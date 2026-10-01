@@ -13,7 +13,6 @@
   --brand-blue: #146287;         /* Secundario: Enlaces, kickers, hover primario */
   --brand-cyan: #4DC4D3;         /* Acento único de acción: Botones captación, foco, chips */
   --brand-cyan-hover: #62D8E7;   /* Hover de elementos cian interactivos */
-  
 
   /* 2. Rampa Canónica de Superficies Claras (Sin grises slate) */
   --bg-primary: #F9FAFB;         /* Lienzo claro base oficial */
@@ -240,17 +239,88 @@ h1, h2, h3, h4, h5, h6 {
   color: #FFFFFF;
 }
 
-/* Punto Pulsante para Eventos en Vivo */
-.punto-vivo {
+/* ==========================================================================
+   COMPONENTES ESPECÍFICOS DE CAPACITACIONES E INDUCCIÓN
+   ========================================================================== */
+
+/* Indicador de Estado Operativo Institucional */
+.indicador-operativo {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
-  background-color: var(--brand-live);
-  animation: pulsar-vivo 1.8s infinite cubic-bezier(0.65, 0, 0.35, 1);
+  border-radius: var(--radius-full);
+  background-color: var(--brand-cyan);
+  display: inline-block;
+  box-shadow: 0 0 0 3px rgba(77, 196, 211, 0.25);
 }
 
-@keyframes pulsar-vivo {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.7); }
-  70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(229, 72, 77, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(229, 72, 77, 0); }
+/* Barra de Progreso de Capacitaciones y Rutas de Inducción */
+.barra-progreso {
+  width: 100%;
+  height: 8px;
+  background-color: rgba(9, 42, 96, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.barra-progreso-avance {
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand-blue), var(--brand-cyan));
+  border-radius: var(--radius-full);
+  transition: width var(--dur-base) var(--ease-out-soft);
+}
+
+/* Chips de Estado de Módulo de Aprendizaje */
+.chip-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.chip-estado--completado {
+  background-color: rgba(20, 98, 135, 0.12);
+  color: var(--brand-blue);
+  border: 1px solid rgba(20, 98, 135, 0.25);
+}
+
+.chip-estado--en-curso {
+  background-color: rgba(77, 196, 211, 0.15);
+  color: var(--brand-navy);
+  border: 1px solid rgba(77, 196, 211, 0.40);
+}
+
+.chip-estado--pendiente {
+  background-color: rgba(9, 42, 96, 0.05);
+  color: var(--text-muted);
+  border: 1px solid rgba(9, 42, 96, 0.10);
+}
+
+/* Contenedor / Visor de Diapositiva de Inducción */
+.visor-diapositiva {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--borde-sutil);
+  box-shadow: var(--sombra-elevada);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Formato de Papel para Certificado / Constancia de Acreditación */
+.certificado-papel {
+  background-color: #FFFFFF;
+  border: 2px solid rgba(9, 42, 96, 0.15);
+  box-shadow: var(--sombra-elevada);
+  border-radius: var(--radius-md);
+  padding: 32px;
+  font-family: Georgia, 'Times New Roman', serif;
 }

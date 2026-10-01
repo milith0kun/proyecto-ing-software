@@ -144,11 +144,30 @@ Proyecto Doctores Ing de Sotfware/
 │   │   └── globals.css                 # Estilos globales con Tailwind CSS
 │   └── lib/
 │       └── prisma.ts                   # Cliente singleton de conexión a MongoDB Atlas
+├── MANUAL_DE_MARCA_Y_SISTEMA_DISENO.md # Guía Maestra de Estilo y Sistema de Diseño Oficial (Capacitación/Inducción)
 ├── informe/
 │   ├── informe.md                      # Informe académico en Markdown (Metodología, Requisitos, Stack)
 │   ├── informe.tex                     # Código fuente LaTeX estándar UNSAAC
 │   ├── informe.pdf                     # PDF oficial compilado (15 páginas con estándares ISO/IEEE/SWEBOK)
 │   └── referencias.bib                 # Bibliografía académica en formato BibTeX
 ├── logos/                              # Identidad visual de CGB Academy, CIIP, GEOMINA y BIOMEDIC
+├── public/logos/                       # Logotipos optimizados servidos estáticamente
 └── README.md                           # Documentación central y directrices del equipo
 ```
+
+---
+
+## 🎨 Manual de Marca y Sistema de Diseño (Obligatorio)
+
+Todo desarrollo de interfaz de usuario debe ceñirse estrictamente a las directrices de la plataforma de **Capacitación e Inducción**:
+
+👉 **Consulta el documento maestro:** [`MANUAL_DE_MARCA_Y_SISTEMA_DISENO.md`](./MANUAL_DE_MARCA_Y_SISTEMA_DISENO.md)
+
+### 📌 Reglas de Oro para Desarrolladores:
+1. **Paleta Institucional:** Usar variables CSS oficiales (`--brand-navy: #092A60`, `--brand-blue: #146287`, `--brand-cyan: #4DC4D3`).
+2. **Accesibilidad WCAG Innegociable:** El cian (`#4DC4D3`) **nunca** se usa como texto sobre fondos claros. Solo como fondo con texto Navy `#092A60` o foco de inputs.
+3. **Superficies Canónicas:** Lienzo `#F9FAFB` $\rightarrow$ alternancia `#F3F6FA` $\rightarrow$ tarjetas `#FFFFFF`. **Prohibido el uso de grises slate (`#f1f5f9`).**
+4. **Tipografía Oficial:** `Montserrat` para títulos y botones; `Inter` para cuerpo de texto; `Georgia` solo para diplomas y certificados.
+5. **Componentes de Inducción:** Utilizar `.boton-primario` (1 por bloque), `.tarjeta-cgb` (alturas al ras con `flex: 1`), `.barra-progreso` y `.chip-estado`.
+6. **Iconos:** Exclusivamente SVG inline vectoriales limpios (estilo Lucide). **Cero emojis en componentes de interfaz.**
+7. **Nomenclatura:** Clases, variables y propiedades 100% redactadas en español.

@@ -140,9 +140,14 @@ export default function PaginaInicio() {
               <p className="text-sm text-[#434654] leading-relaxed mb-6 flex-1">
                 Centro Internacional de Investigación y Postgrado. Especialización avanzada en ingeniería, gestión de proyectos y desarrollo tecnológico.
               </p>
-              <div className="pt-4 border-t border-[rgba(9,42,96,0.06)] mt-auto flex items-center justify-between text-xs text-[#5F6673]">
-                <span>Inducción Profesional</span>
-                <span className="font-bold text-[#146287]">Activa</span>
+              <div className="pt-4 border-t border-[rgba(9,42,96,0.06)] mt-auto flex flex-col gap-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[#5F6673] font-medium">Ruta de Inducción</span>
+                  <span className="chip-estado chip-estado--en-curso">4 Módulos</span>
+                </div>
+                <div className="barra-progreso">
+                  <div className="barra-progreso-avance" style={{ width: '100%' }}></div>
+                </div>
               </div>
             </div>
 
@@ -162,9 +167,14 @@ export default function PaginaInicio() {
               <p className="text-sm text-[#434654] leading-relaxed mb-6 flex-1">
                 Especialización en geología aplicada, ingeniería de minas, geotecnia y procesamiento minero con enfoque de sostenibilidad ambiental.
               </p>
-              <div className="pt-4 border-t border-[rgba(9,42,96,0.06)] mt-auto flex items-center justify-between text-xs text-[#5F6673]">
-                <span>Inducción Técnica</span>
-                <span className="font-bold text-[#146287]">Activa</span>
+              <div className="pt-4 border-t border-[rgba(9,42,96,0.06)] mt-auto flex flex-col gap-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[#5F6673] font-medium">Ruta de Inducción</span>
+                  <span className="chip-estado chip-estado--en-curso">4 Módulos</span>
+                </div>
+                <div className="barra-progreso">
+                  <div className="barra-progreso-avance" style={{ width: '100%' }}></div>
+                </div>
               </div>
             </div>
 
@@ -184,9 +194,14 @@ export default function PaginaInicio() {
               <p className="text-sm text-[#434654] leading-relaxed mb-6 flex-1">
                 Capacitación continua en ciencias biomédicas, instrumentación médica, tecnologías para la salud e investigación clínica aplicada.
               </p>
-              <div className="pt-4 border-t border-[rgba(9,42,96,0.06)] mt-auto flex items-center justify-between text-xs text-[#5F6673]">
-                <span>Inducción en Salud</span>
-                <span className="font-bold text-[#146287]">Activa</span>
+              <div className="pt-4 border-t border-[rgba(9,42,96,0.06)] mt-auto flex flex-col gap-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[#5F6673] font-medium">Ruta de Inducción</span>
+                  <span className="chip-estado chip-estado--en-curso">4 Módulos</span>
+                </div>
+                <div className="barra-progreso">
+                  <div className="barra-progreso-avance" style={{ width: '100%' }}></div>
+                </div>
               </div>
             </div>
           </div>
@@ -198,8 +213,8 @@ export default function PaginaInicio() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-wider mb-4">
-              <span className="punto-vivo"></span>
-              Estado de Infraestructura
+              <span className="indicador-operativo"></span>
+              Plataforma Institucional Activa
             </span>
             <h2 className="text-3xl font-extrabold text-white">
               Arquitectura del Sistema
