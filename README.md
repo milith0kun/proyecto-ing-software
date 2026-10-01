@@ -32,8 +32,8 @@ Proyecto Doctores Ing de Sotfware/
 
 ## 🌿 Flujo de Ramas (Git)
 
-- **`main`**: Rama de código estable y versiones finales para entrega.
-- **`develop`**: Rama base de integración y pruebas colaborativas donde los desarrolladores integran sus ramas de trabajo (`feature/*`) antes de consolidar en `main`.
+- **`edmil-saire`** (o `main`): Rama principal / producción del repositorio con código estable y versiones finales.
+- **`develop`**: Rama base de integración y pruebas colaborativas donde los desarrolladores integran sus ramas de trabajo (`feature/*`) antes de consolidar en la rama principal.
 
 ---
 

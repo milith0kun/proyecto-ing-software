@@ -19,7 +19,7 @@
   5. **Ticona Jancco, Ronaldo** — *Desarrollador Full-Stack*
 - **Entidad Beneficiaria:** CGB Academy (Integrando las unidades CIIP LATAM, GEOMINA LATAM y BIOMEDIC)
 - **Repositorio Oficial en GitHub:** `https://github.com/milith0kun/proyecto-ing-software`
-- **Ramas Principales de Trabajo:** `main` (código estable de producción) y `develop` (integración y pruebas conjuntas)
+- **Ramas Principales de Trabajo:** `edmil-saire` (rama principal / producción) y `develop` (integración y pruebas conjuntas)
 
 ---
 
