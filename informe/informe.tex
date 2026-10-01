@@ -151,21 +151,23 @@ El sistema prestará servicio a nivel nacional e internacional vía web. Los col
 \begin{tabularx}{\linewidth}{|l|l|X|}
 \hline
 \rowcolor{gray!15}
-\textbf{Capa / Función} & \textbf{Tecnología} & \textbf{Justificación Técnica} \\
+\textbf{Capa / Componente} & \textbf{Tecnología} & \textbf{Justificación Técnica} \\
 \hline
-Frontend & TypeScript + Next.js / React & Renderizado híbrido (SSR/CSR), tipado estático seguro y arquitectura por componentes. \\
+Base de Datos & MongoDB Atlas & Base de datos NoSQL documental en la nube, flexible y óptima para estructuras dinámicas de slides y progreso de onboarding. \\
 \hline
-Estilos UI & CSS Moderno / TailwindCSS & Consistencia visual, sistema de diseño estandarizado y diseño responsive liviano. \\
+ORM / Acceso a Datos & Prisma ORM & Modelado declarativo con conector MongoDB (\texttt{provider = "mongodb"}), tipado estático seguro y migraciones eficientes. \\
 \hline
-Backend & Node.js + Express / NestJS & Ecosistema asíncrono I/O no bloqueante, bajo consumo de memoria RAM y API RESTful. \\
+Arquitectura Full-Stack & Next.js (App Router) & Framework unificado que resuelve el Frontend (React con SSR/CSR) y el Backend (Route Handlers en \texttt{/app/api/...} y Server Actions). \\
 \hline
-Base de Datos & PostgreSQL + Prisma ORM & Motor relacional robusto, integridad transaccional, esquema fuertemente tipado y migraciones. \\
+Aplicación Web & Next.js Web App & Aplicación responsiva, óptima para SEO y tiempos de carga instantáneos en accesos públicos y privados. \\
 \hline
-Control de Versiones & Git \& GitHub & Estrategia GitFlow simplificada (\texttt{main}, \texttt{develop}, \texttt{feature/*}) y trazabilidad. \\
+Estilos UI & TailwindCSS / CSS Moderno & Sistema de diseño estandarizado basado en utilidades, liviano y consistente con la identidad de CGB Academy. \\
 \hline
-Gestión de Proyecto & Jira / GitHub Projects & Tableros Kanban por fases, sprints, estimación con Planning Poker y métricas ágiles. \\
+Lenguaje & TypeScript & Tipado estático integral de extremo a extremo (base de datos, endpoints y componentes de UI). \\
 \hline
-Diseño & Figma & Prototipado y wireframes aprobados por el Product Owner antes de codificar. \\
+Control de Versiones & Git \& GitHub & Ramas: principal (\texttt{edmil-saire}), desarrollo (\texttt{desarrollo}) e individuales por desarrollador. \\
+\hline
+Gestión de Proyecto & Jira / GitHub Projects & Tableros Kanban por fases, sprints, estimación con Planning Poker y métricas de flujo. \\
 \hline
 \end{tabularx}
 \caption{Pila tecnológica seleccionada para CGB Academy.}
@@ -221,10 +223,25 @@ Integración Continua (CI) mediante validaciones en cada Pull Request a \texttt{
 Uso de modelos de lenguaje para generación de casos de prueba y esquemas de datos, bajo el principio de \textbf{validación humana obligatoria}: ningún integrante incorpora código generado sin comprender su arquitectura y probar su funcionamiento.
 
 \section{Roles, Responsabilidades y Forma de Coordinación}
+\subsection{Política de Roles Rotativos por Sprint}
+El equipo adopta una estructura de \textbf{roles rotativos por iteración} para fomentar el aprendizaje integral de todos los integrantes:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Product Owner:} Saire Bustamante, Edmil Jampier. Gestión del backlog, validación de criterios BDD y desarrollo de historias full-stack.
-    \item \textbf{Scrum Master:} Barazorda Cuellar, Hector. Facilitación ágil, remoción de bloqueos técnicos y desarrollo full-stack.
-    \item \textbf{Desarrolladores Full-Stack:} Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; Ticona Jancco, Ronaldo. Ejecución autónoma de las 5 fases de sus historias asignadas y revisión por pares.
+    \item \textbf{Sprint 1 (Sprint Piloto de Evaluación):}
+    \begin{itemize}
+        \item \textbf{Product Owner:} Saire Bustamante, Edmil Jampier. Responsable de la priorización del backlog, validación de criterios BDD (\textit{Dado/Cuando/Entonces}) y desarrollo full-stack.
+        \item \textbf{Scrum Master:} Barazorda Cuellar, Hector. Responsable de facilitar ceremonias (Daily de 15 min), remoción de bloqueos técnicos y desarrollo full-stack.
+        \item \textbf{Desarrolladores Full-Stack:} Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; Ticona Jancco, Ronaldo. Ejecución autónoma de las 5 fases de sus HU asignadas y revisión por pares.
+    \end{itemize}
+    \item \textbf{Evaluación y Rotación en Retrospectiva:} Al cierre del Sprint 1, el equipo analiza la dinámica y efectividad de las acciones para determinar la rotación de los roles de Product Owner y Scrum Master hacia los demás integrantes en los Sprints 2 y 3.
+\end{itemize}
+
+\subsection{Estrategia de Ramas en Git y Flujo para Desarrolladores}
+Para garantizar orden en el código y evitar colisiones, se define el siguiente esquema de ramas:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Rama Principal (\texttt{edmil-saire}):} Rama \textit{main} del repositorio oficial, destinada exclusivamente a versiones estables y libres de errores.
+    \item \textbf{Rama de Integración (\texttt{desarrollo} / \texttt{develop}):} Espacio común donde convergen los avances para testear la unión de los desarrolladores antes de producción.
+    \item \textbf{Ramas Individuales por Desarrollador:} Cada miembro dispone de una rama con su nombre (\texttt{hector-barazorda}, \texttt{alex-carpio}, \texttt{domingo-quispe}, \texttt{edmil-saire}, \texttt{ronaldo-ticona}).
+    \item \textbf{Flujo Operativo:} Cada desarrollador ejecuta \texttt{git pull origin desarrollo} en su rama para sincronizar cambios, sube commits con su cuenta de GitHub a su rama personal y genera un Pull Request hacia \texttt{desarrollo}. Tras el testeo conjunto, se integra a \texttt{edmil-saire}.
 \end{itemize}
 
 \section{Flujo de Trabajo del Equipo}
@@ -241,7 +258,7 @@ Un desarrollador no puede iniciar una nueva HU si no ha llevado su historia actu
 Toda tarea impedida por factores externos o técnicos durante más de 24 horas se mueve a la columna \texttt{Bloqueado} y se atiende prioritariamente en la Daily.
 
 \subsection{Definición de Hecho (Definition of Done)}
-Una HU es \textit{Done} si supera el 100\% de sus Criterios de Aceptación, no tiene errores de TypeScript, cuenta con pruebas aprobadas, tiene revisión de código aprobada en GitHub y está fusionada en \texttt{develop}.
+Una HU es \textit{Done} si supera el 100\% de sus Criterios de Aceptación, no tiene errores de compilación en Next.js ni TypeScript, cuenta con persistencia validada en MongoDB Atlas con Prisma, tiene revisión de código aprobada en GitHub y está fusionada y probada en la rama \texttt{desarrollo}.
 
 \section{Incrementos Presentados del Proyecto}
 \subsection{Incremento 1 (Sprint 1: Núcleo de Capacitación y Acceso Público)}

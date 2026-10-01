@@ -121,17 +121,18 @@ La plataforma operará en la nube, consumida por usuarios distribuidos geográfi
 
 ## 6. Tecnologías Utilizadas
 
-| Capa / Dominio | Tecnología Seleccionada | Justificación Técnica de Selección |
+De acuerdo a la arquitectura técnica definida para la plataforma (Frontend, Backend, Prisma, MongoDB Atlas y Next.js App), se seleccionó la siguiente pila tecnológica:
+
+| Capa / Componente | Tecnología Seleccionada | Justificación Técnica de Selección |
 |---|---|---|
-| **Lenguaje de Programación** | TypeScript (v5.x) / JavaScript | Tipado estático en frontend y backend, detección temprana de errores y autocompletado en el IDE. |
-| **Frontend Framework** | React / Next.js | Arquitectura modular basada en componentes, Server-Side Rendering (SSR) para acceso público rápido y client-side para navegación interactiva. |
-| **Estilos y Maquetación** | CSS Moderno / TailwindCSS | Maquetación responsive basada en tokens de diseño, cero dependencias pesadas y máxima consistencia visual. |
-| **Backend Runtime** | Node.js (v20+ LTS) con Express / NestJS | Asincronía eficiente no bloqueante I/O, ideal para APIs RESTful ligeras y bajo consumo de memoria RAM. |
-| **Base de Datos** | PostgreSQL (v15+) con Prisma ORM | Motor relacional robusto con soporte de integridad referencial estricta, migraciones versionadas y tipado seguro en queries. |
-| **Control de Versiones** | Git & GitHub | Estrategia de ramificación GitFlow (`main`, `develop`, `feature/*`), historial trazable y Pull Requests. |
-| **Gestión y Seguimiento Ágil** | Jira Software / GitHub Projects | Backlog priorizado, estimación con Planning Poker y tablero Kanban visual con columnas por fase. |
-| **Diseño y Prototipado** | Figma | Wireframes interactivos de alta fidelidad aprobados por el Product Owner antes del desarrollo. |
-| **Entorno de Pruebas** | Jest / Vitest & Supertest | Pruebas unitarias para controladores, servicios de negocio y validación de endpoints HTTP. |
+| **Base de Datos** | **MongoDB Atlas** | Base de datos NoSQL documental en la nube; flexible, altamente escalable y óptima para almacenar la estructura dinámica de slides enriquecidos y progresos. |
+| **ORM / Acceso a Datos** | **Prisma ORM** | Modelado declarativo de esquemas (`schema.prisma` con provider `mongodb`), generación de cliente fuertemente tipado en TypeScript y seguridad en consultas. |
+| **Arquitectura Full-Stack** | **Next.js (App Router)** | Framework unificado que resuelve tanto el **Frontend** (React con Server y Client Components) como el **Backend** (Route Handlers `/app/api/...` y Server Actions). |
+| **Aplicación Web (App)** | **Next.js Web App** | Aplicación web responsiva, optimizada para SEO y tiempos de carga instantáneos en accesos públicos e internos. |
+| **Estilos y Maquetación** | TailwindCSS / CSS Moderno | Diseño responsive basado en utilidades, coherente con la identidad visual corporativa de CGB Academy. |
+| **Lenguaje de Desarrollo** | TypeScript | Tipado estático de extremo a extremo (base de datos, API y componentes de interfaz). |
+| **Control de Versiones** | Git & GitHub | Ramificación con rama principal `edmil-saire`, rama de integración `desarrollo` y ramas individuales por desarrollador. |
+| **Gestión Ágil** | Jira / GitHub Projects | Backlog de historias de usuario, tablero Kanban por fases y seguimiento de métricas ágiles. |
 
 ---
 
@@ -143,7 +144,7 @@ La plataforma operará en la nube, consumida por usuarios distribuidos geográfi
 | **Administrador** | Gestor de contenidos y personas | Directo | Alto | Facilidad para cargar slides, estructurar rutas por área y ver reportes de avance en tiempo real. |
 | **Público (Estudiantes/Docentes)** | Visitantes anónimos | Directo | Medio | Acceso inmediato y gratuito a guías y orientaciones sobre CIIP, GEOMINA y BIOMEDIC sin registro obligatorio. |
 | **Directorio CGB Academy** | Patrocinador institucional | Clave | Crítico | Reducción de costos de capacitación, estandarización de procesos y cumplimiento de plazos del MVP. |
-| **Equipo de Desarrollo** | 4 Ingenieros de Sistemas | Interno | Alto | Código limpio, mantenible, arquitectura escalable y cumplimiento de los acuerdos del sprint. |
+| **Equipo de Desarrollo** | 5 Ingenieros de Sistemas | Interno | Alto | Código limpio, mantenible, arquitectura escalable y cumplimiento de los acuerdos del sprint. |
 | **Docente Evaluador UNSAAC** | Evaluador académico | Académico | Crítico | Rigor metodológico en ingeniería de software, trazabilidad de requisitos y entrega de software funcional. |
 
 ---
@@ -193,19 +194,55 @@ El modelo secuencial en Cascada se descartó porque presupone requerimientos inm
 
 ## 10. Roles, Responsabilidades y Forma de Coordinación
 
-### 10.1 Matriz de Asignación de Roles
-| Integrante | Rol Metodológico | Responsabilidades Principales |
-|---|---|---|
-| **Saire Bustamante, Edmil Jampier** | **Product Owner** & Dev Full-Stack | Gestión y priorización del Product Backlog, validación de criterios BDD, interacción de requisitos y desarrollo full-stack. |
-| **Barazorda Cuellar, Hector** | **Scrum Master** & Dev Full-Stack | Facilitación de ceremonias ágiles, monitoreo del tablero Kanban, remoción de bloqueos técnicos y desarrollo full-stack. |
-| **Carpio Hermoza, Alex** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU asignadas (Plan, Diseño, Frontend, Backend, Test) y revisión por pares. |
-| **Quispe Mamani, Domingo de Guzman** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU asignadas (Plan, Diseño, Frontend, Backend, Test) y revisión por pares. |
-| **Ticona Jancco, Ronaldo** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU asignadas (Plan, Diseño, Frontend, Backend, Test) y revisión por pares. |
+### 10.1 Política de Roles Rotativos por Sprint
+El equipo adopta una estructura de **roles rotativos**, donde las funciones de liderazgo ágil no son estáticas, sino que se alternan en cada iteración para que todos los integrantes adquieran experiencia en gestión de producto, facilitación técnica y desarrollo full-stack:
 
-### 10.2 Protocolo de Coordinación del Equipo
-- **Sincronización Diaria (Daily):** 15 minutos en Discord / Google Meet al inicio de cada jornada.
-- **Canal de Comunicación Inmediata:** Grupo técnico en Discord y WhatsApp para alertas de bloqueo y avisos de Pull Requests.
-- **Estrategia Git:** Ramas cortas denominadas `feature/HU-xxx-descripcion`, originadas de `develop` y reintegradas mediante Pull Request con revisión obligatoria.
+- **Sprint 1 (Sprint Piloto de Evaluación):**  
+  Se establece la configuración inicial para medir la cadencia y dinamismo del equipo:
+  - **Product Owner (Sprint 1):** Saire Bustamante, Edmil Jampier.
+  - **Scrum Master (Sprint 1):** Barazorda Cuellar, Hector.
+  - **Desarrolladores Full-Stack:** Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; Ticona Jancco, Ronaldo.
+- **Mecanismo de Evaluación y Rotación:**  
+  En la **Sprint Retrospective** al término del Sprint 1, se analizan los resultados del flujo, los bloqueos resueltos y la interacción con los requisitos. A partir de esa evaluación, se ejecutan las decisiones de rotación del Scrum Master y Product Owner para el Sprint 2 y Sprint 3, permitiendo la alternancia de roles entre los 5 integrantes.
+
+| Integrante | Rol en Sprint 1 | Acciones y Responsabilidades Principales |
+|---|---|---|
+| **Saire Bustamante, Edmil Jampier** | **Product Owner** (Sprint 1) & Dev Full-Stack | Priorización del backlog, validación de criterios BDD (Dado/Cuando/Entonces), aprobación de entregables en la Review y desarrollo de su HU asignada. |
+| **Barazorda Cuellar, Hector** | **Scrum Master** (Sprint 1) & Dev Full-Stack | Facilitación de las ceremonias diarias (Daily de 15 min), remoción de bloqueos técnicos, vigilancia de límites WIP y desarrollo de su HU asignada. |
+| **Carpio Hermoza, Alex** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
+| **Quispe Mamani, Domingo de Guzman** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
+| **Ticona Jancco, Ronaldo** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
+
+### 10.2 Protocolo de Coordinación y Ramas de Git para los Desarrolladores
+Para asegurar un trabajo colaborativo ordenado y evitar colisiones de código, se establece la siguiente arquitectura de ramas:
+
+1. **Rama Principal (`edmil-saire`):** Es la rama `main` del repositorio remoto. Contiene código 100% estable, validado y libre de errores para entregas oficiales.
+2. **Rama de Desarrollo e Integración (`desarrollo` / `develop`):** Rama común donde confluyen todos los avances para testear la unión de los desarrolladores antes de enviar a producción.
+3. **Ramas Individuales de cada Desarrollador:**  
+   Cada desarrollador cuenta con su rama personal vinculada a su cuenta de GitHub:
+   - `hector-barazorda`
+   - `alex-carpio`
+   - `domingo-quispe`
+   - `edmil-saire`
+   - `ronaldo-ticona`
+
+#### Ciclo de Trabajo Obligatorio para cada Desarrollador:
+```bash
+# 1. Situarse en su rama y sincronizar los últimos cambios de desarrollo
+git checkout <tu-nombre-de-rama>
+git pull origin desarrollo
+
+# 2. Realizar avances y confirmar con su cuenta de GitHub
+git add .
+git commit -m "feat(modulo): descripción del avance de la HU"
+git push origin <tu-nombre-de-rama>
+
+# 3. Crear Pull Request en GitHub:
+#    Base: desarrollo  <---  Compare: <tu-nombre-de-rama>
+
+# 4. Probar la integración conjunta en la rama 'desarrollo'.
+# 5. Pase a la rama principal 'edmil-saire' una vez superado el testing.
+```
 
 ---
 
@@ -224,9 +261,9 @@ La unidad central de entrega es la **Historia de Usuario (HU)** tratada como un 
 2. **1. Plan:** Refinamiento de la HU, formulación de criterios de aceptación BDD y estimación en Planning Poker.
 3. **2. Diseño UI/UX:** Creación y validación de wireframes/pantallas en Figma bajo los lineamientos visuales de CGB Academy.
 4. **3. Frontend:** Construcción de componentes, formularios e interfaces responsivas en React/Next.js.
-5. **4. Backend:** Implementación de endpoints RESTful, controladores, lógica de negocio y migraciones de BD.
+5. **4. Backend:** Implementación de endpoints RESTful con Route Handlers de Next.js (`/app/api/...`), modelos Prisma y base de datos MongoDB Atlas.
 6. **5. Test:** Ejecución de pruebas unitarias, verificación de criterios de aceptación y validación de regresión.
-7. **Done:** Incremento probado, revisado por pares y fusionado en `develop`.
+7. **Done:** Incremento probado, revisado por pares y fusionado en `desarrollo`.
 8. **Bloqueado (Carril Transversal):** Tareas interrumpidas por dependencias de terceros, credenciales o fallos bloqueantes.
 
 ### 11.2 Límites WIP (Work In Progress)
@@ -238,11 +275,11 @@ La unidad central de entrega es la **Historia de Usuario (HU)** tratada como un 
 ### 11.4 Definición de Hecho (*Definition of Done* — DoD)
 Para que una Historia de Usuario sea declarada formalmente **Done**, debe satisfacer sin excepciones:
 - [x] Cumplir al 100% todos los Criterios de Aceptación especificados (CA-01, CA-02, etc.).
-- [x] No generar errores de compilación ni advertencias críticas de linting (TypeScript estricto).
-- [x] Contar con pruebas unitarias o de integración automatizadas que pasen exitosamente.
+- [x] No generar errores de compilación en Next.js ni advertencias críticas de TypeScript.
+- [x] Contar con persistencia correcta en MongoDB Atlas a través de Prisma ORM.
 - [x] Haber sido revisada y aprobada por al menos otro desarrollador (*Peer Review* en GitHub).
-- [x] Estar fusionada e integrada limpiamente en la rama `develop` sin conflictos.
-- [x] Haber sido demostrada y validada por el Product Owner.
+- [x] Estar fusionada e integrada limpiamente en la rama `desarrollo` habiendo superado el testeo conjunto.
+- [x] Haber sido demostrada y validada por el Product Owner antes del merge a `edmil-saire`.
 
 ---
 
