@@ -6,12 +6,13 @@ Repositorio oficial para el desarrollo del proyecto semestral del curso de **Ing
 
 ## 👥 Equipo de Trabajo
 
-| Integrante | Código UNSAAC | Rol en el Equipo |
+| N° | Integrante | Rol en el Equipo |
 |---|---|---|
-| **Saire Bustamante, Edmil Jampier** | 174449 | Desarrollador Full-Stack / Product Owner |
-| **Pumaccahua Cusihuaman, Christian** | 204805 | Desarrollador Full-Stack / Scrum Master |
-| **Quispe Quispe, Celia** | 221950 | Desarrolladora Full-Stack |
-| **Lozano Llacctahuaman, Medaly** | 195050 | Desarrolladora Full-Stack |
+| 1 | **Barazorda Cuellar, Hector** | Scrum Master / Desarrollador Full-Stack |
+| 2 | **Carpio Hermoza, Alex** | Desarrollador Full-Stack |
+| 3 | **Quispe Mamani, Domingo de Guzman** | Desarrollador Full-Stack |
+| 4 | **Saire Bustamante, Edmil Jampier** | Product Owner / Desarrollador Full-Stack |
+| 5 | **Ticona Jancco, Ronaldo** | Desarrollador Full-Stack |
 
 ---
 

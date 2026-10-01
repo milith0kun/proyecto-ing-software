@@ -1,250 +1,327 @@
 # INFORME DEL PROYECTO DE INGENIERÍA DE SOFTWARE
+**Centro de Capacitación e Inducción — CGB Academy**  
 **Curso:** Ingeniería de Software I — IF614  
 **Universidad Nacional de San Antonio Abad del Cusco (UNSAAC)**  
-**Semestre:** 2026-I  
+**Facultad de Ingeniería Eléctrica, Electrónica, Informática y Mecánica**  
+**Escuela Profesional de Ingeniería de Sistemas e Informática**  
+**Semestre Académico:** 2026-I  
 
 ---
 
 ## PORTADA Y DATOS GENERALES DEL PROYECTO
 
-- **Nombre del Proyecto:** [Nombre del Sistema / Proyecto]
+- **Nombre del Proyecto:** Centro de Capacitación e Inducción — CGB Academy
 - **Equipo de Trabajo:**
-  - Saire Bustamante, Edmil Jampier (174449) — *Desarrollador Full-Stack / Product Owner*
-  - Pumaccahua Cusihuaman, Christian (204805) — *Desarrollador Full-Stack / Scrum Master*
-  - Quispe Quispe, Celia (221950) — *Desarrolladora Full-Stack*
-  - Lozano Llacctahuaman, Medaly (195050) — *Desarrolladora Full-Stack*
-- **Docente:** [Nombre del Docente]
-- **Fecha:** [Fecha de Entrega]
+  1. **Barazorda Cuellar, Hector** — *Scrum Master / Desarrollador Full-Stack*
+  2. **Carpio Hermoza, Alex** — *Desarrollador Full-Stack*
+  3. **Quispe Mamani, Domingo de Guzman** — *Desarrollador Full-Stack*
+  4. **Saire Bustamante, Edmil Jampier** — *Product Owner / Desarrollador Full-Stack*
+  5. **Ticona Jancco, Ronaldo** — *Desarrollador Full-Stack*
+- **Entidad Beneficiaria:** CGB Academy (Integrando las unidades CIIP LATAM, GEOMINA LATAM y BIOMEDIC)
+- **Repositorio Oficial en GitHub:** `https://github.com/milith0kun/proyecto-ing-software`
+- **Ramas Principales de Trabajo:** `main` (código estable de producción) y `develop` (integración y pruebas conjuntas)
 
 ---
 
 ## 1. Datos Generales del Proyecto
 
-| Parámetro | Detalle |
+| Parámetro | Detalle Institucional y Operativo |
 |---|---|
-| **Denominación** | [Nombre formal del software a desarrollar] |
-| **Organización / Cliente** | [Institución o beneficiario objetivo] |
-| **Repositorio Oficial** | `https://github.com/milith0kun/proyecto-ing-software` |
-| **Rama de Integración** | `develop` |
-| **Rama de Producción** | `main` |
+| **Nombre del Sistema** | Centro de Capacitación e Inducción CGB Academy |
+| **Tipo de Aplicación** | Plataforma Web Modular (Área Pública de Orientación y Entorno Privado de Onboarding) |
+| **Organización Destino** | CGB Academy (Ecosistema corporativo: CIIP LATAM, GEOMINA LATAM, BIOMEDIC) |
+| **Repositorio Central** | `https://github.com/milith0kun/proyecto-ing-software` |
+| **Ramas Git** | `main` (entregas estables) y `develop` (integración ágil continua) |
+| **Cadencia de Trabajo** | Sprints de 2 semanas (10 días hábiles por iteración) |
+| **Tamaño del MVP** | 15 Historias de Usuario funcionales distribuidas en 3 Sprints |
 
 ---
 
 ## 2. Objetivo General y Específicos
 
 ### 2.1 Objetivo General
-- [Describir el objetivo principal del sistema: qué problema resuelve, a quién beneficia y el resultado medible esperado].
+Desarrollar e implementar el **Centro de Capacitación e Inducción CGB Academy**, una plataforma web orientada a la capacitación introductoria de colaboradores internos y a la orientación pública de estudiantes y docentes, facilitando la creación ágil de contenidos estructurados en diapositivas interactivas (*slides*), la gestión jerárquica de rutas de aprendizaje organizacional y el seguimiento formativo del avance sin incurrir en la sobrecarga de un LMS tradicional.
 
 ### 2.2 Objetivos Específicos
-1. [Objetivo específico 1: Requerimientos y modelado conceptual].
-2. [Objetivo específico 2: Diseño de arquitectura, componentes y persistencia de datos].
-3. [Objetivo específico 3: Implementación modular bajo el método híbrido adoptado].
-4. [Objetivo específico 4: Verificación, validación y control de calidad mediante pruebas continuas].
+1. **Especificar y priorizar los requerimientos funcionales y no funcionales** del MVP mediante 15 historias de usuario redactadas en formato estándar (*Como/Quiero/Para*) y sustentadas en criterios de aceptación verificables (*Dado/Cuando/Entonces*).
+2. **Diseñar una arquitectura web ligera y desacoplada** para frontend y backend, optimizada para desplegarse en infraestructura VPS de recursos controlados (2 vCPU y 8 GB de RAM) priorizando componentes interactivos ligeros.
+3. **Implementar el motor de creación y visualización de capacitaciones mediante slides**, permitiendo la administración no-code de contenidos de inducción tanto para el ámbito público como privado.
+4. **Construir el módulo de onboarding organizacional jerárquico**, modelando la relación *Área $\rightarrow$ Puesto $\rightarrow$ Ruta de Onboarding $\rightarrow$ Capacitaciones*, garantizando la activación segura de colaboradores y la persistencia automática de su progreso.
+5. **Incorporar microtests formativos de evaluación inmediata**, brindando retroalimentación pedagógica al colaborador sin penalizaciones de puntajes punitivos.
+6. **Aplicar un método de desarrollo ágil híbrido (Scrum base, Kanban visual y prácticas técnicas de XP)** con integración continua, revisión de código por pares y validación asistida por Inteligencia Artificial.
 
 ---
 
 ## 3. Alcance del Sistema
 
-### 3.1 Módulos y Funcionalidades Incluidas (In-Scope)
-- **Módulo 1:** [Descripción del módulo y sus capacidades operativas].
-- **Módulo 2:** [Descripción del módulo y sus capacidades operativas].
-- **Módulo 3:** [Descripción del módulo y sus capacidades operativas].
+### 3.1 Módulos y Funcionalidades Incluidas (In-Scope — MVP)
+El MVP se encuentra estructurado en tres componentes fundamentales:
 
-### 3.2 Exclusiones y Límites del Sistema (Out-of-Scope)
-- [Listar aspectos que no forman parte del entregable para delimitar expectativas claras].
+1. **Módulo de Gestión y Motor de Contenidos (Sprint 1):**
+   - Autenticación interna basada en roles (Administrador y Colaborador) con sesiones seguras.
+   - Creación, edición general y gestión de estados de capacitación (*Borrador*, *Publicada*).
+   - Constructor de contenidos mediante *slides* administrables (soporte para bloques de texto enriquecido, imágenes optimizadas, listas, avisos/indicaciones, enlaces y botones de acción).
+   - Previsualización en tiempo real previa a la publicación.
+   - Catálogo y visualizador público para consulta libre de estudiantes y docentes sin necesidad de cuenta.
+
+2. **Módulo de Estructura Organizacional y Onboarding Interno (Sprint 2):**
+   - Mantenimiento integral de Áreas y Puestos de CGB Academy con integridad referencial.
+   - Creación y secuenciación de rutas de onboarding asociadas a puestos o áreas.
+   - Registro y gestión de colaboradores con asignación de rutas específicas.
+   - Proceso de activación de cuenta mediante token seguro de uso único y contraseña protegida.
+   - Panel personalizado *"Mi Onboarding"* con seguimiento automático de lectura de slides y rutas completadas.
+
+3. **Módulo de Microtests Formativos y Supervisión Administrativa (Sprint 3):**
+   - Creación y edición de preguntas de opción múltiple asociadas a capacitaciones.
+   - Interfaz interactiva de resolución para el colaborador con retroalimentación inmediata en cada respuesta.
+   - Panel administrativo de supervisión con métricas de avance general e individual por colaborador.
+
+### 3.2 Exclusiones Expresas del Alcance Inicial (Out-of-Scope)
+Para mantener el foco y evitar el sobredimensionamiento (*scope creep*), se excluyen explícitamente:
+- Venta de cursos, pasarela de pagos y carritos de compra.
+- Aulas virtuales en vivo, videoconferencias o funcionalidades de LMS académico pesado (tipo Moodle/Canvas).
+- Emisión o generación de certificados académicos oficiales desde la plataforma.
+- Almacenamiento y streaming de archivos de video pesados o biblioteca de descargas masivas.
+- Soporte multilingüe (la versión 1.0 operará exclusivamente en español).
+- Migración automatizada de datos históricos legados de colaboradores.
 
 ---
 
 ## 4. Justificación del Proyecto
 
-- **Justificación Práctica / Operativa:** [Explicar la necesidad real, dolores actuales del usuario y valor agregado del software].
-- **Justificación Académica / Técnica:** [Aplicación de principios de ingeniería de software, patrones de arquitectura y buenas prácticas ágiles].
+### 4.1 Justificación Práctica y Organizacional
+CGB Academy agrupa la oferta formativa de tres marcas especializadas: **CIIP LATAM**, **GEOMINA LATAM** y **BIOMEDIC**. En el modelo previo, la inducción de nuevos colaboradores y la orientación introductoria a estudiantes dependían de procesos manuales dispersos, documentos en PDF desactualizados o explicaciones verbales repetitivas que demandaban horas hombre y no ofrecían trazabilidad. El sistema centraliza y estandariza la orientación, reduce tiempos de inducción y asegura que cada colaborador domine los procesos clave de su puesto desde el primer día.
+
+### 4.2 Justificación Académica y de Ingeniería de Software
+Desde la perspectiva de la Ingeniería de Software (*Sommerville, 2011; Pressman, 2010*), el proyecto constituye un caso de estudio real para:
+- Superar los vicios del desarrollo no estructurado aplicando un método formal con separación estricta de fases de ingeniería.
+- Modelar requerimientos mediante historias de usuario granulares y criterios de aceptación verificables en estilo BDD (*Behavior-Driven Development*).
+- Demostrar la viabilidad de arquitecturas web modernas de bajo consumo de recursos (VPS 2 vCPU / 8 GB RAM) con alta reactividad y consistencia de datos.
 
 ---
 
 ## 5. Contexto del Proyecto y Restricciones
 
 ### 5.1 Contexto Operativo
-[Descripción del entorno donde operará la solución, tipo de usuarios finales y condiciones de acceso].
+La plataforma operará en la nube, consumida por usuarios distribuidos geográficamente en Perú y Latinoamérica. Los usuarios públicos accederán principalmente desde computadoras personales y smartphones en busca de guías rápidas, mientras que los colaboradores accederán durante su jornada laboral para cumplir con sus rutas de inducción institucional.
 
-### 5.2 Restricciones
-- **Tecnológicas:** [Ej. Despliegue en VPS, soporte web responsive, compatibilidad con navegadores modernos].
-- **Temporales:** [Duración de los sprints de 2 semanas y fechas de corte del semestre académico].
-- **De Datos y Privacidad:** [Seguridad de autenticación, hash de contraseñas, minimización de datos personales].
+### 5.2 Restricciones del Sistema
+- **RNF-001 (Diseño Responsive):** Adaptación fluida a computadoras de escritorio, tablets y dispositivos móviles.
+- **RNF-002 (Idioma):** Interfaz disponible íntegramente en español sin soporte de internacionalización inicial.
+- **RNF-003 (Infraestructura Objetivo):** Capacidad de operar en una VPS de **2 vCPU y 8 GB de RAM** bajo contenedores Docker o servicios Node.js livianos.
+- **RNF-004 (Contenido Ligero):** Arquitectura sin streaming de video propio ni gestor de archivos binarios pesados; priorización de texto e imágenes optimizadas en WebP/SVG.
+- **RNF-005 (Seguridad de Acceso Interno):** Segmentación estricta de rutas privadas protegidas por tokens de sesión; redirección forzada de usuarios anónimos al login.
+- **RNF-006 (Protección de Credenciales):** Almacenamiento no legible de credenciales (hashing robusto con bcrypt/argon2) y tokens de activación de un solo uso.
+- **RNF-007 (Minimización de Datos):** Registro simplificado sin solicitud obligatoria de DNI, teléfono o dirección; únicamente nombres, correo institucional, rol y asignaciones.
+- **RNF-008 (Consistencia Visual):** Uso de un sistema de componentes prediseñados bajo la identidad de marca de CGB Academy para evitar el diseño ad-hoc de pantallas.
+- **RNF-009 (Facilidad de Administración):** Creación y ordenamiento de slides mediante interfaz gráfica intuitiva (*no-code*).
+- **RNF-010 (Integridad de Información):** Restricciones de integridad referencial para impedir el borrado huérfano de áreas o puestos con colaboradores activos.
 
 ---
 
 ## 6. Tecnologías Utilizadas
 
-| Categoría | Tecnología / Herramienta | Justificación de Selección |
+| Capa / Dominio | Tecnología Seleccionada | Justificación Técnica de Selección |
 |---|---|---|
-| **Lenguaje Frontend** | TypeScript / JavaScript | Tipado estático, robustez y amplio ecosistema. |
-| **Framework Frontend** | [Ej. React / Next.js] | Componentización reactiva y alto rendimiento. |
-| **Lenguaje Backend** | [Ej. Node.js / Python] | Facilidad de integración, velocidad de desarrollo y escalabilidad. |
-| **Base de Datos** | [Ej. PostgreSQL / SQLite] | Integridad relacional, soporte transaccional y consultas complejas. |
-| **Control de Versiones** | Git & GitHub | Ramificación GitFlow (`main`, `develop`, `feature/*`) y CI/CD. |
-| **Gestión Ágil** | Jira / Trello | Seguimiento de backlog, tableros Kanban y cálculo de métricas. |
-| **Diseño UI/UX** | Figma | Creación de wireframes y prototipos interactivos. |
+| **Lenguaje de Programación** | TypeScript (v5.x) / JavaScript | Tipado estático en frontend y backend, detección temprana de errores y autocompletado en el IDE. |
+| **Frontend Framework** | React / Next.js | Arquitectura modular basada en componentes, Server-Side Rendering (SSR) para acceso público rápido y client-side para navegación interactiva. |
+| **Estilos y Maquetación** | CSS Moderno / TailwindCSS | Maquetación responsive basada en tokens de diseño, cero dependencias pesadas y máxima consistencia visual. |
+| **Backend Runtime** | Node.js (v20+ LTS) con Express / NestJS | Asincronía eficiente no bloqueante I/O, ideal para APIs RESTful ligeras y bajo consumo de memoria RAM. |
+| **Base de Datos** | PostgreSQL (v15+) con Prisma ORM | Motor relacional robusto con soporte de integridad referencial estricta, migraciones versionadas y tipado seguro en queries. |
+| **Control de Versiones** | Git & GitHub | Estrategia de ramificación GitFlow (`main`, `develop`, `feature/*`), historial trazable y Pull Requests. |
+| **Gestión y Seguimiento Ágil** | Jira Software / GitHub Projects | Backlog priorizado, estimación con Planning Poker y tablero Kanban visual con columnas por fase. |
+| **Diseño y Prototipado** | Figma | Wireframes interactivos de alta fidelidad aprobados por el Product Owner antes del desarrollo. |
+| **Entorno de Pruebas** | Jest / Vitest & Supertest | Pruebas unitarias para controladores, servicios de negocio y validación de endpoints HTTP. |
 
 ---
 
-## 7. Stakeholders (Partes Interesadas)
+## 7. Stakeholders (Matriz de Interesados)
 
-| Actor / Stakeholder | Tipo | Nivel de Influencia | Interés / Expectativa Principal |
-|---|---|---|---|
-| **Usuario Final Primario** | Directo | Alto | Facilidad de uso, navegación intuitiva y rapidez. |
-| **Administrador del Sistema** | Directo | Alto | Control total de configuraciones, usuarios y reportes. |
-| **Equipo de Desarrollo** | Interno | Alto | Código mantenible, arquitectura limpia y entregas a tiempo. |
-| **Docente Evaluador** | Académico | Crítico | Rigor metodológico, trazabilidad y software funcional. |
+| Stakeholder / Actor | Rol en el Ecosistema | Tipo | Influencia | Interés Principal / Expectativa |
+|---|---|---|:---:|---|
+| **Colaborador CGB** | Usuario interno activo | Directo | Alto | Conocer de manera clara sus tareas, procesos y completar su inducción sin fricciones técnicas. |
+| **Administrador** | Gestor de contenidos y personas | Directo | Alto | Facilidad para cargar slides, estructurar rutas por área y ver reportes de avance en tiempo real. |
+| **Público (Estudiantes/Docentes)** | Visitantes anónimos | Directo | Medio | Acceso inmediato y gratuito a guías y orientaciones sobre CIIP, GEOMINA y BIOMEDIC sin registro obligatorio. |
+| **Directorio CGB Academy** | Patrocinador institucional | Clave | Crítico | Reducción de costos de capacitación, estandarización de procesos y cumplimiento de plazos del MVP. |
+| **Equipo de Desarrollo** | 4 Ingenieros de Sistemas | Interno | Alto | Código limpio, mantenible, arquitectura escalable y cumplimiento de los acuerdos del sprint. |
+| **Docente Evaluador UNSAAC** | Evaluador académico | Académico | Crítico | Rigor metodológico en ingeniería de software, trazabilidad de requisitos y entrega de software funcional. |
 
 ---
 
 ## 8. Enfoque de Desarrollo Seleccionado y Justificación
 
-Se ha adoptado un **Enfoque Híbrido Ágil**, fundamentado en la teoría de procesos de software (referencia a *1. Introducción a la IS* y *2. Procesos de Software*).
+Se ha seleccionado un **Enfoque Ágil Híbrido** que toma a **Scrum** como estructura marco e incorpora la visibilidad y límites de **Kanban**, junto con las disciplinas técnicas de la **Programación Extrema (XP)** y el soporte asistido de **Inteligencia Artificial**:
 
-### 8.1 Comparación de Modelos de Proceso
-- **Modelo en Cascada:** Descartado por su rigidez, secuencialidad estricta y riesgo elevado de discrepancias al final del proyecto.
-- **Scrum Puro:** Proporciona un marco temporal excelente mediante sprints, pero por sí solo no prescribe prácticas técnicas directas de ingeniería.
-- **Kanban:** Provee visibilidad en tiempo real y limitación del trabajo en proceso (WIP), pero carece de compromisos de entrega de ciclo cerrado.
-- **XP (Extreme Programming):** Aporta las disciplinas de ingeniería esenciales (TDD, refactorización, integración continua, estándares de código).
+### 8.1 Descarte del Modelo Tradicional en Cascada (*Waterfall*)
+El modelo secuencial en Cascada se descartó porque presupone requerimientos inmutables y difiere la integración y pruebas hasta etapas tardías, lo cual incrementa exponencialmente el riesgo de discrepancias funcionales al cierre del semestre.
 
-### 8.2 Justificación de la Combinación Híbrida
-El equipo combina la estructura de cadencia temporal de Scrum (sprints de 2 semanas) con el control visual y límites WIP de Kanban, y la excelencia técnica de XP.
+### 8.2 Justificación del Modelo Híbrido
+- **De Scrum se toma:** La cadencia fija en sprints cortos (2 semanas), las ceremonias de planificación, sincronización diaria, revisión y retrospectiva, y la unidad de trabajo en historias de usuario priorizadas.
+- **De Kanban se toma:** La transparencia visual mediante el tablero Kanban por fases, la limitación explícita del trabajo en curso (*WIP limits*) y la política de bloqueo para visibilizar impedimentos.
+- **De XP se toma:** Las prácticas de integración continua (*CI*), desarrollo guiado por pruebas (*TDD* en lógica crítica), propiedad colectiva del código, diseño simple y revisión por pares (*Peer Review*).
 
 ---
 
 ## 9. Prácticas Adoptadas del Proceso
 
 ### 9.1 Aportes de Scrum
-- Sprints de duración fija (2 semanas).
-- Ceremonias estructuradas: Sprint Planning, Daily Scrum (15 min), Sprint Review y Retrospectiva.
-- Unidad de trabajo basada en Historias de Usuario priorizadas en el Backlog.
+- **Sprints de 2 Semanas:** Tres iteraciones para completar las 15 historias del MVP.
+- **Capacidad Fija:** Cuatro historias de usuario por sprint (exactamente 1 HU completa por cada integrante del equipo).
+- **Ceremonias Regulares:**
+  - *Sprint Planning:* Estimación con Planning Poker y compromiso de entrega.
+  - *Daily Scrum:* 15 minutos diarios para alinear avances y destrabar bloqueos.
+  - *Sprint Review:* Demostración del software funcionando al Product Owner sobre la rama de integración.
+  - *Retrospectiva:* Análisis introspectivo y formulación de acuerdos de mejora para la siguiente iteración.
 
 ### 9.2 Aportes de Kanban
-- Tablero visual por fases de desarrollo.
-- Políticas explícitas para cada transición de estado.
-- Límites de trabajo en progreso (WIP = 1 HU activa por integrante).
+- **Tablero Visual por Fases:** En lugar de simples columnas "To Do / Doing / Done", el tablero descompone cada HU en sus 5 fases consecutivas de ingeniería.
+- **Límite WIP (Work In Progress):** Cada desarrollador tiene permitido un límite estricto de **WIP = 1 HU activa**. No se inicia una nueva historia hasta culminar las 5 fases de la actual.
+- **Carril de Bloqueo (*Blocked Lane*):** Cualquier tarea paralizada por causas técnicas o dependencias externas se traslada a la columna de bloqueo para intervención inmediata.
 
-### 9.3 Aportes de XP (Extreme Programming)
-- Integración Continua (validación automática en cada push/PR).
-- Propiedad colectiva del código y revisión por pares (*Peer Review*).
-- Diseño simple y refactorización continua.
-- Pruebas automatizadas sobre criterios de aceptación.
+### 9.3 Aportes de Programación Extrema (XP)
+- **Integración Continua (CI):** Cada pull request a `develop` compila y ejecuta pruebas automáticas en GitHub.
+- **Revisión de Código por Pares (*Peer Review*):** Ningún código entra a la rama común sin al menos una aprobación formal de otro integrante.
+- **Diseño Simple y Refactorización:** El código se escribe priorizando claridad semántica, eliminando duplicidad y optimizando componentes.
+- **Pruebas Automatizadas de Aceptación:** Cada criterio de aceptación (`Dado/Cuando/Entonces`) se traduce en una validación de prueba reproducible.
 
-### 9.4 Uso de IA en el Proceso
-- Asistencia en la generación de pruebas unitarias y esquemas de base de datos.
-- Apoyo en la redacción estructurada de historias de usuario y criterios BDD (`Dado/Cuando/Entonces`).
-- Validación humana obligatoria previa a la integración en código fuente.
+### 9.4 Uso de Inteligencia Artificial en el Proceso
+- **Asistencia en Generación de Estructuras y Casos de Prueba:** Apoyo en la formulación de fixtures de datos, esqueletos de controladores y escenarios de prueba unitaria.
+- **Generación Asistida de Documentación:** Conversión de notas técnicas a formatos estándar Markdown y LaTeX.
+- **Principio Ético y de Validación Humana Obligatoria:** Todo código o texto sugerido por modelos de lenguaje es minuciosamente revisado, comprendido, ejecutado y validado por los desarrolladores antes de integrarse.
 
 ---
 
 ## 10. Roles, Responsabilidades y Forma de Coordinación
 
-### 10.1 Matriz de Roles
-| Integrante | Rol Ágil Principal | Responsabilidades |
+### 10.1 Matriz de Asignación de Roles
+| Integrante | Rol Metodológico | Responsabilidades Principales |
 |---|---|---|
-| **Saire Bustamante, Edmil Jampier** | Product Owner / Dev Full-Stack | Priorización del backlog, aceptación de HU y desarrollo de historias asignadas. |
-| **Pumaccahua Cusihuaman, Christian** | Scrum Master / Dev Full-Stack | Facilitación de ceremonias, eliminación de impedimentos y desarrollo full-stack. |
-| **Quispe Quispe, Celia** | Desarrolladora Full-Stack | Diseño UI/UX, frontend, backend y pruebas de historias asignadas. |
-| **Lozano Llacctahuaman, Medaly** | Desarrolladora Full-Stack | Diseño UI/UX, frontend, backend y pruebas de historias asignadas. |
+| **Saire Bustamante, Edmil Jampier** | **Product Owner** & Dev Full-Stack | Gestión y priorización del Product Backlog, validación de criterios BDD, interacción de requisitos y desarrollo full-stack. |
+| **Barazorda Cuellar, Hector** | **Scrum Master** & Dev Full-Stack | Facilitación de ceremonias ágiles, monitoreo del tablero Kanban, remoción de bloqueos técnicos y desarrollo full-stack. |
+| **Carpio Hermoza, Alex** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU asignadas (Plan, Diseño, Frontend, Backend, Test) y revisión por pares. |
+| **Quispe Mamani, Domingo de Guzman** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU asignadas (Plan, Diseño, Frontend, Backend, Test) y revisión por pares. |
+| **Ticona Jancco, Ronaldo** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU asignadas (Plan, Diseño, Frontend, Backend, Test) y revisión por pares. |
 
-### 10.2 Acuerdos de Coordinación
-- **Daily Scrum:** 15 minutos diarios para sincronización de estado y reporte de bloqueos.
-- **Canal de Comunicación:** Discord / WhatsApp para comunicación asíncrona inmediata.
-- **Repositorio:** Todo cambio pasa por Pull Request a `develop` con aprobación requerida.
+### 10.2 Protocolo de Coordinación del Equipo
+- **Sincronización Diaria (Daily):** 15 minutos en Discord / Google Meet al inicio de cada jornada.
+- **Canal de Comunicación Inmediata:** Grupo técnico en Discord y WhatsApp para alertas de bloqueo y avisos de Pull Requests.
+- **Estrategia Git:** Ramas cortas denominadas `feature/HU-xxx-descripcion`, originadas de `develop` y reintegradas mediante Pull Request con revisión obligatoria.
 
 ---
 
 ## 11. Flujo de Trabajo del Equipo
 
-Cada Historia de Usuario avanza obligatoriamente por un ciclo de **5 Fases**:
+La unidad central de entrega es la **Historia de Usuario (HU)** tratada como un incremento vertical completo. Cada desarrollador recorre obligatoriamente **cinco fases consecutivas**:
 
 ```
-[ Backlog ] -> [ 1. Plan ] -> [ 2. Diseño UI/UX ] -> [ 3. Frontend ] -> [ 4. Backend ] -> [ 5. Test ] -> [ Done ]
-                      |
-              [ ⚠️ Bloqueado ]
+[ BACKLOG ] ──> [ 1. PLAN ] ──> [ 2. DISEÑO UI/UX ] ──> [ 3. FRONTEND ] ──> [ 4. BACKEND ] ──> [ 5. TEST ] ──> [ DONE ]
+                      │                                                                                │
+                      └───────────────────────────────[ ⚠️ BLOQUEADO ]─────────────────────────────────┘
 ```
 
-### 11.1 Estados del Tablero
-1. **Backlog:** Historias priorizadas pendientes de entrar al sprint.
-2. **Plan:** Análisis detallado, definición de criterios de aceptación y Planning Poker.
-3. **Diseño UI/UX:** Prototipos en Figma y flujos de pantalla validados.
-4. **Frontend:** Construcción de vistas e interfaces de usuario reactivas.
-5. **Backend:** Endpoints, servicios de negocio, modelos de BD y seguridad.
-6. **Test:** Ejecución de pruebas unitarias, integración y verificación de criterios de aceptación.
-7. **Done:** Incremento verificado y listo para producción.
-8. **Bloqueado:** Estado transversal para visibilizar impedimentos técnicos o de dependencia.
+### 11.1 Estados del Tablero Kanban
+1. **Backlog:** Historias priorizadas en espera del siguiente sprint.
+2. **1. Plan:** Refinamiento de la HU, formulación de criterios de aceptación BDD y estimación en Planning Poker.
+3. **2. Diseño UI/UX:** Creación y validación de wireframes/pantallas en Figma bajo los lineamientos visuales de CGB Academy.
+4. **3. Frontend:** Construcción de componentes, formularios e interfaces responsivas en React/Next.js.
+5. **4. Backend:** Implementación de endpoints RESTful, controladores, lógica de negocio y migraciones de BD.
+6. **5. Test:** Ejecución de pruebas unitarias, verificación de criterios de aceptación y validación de regresión.
+7. **Done:** Incremento probado, revisado por pares y fusionado en `develop`.
+8. **Bloqueado (Carril Transversal):** Tareas interrumpidas por dependencias de terceros, credenciales o fallos bloqueantes.
 
-### 11.2 Límites WIP (Work in Progress)
-- **Regla:** Cada desarrollador solo puede tener **1 Historia de Usuario activa** en desarrollo a la vez. No se inicia una nueva HU hasta cerrar la actual.
+### 11.2 Límites WIP (Work In Progress)
+- **Límite Estricto:** Máximo **1 HU activa en desarrollo por persona**. Queda prohibido avanzar una segunda historia si la anterior no ha superado la fase de pruebas y alcanzado el estado de *Done*.
 
 ### 11.3 Política de Bloqueo
-- Si una HU no puede avanzar por dependencias externas o fallos técnicos mayores a 24 horas, se traslada a la columna `Bloqueado` y se alerta inmediatamente al Scrum Master en la Daily.
+- Si una historia permanece detenida por más de 24 horas continuas, el desarrollador debe asignarle la etiqueta `Bloqueado` y comunicarlo de inmediato en la Daily Scrum para que el Scrum Master coordine la resolución colaborativa del impedimento.
 
-### 11.4 Definición de Hecho (Definition of Done - DoD)
-Una Historia de Usuario se considera **Done** únicamente cuando:
-- [x] Cumple al 100% los Criterios de Aceptación especificados.
-- [x] El código respeta los estándares de estilo del proyecto.
-- [x] Cuenta con pruebas unitarias/integración aprobadas.
-- [x] Ha pasado la revisión de código por otro integrante (*Peer Review*).
-- [x] Ha sido fusionada en la rama `develop` sin conflictos.
+### 11.4 Definición de Hecho (*Definition of Done* — DoD)
+Para que una Historia de Usuario sea declarada formalmente **Done**, debe satisfacer sin excepciones:
+- [x] Cumplir al 100% todos los Criterios de Aceptación especificados (CA-01, CA-02, etc.).
+- [x] No generar errores de compilación ni advertencias críticas de linting (TypeScript estricto).
+- [x] Contar con pruebas unitarias o de integración automatizadas que pasen exitosamente.
+- [x] Haber sido revisada y aprobada por al menos otro desarrollador (*Peer Review* en GitHub).
+- [x] Estar fusionada e integrada limpiamente en la rama `develop` sin conflictos.
+- [x] Haber sido demostrada y validada por el Product Owner.
 
 ---
 
 ## 12. Incrementos Presentados del Proyecto
 
-### 12.1 Incremento 1 (Sprint 1)
-- **Funcionalidad Desarrollada:** [Describir las funcionalidades construidas durante el primer incremento].
-- **Evidencia de Funcionamiento:** [Adjuntar capturas de pantalla, diagramas y URLs funcionales].
-- **Pruebas o Validaciones Realizadas:** [Resumen de casos de prueba ejecutados y resultados].
-- **Cambios Realizados Respecto al Avance Anterior:** [Ajustes derivados del feedback inicial].
+### 12.1 Incremento 1 (Sprint 1 — Núcleo de Capacitación y Acceso Público)
+El primer incremento del proyecto comprende la construcción del núcleo operativo funcional de la plataforma:
+
+| Código HU | Título de la Historia | Responsable | Resultado Funcional Entregado |
+|---|---|---|---|
+| **HU-001** | Acceder al área interna | [Asignado 1] | Formulario de autenticación, validación de credenciales JWT y redirección por rol (Admin / Colaborador). |
+| **HU-002** | Crear una capacitación | [Asignado 2] | Panel de gestión de capacitaciones, creación de registros en BD y edición de datos generales. |
+| **HU-003** | Construir contenido mediante slides | [Asignado 3] | Editor interactivo de diapositivas con soporte para textos, imágenes, listas, indicaciones y botones. |
+| **HU-004** | Previsualizar y publicar una capacitación | [Asignado 1] | Flujo de estados (Borrador/Publicada), vista previa interactiva y publicación según ámbito (público/interno). |
+| **HU-005** | Explorar capacitaciones públicas | [Asignado 2] | Catálogo abierto para estudiantes y docentes accesible sin necesidad de inicio de sesión. |
+| **HU-006** | Consultar una capacitación pública | [Asignado 3] | Visualizador dinámico de slides interactivos con navegación fluida y ejecución de enlaces/botones. |
+
+- **Evidencias de Funcionamiento:**
+  - Interfaces construidas bajo estándares responsive en Next.js.
+  - Repositorio activo con control de versiones en GitHub (`main` y `develop`).
+  - Base de datos relacional con modelos para `Usuario`, `Rol`, `Capacitación` y `Slide`.
+- **Pruebas y Validaciones Realizadas:**
+  - Pruebas de integración sobre endpoints de autenticación y CRUD de capacitaciones.
+  - Verificación manual de los Criterios de Aceptación (CA-01 a CA-04 de HU-001 a HU-006).
+- **Cambios Respecto al Avance Anterior:**
+  - Consolidación del alcance MVP reduciendo funcionalidades superfluas (eliminación de pasarelas de pago y módulos pesados de video) para asegurar entrega vertical terminada.
 
 ---
 
 ## 13. Métricas y Seguimiento del Proceso
 
-- **Historias de Usuario Planificadas vs. Completadas:** [Gráfico o tabla de cumplimiento].
-- **Velocidad del Equipo:** [Puntos de historia completados en el sprint].
-- **Lead Time y Cycle Time:** [Tiempo medio desde que se inicia una HU hasta su pase a Done].
+El equipo utiliza métricas cuantitativas para evaluar la estabilidad del flujo y la cadencia de entrega:
+
+1. **Velocidad del Sprint (Sprint Velocity):** 4 Historias de Usuario completadas por sprint (equivalente a 100% de la capacidad comprometida del equipo).
+2. **Tiempo de Ciclo (*Cycle Time*):** Tiempo promedio medido desde que una HU pasa de `Plan` a `Done` (meta promedio: 3 a 4 días laborables por HU).
+3. **Tasa de Criterios de Aceptación Superados:** 100% de criterios de aceptación verificados antes del cierre de cada historia.
+4. **Métricas de Calidad de Código:** Cero regresiones críticas en la rama `develop` mediante validación por pares.
 
 ---
 
 ## 14. Acuerdos de Mejora para el Siguiente Incremento
 
-- **Qué funcionó bien:** [Aspectos positivos del sprint].
-- **Qué dificultades se encontraron:** [Obstáculos técnicos u organizacionales].
-- **Acciones correctivas concretas:** [Compromisos aplicables para el siguiente sprint].
+Tras la retrospectiva del Sprint 1, el equipo adoptó los siguientes compromisos para el Sprint 2:
+1. **Anticipación en el Diseño UI/UX:** Validar wireframes en Figma con el Product Owner a más tardar el Día 2 del sprint para evitar retrasos en la fase de frontend.
+2. **Automatización de Pruebas de Endpoints:** Extender los tests de integración con Supertest en backend para cubrir casos de excepción y tokens inválidos.
+3. **Refinamiento de Dependencias entre HUs:** En el Sprint 2 (Áreas, Puestos y Onboarding), coordinar la estructura de la base de datos de manera conjunta durante la sesión de Sprint Planning.
 
 ---
 
 ## 15. Política de Uso de IA y Registro de Uso
 
-### 15.1 Política Ética
-La Inteligencia Artificial se utiliza como herramienta de asistencia técnica, productividad y validación, bajo los siguientes principios:
-1. **Comprensión Total:** Ningún miembro del equipo incorpora código generado por IA sin comprender su lógica y arquitectura.
-2. **Validación Rigurosa:** Todo fragmento asistido por IA debe ser probado y verificado manualmente.
-3. **Transparencia:** Registro documentado de las áreas y propósitos donde se utilizó IA.
+### 15.1 Política Ética de Uso de Inteligencia Artificial
+En el marco de la formación profesional de la UNSAAC, la Inteligencia Artificial se adopta como un copiloto de desarrollo y acelerador de productividad técnica, bajo los siguientes principios inviolables:
+1. **Transparencia y Trazabilidad:** Todo aporte generado por modelos de lenguaje (Claude, ChatGPT, Gemini) debe registrarse en la bitácora del proyecto.
+2. **Autoría Responsable y Comprensión:** Ningún integrante del equipo puede incluir código o documentación sin comprender cabalmente su funcionamiento y justificación técnica.
+3. **Validación Humana Obligatoria:** Todo componente, script de prueba o esquema de BD asistido por IA debe ser revisado, compilado y verificado empíricamente por los desarrolladores.
 
-### 15.2 Registro de Uso
-| Fecha | Herramienta | Propósito / Tarea | Validación Humana Realizada |
+### 15.2 Registro de Uso de Herramientas de IA
+| Fecha | Herramienta Empleada | Propósito / Actividad | Validación Técnica Realizada |
 |---|---|---|---|
-| [Fecha] | Claude / ChatGPT / Gemini | Generación de plantillas de informe y esqueletos de código | Revisión y adaptación a los requerimientos de UNSAAC |
+| 30/09/2026 | Gemini / Claude 3.5 Sonnet | Extracción estructurada y formateo de la especificación funcional CGB Academy | Revisión de coherencia con el documento oficial de 18 páginas y ajuste de alcances. |
+| 30/09/2026 | ChatGPT / Copilot | Generación de la plantilla modular en LaTeX (`informe.tex`) y BibTeX | Compilación exitosa en MiKTeX con `pdflatex` y validación de márgenes e hipervínculos. |
+| 30/09/2026 | Antigravity AI Assistant | Automatización de scripts de verificación de integridad y comandos Git | Ejecución local y verificación de sincronización de ramas en GitHub. |
 
 ---
 
 ## 16. Conclusiones
 
-1. [Conclusión sobre la efectividad del método híbrido adoptado].
-2. [Conclusión sobre los resultados técnicos alcanzados en el software].
-3. [Conclusión sobre la colaboración y dinámica del equipo de desarrollo].
+1. **Eficacia del Método Híbrido:** La combinación de la estructura cadenciada de Scrum, el control visual con límites WIP de Kanban y las prácticas de ingeniería de XP proporciona un equilibrio óptimo entre previsibilidad de entregas, calidad técnica y autonomía para un equipo universitario de cuatro desarrolladores.
+2. **Acotamiento Riguroso del MVP:** La delimitación precisa del alcance de CGB Academy (evitando LMS pesados, pasarelas de pago o hosting de video) asegura que el equipo entregue un producto de software terminado, funcional y de alto valor institucional dentro de los plazos académicos previstos.
+3. **Calidad Integrada por Fases:** Obligar a que cada historia de usuario atraviese consecutivamente las cinco fases (Plan, Diseño UI/UX, Frontend, Backend y Test) previene el fenómeno común del "software a medio terminar" y garantiza que cada incremento cuente con respaldo visual, persistencia de datos y pruebas verificables.
 
 ---
 
 ## 17. Referencias Bibliográficas
 
-- Sommerville, I. (2011). *Ingeniería del Software* (9na ed.). Pearson Educación.
-- Pressman, R. S. (2010). *Ingeniería del Software: Un enfoque práctico* (7ma ed.). McGraw-Hill.
-- Schwaber, K., & Sutherland, J. (2020). *La Guía Scrum: Las reglas del juego*. Scrum.org.
-- Anderson, D. J. (2010). *Kanban: Successful Evolutionary Change for Your Technology Business*. Blue Hole Press.
-- Beck, K. (2000). *Extreme Programming Explained: Embrace Change*. Addison-Wesley.
+- Sommerville, I. (2011). *Ingeniería del Software* (9na ed.). Madrid: Pearson Educación.
+- Pressman, R. S. (2010). *Ingeniería del Software: Un enfoque práctico* (7ma ed.). México D.F.: McGraw-Hill.
+- Schwaber, K., & Sutherland, J. (2020). *La Guía de Scrum: Las reglas del juego*. Scrum.org.
+- Anderson, D. J. (2010). *Kanban: Successful Evolutionary Change for Your Technology Business*. Sequim, WA: Blue Hole Press.
+- Beck, K. (2000). *Extreme Programming Explained: Embrace Change*. Boston: Addison-Wesley.
+- CGB Academy. (2026). *Documento de Requerimientos Funcionales y No Funcionales: Centro de Capacitación e Inducción (Versión 1.0)*. Cusco: Documentación Técnica de Proyecto.
