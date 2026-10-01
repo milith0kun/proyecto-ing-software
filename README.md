@@ -147,7 +147,7 @@ Proyecto Doctores Ing de Sotfware/
 ├── informe/
 │   ├── informe.md                      # Informe académico en Markdown (Metodología, Requisitos, Stack)
 │   ├── informe.tex                     # Código fuente LaTeX estándar UNSAAC
-│   ├── informe.pdf                     # PDF oficial compilado (13 páginas)
+│   ├── informe.pdf                     # PDF oficial compilado (15 páginas con estándares ISO/IEEE/SWEBOK)
 │   └── referencias.bib                 # Bibliografía académica en formato BibTeX
 ├── logos/                              # Identidad visual de CGB Academy, CIIP, GEOMINA y BIOMEDIC
 └── README.md                           # Documentación central y directrices del equipo

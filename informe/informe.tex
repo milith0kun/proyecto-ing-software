@@ -100,12 +100,12 @@ Diseñar, implementar y validar el \textbf{Centro de Capacitación e Inducción 
 
 \subsection{Objetivos Específicos}
 \begin{enumerate}[leftmargin=*]
-    \item Especificar y priorizar 15 historias de usuario funcionales para el MVP con criterios de aceptación verificables en formato BDD (\textit{Dado que / Cuando / Entonces}).
-    \item Diseñar una arquitectura web ligera, desacoplada y responsiva apta para desplegarse sobre una infraestructura VPS objetivo de 2 vCPU y 8 GB de RAM.
+    \item Especificar y priorizar 15 historias de usuario funcionales para el MVP conforme al estándar internacional \textbf{ISO/IEC/IEEE 29148:2018} \cite{iso29148} y el marco INVEST \cite{cohn2004}, con criterios de aceptación verificables en formato BDD (\textit{Dado que / Cuando / Entonces}).
+    \item Diseñar una arquitectura web ligera, desacoplada y responsiva conforme a las áreas de conocimiento de Arquitectura y Construcción de Software de \textbf{SWEBOK V4.0} \cite{swebok2024}, apta para desplegarse sobre una infraestructura VPS objetivo de 2 vCPU y 8 GB de RAM.
     \item Implementar el motor de creación y publicación de capacitaciones mediante \textit{slides} administrables sin requerir conocimientos de programación (\textit{no-code}).
     \item Modelar el módulo organizacional de onboarding relacionando \textit{Área $\rightarrow$ Puesto $\rightarrow$ Ruta $\rightarrow$ Capacitación}, garantizando activación segura y registro automático de progreso.
     \item Incorporar microtests formativos con retroalimentación inmediata orientados al aprendizaje sin penalizaciones punitivas.
-    \item Aplicar un método ágil híbrido combinando la cadencia de Scrum, la visibilidad de Kanban y las disciplinas de ingeniería de XP.
+    \item Aplicar un método ágil híbrido combinando la cadencia de Scrum \cite{scrumguide2020}, el control de flujo Kanban con límites WIP fundamentados en la Ley de Little \cite{little1961, anderson2010} y las disciplinas de ingeniería de XP/TDD \cite{beck2000}.
 \end{enumerate}
 
 \section{Alcance del Sistema}
@@ -124,53 +124,79 @@ Se excluyen deliberadamente para el MVP: venta de cursos, carritos de compra y p
 CGB Academy agrupa la formación especializada de CIIP LATAM, GEOMINA LATAM y BIOMEDIC. Previamente, la inducción de personal dependía de documentos manuales en PDF y explicaciones repetitivas no trazables. La plataforma automatiza la inducción, estandariza procesos corporativos y ofrece a la comunidad externa un centro de consulta claro y accesible en todo momento.
 
 \subsection{Justificación Académica y de Ingeniería}
-El proyecto aplica de manera rigurosa los estándares de la ingeniería de software moderna \cite{sommerville2011, pressman2010}: elicitación formal de requisitos mediante historias de usuario atómicas, diseño de arquitecturas eficientes para recursos limitados, control de versiones bajo GitFlow y aseguramiento continuo de la calidad.
+El proyecto aplica de manera rigurosa los estándares de la ingeniería de software moderna \cite{sommerville2011, pressman2010, swebok2024}: elicitación formal de requisitos mediante historias de usuario atómicas bajo ISO/IEC/IEEE 29148 \cite{iso29148}, diseño de arquitecturas eficientes para recursos limitados, control de versiones bajo GitFlow y aseguramiento continuo de la calidad asistido por TDD.
 
 \section{Contexto del Proyecto y Restricciones}
 \subsection{Contexto Operativo}
 El sistema prestará servicio a nivel nacional e internacional vía web. Los colaboradores realizarán su onboarding en horarios laborales desde sus computadoras de trabajo o dispositivos móviles, mientras que el público externo consultará libremente contenidos informativos sin fricción de registro.
 
-\subsection{Restricciones del Sistema (Requerimientos No Funcionales)}
-\begin{itemize}[leftmargin=*]
-    \item \textbf{RNF-001 (Diseño Responsive):} Adaptación visual a computadoras, tablets y móviles.
-    \item \textbf{RNF-002 (Idioma):} Interfaz disponible únicamente en español para la v1.0.
-    \item \textbf{RNF-003 (Infraestructura):} Capacidad de operar fluidamente en VPS de 2 vCPU y 8 GB de RAM.
-    \item \textbf{RNF-004 (Contenido Ligero):} Priorización de texto e imágenes optimizadas; sin videos pesados.
-    \item \textbf{RNF-005 (Seguridad Interna):} Segmentación estricta de rutas privadas con redirección a login.
-    \item \textbf{RNF-006 (Protección de Credenciales):} Contraseñas cifradas mediante algoritmos robustos y tokens de activación de un solo uso.
-    \item \textbf{RNF-007 (Minimización de Datos):} Registro sin solicitud de datos personales sensibles no indispensables.
-    \item \textbf{RNF-008 (Consistencia Visual):} Sistema de componentes estandarizado con la identidad de CGB Academy.
-    \item \textbf{RNF-009 (Facilidad Administrativa):} Administración de slides mediante interfaz gráfica intuitiva (\textit{no-code}).
-    \item \textbf{RNF-010 (Integridad de Información):} Protección contra eliminación huérfana de áreas o puestos con personal activo.
-\end{itemize}
+\subsection{Restricciones del Sistema (Mapeo Taxonómico ISO/IEC 25010:2023)}
+Los diez Requerimientos No Funcionales (RNF) del sistema se clasifican rigurosamente conforme al modelo de calidad de producto de la norma internacional \textbf{ISO/IEC 25010:2023 (Serie SQuaRE)} \cite{iso25010}:
 
-\section{Tecnologías Utilizadas}
+\begin{table}[H]
+\centering
+\scriptsize
+\begin{tabularx}{\linewidth}{|l|l|l|X|}
+\hline
+\rowcolor{gray!15}
+\textbf{Código} & \textbf{Requerimiento No Funcional} & \textbf{Característica ISO 25010} & \textbf{Métrica de Aceptación / Estándar} \\
+\hline
+\textbf{RNF-001} & Diseño Responsive & Usabilidad / Interacción & Adaptación fluida ($\ge 360\text{px}$) sin pérdida funcional. \\
+\hline
+\textbf{RNF-002} & Idioma de Operación & Usabilidad / Comprensibilidad & Interfaz 100\% en español neutral sin mezclas lingüísticas. \\
+\hline
+\textbf{RNF-003} & Infraestructura Objetivo & Eficiencia de Rendimiento & Despliegue en VPS (2 vCPU / 8 GB RAM) sin degradación de memoria. \\
+\hline
+\textbf{RNF-004} & Contenido Ligero & Eficiencia de Rendimiento & Carga $< 1.5\text{ s}$ en 4G; compresión en WebP/SVG y sin videos pesados. \\
+\hline
+\textbf{RNF-005} & Seguridad de Acceso Interno & Seguridad (Confidencialidad) & Rutas privadas protegidas por sesión; denegación con HTTP 401/403. \\
+\hline
+\textbf{RNF-006} & Protección de Credenciales & Seguridad (NIST SP 800-218 \cite{nist2022}) & Hashing bcrypt ($\text{costo} \ge 10$) y tokens de uso único con caducidad. \\
+\hline
+\textbf{RNF-007} & Minimización de Datos & Privacidad por Diseño & Captura exclusiva de datos indispensables para la inducción corporativa. \\
+\hline
+\textbf{RNF-008} & Consistencia Visual & Mantenibilidad / Modularidad & Uso del sistema de componentes estandarizado de CGB Academy. \\
+\hline
+\textbf{RNF-009} & Facilidad de Administración & Usabilidad / Operabilidad & Gestión intuitiva de slides \textit{no-code} sin edición manual de código. \\
+\hline
+\textbf{RNF-010} & Integridad de Información & Fiabilidad / Consistencia & Restricciones contra borrado huérfano de áreas/puestos con personal activo. \\
+\hline
+\end{tabularx}
+\caption{Mapeo formal de restricciones del sistema según la norma ISO/IEC 25010:2023.}
+\label{tab:rnf_iso}
+\end{table}
+
+\section{Tecnologías Utilizadas y Fundamentación Arquitectónica}
+Bajo el marco del \textbf{SWEBOK V4.0} \cite{swebok2024}, la arquitectura se diseñó aplicando patrones reconocidos de ingeniería de software:
+
 \begin{table}[H]
 \centering
 \small
 \begin{tabularx}{\linewidth}{|l|l|X|}
 \hline
 \rowcolor{gray!15}
-\textbf{Capa / Componente} & \textbf{Tecnología} & \textbf{Justificación Técnica} \\
+\textbf{Capa / Componente} & \textbf{Tecnología} & \textbf{Justificación Técnica y Patrones de Ingeniería} \\
 \hline
-Base de Datos & MongoDB Atlas & Base de datos NoSQL documental en la nube, flexible y óptima para estructuras dinámicas de slides y progreso de onboarding. \\
+Base de Datos & MongoDB Atlas & NoSQL documental en la nube (Cluster0), óptima para estructuras polimórficas de slides y trazas de onboarding. \\
 \hline
-ORM / Acceso a Datos & Prisma ORM & Modelado declarativo con conector MongoDB (\texttt{provider = "mongodb"}), tipado estático seguro y migraciones eficientes. \\
+ORM / Acceso a Datos & Prisma ORM & Modelado tipado con conector MongoDB. Implementa el patrón \textbf{Singleton} \cite{gamma1994} en \texttt{src/lib/prisma.ts} para evitar el agotamiento de sockets en el pool. \\
 \hline
-Arquitectura Full-Stack & Next.js (App Router) & Framework unificado que resuelve el Frontend (React con SSR/CSR) y el Backend (Route Handlers en \texttt{/app/api/...} y Server Actions). \\
+Arquitectura Full-Stack & Next.js 16 (App Router) & Arquitectura limpia unificada: Backend (Route Handlers en \texttt{/app/api/...}) y Frontend (React Server Components y Client Components) con motor \textbf{Turbopack}. \\
 \hline
-Aplicación Web & Next.js Web App & Aplicación responsiva, óptima para SEO y tiempos de carga instantáneos en accesos públicos y privados. \\
+Aplicación Web & Next.js Web App & Optimización para SEO y rendimiento (\textit{Core Web Vitals}) con carga instantánea en navegación pública y privada. \\
 \hline
-Estilos UI & TailwindCSS / CSS Moderno & Sistema de diseño estandarizado basado en utilidades, liviano y consistente con la identidad de CGB Academy. \\
+Estilos UI & TailwindCSS / CSS Moderno & Sistema de diseño basado en utilidades que garantiza consistencia visual y supresión de estilos no utilizados (\textit{purging}). \\
 \hline
-Lenguaje & TypeScript & Tipado estático integral de extremo a extremo (base de datos, endpoints y componentes de UI). \\
+Lenguaje & TypeScript & Tipado estático integral que previene defectos en tiempo de compilación entre modelos, endpoints y vistas. \\
+\hline
+Seguridad de Entorno & Variables \texttt{.env} & Aislamiento de credenciales y secretos fuera del repositorio Git, cumpliendo con el estándar \textbf{NIST SSDF SP 800-218} \cite{nist2022}. \\
 \hline
 Control de Versiones & Git \& GitHub & Ramas: principal (\texttt{edmil-saire}), desarrollo (\texttt{desarrollo}) e individuales por desarrollador. \\
 \hline
-Gestión de Proyecto & Jira / GitHub Projects & Tableros Kanban por fases, sprints, estimación con Planning Poker y métricas de flujo. \\
+Gestión de Proyecto & Jira / GitHub Projects & Tablero Kanban con límites WIP fundamentados, Planning Poker \cite{cohn2004} y métricas de flujo. \\
 \hline
 \end{tabularx}
-\caption{Pila tecnológica seleccionada para CGB Academy.}
+\caption{Pila tecnológica seleccionada con fundamentación arquitectónica SWEBOK v4.0.}
 \label{tab:tecnologias}
 \end{table}
 
@@ -205,8 +231,8 @@ Se ha adoptado un \textbf{Método Ágil Híbrido} \cite{sommerville2011, pressma
 \begin{itemize}[leftmargin=*]
     \item \textbf{Descarte de Cascada:} Se descartó por su inviabilidad ante ajustes dinámicos de interfaz y requerimientos en sprints de corta duración.
     \item \textbf{Estructura Base Scrum \cite{scrumguide2020}:} Provee la cadencia de trabajo en sprints de 2 semanas, ceremonias de planificación, Daily, Review y Retrospectiva.
-    \item \textbf{Control de Flujo Kanban \cite{anderson2010}:} Aporta visibilidad en tiempo real mediante un tablero descompuesto en fases, límites de trabajo en progreso (WIP) y gestión explícita de bloqueos.
-    \item \textbf{Prácticas de XP \cite{beck2000}:} Garantiza la calidad técnica mediante integración continua, pruebas automatizadas y revisión de código entre pares.
+    \item \textbf{Control de Flujo Kanban \cite{anderson2010, kanbanguide2025}:} Aporta visibilidad en tiempo real mediante un tablero de cuatro columnas, límites de trabajo en progreso (WIP) justificados en la teoría de colas y gestión explícita de bloqueos.
+    \item \textbf{Prácticas de XP y TDD \cite{beck2000, martin2008, fowler2018}:} Garantiza la calidad técnica mediante desarrollo guiado por pruebas, integración continua y refactorización orientada a la contención de la deuda técnica.
 \end{itemize}
 
 \section{Prácticas Adoptadas del Proceso}
@@ -285,17 +311,25 @@ El flujo se organiza formalmente en cuatro estados con límites explícitos de t
 \label{tab:kanban}
 \end{table}
 
-\subsection{Justificación de los Límites WIP para 3 Desarrolladores}
+\subsection{Justificación Matemática de los Límites WIP (Ley de Little)}
+Desde la teoría matemática de colas, el comportamiento del flujo de trabajo se fundamenta en la \textbf{Ley de Little} \cite{little1961, anderson2010}:
+\begin{equation}
+\text{WIP} = \text{Throughput (TH)} \times \text{Cycle Time (CT)} \quad \Longrightarrow \quad \text{Cycle Time (CT)} = \frac{\text{WIP}}{\text{Throughput (TH)}}
+\end{equation}
+Donde el \textit{Throughput} representa la velocidad de entrega del equipo de 3 desarrolladores activos ($\text{TH}$ cuasi-constante). Matemáticamente, cualquier aumento descontrolado del $\text{WIP}$ dilata en proporción directa el tiempo de ciclo (\textit{Cycle Time}), generando esperas y multitarea ineficiente.
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Desarrollo = 3:} Dado que el equipo cuenta con 3 integrantes en el rol Development, la regla es estricta: \textbf{1 desarrollador = máximo 1 HU activa en Desarrollo}. Esto evita la fragmentación de atención y asegura culminación vertical antes de iniciar otra tarea.
-    \item \textbf{Revisión = 2:} Previene la formación de cuellos de botella en la integración. Si la columna se satura (2/2), ningún desarrollador puede enviar más código a Revisión; la prioridad absoluta del equipo pasa a ser colaborar en revisar y fusionar las historias pendientes.
+    \item \textbf{Desarrollo = 3:} Dado que el equipo cuenta con 3 integrantes en el rol Development, la regla es estricta: \textbf{1 desarrollador = máximo 1 HU activa en Desarrollo}. Previene la sobreproducción (\textit{Muda} en Lean) y focaliza el esfuerzo en entregas verticales terminadas.
+    \item \textbf{Revisión = 2:} Actúa como \textit{buffer} óptimo de aseguramiento de la calidad. Si la columna se satura (2/2), la prioridad del equipo cambia inmediatamente: suspender el inicio de nuevo trabajo y abocarse colaborativamente a revisar y fusionar las historias pendientes (\textit{``Stop starting, start finishing''}).
 \end{itemize}
 
 \subsection{Unidad de Flujo y Subtareas Técnicas TDD}
-La tarjeta que transita por el tablero es la \textbf{Historia de Usuario} completa. Internamente en Jira, cada HU desglosa las 4 subtareas técnicas del ciclo TDD:
-\begin{center}
-\texttt{[T1: Pruebas / RED]} $\rightarrow$ \texttt{[T2: Implementación / GREEN]} $\rightarrow$ \texttt{[T3: Refactorización]} $\rightarrow$ \texttt{[T4: Validación e Integración]}
-\end{center}
+La tarjeta que transita por el tablero es la \textbf{Historia de Usuario} completa conforme a \textbf{ISO/IEC/IEEE 29148:2018} \cite{iso29148}. Internamente en Jira, cada HU desglosa cuatro subtareas técnicas obligatorias bajo el ciclo TDD postulado por Beck \cite{beck2000} y los niveles de prueba de ISTQB \cite{istqb2023}:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{T1 -- Pruebas / RED:} Diseño y codificación de pruebas unitarias/integración que inicialmente fallan por ausencia de código (prevención de defectos por diseño).
+    \item \textbf{T2 -- Implementación / GREEN:} Codificación mínima necesaria para superar las pruebas con éxito (diseño simple y principio YAGNI).
+    \item \textbf{T3 -- Refactorización:} Optimización de diseño, componentes Next.js y consultas Prisma sin alterar el comportamiento observable, mitigando la deuda técnica \cite{martin2008, fowler2018}.
+    \item \textbf{T4 -- Validación e Integración:} Verificación exhaustiva de criterios BDD (\textit{Dado/Cuando/Entonces}) y preparación del Pull Request hacia \texttt{desarrollo}.
+\end{enumerate}
 
 \subsection{Políticas Explícitas de Transición}
 \begin{itemize}[leftmargin=*]
@@ -366,9 +400,9 @@ Una HU es declarada \textit{Done} si supera el 100\% de criterios de aceptación
 
 \section{Conclusiones}
 \begin{enumerate}[leftmargin=*]
-    \item El método híbrido garantiza que cada entrega sea un incremento vertical completo con diseño, backend, frontend y pruebas.
-    \item La delimitación estricta del MVP de CGB Academy previene la dispersión del esfuerzo técnico y asegura la entrega a tiempo.
-    \item La adopción ética de IA incrementa sustancialmente la productividad sin comprometer el rigor ingenieril ni el aprendizaje formativo.
+    \item \textbf{Eficacia del Enfoque Híbrido:} La integración de la cadencia de Scrum, la limitación del WIP de Kanban fundamentada en la Ley de Little y las prácticas de ingeniería de XP/TDD proporciona un flujo continuo y predecible para el equipo de desarrollo.
+    \item \textbf{Rigor en la Ingeniería de Requisitos y Calidad:} La formulación de historias de usuario bajo el estándar ISO/IEC/IEEE 29148 y el marco INVEST, combinada con la clasificación taxonómica de atributos de calidad ISO/IEC 25010:2023, asegura un producto robusto y verificable.
+    \item \textbf{Aseguramiento de Calidad y Deuda Técnica:} El ciclo TDD con 4 subtareas técnicas obligatorias y el patrón Singleton en Prisma Client garantizan un código modular, mantenible y libre de sobrecargas de conexión en la infraestructura objetivo.
 \end{enumerate}
 
 \bibliographystyle{plain}

@@ -43,12 +43,12 @@
 Desarrollar e implementar el **Centro de Capacitación e Inducción CGB Academy**, una plataforma web orientada a la capacitación introductoria de colaboradores internos y a la orientación pública de estudiantes y docentes, facilitando la creación ágil de contenidos estructurados en diapositivas interactivas (*slides*), la gestión jerárquica de rutas de aprendizaje organizacional y el seguimiento formativo del avance sin incurrir en la sobrecarga de un LMS tradicional.
 
 ### 2.2 Objetivos Específicos
-1. **Especificar y priorizar los requerimientos funcionales y no funcionales** del MVP mediante 15 historias de usuario redactadas en formato estándar (*Como/Quiero/Para*) y sustentadas en criterios de aceptación verificables (*Dado/Cuando/Entonces*).
-2. **Diseñar una arquitectura web ligera y desacoplada** para frontend y backend, optimizada para desplegarse en infraestructura VPS de recursos controlados (2 vCPU y 8 GB de RAM) priorizando componentes interactivos ligeros.
-3. **Implementar el motor de creación y visualización de capacitaciones mediante slides**, permitiendo la administración no-code de contenidos de inducción tanto para el ámbito público como privado.
+1. **Especificar y priorizar los requerimientos funcionales y no funcionales** del MVP conforme al estándar internacional **ISO/IEC/IEEE 29148:2018** y bajo los atributos del marco **INVEST** (*Mike Cohn, 2004*), estructurando 15 historias de usuario atómicas con criterios de aceptación verificables en formato BDD (*Dado que / Cuando / Entonces*).
+2. **Diseñar una arquitectura web ligera y desacoplada** para frontend y backend alineada con las áreas de conocimiento de Arquitectura y Construcción de Software de **SWEBOK V4.0 (IEEE, 2024)**, optimizada para ejecutarse en infraestructura VPS de recursos controlados (2 vCPU y 8 GB de RAM).
+3. **Implementar el motor de creación y visualización de capacitaciones mediante slides**, permitiendo la administración intuitiva (*no-code*) de contenidos de inducción tanto para el ámbito público como privado.
 4. **Construir el módulo de onboarding organizacional jerárquico**, modelando la relación *Área $\rightarrow$ Puesto $\rightarrow$ Ruta de Onboarding $\rightarrow$ Capacitaciones*, garantizando la activación segura de colaboradores y la persistencia automática de su progreso.
 5. **Incorporar microtests formativos de evaluación inmediata**, brindando retroalimentación pedagógica al colaborador sin penalizaciones de puntajes punitivos.
-6. **Aplicar un método de desarrollo ágil híbrido (Scrum base, Kanban visual y prácticas técnicas de XP)** con integración continua, revisión de código por pares y validación asistida por Inteligencia Artificial.
+6. **Aplicar un método de desarrollo ágil híbrido (Scrum base, Kanban visual con límites WIP y prácticas técnicas de XP/TDD)** respaldado matemáticamente por la teoría de colas (Ley de Little) e inspección continua de código.
 
 ---
 
@@ -105,34 +105,40 @@ Desde la perspectiva de la Ingeniería de Software (*Sommerville, 2011; Pressman
 ### 5.1 Contexto Operativo
 La plataforma operará en la nube, consumida por usuarios distribuidos geográficamente en Perú y Latinoamérica. Los usuarios públicos accederán principalmente desde computadoras personales y smartphones en busca de guías rápidas, mientras que los colaboradores accederán durante su jornada laboral para cumplir con sus rutas de inducción institucional.
 
-### 5.2 Restricciones del Sistema
-- **RNF-001 (Diseño Responsive):** Adaptación fluida a computadoras de escritorio, tablets y dispositivos móviles.
-- **RNF-002 (Idioma):** Interfaz disponible íntegramente en español sin soporte de internacionalización inicial.
-- **RNF-003 (Infraestructura Objetivo):** Capacidad de operar en una VPS de **2 vCPU y 8 GB de RAM** bajo contenedores Docker o servicios Node.js livianos.
-- **RNF-004 (Contenido Ligero):** Arquitectura sin streaming de video propio ni gestor de archivos binarios pesados; priorización de texto e imágenes optimizadas en WebP/SVG.
-- **RNF-005 (Seguridad de Acceso Interno):** Segmentación estricta de rutas privadas protegidas por tokens de sesión; redirección forzada de usuarios anónimos al login.
-- **RNF-006 (Protección de Credenciales):** Almacenamiento no legible de credenciales (hashing robusto con bcrypt/argon2) y tokens de activación de un solo uso.
-- **RNF-007 (Minimización de Datos):** Registro simplificado sin solicitud obligatoria de DNI, teléfono o dirección; únicamente nombres, correo institucional, rol y asignaciones.
-- **RNF-008 (Consistencia Visual):** Uso de un sistema de componentes prediseñados bajo la identidad de marca de CGB Academy para evitar el diseño ad-hoc de pantallas.
-- **RNF-009 (Facilidad de Administración):** Creación y ordenamiento de slides mediante interfaz gráfica intuitiva (*no-code*).
-- **RNF-010 (Integridad de Información):** Restricciones de integridad referencial para impedir el borrado huérfano de áreas o puestos con colaboradores activos.
+### 5.2 Restricciones del Sistema (Mapeo Taxonómico ISO/IEC 25010:2023)
+
+Para asegurar el rigor en el aseguramiento de la calidad, los diez Requerimientos No Funcionales (RNF) del sistema se clasifican formalmente bajo el modelo de calidad de producto de la norma internacional **ISO/IEC 25010:2023 (Serie SQuaRE)**:
+
+| Código RNF | Requerimiento No Funcional | Característica ISO/IEC 25010:2023 | Subcaracterística | Justificación y Métrica de Cumplimiento |
+|---|---|---|---|---|
+| **RNF-001** | **Diseño Responsive** | Capacidad de Interacción (Usabilidad) | Flexibilidad de Interfaz de Usuario | Adaptación fluida a resoluciones móviles ($\ge 360\text{px}$), tablets y desktop sin pérdida de funcionalidad ni solapamiento. |
+| **RNF-002** | **Idioma de Operación** | Capacidad de Interacción (Usabilidad) | Reconocimiento de Idoneidad / Comprensibilidad | Interfaz y contenidos disponibles 100% en español neutral, sin mezclas de idioma en mensajes del sistema. |
+| **RNF-003** | **Infraestructura Objetivo** | Eficiencia de Rendimiento | Utilización de Recursos / Capacidad | Operación fluida en servidor VPS de 2 vCPU y 8 GB de RAM bajo contenedores o runtime Node.js sin degradación de memoria. |
+| **RNF-004** | **Contenido Ligero** | Eficiencia de Rendimiento | Comportamiento Temporal | Tiempo de carga inicial $< 1.5\text{ s}$ en conexiones 4G; prohibición de video pesado y compresión de imágenes a formato WebP/SVG. |
+| **RNF-005** | **Seguridad de Acceso Interno** | Seguridad | Confidencialidad y Control de Acceso | Segmentación estricta de rutas privadas protegidas por sesión/token; redirección inmediata con código HTTP 401/403 para usuarios anónimos. |
+| **RNF-006** | **Protección de Credenciales** | Seguridad (NIST SSDF SP 800-218) | Integridad y Autenticidad | Hashing unidireccional no reversible de contraseñas (bcrypt con factor de costo $\ge 10$) y tokens de activación de un solo uso con caducidad temporal. |
+| **RNF-007** | **Minimización de Datos** | Seguridad / Privacidad por Diseño | Confidencialidad de Información Personal | Captura exclusiva de datos indispensables para la inducción (nombre, correo institucional y rol), descartando datos sensibles (DNI, teléfono, dirección). |
+| **RNF-008** | **Consistencia Visual** | Mantenibilidad / Usabilidad | Modularidad / Consistencia Estética | Empleo estricto de un sistema de componentes prediseñado bajo la identidad de marca de CGB Academy, evitando estilos ad-hoc aislados. |
+| **RNF-009** | **Facilidad de Administración** | Capacidad de Interacción (Usabilidad) | Operabilidad / Aprendizaje | Creación, ordenamiento y edición de slides mediante interfaz gráfica intuitiva (*no-code*) sin requerir edición manual de código. |
+| **RNF-010** | **Integridad de Información** | Fiabilidad | Tolerancia a Fallos / Consistencia | Reglas de integridad referencial para bloquear la eliminación accidental o huérfana de áreas o puestos que mantengan colaboradores activos. |
 
 ---
 
-## 6. Tecnologías Utilizadas
+## 6. Tecnologías Utilizadas y Fundamentación Arquitectónica
 
-De acuerdo a la arquitectura técnica definida para la plataforma (Frontend, Backend, Prisma, MongoDB Atlas y Next.js App), se seleccionó la siguiente pila tecnológica:
+Conforme a las directrices de las Áreas de Conocimiento de **Arquitectura de Software (KA 2)** y **Construcción de Software (KA 4)** de **SWEBOK V4.0 (IEEE, 2024)**, la selección tecnológica responde a criterios de mantenibilidad, eficiencia y desacoplamiento:
 
-| Capa / Componente | Tecnología Seleccionada | Justificación Técnica de Selección |
+| Capa / Componente | Tecnología Seleccionada | Justificación Técnica de Selección y Patrones de Ingeniería |
 |---|---|---|
-| **Base de Datos** | **MongoDB Atlas** | Base de datos NoSQL documental en la nube; flexible, altamente escalable y óptima para almacenar la estructura dinámica de slides enriquecidos y progresos. |
-| **ORM / Acceso a Datos** | **Prisma ORM** | Modelado declarativo de esquemas (`schema.prisma` con provider `mongodb`), generación de cliente fuertemente tipado en TypeScript y seguridad en consultas. |
-| **Arquitectura Full-Stack** | **Next.js (App Router)** | Framework unificado que resuelve tanto el **Frontend** (React con Server y Client Components) como el **Backend** (Route Handlers `/app/api/...` y Server Actions). |
-| **Aplicación Web (App)** | **Next.js Web App** | Aplicación web responsiva, optimizada para SEO y tiempos de carga instantáneos en accesos públicos e internos. |
-| **Estilos y Maquetación** | TailwindCSS / CSS Moderno | Diseño responsive basado en utilidades, coherente con la identidad visual corporativa de CGB Academy. |
-| **Lenguaje de Desarrollo** | TypeScript | Tipado estático de extremo a extremo (base de datos, API y componentes de interfaz). |
-| **Control de Versiones** | Git & GitHub | Ramificación con rama principal `edmil-saire`, rama de integración `desarrollo` y ramas individuales por desarrollador. |
-| **Gestión Ágil** | Jira / GitHub Projects | Backlog de historias de usuario, tablero Kanban por fases y seguimiento de métricas ágiles. |
+| **Base de Datos** | **MongoDB Atlas** | Base de datos NoSQL documental en la nube (Cluster0); óptima para esquemas polimórficos de slides enriquecidos y persistencia de trazas de avance de onboarding en formato BSON/JSON. |
+| **ORM / Acceso a Datos** | **Prisma ORM** | Capa de abstracción de datos fuertemente tipada en TypeScript (`provider = "mongodb"`). Implementa el patrón **Singleton** (*Gamma et al., 1994*) en `src/lib/prisma.ts` para reutilizar la conexión global y evitar la saturación de sockets en el pool ante recargas rápidas (*Fast Refresh*). |
+| **Arquitectura Full-Stack** | **Next.js 16 (App Router)** | Framework unificado que materializa el patrón de arquitectura limpia: Backend mediante Route Handlers (`/app/api/...`) y Server Actions, y Frontend responsivo combinando React Server Components (RSC) y Client Components. Compilación ultrarrápida con el motor **Turbopack**. |
+| **Aplicación Web (App)** | **Next.js Web App** | Arquitectura orientada a rendimiento y SEO (*Core Web Vitals*), optimizando el tiempo de primera pintura con contenido (*First Contentful Paint*) para la orientación pública e inducción privada. |
+| **Estilos y Maquetación** | TailwindCSS / CSS Moderno | Sistema de diseño basado en clases utilitarias que previene la sobrecarga de hojas de estilo (*dead code elimination*) y garantiza consistencia visual corporativa. |
+| **Lenguaje de Desarrollo** | TypeScript | Tipado estático de extremo a extremo que previene errores de tipo en tiempo de compilación entre modelos de base de datos, APIs y componentes de interfaz. |
+| **Seguridad de Configuración** | Variables de Entorno (`.env`) | Gestión segura de credenciales y URIs de base de datos protegidas por `.gitignore`, cumpliendo con las pautas de prevención de fuga de secretos del marco **NIST SSDF SP 800-218**. |
+| **Control de Versiones** | Git & GitHub | Arquitectura de ramas con rama principal `edmil-saire`, rama de integración `desarrollo` y ramas personales por desarrollador. |
+| **Gestión Ágil** | Jira / GitHub Projects | Tablero Kanban con límites WIP, estimación con Planning Poker (*Mike Cohn, 2004*) y seguimiento de métricas DORA y Cycle Time. |
 
 ---
 
@@ -271,36 +277,48 @@ $$\text{TO DO} \longrightarrow \text{DESARROLLO [WIP 3]} \longrightarrow \text{R
 
 ### 11.2 Justificación de los Límites WIP para el Equipo de 3 Desarrolladores
 
+#### Fundamentación Matemática Mediante la Ley de Little
+Desde la teoría matemática de colas (*Queuing Theory*), el comportamiento del flujo de trabajo se rige rigurosamente por la **Ley de Little** (*John D. C. Little, 1961*), adaptada a la ingeniería de software ágil (*David J. Anderson, 2010*):
+
+$$\text{WIP} = \text{Throughput (TH)} \times \text{Cycle Time (CT)} \quad \Longrightarrow \quad \text{Cycle Time (CT)} = \frac{\text{WIP}}{\text{Throughput (TH)}}$$
+
+Donde:
+- **$\text{WIP}$ (Work In Progress):** Cantidad de Historias de Usuario admitidas simultáneamente en el sistema.
+- **$\text{Throughput (TH)}$:** Tasa de entrega o velocidad efectiva del equipo (historias terminadas por unidad de tiempo).
+- **$\text{Cycle Time (CT)}$:** Tiempo promedio que tarda una historia desde que inicia su implementación hasta ser desplegada y aceptada.
+
+Bajo una capacidad productiva fija de 3 desarrolladores ($\text{TH}$ cuasi-constante), cualquier incremento descontrolado del $\text{WIP}$ genera un aumento lineal directo en el $\text{Cycle Time}$, disparando la multitarea, las esperas en cola y la probabilidad de defectos por cambio de contexto (*context switching*). Limitar el $\text{WIP}$ es la única garantía matemática de mantener un $\text{Cycle Time}$ mínimo, predecible y estable.
+
 #### ¿Por qué Desarrollo = 3?
-El equipo de trabajo cuenta con **3 integrantes en el rol de Development** dedicados a la construcción de las historias de usuario de cada Sprint (mientras que los roles de Product Owner y Scrum Master facilitan la gestión, refinamiento y apoyo técnico). La regla operativa fundamental es:
+El equipo cuenta con **3 integrantes en el rol de Development** dedicados a la construcción técnica de las historias de usuario de cada Sprint (mientras que los roles de Product Owner y Scrum Master facilitan la priorización, refinamiento, gestión de bloqueos y apoyo técnico). La regla operativa fundamental es:
 
 $$\mathbf{1\text{ Desarrollador} = \text{Máximo 1 HU activa en Desarrollo}}$$
 
-Esta política elimina el cambio de contexto (*context switching*), la multitarea ineficiente y la acumulación de trabajo a medio terminar. Cada desarrollador asume una única historia de principio a fin hasta enviarla a Revisión.
+Esta política previene la sobreproducción (*Muda* en filosofía Lean), garantizando que el esfuerzo intelectual esté focalizado al 100% en una sola entrega de valor vertical a la vez.
 
 #### ¿Por qué Revisión = 2?
-En equipos de desarrollo ágil pequeños, la fase de revisión suele convertirse en un cuello de botella silencioso. Un límite de $\text{WIP} = 1$ resultaría demasiado restrictivo y bloquearía a los desarrolladores al terminar su historia, mientras que un límite sin control permitiría que el código pendiente de integración se acumule indefinidamente.
+En sistemas de colas en serie, la fase de revisión representa una compuerta de calidad que previene la entrada de regresiones a producción. Si se asignara un límite excesivamente restrictivo ($\text{WIP} = 1$), cualquier demora mínima en una revisión por pares paralizaría de inmediato a los desarrolladores que terminan su codificación. Por el contrario, un límite abierto ($\text{WIP} \ge 3$) causaría que las historias se acumulen sin integrar, desfasando las pruebas conjuntas.
 
-Con $\text{WIP} = 2$ en Revisión se logra el equilibrio perfecto. Si en algún momento la columna alcanza su tope ($\text{Revisión} = 2/2$), **la prioridad de todo el equipo cambia de inmediato**:
-$$\textbf{"Dejar de iniciar trabajo nuevo y ayudar a terminar la revisión e integración existente"}$$
-Ningún desarrollador puede ingresar una tercera historia a Revisión hasta que se libere un espacio, materializando el principio rector de Kanban: *"Stop starting, start finishing"*.
+Con $\text{WIP} = 2$ en Revisión se alcanza el punto de amortiguamiento (*buffer*) óptimo. Si la columna se satura ($\text{Revisión} = 2/2$), **la política del equipo altera dinámicamente la prioridad operativa**:
+$$\textbf{"Detener el inicio de nuevas historias y abocarse colaborativamente a revisar, probar e integrar las historias en cola"}$$
+Esto materializa el axioma de ingeniería Lean: *"Stop starting, start finishing"*.
 
 ---
 
 ### 11.3 Unidad de Flujo: Las Historias de Usuario
-En el tablero Kanban, la tarjeta que se mueve a través de las columnas es la **Historia de Usuario (HU)** completa (por ejemplo, *HU-002: Crear una capacitación*). **No se crean tarjetas separadas para cada paso técnico**. La HU representa el incremento vertical de valor que viaja desde *TO DO* hasta *DONE*.
+En el tablero Kanban, la tarjeta que se mueve a través de las columnas es la **Historia de Usuario (HU)** completa (por ejemplo, *HU-002: Crear una capacitación*). Conforme a **ISO/IEC/IEEE 29148:2018**, la HU representa el incremento vertical de valor que viaja desde *TO DO* hasta *DONE*. **No se crean tarjetas separadas para cada paso técnico**.
 
 ---
 
 ### 11.4 Las 4 Subtareas Técnicas TDD dentro de cada Historia de Usuario
-Para asegurar la excelencia técnica requerida por la Programación Extrema (XP), cada Historia de Usuario en Jira contiene internamente **cuatro subtareas técnicas estructuradas bajo el ciclo TDD**:
+Para materializar las disciplinas de la Programación Extrema (XP) postuladas por *Kent Beck (2000, 2002)* y los estándares de verificación y prueba de **ISTQB CTFL v4.0 (2023)**, cada Historia de Usuario en Jira contiene internamente **cuatro subtareas técnicas estructuradas bajo el ciclo TDD**:
 
-| Subtarea Técnica | Actividad Concreta en el Ciclo TDD |
-|---|---|
-| **T1 — Pruebas / RED** | Diseñar y programar pruebas automatizadas unitarias/integración que inicialmente fallan por no existir la implementación. |
-| **T2 — Implementación / GREEN** | Desarrollar el código mínimo y necesario para que todas las pruebas pasen exitosamente a verde. |
-| **T3 — Refactorización** | Limpiar el diseño, modularizar componentes en Next.js, optimizar consultas de Prisma y eliminar código redundante sin alterar el comportamiento. |
-| **T4 — Validación e integración** | Ejecutar la suite completa de pruebas, contrastar con los criterios de aceptación BDD (*Dado/Cuando/Entonces*) y preparar el Pull Request hacia la rama `desarrollo`. |
+| Subtarea Técnica | Actividad Concreta en el Ciclo TDD | Fundamento de Ingeniería de Calidad |
+|---|---|---|
+| **T1 — Pruebas / RED** | Diseñar y codificar pruebas unitarias y de integración que inicialmente fallan por ausencia de implementación. | Prevención de defectos por diseño (*Defect Prevention* - ISTQB) y especificación ejecutable. |
+| **T2 — Implementación / GREEN** | Desarrollar el código mínimo y necesario para que la suite de pruebas pase exitosamente a verde. | Verificación de funcionalidad básica y eliminación del sobre-diseño (*YAGNI - You Aren't Gonna Need It*). |
+| **T3 — Refactorización** | Reestructurar el código interno sin alterar su comportamiento observable: modularizar en Next.js, optimizar consultas Prisma y suprimir duplicidades. | Control riguroso de la Deuda Técnica (*Martin Fowler, 2018; Robert C. Martin, 2008*) para mantener la mantenibilidad ISO 25010. |
+| **T4 — Validación e integración** | Ejecutar la suite completa de pruebas de regresión, contrastar con los criterios de aceptación BDD (*Dado/Cuando/Entonces*) y preparar el Pull Request hacia la rama `desarrollo`. | Validación de integración continua (*Continuous Integration*) y cumplimiento de la Definition of Done. |
 
 En el tablero de Jira, la tarjeta principal visualmente visible es la **HU**, y a medida que el desarrollador completa sus subtareas $T1 \rightarrow T2 \rightarrow T3 \rightarrow T4$, la historia transita fluidamente de Desarrollo a Revisión.
 
@@ -502,17 +520,27 @@ En el marco de la formación profesional de la UNSAAC, la Inteligencia Artificia
 
 ## 16. Conclusiones
 
-1. **Eficacia del Método Híbrido:** La combinación de la estructura cadenciada de Scrum, el control visual con límites WIP de Kanban y las prácticas de ingeniería de XP proporciona un equilibrio óptimo entre previsibilidad de entregas, calidad técnica y autonomía para un equipo universitario de cuatro desarrolladores.
-2. **Acotamiento Riguroso del MVP:** La delimitación precisa del alcance de CGB Academy (evitando LMS pesados, pasarelas de pago o hosting de video) asegura que el equipo entregue un producto de software terminado, funcional y de alto valor institucional dentro de los plazos académicos previstos.
-3. **Calidad Integrada por Fases:** Obligar a que cada historia de usuario atraviese consecutivamente las cinco fases (Plan, Diseño UI/UX, Frontend, Backend y Test) previene el fenómeno común del "software a medio terminar" y garantiza que cada incremento cuente con respaldo visual, persistencia de datos y pruebas verificables.
+1. **Eficacia del Método Híbrido:** La sinergia entre la cadencia predecible de Scrum (sprints de 2 semanas), la limitación matemática del trabajo en curso de Kanban (Ley de Little con $\text{WIP} = 3$ en Desarrollo y $\text{WIP} = 2$ en Revisión) y la disciplina técnica de XP/TDD proporciona un flujo continuo, minimiza el tiempo de ciclo y previene la dispersión del equipo de cinco integrantes.
+2. **Delimitación Rigurosa del MVP bajo Estándares:** La especificación de requerimientos conforme a **ISO/IEC/IEEE 29148:2018** y los atributos **INVEST**, sumada a la clasificación taxonómica de restricciones bajo **ISO/IEC 25010:2023**, asegura un producto de software enfocado, técnicamente verificable y de alto valor institucional sin incurrir en deuda técnica temprana.
+3. **Calidad Integrada Mediante Ciclo TDD y Políticas Explícitas:** Estructurar cada Historia de Usuario en las cuatro subtareas técnicas de ingeniería ($T1$ Pruebas/RED, $T2$ Implementación/GREEN, $T3$ Refactorización y $T4$ Validación e Integración) garantiza que ningún incremento alcance el estado de *Done* sin respaldo automatizado, persistencia comprobada en MongoDB Atlas y validación por pares en GitHub.
 
 ---
 
 ## 17. Referencias Bibliográficas
 
-- Sommerville, I. (2011). *Ingeniería del Software* (9na ed.). Madrid: Pearson Educación.
-- Pressman, R. S. (2010). *Ingeniería del Software: Un enfoque práctico* (7ma ed.). México D.F.: McGraw-Hill.
-- Schwaber, K., & Sutherland, J. (2020). *La Guía de Scrum: Las reglas del juego*. Scrum.org.
 - Anderson, D. J. (2010). *Kanban: Successful Evolutionary Change for Your Technology Business*. Sequim, WA: Blue Hole Press.
 - Beck, K. (2000). *Extreme Programming Explained: Embrace Change*. Boston: Addison-Wesley.
 - CGB Academy. (2026). *Documento de Requerimientos Funcionales y No Funcionales: Centro de Capacitación e Inducción (Versión 1.0)*. Cusco: Documentación Técnica de Proyecto.
+- Cohn, M. (2004). *User Stories Applied: For Agile Software Development*. Boston: Addison-Wesley Professional.
+- Fowler, M. (2018). *Refactoring: Improving the Design of Existing Code* (2da ed.). Boston: Addison-Wesley Professional.
+- Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). *Design Patterns: Elements of Reusable Object-Oriented Software*. Reading, MA: Addison-Wesley.
+- IEEE Computer Society. (2024). *Guide to the Software Engineering Body of Knowledge (SWEBOK Guide), Version 4.0*. Piscataway, NJ: IEEE Computer Society Standard.
+- International Organization for Standardization. (2018). *ISO/IEC/IEEE 29148:2018 Systems and Software Engineering — Life Cycle Processes — Requirements Engineering*. Ginebra: ISO.
+- International Organization for Standardization. (2023). *ISO/IEC 25010:2023 Systems and Software Engineering — Systems and Software Quality Requirements and Evaluation (SQuaRE) — Product Quality Model*. Ginebra: ISO.
+- ISTQB. (2023). *Certified Tester Foundation Level (CTFL) Syllabus Version 4.0*. International Software Testing Qualifications Board.
+- Little, J. D. C. (1961). A Proof for the Queuing Formula: $L = \lambda W$. *Operations Research*, 9(3), 383–387. https://doi.org/10.1287/opre.9.3.383
+- Martin, R. C. (2008). *Clean Code: A Handbook of Agile Software Craftsmanship*. Upper Saddle River, NJ: Prentice Hall.
+- Pressman, R. S. (2010). *Ingeniería del Software: Un enfoque práctico* (7ma ed.). México D.F.: McGraw-Hill.
+- Schwaber, K., & Sutherland, J. (2020). *La Guía de Scrum: Las reglas del juego*. Scrum.org.
+- Sommerville, I. (2011). *Ingeniería del Software* (9na ed.). Madrid: Pearson Educación.
+- Souppaya, M., Scarfone, K., & Dodson, D. (2022). *Secure Software Development Framework (SSDF) Version 1.1: Recommendations for Mitigating the Risk of Software Vulnerabilities*. NIST Special Publication 800-218. https://doi.org/10.6028/NIST.SP.800-218
