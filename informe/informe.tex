@@ -213,14 +213,30 @@ Se ha adoptado un \textbf{Método Ágil Híbrido} \cite{sommerville2011, pressma
 \subsection{Aportes de Scrum}
 Sprints de 2 semanas con capacidad fija de 4 Historias de Usuario por iteración (1 HU asignada de principio a fin a cada desarrollador). Ceremonias obligatorias: Sprint Planning, Daily Scrum de 15 minutos, Sprint Review y Retrospectiva.
 
-\subsection{Aportes de Kanban}
-Tablero con límite de trabajo en curso: $\text{WIP} = 1\text{ HU activa por desarrollador}$. Carril explícito de \textit{Bloqueado} para alertas que superen 24 horas sin resolución.
+\section{Prácticas Adoptadas del Proceso}
+\subsection{Aportes de Scrum}
+Sprints de 2 semanas con cadencia regular para completar las 15 historias del MVP. Ceremonias formales: Sprint Planning con estimación en Planning Poker, Daily Scrum de 15 minutos, Sprint Review y Retrospectiva al término de cada iteración.
 
-\subsection{Aportes de Extreme Programming (XP)}
-Integración Continua (CI) mediante validaciones en cada Pull Request a \texttt{develop}, pruebas automatizadas basadas en los criterios de aceptación, diseño simple y revisión obligatoria por pares (\textit{Peer Review}).
+\subsection{Aportes de Kanban y Límites WIP}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Tablero Visual de Cuatro Columnas:} Estructura controlada: \texttt{TO DO} $\rightarrow$ \texttt{DESARROLLO [WIP 3]} $\rightarrow$ \texttt{REVISIÓN [WIP 2]} $\rightarrow$ \texttt{DONE}.
+    \item \textbf{Límites WIP Justificados:} Para los 3 desarrolladores activos, se establece $\text{WIP} = 3$ en Desarrollo (1 desarrollador = máximo 1 HU activa) y $\text{WIP} = 2$ en Revisión.
+    \item \textbf{Principio de Fluidez:} Al alcanzarse la capacidad de Revisión (2/2), la prioridad del equipo cambia inmediatamente: suspender el inicio de nuevo trabajo y colaborar para finalizar y fusionar las historias en revisión (\textit{``Stop starting, start finishing''}).
+    \item \textbf{Visibilidad de Impedimentos:} Bloqueos gestionados mediante etiqueta \texttt{BLOQUEADA} en la columna actual, sin crear columnas redundantes.
+\end{itemize}
+
+\subsection{Aportes de Extreme Programming (XP) y Ciclo TDD}
+Cada Historia de Usuario desglosa internamente cuatro subtareas técnicas bajo el ciclo de Desarrollo Guiado por Pruebas:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{T1 -- Pruebas / RED:} Escritura inicial de pruebas unitarias o de integración que fallan.
+    \item \textbf{T2 -- Implementación / GREEN:} Codificación mínima necesaria para superar las pruebas.
+    \item \textbf{T3 -- Refactorización:} Optimización de estructura y legibilidad sin alterar el comportamiento.
+    \item \textbf{T4 -- Validación e Integración:} Verificación de criterios BDD (\textit{Dado/Cuando/Entonces}) y preparación del Pull Request.
+\end{enumerate}
+Complementado con Integración Continua (CI), revisión obligatoria por pares (\textit{Peer Review}) y diseño simple.
 
 \subsection{Uso de Inteligencia Artificial en el Proceso}
-Uso de modelos de lenguaje para generación de casos de prueba y esquemas de datos, bajo el principio de \textbf{validación humana obligatoria}: ningún integrante incorpora código generado sin comprender su arquitectura y probar su funcionamiento.
+Uso de modelos de lenguaje para asistencia en generación de fixtures, casos de prueba y esquemas Prisma, bajo el principio de \textbf{validación humana obligatoria}: ningún miembro incorpora código sin comprenderlo y probarlo rigurosamente.
 
 \section{Roles, Responsabilidades y Forma de Coordinación}
 \subsection{Política de Roles Rotativos por Sprint}
@@ -230,7 +246,7 @@ El equipo adopta una estructura de \textbf{roles rotativos por iteración} para 
     \begin{itemize}
         \item \textbf{Product Owner:} Saire Bustamante, Edmil Jampier. Responsable de la priorización del backlog, validación de criterios BDD (\textit{Dado/Cuando/Entonces}) y desarrollo full-stack.
         \item \textbf{Scrum Master:} Barazorda Cuellar, Hector. Responsable de facilitar ceremonias (Daily de 15 min), remoción de bloqueos técnicos y desarrollo full-stack.
-        \item \textbf{Desarrolladores Full-Stack:} Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; Ticona Jancco, Ronaldo. Ejecución autónoma de las 5 fases de sus HU asignadas y revisión por pares.
+        \item \textbf{Desarrolladores Full-Stack:} Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; Ticona Jancco, Ronaldo. Ejecución autónoma de sus HUs asignadas y revisión por pares.
     \end{itemize}
     \item \textbf{Evaluación y Rotación en Retrospectiva:} Al cierre del Sprint 1, el equipo analiza la dinámica y efectividad de las acciones para determinar la rotación de los roles de Product Owner y Scrum Master hacia los demás integrantes en los Sprints 2 y 3.
 \end{itemize}
@@ -239,44 +255,86 @@ El equipo adopta una estructura de \textbf{roles rotativos por iteración} para 
 Para garantizar orden en el código y evitar colisiones, se define el siguiente esquema de ramas:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Rama Principal (\texttt{edmil-saire}):} Rama \textit{main} del repositorio oficial, destinada exclusivamente a versiones estables y libres de errores.
-    \item \textbf{Rama de Integración (\texttt{desarrollo} / \texttt{develop}):} Espacio común donde convergen los avances para testear la unión de los desarrolladores antes de producción.
+    \item \textbf{Rama de Integración (\texttt{desarrollo}):} Espacio común donde convergen los avances para testear la unión de los desarrolladores antes de producción.
     \item \textbf{Ramas Individuales por Desarrollador:} Cada miembro dispone de una rama con su nombre (\texttt{hector-barazorda}, \texttt{alex-carpio}, \texttt{domingo-quispe}, \texttt{edmil-saire}, \texttt{ronaldo-ticona}).
     \item \textbf{Flujo Operativo:} Cada desarrollador ejecuta \texttt{git pull origin desarrollo} en su rama para sincronizar cambios, sube commits con su cuenta de GitHub a su rama personal y genera un Pull Request hacia \texttt{desarrollo}. Tras el testeo conjunto, se integra a \texttt{edmil-saire}.
 \end{itemize}
 
 \section{Flujo de Trabajo del Equipo}
-\subsection{Estados del Tablero (5 Fases Obligatorias por HU)}
-Cada desarrollador debe completar en orden estricto:
+\subsection{Estructura del Tablero Kanban Oficial y Límites WIP}
+El flujo se organiza formalmente en cuatro estados con límites explícitos de trabajo en progreso:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{|l|X|c|}
+\hline
+\rowcolor{gray!15}
+\textbf{Columna} & \textbf{Significado Operativo} & \textbf{Límite WIP} \\
+\hline
+\textbf{TO DO} & Historias del Sprint comprometidas aún no iniciadas. & Sin límite \\
+\hline
+\textbf{DESARROLLO} & Historias en codificación activa y construcción de pruebas. & \textbf{3} \\
+\hline
+\textbf{REVISIÓN} & Desarrollo culminado; en espera de revisión por pares y testing de integración. & \textbf{2} \\
+\hline
+\textbf{DONE} & Historias integradas en \texttt{desarrollo} y aceptadas por el Product Owner. & Sin límite \\
+\hline
+\end{tabularx}
+\caption{Estructura de columnas y políticas WIP del tablero Kanban.}
+\label{tab:kanban}
+\end{table}
+
+\subsection{Justificación de los Límites WIP para 3 Desarrolladores}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Desarrollo = 3:} Dado que el equipo cuenta con 3 integrantes en el rol Development, la regla es estricta: \textbf{1 desarrollador = máximo 1 HU activa en Desarrollo}. Esto evita la fragmentación de atención y asegura culminación vertical antes de iniciar otra tarea.
+    \item \textbf{Revisión = 2:} Previene la formación de cuellos de botella en la integración. Si la columna se satura (2/2), ningún desarrollador puede enviar más código a Revisión; la prioridad absoluta del equipo pasa a ser colaborar en revisar y fusionar las historias pendientes.
+\end{itemize}
+
+\subsection{Unidad de Flujo y Subtareas Técnicas TDD}
+La tarjeta que transita por el tablero es la \textbf{Historia de Usuario} completa. Internamente en Jira, cada HU desglosa las 4 subtareas técnicas del ciclo TDD:
 \begin{center}
-\texttt{[Backlog]} $\rightarrow$ \texttt{[1. Plan]} $\rightarrow$ \texttt{[2. Diseño UI/UX]} $\rightarrow$ \texttt{[3. Frontend]} $\rightarrow$ \texttt{[4. Backend]} $\rightarrow$ \texttt{[5. Test]} $\rightarrow$ \texttt{[Done]}
+\texttt{[T1: Pruebas / RED]} $\rightarrow$ \texttt{[T2: Implementación / GREEN]} $\rightarrow$ \texttt{[T3: Refactorización]} $\rightarrow$ \texttt{[T4: Validación e Integración]}
 \end{center}
 
-\subsection{Límites WIP}
-Un desarrollador no puede iniciar una nueva HU si no ha llevado su historia actual hasta \texttt{Done}.
+\subsection{Políticas Explícitas de Transición}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{TO DO $\rightarrow$ DESARROLLO:} HU perteneciente al sprint, con criterios BDD definidos, desarrollador asignado y espacio en WIP de Desarrollo ($\le 3$).
+    \item \textbf{DESARROLLO $\rightarrow$ REVISIÓN:} Subtareas $T1$, $T2$ y $T3$ completadas, pruebas locales en verde, commits en la rama individual y espacio en WIP de Revisión ($\le 2$).
+    \item \textbf{REVISIÓN $\rightarrow$ DONE:} Aprobación en \textit{Peer Review}, integración sin conflictos en \texttt{desarrollo}, criterios de aceptación verificados y validación por el Product Owner.
+\end{itemize}
 
-\subsection{Política de Bloqueo}
-Toda tarea impedida por factores externos o técnicos durante más de 24 horas se mueve a la columna \texttt{Bloqueado} y se atiende prioritariamente en la Daily.
+\subsection{Gestión de Bloqueos e Impedimentos}
+No se crea una columna independiente para bloqueos. La tarjeta permanece en su estado actual con la etiqueta \texttt{BLOQUEADA}. Se registra en Jira el motivo técnico, el responsable y la acción de mitigación, interviniendo el Scrum Master en la Daily Scrum para su resolución prioritaria.
+
+\subsection{Dinámica por Sprints}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Sprint 1 (HU-001 a HU-006):} Arranque con HU-001 (Dev 1), HU-002 (Dev 2) y HU-003 (Dev 3) en Desarrollo. Al culminar, ingresan ordenadamente HU-004, HU-005 y HU-006 respetando el límite de 3.
+    \item \textbf{Sprint 2 (HU-007 a HU-012):} Arranque con HU-007, HU-008 y HU-009 en Desarrollo; HU-010, HU-011 y HU-012 en To Do con ingreso progresivo.
+    \item \textbf{Sprint 3 (HU-013 a HU-015):} Coincidencia de 3 HUs para 3 Desarrolladores. Gestión de dependencias: HU-014 coordina su integración tras la definición de datos de HU-013.
+\end{itemize}
 
 \subsection{Definición de Hecho (Definition of Done)}
-Una HU es \textit{Done} si supera el 100\% de sus Criterios de Aceptación, no tiene errores de compilación en Next.js ni TypeScript, cuenta con persistencia validada en MongoDB Atlas con Prisma, tiene revisión de código aprobada en GitHub y está fusionada y probada en la rama \texttt{desarrollo}.
+Una HU es declarada \textit{Done} si supera el 100\% de criterios de aceptación BDD, cuenta con pruebas automáticas en verde, no presenta errores de TypeScript/Next.js, tiene persistencia validada en MongoDB Atlas con Prisma, y se encuentra fusionada en la rama \texttt{desarrollo}.
 
 \section{Incrementos Presentados del Proyecto}
 \subsection{Incremento 1 (Sprint 1: Núcleo de Capacitación y Acceso Público)}
 \begin{itemize}[leftmargin=*]
-    \item \textbf{HU-001 (Acceder al área interna):} Autenticación segura y redirección por rol.
-    \item \textbf{HU-002 (Crear capacitación):} Gestión de datos generales y persistencia en base de datos.
-    \item \textbf{HU-003 (Slides interactivos):} Constructor de diapositivas con texto, imágenes y botones.
-    \item \textbf{HU-004 (Publicar capacitación):} Previsualización interactiva y flujo de publicación según visibilidad.
-    \item \textbf{HU-005 (Explorar capacitaciones públicas):} Catálogo abierto para estudiantes y docentes.
-    \item \textbf{HU-006 (Consultar capacitación pública):} Visualizador de slides interactivo sin autenticación.
+    \item \textbf{HU-001 (Acceder al área interna):} Autenticación segura y redirección por rol (Dev 1: Carpio Hermoza, Alex).
+    \item \textbf{HU-002 (Crear capacitación):} Gestión de datos generales y persistencia en MongoDB (Dev 2: Quispe Mamani, Domingo).
+    \item \textbf{HU-003 (Slides interactivos):} Constructor de diapositivas con texto, imágenes y botones (Dev 3: Ticona Jancco, Ronaldo).
+    \item \textbf{HU-004 (Publicar capacitación):} Previsualización interactiva y flujo de estados (Dev 1: Carpio Hermoza, Alex).
+    \item \textbf{HU-005 (Explorar capacitaciones públicas):} Catálogo abierto para estudiantes y docentes (Dev 2: Quispe Mamani, Domingo).
+    \item \textbf{HU-006 (Consultar capacitación pública):} Visualizador de slides interactivo sin autenticación (Dev 3: Ticona Jancco, Ronaldo).
 \end{itemize}
-\textbf{Pruebas y Evidencias:} Casos de prueba automatizados para autenticación, verificación de respuestas HTTP y validación de los criterios CA-01 a CA-04 de cada historia.
+\textbf{Pruebas y Evidencias:} Pruebas automatizadas sobre endpoints de Next.js, verificación de persistencia en MongoDB Atlas Cluster0 vía Prisma ORM y validación de los criterios CA-01 a CA-04 de cada historia bajo TDD.
 
 \section{Métricas y Seguimiento del Proceso}
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Velocidad del Sprint:} 4 Historias de Usuario completadas por sprint (100\% de capacidad del equipo).
-    \item \textbf{Cycle Time:} Promedio de 3 a 4 días hábiles por historia desde \textit{Plan} hasta \textit{Done}.
+    \item \textbf{Velocidad del Sprint:} 6 HUs en Sprint 1, 6 HUs en Sprint 2 y 3 HUs en Sprint 3 (Total: 15 Historias de Usuario del MVP completadas).
+    \item \textbf{Cycle Time:} Promedio de 3 a 4 días hábiles por historia desde \texttt{TO DO} hasta \texttt{DONE}.
     \item \textbf{Criterios Superados:} Tasa de éxito del 100\% en criterios de aceptación verificados.
+    \item \textbf{Calidad de Código:} Cero regresiones en la rama \texttt{desarrollo} respaldadas por la suite TDD.
 \end{itemize}
 
 \section{Acuerdos de Mejora para el Siguiente Incremento}

@@ -87,18 +87,68 @@ El repositorio opera bajo un esquema colaborativo diseñado para testear los ava
 
 ---
 
+---
+
+## 📊 Metodología de Desarrollo: Scrum + Kanban con Límites WIP + TDD
+
+El proyecto combina la cadencia de **Scrum** (sprints de 2 semanas), la fluidez de **Kanban** y el rigor técnico de **TDD**:
+
+```
+[ BACKLOG ] ──> [ SPRINT ] ──> [ TO DO ] ──> [ DESARROLLO (WIP 3) ] ──> [ REVISIÓN (WIP 2) ] ──> [ DONE ]
+```
+
+### 📋 Tablero Kanban Oficial del Equipo:
+| Columna | Significado | Límite WIP | Justificación Operativa |
+|---|---|:---:|---|
+| **TO DO** | HUs del Sprint comprometidas aún no iniciadas | Sin límite | Backlog priorizado del Sprint. |
+| **DESARROLLO** | HUs en codificación activa y construcción de pruebas | **3** | **1 desarrollador = máx. 1 HU activa** (3 integrantes Development). |
+| **REVISIÓN** | En espera de *Peer Review*, pruebas e integración | **2** | Si llega a **2/2**, el equipo detiene trabajo nuevo y ayuda a desatorar revisión. |
+| **DONE** | Integradas en `desarrollo`, aceptadas por el PO | Sin límite | Cumplen con la *Definition of Done* al 100%. |
+
+### 🧪 Ciclo TDD en 4 Subtareas Técnicas dentro de cada HU:
+Cada Historia de Usuario es la tarjeta principal que viaja por el tablero y contiene en su interior 4 subtareas técnicas:
+1. **T1 — Pruebas / RED:** Diseñar pruebas unitarias e integración que inicialmente fallan.
+2. **T2 — Implementación / GREEN:** Programar el código necesario para pasar las pruebas a verde.
+3. **T3 — Refactorización:** Limpiar el código, modularizar y optimizar sin romper la funcionalidad.
+4. **T4 — Validación e integración:** Verificar criterios BDD (*Dado/Cuando/Entonces*) y preparar el PR a `desarrollo`.
+
+### 🚫 Gestión de Bloqueos:
+No existe columna "Bloqueado". Las tarjetas impedidas permanecen en su columna con la etiqueta **`🚫 BLOQUEADA`**, detallando en Jira: *Motivo, Responsable y Acción requerida*. El Scrum Master prioriza su remoción en la Daily Scrum.
+
+### 🎯 Distribución de las 15 HUs del MVP por Sprints:
+- **Sprint 1 (HU-001 a HU-006):** Núcleo de capacitación y acceso público.  
+  *Arranque:* Dev 1 $\rightarrow$ HU-001 | Dev 2 $\rightarrow$ HU-002 | Dev 3 $\rightarrow$ HU-003. Luego ingresan HU-004, HU-005, HU-006.
+- **Sprint 2 (HU-007 a HU-012):** Estructura organizacional (Áreas, Puestos) y Onboarding de colaboradores.  
+  *Arranque:* Dev 1 $\rightarrow$ HU-007 | Dev 2 $\rightarrow$ HU-008 | Dev 3 $\rightarrow$ HU-009. Luego ingresan HU-010, HU-011, HU-012.
+- **Sprint 3 (HU-013 a HU-015):** Microtests formativos y supervisión de colaboradores.  
+  *Arranque:* Dev 1 $\rightarrow$ HU-013 | Dev 2 $\rightarrow$ HU-014 | Dev 3 $\rightarrow$ HU-015 (3 HUs para 3 Devs).
+
+---
+
 ## 📁 Estructura del Repositorio
 
 ```
 Proyecto Doctores Ing de Sotfware/
-├── README.md                           # Documentación principal, stack y flujo Git
-├── .gitignore                          # Exclusión de archivos temporales
-├── CGB_Academy_Requerimientos_...pdf   # Documento oficial de 18 páginas de requisitos
-├── Estructura del informe (1).docx     # Guía oficial del informe (Word)
-└── informe/
-    ├── informe.md                      # Informe completo en Markdown
-    ├── informe.tex                     # Plantilla oficial en LaTeX (UNSAAC)
-    ├── informe.pdf                     # PDF compilado y verificado (11 páginas)
-    ├── referencias.bib                 # Bibliografía académica en BibTeX
-    └── Estructura del informe.docx     # Documento base de referencia
+├── .env.example                        # Plantilla de variables de entorno para desarrolladores
+├── .gitignore                          # Exclusión estricta de secretos (.env) y dependencias
+├── next.config.ts                      # Configuración de Next.js (Turbopack)
+├── package.json                        # Dependencias (Next.js 16, React 19, Prisma 6)
+├── tsconfig.json                       # Configuración de TypeScript
+├── prisma/
+│   └── schema.prisma                   # Esquema de datos para MongoDB Atlas (provider: "mongodb")
+├── src/
+│   ├── app/
+│   │   ├── api/health/route.ts         # Endpoint de verificación de estado y conexión a MongoDB
+│   │   ├── layout.tsx                  # Layout principal de la aplicación
+│   │   ├── page.tsx                    # Landing page sobria de bienvenida CGB Academy
+│   │   └── globals.css                 # Estilos globales con Tailwind CSS
+│   └── lib/
+│       └── prisma.ts                   # Cliente singleton de conexión a MongoDB Atlas
+├── informe/
+│   ├── informe.md                      # Informe académico en Markdown (Metodología, Requisitos, Stack)
+│   ├── informe.tex                     # Código fuente LaTeX estándar UNSAAC
+│   ├── informe.pdf                     # PDF oficial compilado (13 páginas)
+│   └── referencias.bib                 # Bibliografía académica en formato BibTeX
+├── logos/                              # Identidad visual de CGB Academy, CIIP, GEOMINA y BIOMEDIC
+└── README.md                           # Documentación central y directrices del equipo
 ```
