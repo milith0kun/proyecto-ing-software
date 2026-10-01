@@ -18,3 +18,40 @@ model User {
 
   @@map("users")
 }
+
+// Modelo principal para la gestión de capacitaciones (HU-002 / HU-004 / HU-005)
+model Capacitacion {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  titulo      String
+  descripcion String
+  unidad      String   @default("CIIP") // "CIIP" | "GEOMINA" | "BIOMEDIC" | "GENERAL"
+  ambito      String   @default("PUBLICO") // "PUBLICO" | "INTERNO"
+  estado      String   @default("BORRADOR") // "BORRADOR" | "PUBLICADA"
+  categoria   String?  @default("Inducción")
+  duracionMin Int?     @default(30)
+  icono       String?  @default("book-open")
+  creadoPor   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relación con Slides (para HU-003 / HU-006)
+  slides      Slide[]
+
+  @@map("capacitaciones")
+}
+
+// Modelo de diapositivas interactivas por capacitación (HU-003 / HU-006)
+model Slide {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  capacitacionId  String       @db.ObjectId
+  capacitacion    Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Cascade)
+  orden           Int          @default(1)
+  titulo          String
+  contenido       String       // Contenido textual o estructura JSON de bloques
+  tipo            String       @default("INFO") // "INFO" | "INTERACTIVO" | "EVALUACION"
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@map("slides")
+}
+
