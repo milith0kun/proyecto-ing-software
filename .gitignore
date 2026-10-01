@@ -40,3 +40,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+
+# Caché de compilación de TypeScript (archivo local, no debe subirse al repo)
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
