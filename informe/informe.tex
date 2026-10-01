@@ -237,11 +237,7 @@ Se ha adoptado un \textbf{Método Ágil Híbrido} \cite{sommerville2011, pressma
 
 \section{Prácticas Adoptadas del Proceso}
 \subsection{Aportes de Scrum}
-Sprints de 2 semanas con capacidad fija de 4 Historias de Usuario por iteración (1 HU asignada de principio a fin a cada desarrollador). Ceremonias obligatorias: Sprint Planning, Daily Scrum de 15 minutos, Sprint Review y Retrospectiva.
-
-\section{Prácticas Adoptadas del Proceso}
-\subsection{Aportes de Scrum}
-Sprints de 2 semanas con cadencia regular para completar las 15 historias del MVP. Ceremonias formales: Sprint Planning con estimación en Planning Poker, Daily Scrum de 15 minutos, Sprint Review y Retrospectiva al término de cada iteración.
+Sprints de 2 semanas con cadencia regular para completar las 15 historias de usuario del MVP. Ceremonias formales obligatorias: Sprint Planning con estimación mediante Planning Poker \cite{cohn2004}, Daily Scrum de 15 minutos para sincronización diaria, Sprint Review con demostración en vivo y Sprint Retrospective para la formulación de compromisos de mejora continua y acuerdos de rotación de roles.
 
 \subsection{Aportes de Kanban y Límites WIP}
 \begin{itemize}[leftmargin=*]
@@ -314,42 +310,129 @@ El flujo se organiza formalmente en cuatro estados con límites explícitos de t
 \subsection{Justificación Matemática de los Límites WIP (Ley de Little)}
 Desde la teoría matemática de colas, el comportamiento del flujo de trabajo se fundamenta en la \textbf{Ley de Little} \cite{little1961, anderson2010}:
 \begin{equation}
-\text{WIP} = \text{Throughput (TH)} \times \text{Cycle Time (CT)} \quad \Longrightarrow \quad \text{Cycle Time (CT)} = \frac{\text{WIP}}{\text{Throughput (TH)}}
+\text{WIP} = \text{TH} \times \text{CT} \quad \Longrightarrow \quad \text{CT} = \frac{\text{WIP}}{\text{TH}}
 \end{equation}
-Donde el \textit{Throughput} representa la velocidad de entrega del equipo de 3 desarrolladores activos ($\text{TH}$ cuasi-constante). Matemáticamente, cualquier aumento descontrolado del $\text{WIP}$ dilata en proporción directa el tiempo de ciclo (\textit{Cycle Time}), generando esperas y multitarea ineficiente.
+Donde $\text{TH}$ representa el \textit{Throughput} (velocidad de entrega de historias terminadas por unidad de tiempo) del equipo de 3 desarrolladores activos ($\text{TH}$ cuasi-constante) y $\text{CT}$ el \textit{Cycle Time} promedio por historia. Matemáticamente, cualquier aumento descontrolado del $\text{WIP}$ dilata en proporción directa el tiempo de ciclo (\textit{Cycle Time}), generando esperas y multitarea ineficiente.
 \begin{itemize}[leftmargin=*]
     \item \textbf{Desarrollo = 3:} Dado que el equipo cuenta con 3 integrantes en el rol Development, la regla es estricta: \textbf{1 desarrollador = máximo 1 HU activa en Desarrollo}. Previene la sobreproducción (\textit{Muda} en Lean) y focaliza el esfuerzo en entregas verticales terminadas.
     \item \textbf{Revisión = 2:} Actúa como \textit{buffer} óptimo de aseguramiento de la calidad. Si la columna se satura (2/2), la prioridad del equipo cambia inmediatamente: suspender el inicio de nuevo trabajo y abocarse colaborativamente a revisar y fusionar las historias pendientes (\textit{``Stop starting, start finishing''}).
 \end{itemize}
 
 \subsection{Unidad de Flujo y Subtareas Técnicas TDD}
-La tarjeta que transita por el tablero es la \textbf{Historia de Usuario} completa conforme a \textbf{ISO/IEC/IEEE 29148:2018} \cite{iso29148}. Internamente en Jira, cada HU desglosa cuatro subtareas técnicas obligatorias bajo el ciclo TDD postulado por Beck \cite{beck2000} y los niveles de prueba de ISTQB \cite{istqb2023}:
+La tarjeta principal que transita por el tablero visual es la \textbf{Historia de Usuario} (por ejemplo, \texttt{HU-002: Crear una capacitación}) conforme al estándar \textbf{ISO/IEC/IEEE 29148:2018} \cite{iso29148}. No se crean tarjetas separadas en el tablero para cada tarea técnica.
+
+Para materializar las disciplinas de la Programación Extrema (XP) postuladas por Beck \cite{beck2000} y los estándares de aseguramiento de calidad de ISTQB \cite{istqb2023}, cada Historia de Usuario en Jira desglosa internamente cuatro subtareas técnicas obligatorias:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{|l|X|X|}
+\hline
+\rowcolor{gray!15}
+\textbf{Subtarea Técnica} & \textbf{Actividad en el Ciclo TDD} & \textbf{Fundamento de Calidad} \\
+\hline
+\textbf{T1 -- Pruebas / RED} & Diseñar y programar pruebas que inicialmente fallan por ausencia de código. & Prevención de defectos por diseño (\textit{Defect Prevention} - ISTQB). \\
+\hline
+\textbf{T2 -- Implementación / GREEN} & Programar la lógica mínima necesaria para hacer pasar las pruebas con éxito. & Diseño simple y eliminación de sobre-ingeniería (principio YAGNI). \\
+\hline
+\textbf{T3 -- Refactorización} & Reestructurar el código interno sin alterar su comportamiento funcional. & Contención proactiva de la deuda técnica \cite{martin2008, fowler2018}. \\
+\hline
+\textbf{T4 -- Validación e Integración} & Ejecutar pruebas completas, validar criterios BDD y preparar el Pull Request. & Integración continua y verificación formal de la Definition of Done. \\
+\hline
+\end{tabularx}
+\caption{Subtareas técnicas obligatorias bajo el ciclo TDD integradas en cada Historia de Usuario.}
+\label{tab:subtareas_tdd}
+\end{table}
+
+\subsection{Políticas Explícitas de Transición entre Columnas}
+Para que una tarjeta pueda avanzar entre columnas, debe cumplir estrictamente las siguientes políticas:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{TO DO $\longrightarrow$ DESARROLLO:} Pertenece al Sprint actual aprobado; suficientemente refinada y estimada; cuenta con criterios de aceptación verificables en formato BDD; el desarrollador comprende el alcance técnico; y \textbf{existe capacidad disponible dentro del límite WIP de Desarrollo ($\le 3$)}.
+    \item \textbf{DESARROLLO $\longrightarrow$ REVISIÓN:} Las pruebas automáticas fueron escritas y superadas ($T1$ y $T2$); se ejecutó la refactorización ($T3$); las pruebas locales pasan al 100\%; el código está subido a la rama personal de GitHub; y \textbf{existe capacidad disponible en el límite WIP de Revisión ($\le 2$)}.
+    \item \textbf{REVISIÓN $\longrightarrow$ DONE:} El código ha sido revisado y aprobado formalmente por pares (\textit{Peer Review}); las pruebas de integración en \texttt{desarrollo} pasan sin regresiones; no existen errores bloqueantes de compilación; se validaron los criterios de aceptación con el Product Owner; y el Pull Request ha sido fusionado limpiamente.
+\end{itemize}
+
+\subsection{Protocolo de Gestión de Bloqueos e Impedimentos}
+Para preservar la integridad del flujo y no distorsionar las métricas de tiempo de ciclo (\textit{Cycle Time}), el equipo \textbf{no utiliza una columna separada llamada ``Bloqueado''}. Cuando una historia de usuario queda impedida:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{T1 -- Pruebas / RED:} Diseño y codificación de pruebas unitarias/integración que inicialmente fallan por ausencia de código (prevención de defectos por diseño).
-    \item \textbf{T2 -- Implementación / GREEN:} Codificación mínima necesaria para superar las pruebas con éxito (diseño simple y principio YAGNI).
-    \item \textbf{T3 -- Refactorización:} Optimización de diseño, componentes Next.js y consultas Prisma sin alterar el comportamiento observable, mitigando la deuda técnica \cite{martin2008, fowler2018}.
-    \item \textbf{T4 -- Validación e Integración:} Verificación exhaustiva de criterios BDD (\textit{Dado/Cuando/Entonces}) y preparación del Pull Request hacia \texttt{desarrollo}.
+    \item La tarjeta permanece en su columna física actual (Desarrollo o Revisión).
+    \item Se le asigna de inmediato una etiqueta visible destacada: \texttt{BLOQUEADA}.
+    \item Se documenta formalmente en Jira: \textbf{Motivo del bloqueo} (causa técnica o dependencia), \textbf{Responsable} y \textbf{Acción requerida}.
+    \item El Scrum Master actúa prioritariamente en la Daily Scrum para levantar el impedimento con la mayor celeridad.
 \end{enumerate}
 
-\subsection{Políticas Explícitas de Transición}
-\begin{itemize}[leftmargin=*]
-    \item \textbf{TO DO $\rightarrow$ DESARROLLO:} HU perteneciente al sprint, con criterios BDD definidos, desarrollador asignado y espacio en WIP de Desarrollo ($\le 3$).
-    \item \textbf{DESARROLLO $\rightarrow$ REVISIÓN:} Subtareas $T1$, $T2$ y $T3$ completadas, pruebas locales en verde, commits en la rama individual y espacio en WIP de Revisión ($\le 2$).
-    \item \textbf{REVISIÓN $\rightarrow$ DONE:} Aprobación en \textit{Peer Review}, integración sin conflictos en \texttt{desarrollo}, criterios de aceptación verificados y validación por el Product Owner.
-\end{itemize}
+\subsection{Dinámica por Sprints y Evolución del Tablero}
 
-\subsection{Gestión de Bloqueos e Impedimentos}
-No se crea una columna independiente para bloqueos. La tarjeta permanece en su estado actual con la etiqueta \texttt{BLOQUEADA}. Se registra en Jira el motivo técnico, el responsable y la acción de mitigación, interviniendo el Scrum Master en la Daily Scrum para su resolución prioritaria.
+\subsubsection{Sprint 1 (HU-001 a HU-006): Núcleo de Capacitación y Acceso Público}
+El Sprint 1 inicia con la asignación simultánea de los tres desarrolladores activos:
 
-\subsection{Dinámica por Sprints}
-\begin{itemize}[leftmargin=*]
-    \item \textbf{Sprint 1 (HU-001 a HU-006):} Arranque con HU-001 (Dev 1), HU-002 (Dev 2) y HU-003 (Dev 3) en Desarrollo. Al culminar, ingresan ordenadamente HU-004, HU-005 y HU-006 respetando el límite de 3.
-    \item \textbf{Sprint 2 (HU-007 a HU-012):} Arranque con HU-007, HU-008 y HU-009 en Desarrollo; HU-010, HU-011 y HU-012 en To Do con ingreso progresivo.
-    \item \textbf{Sprint 3 (HU-013 a HU-015):} Coincidencia de 3 HUs para 3 Desarrolladores. Gestión de dependencias: HU-014 coordina su integración tras la definición de datos de HU-013.
-\end{itemize}
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{|X|X|c|c|}
+\hline
+\rowcolor{gray!15}
+\textbf{TO DO} & \textbf{DESARROLLO [WIP: 3]} & \textbf{REVISIÓN [WIP: 2]} & \textbf{DONE} \\
+\hline
+HU-004 -- Previsualizar y publicar & \textbf{HU-001} -- Área interna \textit{(Dev 1)} & \textit{(vacío)} & \textit{(vacío)} \\
+HU-005 -- Explorar públicas & \textbf{HU-002} -- Crear capacitación \textit{(Dev 2)} & & \\
+HU-006 -- Consultar pública & \textbf{HU-003} -- Slides interactivos \textit{(Dev 3)} & & \\
+\hline
+\end{tabularx}
+\caption{Estado inicial del tablero Kanban al arranque del Sprint 1.}
+\label{tab:kanban_s1_inicio}
+\end{table}
 
-\subsection{Definición de Hecho (Definition of Done)}
-Una HU es declarada \textit{Done} si supera el 100\% de criterios de aceptación BDD, cuenta con pruebas automáticas en verde, no presenta errores de TypeScript/Next.js, tiene persistencia validada en MongoDB Atlas con Prisma, y se encuentra fusionada en la rama \texttt{desarrollo}.
+Conforme avanza la iteración, puede presentarse el siguiente estado de saturación en la columna de revisión:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{|X|X|X|X|}
+\hline
+\rowcolor{gray!15}
+\textbf{TO DO} & \textbf{DESARROLLO [WIP: 3]} & \textbf{REVISIÓN [WIP: 2]} & \textbf{DONE} \\
+\hline
+HU-006 -- Consultar pública & HU-004 \textit{(Dev 1)} & \textbf{HU-002} & HU-001 \\
+& HU-005 \textit{(Dev 2)} & \textbf{HU-003} & \\
+\hline
+\end{tabularx}
+\caption{Escenario de saturación de Revisión (2/2) en el Sprint 1.}
+\label{tab:kanban_s1_saturacion}
+\end{table}
+
+En este escenario, dado que $\text{Revisión} = 2/2$ (capacidad máxima alcanzada), \textbf{ningún desarrollador puede mover una nueva tarjeta a Revisión hasta que se libere al menos una}. La prioridad del equipo cambia inmediatamente: suspender el avance de nuevas tareas y colaborar para revisar, probar y fusionar HU-002 o HU-003 hacia \texttt{desarrollo}, desbloqueando el flujo de trabajo.
+
+\subsubsection{Sprint 2 (HU-007 a HU-012): Estructura Organizacional y Onboarding}
+El Sprint 2 arranca con HU-007 (Áreas y puestos), HU-008 (Rutas de onboarding) y HU-009 (Registro de colaboradores) en Desarrollo, mientras HU-010, HU-011 y HU-012 aguardan en To Do. Conforme se liberan las historias del primer bloque, las restantes ingresan ordenadamente garantizando que nunca se exceda el límite $\text{WIP} \le 3$.
+
+\subsubsection{Sprint 3 (HU-013 a HU-015): Microtests Formativos y Supervisión}
+El Sprint 3 cuenta con 3 Historias de Usuario para 3 Desarrolladores ($\text{WIP} = 3/3$). Dado que HU-014 (Realizar microtest) depende funcionalmente de la estructura creada en HU-013 (Configurar microtest), el desarrollador responsable de HU-014 avanza en las pruebas ($T1$) e interfaz gráfica, sincronizando la integración de backend una vez consolidado el modelo de HU-013.
+
+\subsection{Política WIP Oficial del Equipo}
+\begin{quote}
+\small\itshape
+``1. La columna Desarrollo tendrá un límite máximo de 3 Historias de Usuario simultáneas, correspondiente a los tres integrantes del rol Development.\\
+2. Cada desarrollador trabajará preferentemente sobre una única Historia de Usuario activa a la vez.\\
+3. La columna Revisión tendrá un límite máximo de 2 Historias de Usuario simultáneas.\\
+4. Cuando Revisión alcance su límite (2/2), el equipo priorizará de forma absoluta revisar, probar e integrar las historias existentes antes de iniciar o avanzar nuevas historias hacia dicha columna.\\
+5. Las tarjetas impedidas permanecerán en su columna física identificadas con la etiqueta visible BLOQUEADA, indicando causa técnica, responsable y acción mitigadora.\\
+6. Ninguna Historia de Usuario podrá pasar al estado DONE sin satisfacer al 100\% sus criterios de aceptación, pruebas automatizadas en verde y fusión validada en la rama desarrollo.''
+\end{quote}
+
+\subsection{Flujo Metodológico Integrado y Definition of Done}
+El ciclo global del proyecto se sintetiza en la siguiente secuencia de etapas:
+\begin{center}
+\small
+\textbf{BACKLOG} $\longrightarrow$ \textbf{SPRINT} $\longrightarrow$ \textbf{TO DO} $\longrightarrow$ \textbf{DESARROLLO [WIP 3]} $\longrightarrow$ \textbf{REVISIÓN [WIP 2]} $\longrightarrow$ \textbf{DONE}
+\end{center}
+y a nivel interno de cada Historia de Usuario en desarrollo:
+\begin{center}
+\small
+\textbf{T1: RED (Pruebas)} $\longrightarrow$ \textbf{T2: GREEN (Código)} $\longrightarrow$ \textbf{T3: REFACTOR} $\longrightarrow$ \textbf{T4: VALIDACIÓN / INTEGRACIÓN}
+\end{center}
+
+Una HU se declara formalmente \textbf{Done} si supera el 100\% de criterios de aceptación BDD, cuenta con pruebas automáticas en verde, no presenta errores de compilación en Next.js ni TypeScript, cuenta con persistencia validada en MongoDB Atlas vía Prisma ORM, y se encuentra integrada limpiamente en la rama \texttt{desarrollo}.
 
 \section{Incrementos Presentados del Proyecto}
 \subsection{Incremento 1 (Sprint 1: Núcleo de Capacitación y Acceso Público)}
