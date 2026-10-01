@@ -1,0 +1,254 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== Codificación e idioma =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ===== Geometría de página =====
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+
+% ===== Gráficos y tablas =====
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,format=plain}
+\usepackage{subcaption}
+\usepackage[table]{xcolor}
+\usepackage{enumitem}
+
+% ===== Enlaces y referencias =====
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!80!black,
+  citecolor=blue!80!black,
+  urlcolor=blue!80!black
+}
+
+% ===== Encabezado y pie =====
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small UNSAAC -- IF614 -- Ing. de Software I}
+\fancyhead[R]{\small Informe del Proyecto Semestral}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\begin{document}
+
+% ===== PORTADA =====
+\begin{titlepage}
+  \centering
+  {\scshape\LARGE Universidad Nacional de San Antonio Abad del Cusco \par}
+  \vspace{0.3cm}
+  {\scshape\large Facultad de Ingeniería Eléctrica, Electrónica, Informática y Mecánica\par}
+  \vspace{0.2cm}
+  {\scshape\normalsize Escuela Profesional de Ingeniería de Sistemas e Informática\par}
+  \vspace{1.5cm}
+
+  {\Large\textbf{CURSO: INGENIERÍA DE SOFTWARE I (IF614)}\par}
+  \vspace{1cm}
+  
+  \rule{\linewidth}{0.5mm}\\[0.4cm]
+  {\huge\bfseries Informe del Proyecto de Software\par}
+  \vspace{0.3cm}
+  {\large\textit{Estructura Basada en Introducción a la IS, Procesos Ágiles y Métodos Híbridos}\par}
+  \rule{\linewidth}{0.5mm}\\[1.5cm]
+
+  \textbf{Docente:}\\[0.2cm]
+  [Nombre del Docente del Curso]\\[1cm]
+
+  \textbf{Integrantes del Equipo:}\\[0.3cm]
+  \begin{tabular}{ll}
+    Saire Bustamante, Edmil Jampier & 174449 \\
+    Pumaccahua Cusihuaman, Christian & 204805 \\
+    Quispe Quispe, Celia & 221950 \\
+    Lozano Llacctahuaman, Medaly & 195050 \\
+  \end{tabular}
+  \vfill
+  {\large Cusco, Perú\par}
+  {\large 2026\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Datos Generales del Proyecto}
+\begin{itemize}
+    \item \textbf{Nombre del Proyecto:} [Nombre del Sistema / Proyecto]
+    \item \textbf{Organización Beneficiaria:} [Institución u organización objetivo]
+    \item \textbf{Repositorio Git:} \url{https://github.com/milith0kun/proyecto-ing-software}
+    \item \textbf{Ramas de Trabajo:} \texttt{develop} (integración) y \texttt{main} (estable/producción)
+\end{itemize}
+
+\section{Objetivo General y Específicos}
+\subsection{Objetivo General}
+[Describir el objetivo general del proyecto de software y la solución integral provista].
+
+\subsection{Objetivos Específicos}
+\begin{enumerate}
+    \item [Objetivo específico 1: Levantamiento y especificación de historias de usuario].
+    \item [Objetivo específico 2: Diseño de arquitectura, componentes y base de datos].
+    \item [Objetivo específico 3: Desarrollo ágil iterativo aplicando el método híbrido Scrum/Kanban/XP].
+    \item [Objetivo específico 4: Verificación, validación y aseguramiento de la calidad mediante pruebas].
+\end{enumerate}
+
+\section{Alcance del Sistema}
+\subsection{Alcance Funcional (In-Scope)}
+[Detallar los módulos y funcionalidades principales cubiertos en el proyecto].
+
+\subsection{Límites y Exclusiones (Out-of-Scope)}
+[Especificar las funcionalidades que quedan fuera del alcance del presente semestre].
+
+\section{Justificación del Proyecto}
+[Explicar el impacto operativo, justificación técnica y académica del desarrollo].
+
+\section{Contexto del Proyecto y Restricciones}
+\subsection{Contexto Operativo}
+[Descripción del entorno operativo de despliegue y usuarios del sistema].
+
+\subsection{Restricciones Técnicas y Temporales}
+\begin{itemize}
+    \item Restricción de infraestructura: Servidor VPS con recursos definidos.
+    \item Restricción temporal: Entregas por sprints de dos semanas.
+    \item Restricción de seguridad: Autenticación segura y minimización de datos.
+\end{itemize}
+
+\section{Tecnologías Utilizadas}
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{|l|l|X|}
+\hline
+\textbf{Capa / Categoría} & \textbf{Tecnología} & \textbf{Justificación} \\
+\hline
+Frontend & TypeScript, React/Next.js & Tipado estático y renderizado eficiente. \\
+\hline
+Backend & Node.js / Python & Arquitectura modular y desarrollo ágil de APIs. \\
+\hline
+Base de Datos & PostgreSQL / SQLite & Soporte relacional e integridad transaccional. \\
+\hline
+Control de Versiones & Git \& GitHub & Estrategia GitFlow simplificada y CI/CD. \\
+\hline
+Gestión de Proyecto & Jira / Trello & Tablero Kanban, sprints y métricas de avance. \\
+\hline
+\end{tabularx}
+\caption{Stack tecnológico del proyecto.}
+\label{tab:tecnologias}
+\end{table}
+
+\section{Stakeholders (Partes Interesadas)}
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{|l|l|l|X|}
+\hline
+\textbf{Stakeholder} & \textbf{Tipo} & \textbf{Influencia} & \textbf{Expectativa Principal} \\
+\hline
+Usuario Final & Externo & Alta & Sistema intuitivo, accesible y sin errores. \\
+\hline
+Administrador & Interno & Alta & Control integral de datos y reportes. \\
+\hline
+Equipo de Desarrollo & Interno & Alta & Arquitectura limpia y entrega ágil. \\
+\hline
+Docente del Curso & Académico & Crítica & Cumplimiento metodológico y calidad de software. \\
+\hline
+\end{tabularx}
+\caption{Matriz de stakeholders del proyecto.}
+\label{tab:stakeholders}
+\end{table}
+
+\section{Enfoque de Desarrollo Seleccionado y Justificación}
+Se ha adoptado un método de desarrollo ágil híbrido fundamentado en la teoría de procesos de software (Sommerville, 2011; Pressman, 2010):
+\begin{itemize}
+    \item \textbf{Descarte de Cascada:} La naturaleza cambiante de los requisitos desaconseja flujos rígidos y secuenciales.
+    \item \textbf{Estructura Base Scrum:} Proporciona la cadencia de sprints de dos semanas y ceremonias periódicas.
+    \item \textbf{Control de Flujo Kanban:} Asegura visibilidad transparente y restricción del trabajo en progreso (WIP).
+    \item \textbf{Excelencia Técnica XP:} Incorpora pruebas automatizadas, integración continua y revisión por pares.
+\end{itemize}
+
+\section{Prácticas Adoptadas del Proceso}
+\subsection{Aportes de Scrum}
+\begin{itemize}
+    \item Sprints fijos de dos semanas con cuatro historias de usuario por sprint (una por desarrollador).
+    \item Ceremonias: Sprint Planning, Daily Scrum (15 min), Sprint Review y Retrospectiva.
+\end{itemize}
+
+\subsection{Aportes de Kanban}
+\begin{itemize}
+    \item Tablero visual con carril de bloqueos.
+    \item Límites de trabajo en progreso: WIP = 1 HU activa por desarrollador.
+\end{itemize}
+
+\subsection{Aportes de XP}
+\begin{itemize}
+    \item Integración continua y pruebas automatizadas sobre criterios de aceptación.
+    \item Refactorización continua y revisión de código por pares (\textit{Peer Review}).
+\end{itemize}
+
+\subsection{Uso de IA en el Proceso}
+\begin{itemize}
+    \item Asistencia en la generación de casos de prueba, documentación y prototipado.
+    \item Principio de validación humana obligatoria antes de integrar en el repositorio.
+\end{itemize}
+
+\section{Roles, Responsabilidades y Forma de Coordinación}
+\begin{itemize}
+    \item \textbf{Product Owner:} Edmil Jampier Saire Bustamante (Gestión de producto + HU asignada).
+    \item \textbf{Scrum Master:} Christian Pumaccahua Cusihuaman (Facilitación técnica + HU asignada).
+    \item \textbf{Desarrolladores Full-Stack:} Celia Quispe Quispe y Medaly Lozano Llacctahuaman.
+\end{itemize}
+
+\section{Flujo de Trabajo del Equipo}
+\subsection{Estados del Tablero}
+El flujo de cada historia de usuario abarca 5 fases obligatorias:
+\texttt{Plan} $\rightarrow$ \texttt{Diseño UI/UX} $\rightarrow$ \texttt{Frontend} $\rightarrow$ \texttt{Backend} $\rightarrow$ \texttt{Test} $\rightarrow$ \texttt{Done}.
+
+\subsection{Límites WIP}
+Cada integrante solo puede avanzar una historia a la vez para mantener el enfoque y evitar cuellos de botella.
+
+\subsection{Política de Bloqueo}
+Cualquier impedimento que detenga una tarea por más de 24 horas se reporta en la columna \texttt{Bloqueado} para atención prioritaria.
+
+\subsection{Definición de Hecho (Definition of Done)}
+Una HU se marca como \textit{Done} cuando supera el 100\% de sus criterios de aceptación, cuenta con pruebas aprobadas, revisión de código completada y merge en la rama \texttt{develop}.
+
+\section{Incrementos Presentados del Proyecto}
+\subsection{Incremento 1}
+\begin{itemize}
+    \item \textbf{Funcionalidad desarrollada:} [Detallar funcionalidades completadas].
+    \item \textbf{Evidencia de funcionamiento:} [Adjuntar figuras y diagramas].
+    \item \textbf{Pruebas realizadas:} [Resumen de pruebas unitarias y de aceptación].
+    \item \textbf{Cambios respecto al avance anterior:} [Modificaciones realizadas].
+\end{itemize}
+
+\section{Métricas y Seguimiento del Proceso}
+[Métricas de velocidad del equipo, cumplimiento de historias y tiempos de ciclo].
+
+\section{Acuerdos de Mejora para el Siguiente Incremento}
+[Compromisos de mejora derivados de la retrospectiva del sprint].
+
+\section{Política de Uso de IA y Registro de Uso}
+[Registro transparente de prompts, herramientas utilizadas y validaciones técnicas realizadas].
+
+\section{Conclusiones}
+\begin{enumerate}
+    \item [Conclusión 1 sobre el proceso y metodología].
+    \item [Conclusión 2 sobre la arquitectura del software].
+    \item [Conclusión 3 sobre los resultados de las pruebas].
+\end{enumerate}
+
+\bibliographystyle{plain}
+\bibliography{referencias}
+
+\end{document}
