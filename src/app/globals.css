@@ -1,1 +1,256 @@
 @import "tailwindcss";
+
+/* ==========================================================================
+   GUÍA MAESTRA DE ESTILO Y SISTEMA DE DISEÑO — CGB ACADEMY
+   Atmósfera: Institucional, Sobria y Premium
+   ========================================================================== */
+
+:root {
+  /* 1. Paleta de Colores de Marca y Acento */
+  --brand-navy: #092A60;         /* Primario: Títulos, fondos oscuros, botones sólidos */
+  --brand-navy-alto: #0D3873;    /* Variación en hover o degradados oscuros */
+  --brand-navy-hondo: #05183A;   /* Fondos oscuros de pie de página institucionales */
+  --brand-blue: #146287;         /* Secundario: Enlaces, kickers, hover primario */
+  --brand-cyan: #4DC4D3;         /* Acento único de acción: Botones captación, foco, chips */
+  --brand-cyan-hover: #62D8E7;   /* Hover de elementos cian interactivos */
+  
+
+  /* 2. Rampa Canónica de Superficies Claras (Sin grises slate) */
+  --bg-primary: #F9FAFB;         /* Lienzo claro base oficial */
+  --bg-surface-alt: #F3F6FA;     /* Superficie clara intermedia de alternancia */
+  --bg-surface-deep: #EEF2F7;    /* Fondo claro profundo de cierre antes del pie */
+  --bg-card: #FFFFFF;            /* Superficie pura para tarjetas y paneles */
+
+  /* 3. Textos y Jerarquía de Contraste */
+  --text-primary: #092A60;       /* Tinta primaria para títulos sobre fondo claro */
+  --text-secondary: #434654;     /* Tinta secundaria para cuerpo y párrafos */
+  --text-muted: #5F6673;         /* Tinta apagada para metadatos y etiquetas */
+  --text-light: #FFFFFF;         /* Tinta clara para fondos oscuros */
+  --text-light-muted: rgba(255, 255, 255, 0.72);
+  --input-placeholder: rgba(9, 42, 96, 0.32);
+
+  /* 4. Bordes y Estructuras */
+  --borde-sutil: rgba(9, 42, 96, 0.11);
+  --borde-divisor: rgba(9, 42, 96, 0.06);
+  --borde-marcado: #CBD7E1;
+  --borde-focus: #4DC4D3;
+
+  /* 5. Sombras Tintadas Oficiales (Nunca negro puro) */
+  --sombra-tarjeta: 0 10px 15px rgba(9, 42, 96, 0.08);
+  --sombra-elevada: 0 25px 50px -12px rgba(9, 42, 96, 0.25);
+  --sombra-hover: 0 14px 20px rgba(9, 42, 96, 0.12);
+
+  /* 6. Radios de Esquina Canónicos */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* 7. Motion Tokens (Animaciones y Transiciones) */
+  --dur-micro: 120ms;
+  --dur-fast: 200ms;
+  --dur-base: 320ms;
+  --dur-slow: 520ms;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* 8. Tipografía Oficial */
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+/* Reglas Estructurales Globales */
+html, body {
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  overflow-x: clip; /* clip NUNCA rompe position: sticky del header */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+}
+
+/* Cifras tabulares obligatorias para contadores y números */
+.cifra-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   COMPONENTES CANÓNICOS DE DISEÑO CGB ACADEMY
+   ========================================================================== */
+
+/* Botón Primario Píldora (Captación / Acción Principal) */
+.boton-primario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 28px;
+  min-height: 48px;
+  border-radius: var(--radius-full);
+  background-color: var(--brand-cyan);
+  color: var(--brand-navy);
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(77, 196, 211, 0.25);
+  transition: background-color var(--dur-fast) var(--ease-out-soft),
+              color var(--dur-fast) var(--ease-out-soft),
+              transform var(--dur-fast) var(--ease-out-soft),
+              box-shadow var(--dur-fast) var(--ease-out-soft);
+}
+
+.boton-primario:hover {
+  background-color: var(--brand-blue);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(20, 98, 135, 0.30);
+}
+
+/* Botón Secundario (Outline / Contorno) */
+.boton-secundario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 26px;
+  min-height: 48px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid rgba(9, 42, 96, 0.25);
+  background-color: transparent;
+  color: var(--brand-navy);
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-out-soft);
+}
+
+.boton-secundario:hover {
+  background-color: var(--brand-navy);
+  color: #FFFFFF;
+  border-color: var(--brand-navy);
+  transform: translateY(-1px);
+}
+
+/* Botón Outline Claro (Para fondos oscuros Navy) */
+.boton-secundario-claro {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 26px;
+  min-height: 48px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background-color: transparent;
+  color: #FFFFFF;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-out-soft);
+}
+
+.boton-secundario-claro:hover {
+  background-color: #FFFFFF;
+  color: var(--brand-navy);
+  border-color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+/* Tarjetas Oficiales CGB */
+.tarjeta-cgb {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--borde-sutil);
+  box-shadow: var(--sombra-tarjeta);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--dur-fast) var(--ease-out-soft),
+              box-shadow var(--dur-fast) var(--ease-out-soft),
+              border-color var(--dur-fast) var(--ease-out-soft);
+}
+
+.tarjeta-cgb:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sombra-hover);
+  border-color: rgba(9, 42, 96, 0.20);
+}
+
+/* Kicker / Versalitas Oficiales */
+.kicker-cgb {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--brand-blue);
+}
+
+/* Campos de Formulario Canónicos */
+.campo-formulario {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  background-color: #F8F9FC;
+  border: 1px solid rgba(9, 42, 96, 0.12);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-primary);
+  transition: border-color var(--dur-fast) var(--ease-out-soft),
+              box-shadow var(--dur-fast) var(--ease-out-soft);
+}
+
+.campo-formulario::placeholder {
+  color: var(--input-placeholder);
+}
+
+.campo-formulario:focus-visible {
+  outline: none;
+  border-color: var(--brand-cyan);
+  box-shadow: 0 0 0 3px rgba(77, 196, 211, 0.25);
+}
+
+/* Actos de Sección Oscura con Curva Superior */
+.acto-oscuro {
+  background-color: var(--brand-navy);
+  color: #FFFFFF;
+  border-radius: 24px 24px 0 0;
+}
+
+.acto-oscuro-profundo {
+  background-color: var(--brand-navy-hondo);
+  color: #FFFFFF;
+}
+
+/* Punto Pulsante para Eventos en Vivo */
+.punto-vivo {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--brand-live);
+  animation: pulsar-vivo 1.8s infinite cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@keyframes pulsar-vivo {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(229, 72, 77, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(229, 72, 77, 0); }
+}
