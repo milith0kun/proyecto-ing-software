@@ -83,3 +83,81 @@ test('HU-002: TDD Fase RED/GREEN - Validaciones de Creación de Capacitación', 
     assert.equal(fusionado.titulo, 'Inducción Biomédica Actualizada');
   });
 });
+
+test('HU-002: T4 - Validación BDD e Integración de Criterios de Aceptación', async (t) => {
+  await t.test('Escenario BDD 1: Registro exitoso de capacitación (Dado/Cuando/Entonces)', () => {
+    // DADO que un usuario administrador ingresa al formulario de creación
+    const entradaFormulario = {
+      titulo: 'Capacitación en Ciberseguridad Institucional',
+      descripcion: 'Lineamientos de seguridad informática y buenas prácticas de contraseñas.',
+      unidad: 'CIIP',
+      ambito: 'PUBLICO'
+    };
+
+    // CUANDO valida los datos e invoca la normalización del sistema
+    const validacion = validarCapacitacion(entradaFormulario);
+    const datosNormalizados = normalizarCapacitacion(entradaFormulario);
+
+    // ENTONCES el resultado es válido, sin errores, y contiene estado BORRADOR y 30 minutos
+    assert.equal(validacion.valido, true);
+    assert.deepEqual(validacion.errores, {});
+    assert.equal(datosNormalizados.estado, 'BORRADOR');
+    assert.equal(datosNormalizados.duracionMin, 30);
+    assert.equal(datosNormalizados.unidad, 'CIIP');
+  });
+
+  await t.test('Escenario BDD 2: Modificación de capacitación existente (Dado/Cuando/Entonces)', () => {
+    // DADO una capacitación existente con ID persistido
+    const capacitacionPrevia = {
+      id: 'cap_001_ciip',
+      titulo: 'Capacitación Inicial',
+      descripcion: 'Descripción previa de inducción general',
+      unidad: 'GENERAL',
+      ambito: 'INTERNO',
+      estado: 'BORRADOR',
+      duracionMin: 30
+    };
+
+    // CUANDO se actualizan el título, descripción y unidad institucional
+    const cambios = {
+      titulo: 'Capacitación Avanzada 2026',
+      descripcion: 'Descripción renovada con estándares internacionales',
+      unidad: 'GEOMINA',
+      ambito: 'PUBLICO'
+    };
+
+    const validacionCambios = validarCapacitacion({ ...capacitacionPrevia, ...cambios });
+    const datosActualizados = {
+      ...capacitacionPrevia,
+      ...normalizarCapacitacion(cambios)
+    };
+
+    // ENTONCES se conserva el ID original y se actualizan los campos solicitados
+    assert.equal(validacionCambios.valido, true);
+    assert.equal(datosActualizados.id, capacitacionPrevia.id);
+    assert.equal(datosActualizados.titulo, 'Capacitación Avanzada 2026');
+    assert.equal(datosActualizados.unidad, 'GEOMINA');
+    assert.equal(datosActualizados.ambito, 'PUBLICO');
+  });
+
+  await t.test('Escenario BDD 3: Rechazo de inserción ante campos inválidos (Dado/Cuando/Entonces)', () => {
+    // DADO datos incompletos o erróneos
+    const entradaErronea = {
+      titulo: 'X',
+      descripcion: 'Corto',
+      unidad: 'INVALIDA',
+      ambito: 'NO_VALIDO'
+    };
+
+    // CUANDO se evalúa la regla de negocio
+    const validacion = validarCapacitacion(entradaErronea);
+
+    // ENTONCES se rechaza la operación y se detallan los errores en cada campo
+    assert.equal(validacion.valido, false);
+    assert.ok(validacion.errores.titulo);
+    assert.ok(validacion.errores.descripcion);
+    assert.ok(validacion.errores.unidad);
+    assert.ok(validacion.errores.ambito);
+  });
+});
+
