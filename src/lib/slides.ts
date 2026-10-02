@@ -14,6 +14,10 @@ export interface SlideEntrada {
   contenido?: string;
   tipo?: string;
   orden?: number;
+  imagenUrl?: string | null;
+  botonTexto?: string | null;
+  botonUrl?: string | null;
+  lista?: string[] | string;
 }
 
 export interface SlideNormalizado {
@@ -23,11 +27,30 @@ export interface SlideNormalizado {
   contenido: string;
   tipo: string;
   orden: number;
+  imagenUrl: string | null;
+  botonTexto: string | null;
+  botonUrl: string | null;
+  lista: string[];
 }
 
 export interface ResultadoValidacionSlide {
   valido: boolean;
   errores: Record<string, string>;
+}
+
+function normalizarLista(lista?: string[] | string): string[] {
+  if (Array.isArray(lista)) {
+    return lista.map((item) => item.trim()).filter(Boolean);
+  }
+
+  if (typeof lista === 'string') {
+    return lista
+      .split(/\n|;/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  return [];
 }
 
 export function validarSlide(datos: SlideEntrada): ResultadoValidacionSlide {
@@ -52,6 +75,22 @@ export function validarSlide(datos: SlideEntrada): ResultadoValidacionSlide {
     errores.capacitacionId = 'La capacitación asociada es obligatoria.';
   }
 
+  const imagenUrl = typeof datos.imagenUrl === 'string' ? datos.imagenUrl.trim() : '';
+  if (tipo === 'IMAGE' && !imagenUrl) {
+    errores.imagenUrl = 'La URL de la imagen es obligatoria para slides de tipo IMAGE.';
+  }
+
+  const botonTexto = typeof datos.botonTexto === 'string' ? datos.botonTexto.trim() : '';
+  const botonUrl = typeof datos.botonUrl === 'string' ? datos.botonUrl.trim() : '';
+  if (tipo === 'INTERACTIVE') {
+    if (!botonTexto || botonTexto.length < 2) {
+      errores.botonTexto = 'El texto del botón es obligatorio para slides interactivos.';
+    }
+    if (!botonUrl || !/^https?:\/\//i.test(botonUrl)) {
+      errores.botonUrl = 'La URL del botón debe comenzar con http:// o https://.';
+    }
+  }
+
   return {
     valido: Object.keys(errores).length === 0,
     errores
@@ -71,7 +110,11 @@ export function crearSlide(datos: SlideEntrada): { valido: boolean; errores: Rec
         titulo: String(datos.titulo || '').trim(),
         contenido: String(datos.contenido || '').trim(),
         tipo: String(datos.tipo || 'TEXT').toUpperCase().trim(),
-        orden: Number(datos.orden) || 1
+        orden: Number(datos.orden) || 1,
+        imagenUrl: typeof datos.imagenUrl === 'string' ? datos.imagenUrl.trim() || null : null,
+        botonTexto: typeof datos.botonTexto === 'string' ? datos.botonTexto.trim() || null : null,
+        botonUrl: typeof datos.botonUrl === 'string' ? datos.botonUrl.trim() || null : null,
+        lista: normalizarLista(datos.lista),
       }
     };
   }
@@ -82,7 +125,11 @@ export function crearSlide(datos: SlideEntrada): { valido: boolean; errores: Rec
     titulo: String(datos.titulo).trim(),
     contenido: String(datos.contenido).trim(),
     tipo: String(datos.tipo || 'TEXT').toUpperCase().trim(),
-    orden: Number(datos.orden) || 1
+    orden: Number(datos.orden) || 1,
+    imagenUrl: typeof datos.imagenUrl === 'string' ? datos.imagenUrl.trim() || null : null,
+    botonTexto: typeof datos.botonTexto === 'string' ? datos.botonTexto.trim() || null : null,
+    botonUrl: typeof datos.botonUrl === 'string' ? datos.botonUrl.trim() || null : null,
+    lista: normalizarLista(datos.lista),
   };
 
   return {
