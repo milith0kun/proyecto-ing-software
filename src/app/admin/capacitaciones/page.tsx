@@ -54,6 +54,8 @@ interface FormularioData {
 const UNIDADES = ['CIIP', 'GEOMINA', 'BIOMEDIC', 'GENERAL'];
 const AMBITOS = ['PUBLICO', 'INTERNO'];
 const TIPOS_SLIDE = ['TEXT', 'IMAGE', 'INTERACTIVE', 'INFO', 'EVALUACION'];
+const TIPOS_IMAGEN_PERMITIDOS = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const TAMANO_MAXIMO_IMAGEN = 5 * 1024 * 1024;
 
 const FORMULARIO_SLIDE_INICIAL: FormularioSlide = {
   titulo: '',
@@ -91,6 +93,23 @@ function chipEstado(estado: string) {
   return estado === 'PUBLICADA'
     ? 'chip-estado chip-estado--completado'
     : 'chip-estado chip-estado--pendiente';
+}
+
+function leerArchivoComoDataUrl(archivo: File): Promise<string> {
+  return new Promise((resolver, rechazar) => {
+    const lector = new FileReader();
+
+    lector.onload = () => {
+      if (typeof lector.result === 'string') {
+        resolver(lector.result);
+        return;
+      }
+
+      rechazar(new Error('No se pudo leer la imagen.'));
+    };
+    lector.onerror = () => rechazar(new Error('No se pudo leer la imagen.'));
+    lector.readAsDataURL(archivo);
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -975,16 +994,65 @@ export default function PanelCapacitaciones() {
               {formularioSlide.tipo === 'IMAGE' && (
                 <div>
                   <label htmlFor="slide-imagen" style={{ display: 'block', marginBottom: '6px', fontSize: '12px', fontWeight: 700, color: 'var(--brand-navy)' }}>
-                    URL de imagen
+                    Imagen del slide
                   </label>
-                  <input
-                    id="slide-imagen"
-                    type="url"
-                    className="campo-formulario"
-                    value={formularioSlide.imagenUrl}
-                    onChange={(evento) => setFormularioSlide((actual) => ({ ...actual, imagenUrl: evento.target.value }))}
-                    placeholder="https://ejemplo.com/imagen.jpg"
-                  />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                    <input
+                      id="slide-imagen"
+                      type="url"
+                      className="campo-formulario"
+                      value={formularioSlide.imagenUrl.startsWith('data:') ? '' : formularioSlide.imagenUrl}
+                      onChange={(evento) => setFormularioSlide((actual) => ({ ...actual, imagenUrl: evento.target.value }))}
+                      placeholder="Pega una URL o sube un archivo"
+                      style={{ flex: '1 1 280px' }}
+                    />
+                    <label
+                      htmlFor="slide-imagen-archivo"
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                        minHeight: '48px', padding: '0 18px', borderRadius: '12px',
+                        border: '1px solid var(--brand-cyan)', backgroundColor: 'rgba(56, 189, 219, 0.08)',
+                        color: 'var(--brand-navy)', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap'
+                      }}
+                    >
+                      Subir imagen
+                    </label>
+                    <input
+                      id="slide-imagen-archivo"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/gif"
+                      aria-label="Seleccionar archivo de imagen"
+                      style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 }}
+                      onChange={async (evento) => {
+                        const archivo = evento.target.files?.[0];
+                        if (!archivo) return;
+
+                        if (!TIPOS_IMAGEN_PERMITIDOS.includes(archivo.type)) {
+                          setErrorSlides('Elige una imagen JPG, PNG, WebP o GIF.');
+                          evento.target.value = '';
+                          return;
+                        }
+                        if (archivo.size > TAMANO_MAXIMO_IMAGEN) {
+                          setErrorSlides('La imagen no puede superar los 5 MiB.');
+                          evento.target.value = '';
+                          return;
+                        }
+
+                        try {
+                          const imagenUrl = await leerArchivoComoDataUrl(archivo);
+                          setFormularioSlide((actual) => ({ ...actual, imagenUrl }));
+                          setErrorSlides('');
+                        } catch {
+                          setErrorSlides('No se pudo leer la imagen seleccionada.');
+                        } finally {
+                          evento.target.value = '';
+                        }
+                      }}
+                    />
+                  </div>
+                  <p style={{ margin: '6px 0 0', color: 'var(--text-muted)', fontSize: '12px' }}>
+                    JPG, PNG, WebP o GIF. Máximo 5 MiB.
+                  </p>
                 </div>
               )}
 
