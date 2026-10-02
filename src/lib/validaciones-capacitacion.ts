@@ -64,11 +64,26 @@ export function validarCapacitacion(datos: DatosCapacitacionEntrada = {}): Resul
     errores.unidad = `Unidad institucional no válida. Debe ser una de: ${UNIDADES_VALIDAS.join(', ')}.`;
   }
 
-  // Validación de ámbito si está presente
-  if (datos.ambito) {
+  // El ámbito tiene un valor por defecto al crear, pero si se envía debe ser válido.
+  if (datos.ambito !== undefined) {
     const ambito = String(datos.ambito).toUpperCase().trim();
     if (!AMBITOS_VALIDOS.includes(ambito as AmbitoCapacitacion)) {
       errores.ambito = `El ámbito debe ser: ${AMBITOS_VALIDOS.join(' o ')}.`;
+    }
+  }
+
+  if (datos.categoria !== undefined) {
+    if (typeof datos.categoria !== 'string') {
+      errores.categoria = 'La categoría debe ser texto.';
+    } else if (datos.categoria.trim().length > 60) {
+      errores.categoria = 'La categoría no puede superar los 60 caracteres.';
+    }
+  }
+
+  if (datos.duracionMin !== undefined) {
+    const duracion = Number(datos.duracionMin);
+    if (!Number.isInteger(duracion) || duracion < 1 || duracion > 480) {
+      errores.duracionMin = 'La duración debe ser un número entero entre 1 y 480 minutos.';
     }
   }
 
@@ -81,15 +96,19 @@ export function validarCapacitacion(datos: DatosCapacitacionEntrada = {}): Resul
 /**
  * Normaliza y aplica valores por defecto para persistencia en MongoDB / Prisma.
  */
-export function normalizarCapacitacion(datos: DatosCapacitacionEntrada = {}): CapacitacionNormalizada {
+export function normalizarCapacitacion(
+  datos: DatosCapacitacionEntrada = {},
+  valoresPreservados: { estado?: string; icono?: string } = {}
+): CapacitacionNormalizada {
   return {
     titulo: String(datos.titulo || '').trim(),
     descripcion: String(datos.descripcion || '').trim(),
     unidad: (datos.unidad || 'CIIP').toUpperCase().trim(),
     ambito: (datos.ambito || 'PUBLICO').toUpperCase().trim(),
-    estado: (datos.estado || 'BORRADOR').toUpperCase().trim(),
-    categoria: datos.categoria || 'Inducción',
-    duracionMin: Number(datos.duracionMin) || 30,
-    icono: datos.icono || 'book-open',
+    // El estado solo cambia desde el flujo de publicación (HU-004).
+    estado: (valoresPreservados.estado || 'BORRADOR').toUpperCase().trim(),
+    categoria: (datos.categoria || 'Inducción').trim(),
+    duracionMin: datos.duracionMin === undefined ? 30 : Number(datos.duracionMin),
+    icono: valoresPreservados.icono || 'book-open',
   };
 }

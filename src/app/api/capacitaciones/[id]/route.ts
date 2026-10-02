@@ -16,6 +16,13 @@ export async function GET(
   try {
     const { id } = await params;
 
+    if (!/^[a-f\d]{24}$/i.test(id)) {
+      return NextResponse.json(
+        { ok: false, error: 'El identificador de la capacitación no es válido.' },
+        { status: 400 }
+      );
+    }
+
     const capacitacion = await prisma.capacitacion.findUnique({
       where: { id },
       include: { slides: { orderBy: { orden: 'asc' } } },
@@ -52,7 +59,20 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const cuerpo = await request.json();
+    if (!/^[a-f\d]{24}$/i.test(id)) {
+      return NextResponse.json(
+        { ok: false, error: 'El identificador de la capacitación no es válido.' },
+        { status: 400 }
+      );
+    }
+
+    const cuerpo = await request.json().catch(() => null);
+    if (!cuerpo || typeof cuerpo !== 'object' || Array.isArray(cuerpo)) {
+      return NextResponse.json(
+        { ok: false, error: 'El cuerpo de la solicitud debe ser un objeto JSON válido.' },
+        { status: 400 }
+      );
+    }
 
     // 1. Verificar que la capacitación existe antes de editar (CA-02)
     const existente = await prisma.capacitacion.findUnique({ where: { id } });
@@ -63,8 +83,19 @@ export async function PUT(
       );
     }
 
+    // Permitir actualizaciones parciales sin borrar valores que el formulario no envíe.
+    const datosParaActualizar = {
+      ...cuerpo,
+      titulo: cuerpo.titulo ?? existente.titulo,
+      descripcion: cuerpo.descripcion ?? existente.descripcion,
+      unidad: cuerpo.unidad ?? existente.unidad,
+      ambito: cuerpo.ambito ?? existente.ambito,
+      categoria: cuerpo.categoria ?? existente.categoria ?? 'Inducción',
+      duracionMin: cuerpo.duracionMin ?? existente.duracionMin ?? 30,
+    };
+
     // 2. Validar los nuevos datos con el módulo de validaciones
-    const { valido, errores } = validarCapacitacion(cuerpo);
+    const { valido, errores } = validarCapacitacion(datosParaActualizar);
     if (!valido) {
       return NextResponse.json(
         { ok: false, error: 'Datos inválidos.', detalles: errores },
@@ -72,8 +103,11 @@ export async function PUT(
       );
     }
 
-    // 3. Normalizar y actualizar SOBRE el mismo registro (mismo ID, sin duplicados)
-    const datosNormalizados = normalizarCapacitacion(cuerpo);
+    // El formulario edita datos generales; el estado e icono se conservan en el registro.
+    const datosNormalizados = normalizarCapacitacion(datosParaActualizar, {
+      estado: existente.estado,
+      icono: existente.icono ?? undefined,
+    });
 
     const capacitacionActualizada = await prisma.capacitacion.update({
       where: { id },
@@ -102,6 +136,13 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+
+    if (!/^[a-f\d]{24}$/i.test(id)) {
+      return NextResponse.json(
+        { ok: false, error: 'El identificador de la capacitación no es válido.' },
+        { status: 400 }
+      );
+    }
 
     const existente = await prisma.capacitacion.findUnique({ where: { id } });
     if (!existente) {

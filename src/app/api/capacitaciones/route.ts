@@ -42,8 +42,13 @@ export async function GET() {
  */
 export async function POST(request: NextRequest) {
   try {
-    // 1. Leer el cuerpo JSON enviado desde el formulario
-    const cuerpo = await request.json();
+    const cuerpo = await request.json().catch(() => null);
+    if (!cuerpo || typeof cuerpo !== 'object' || Array.isArray(cuerpo)) {
+      return NextResponse.json(
+        { ok: false, error: 'El cuerpo de la solicitud debe ser un objeto JSON válido.' },
+        { status: 400 }
+      );
+    }
 
     // 2. Validar los datos con nuestro módulo de validaciones (HU-002 CA-01)
     const { valido, errores } = validarCapacitacion(cuerpo);
@@ -54,7 +59,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Normalizar y aplicar valores por defecto antes de guardar
+    // 3. Las nuevas capacitaciones siempre comienzan como borrador.
     const datosNormalizados = normalizarCapacitacion(cuerpo);
 
     // 4. Guardar la nueva capacitación en MongoDB Atlas a través de Prisma
