@@ -1,6 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { validarCapacitacion, normalizarCapacitacion } from '../src/lib/validaciones-capacitacion.ts';
+import {
+  crearSlide,
+  reordenarSlides,
+  eliminarSlideYReindexar,
+  validarSlide
+} from '../src/lib/slides.ts';
 
 test('HU-002: TDD Fase RED/GREEN - Validaciones de Creación de Capacitación', async (t) => {
   await t.test('CA-01: Debe rechazar capacitaciones sin título o con título menor a 3 caracteres', () => {
@@ -158,6 +164,63 @@ test('HU-002: T4 - Validación BDD e Integración de Criterios de Aceptación', 
     assert.ok(validacion.errores.descripcion);
     assert.ok(validacion.errores.unidad);
     assert.ok(validacion.errores.ambito);
+  });
+});
+
+test('HU-003: T1 - RED - Gestión de slides dentro de una capacitación', async (t) => {
+  await t.test('CA-01: Debe crear un slide asociado a una capacitación con contenido válido', () => {
+    const resultado = crearSlide({
+      capacitacionId: 'cap_123',
+      titulo: 'Bienvenida institucional',
+      contenido: 'Texto de bienvenida con enlaces e instrucciones.',
+      tipo: 'TEXT',
+      orden: 1
+    });
+
+    assert.equal(resultado.valido, true);
+    assert.equal(resultado.slide.capacitacionId, 'cap_123');
+    assert.equal(resultado.slide.orden, 1);
+    assert.equal(resultado.slide.titulo, 'Bienvenida institucional');
+  });
+
+  await t.test('CA-01: Debe rechazar un slide sin título o contenido mínimo', () => {
+    const resultado = validarSlide({
+      capacitacionId: 'cap_123',
+      titulo: '',
+      contenido: 'corto',
+      tipo: 'TEXT',
+      orden: 1
+    });
+
+    assert.equal(resultado.valido, false);
+    assert.ok(resultado.errores.titulo);
+    assert.ok(resultado.errores.contenido);
+  });
+
+  await t.test('CA-02: Debe reordenar slides de forma correlativa', () => {
+    const slides = [
+      { id: 's1', capacitacionId: 'cap_123', orden: 1, titulo: 'Intro', contenido: 'A', tipo: 'TEXT' },
+      { id: 's2', capacitacionId: 'cap_123', orden: 2, titulo: 'Tema', contenido: 'B', tipo: 'TEXT' },
+      { id: 's3', capacitacionId: 'cap_123', orden: 3, titulo: 'Cierre', contenido: 'C', tipo: 'TEXT' }
+    ];
+
+    const reordenados = reordenarSlides(slides, 's3', 1);
+
+    assert.deepEqual(reordenados.map((slide) => slide.orden), [1, 2, 3]);
+    assert.equal(reordenados[0].id, 's3');
+  });
+
+  await t.test('CA-04: Debe eliminar un slide y reajustar la secuencia de los restantes', () => {
+    const slides = [
+      { id: 's1', capacitacionId: 'cap_123', orden: 1, titulo: 'Intro', contenido: 'A', tipo: 'TEXT' },
+      { id: 's2', capacitacionId: 'cap_123', orden: 2, titulo: 'Tema', contenido: 'B', tipo: 'TEXT' },
+      { id: 's3', capacitacionId: 'cap_123', orden: 3, titulo: 'Cierre', contenido: 'C', tipo: 'TEXT' }
+    ];
+
+    const resultado = eliminarSlideYReindexar(slides, 's2');
+
+    assert.deepEqual(resultado.map((slide) => slide.orden), [1, 2]);
+    assert.equal(resultado[1].titulo, 'Cierre');
   });
 });
 
