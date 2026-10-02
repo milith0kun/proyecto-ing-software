@@ -210,6 +210,32 @@ test('HU-003: T1 - RED - Gestión de slides dentro de una capacitación', async 
     assert.equal(reordenados[0].id, 's3');
   });
 
+  await t.test('CA-03: Debe validar imagen y botón de acción para slides multimedia', () => {
+    const slideSinImagen = validarSlide({
+      capacitacionId: 'cap_123',
+      titulo: 'Slide visual',
+      contenido: 'Texto explicativo del contenido.',
+      tipo: 'IMAGE',
+      orden: 1
+    });
+
+    assert.equal(slideSinImagen.valido, false);
+    assert.match(slideSinImagen.errores.imagenUrl, /imagen/i);
+
+    const slideInteractivo = validarSlide({
+      capacitacionId: 'cap_123',
+      titulo: 'Slide interactivo',
+      contenido: 'Incluye acción para continuar.',
+      tipo: 'INTERACTIVE',
+      orden: 2,
+      botonTexto: 'Continuar',
+      botonUrl: 'https://example.com/continuar'
+    });
+
+    assert.equal(slideInteractivo.valido, true);
+    assert.deepEqual(slideInteractivo.errores, {});
+  });
+
   await t.test('CA-04: Debe eliminar un slide y reajustar la secuencia de los restantes', () => {
     const slides = [
       { id: 's1', capacitacionId: 'cap_123', orden: 1, titulo: 'Intro', contenido: 'A', tipo: 'TEXT' },

@@ -79,6 +79,10 @@ export async function POST(request: NextRequest, { params }: ContextoRuta) {
         titulo: resultado.slide.titulo,
         contenido: resultado.slide.contenido,
         tipo: resultado.slide.tipo,
+        imagenUrl: resultado.slide.imagenUrl ?? null,
+        botonTexto: resultado.slide.botonTexto ?? null,
+        botonUrl: resultado.slide.botonUrl ?? null,
+        lista: resultado.slide.lista,
       },
     });
 
