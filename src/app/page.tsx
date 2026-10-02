@@ -46,7 +46,7 @@ export default function PaginaInicio() {
             </Link>
 
             <Link
-              href="#unidades"
+              href="/capacitaciones"
               className="boton-primario"
             >
               <span>Explorar Capacitaciones</span>
@@ -125,7 +125,10 @@ export default function PaginaInicio() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Unidad CIIP */}
-            <div className="tarjeta-cgb">
+            <Link
+              href="/capacitaciones?unidad=CIIP"
+              className="tarjeta-cgb transition-all hover:translate-y-[-4px] hover:shadow-lg block text-inherit no-underline"
+            >
               <div className="relative h-14 w-32 mb-6">
                 <Image
                   src="/logos/ciip-logo.png"
@@ -142,17 +145,20 @@ export default function PaginaInicio() {
               </p>
               <div className="pt-4 border-t border-[rgba(9,42,96,0.06)] mt-auto flex flex-col gap-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-[#5F6673] font-medium">Ruta de Inducción</span>
-                  <span className="chip-estado chip-estado--en-curso">4 Módulos</span>
+                  <span className="text-[#146287] font-semibold">Ver capacitaciones</span>
+                  <span className="chip-estado chip-estado--completado">CIIP</span>
                 </div>
                 <div className="barra-progreso">
                   <div className="barra-progreso-avance" style={{ width: '100%' }}></div>
                 </div>
               </div>
-            </div>
+            </Link>
 
             {/* Unidad GEOMINA */}
-            <div className="tarjeta-cgb">
+            <Link
+              href="/capacitaciones?unidad=GEOMINA"
+              className="tarjeta-cgb transition-all hover:translate-y-[-4px] hover:shadow-lg block text-inherit no-underline"
+            >
               <div className="relative h-14 w-32 mb-6">
                 <Image
                   src="/logos/geomina-logo.png"
@@ -169,17 +175,20 @@ export default function PaginaInicio() {
               </p>
               <div className="pt-4 border-t border-[rgba(9,42,96,0.06)] mt-auto flex flex-col gap-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-[#5F6673] font-medium">Ruta de Inducción</span>
-                  <span className="chip-estado chip-estado--en-curso">4 Módulos</span>
+                  <span className="text-[#146287] font-semibold">Ver capacitaciones</span>
+                  <span className="chip-estado chip-estado--en-curso">GEOMINA</span>
                 </div>
                 <div className="barra-progreso">
                   <div className="barra-progreso-avance" style={{ width: '100%' }}></div>
                 </div>
               </div>
-            </div>
+            </Link>
 
             {/* Unidad BIOMEDIC */}
-            <div className="tarjeta-cgb">
+            <Link
+              href="/capacitaciones?unidad=BIOMEDIC"
+              className="tarjeta-cgb transition-all hover:translate-y-[-4px] hover:shadow-lg block text-inherit no-underline"
+            >
               <div className="relative h-14 w-32 mb-6">
                 <Image
                   src="/logos/biomedic-logo.png"
@@ -196,14 +205,14 @@ export default function PaginaInicio() {
               </p>
               <div className="pt-4 border-t border-[rgba(9,42,96,0.06)] mt-auto flex flex-col gap-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-[#5F6673] font-medium">Ruta de Inducción</span>
-                  <span className="chip-estado chip-estado--en-curso">4 Módulos</span>
+                  <span className="text-[#146287] font-semibold">Ver capacitaciones</span>
+                  <span className="chip-estado chip-estado--pendiente">BIOMEDIC</span>
                 </div>
                 <div className="barra-progreso">
                   <div className="barra-progreso-avance" style={{ width: '100%' }}></div>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
