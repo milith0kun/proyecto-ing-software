@@ -55,13 +55,13 @@
 ```
 
 ### 3.1 Módulos Implementados
-1. **Contratos y Dominio:** [`src/lib/catalogo-publico.ts`](file:///c:/Users/wtfcl/Desktop/ING%20DE%20SOFTWARE/proyecto-ing-software/src/lib/catalogo-publico.ts)
+1. **Contratos y Dominio:** [`src/lib/catalogo-publico.ts`](../src/lib/catalogo-publico.ts)
    - Funciones puras `filtrarCapacitacionesPublicas()`, `buscarEnCatalogoPublico()` y `validarConsultaPublica()`.
-2. **Endpoint API REST:** [`src/app/api/public/capacitaciones/route.ts`](file:///c:/Users/wtfcl/Desktop/ING%20DE%20SOFTWARE/proyecto-ing-software/src/app/api/public/capacitaciones/route.ts)
+2. **Endpoint API REST:** [`src/app/api/public/capacitaciones/route.ts`](../src/app/api/public/capacitaciones/route.ts)
    - `GET /api/public/capacitaciones` con soporte para query params `?unidad=`, `?categoria=`, `?q=`.
-3. **Página de Catálogo Público:** [`src/app/capacitaciones/page.tsx`](file:///c:/Users/wtfcl/Desktop/ING%20DE%20SOFTWARE/proyecto-ing-software/src/app/capacitaciones/page.tsx)
+3. **Página de Catálogo Público:** [`src/app/capacitaciones/page.tsx`](../src/app/capacitaciones/page.tsx)
    - Interfaz con filtros en tiempo real, chips temáticos por unidad, diseño responsivo y estado vacío.
-4. **Navegación en Página Principal:** [`src/app/page.tsx`](file:///c:/Users/wtfcl/Desktop/ING%20DE%20SOFTWARE/proyecto-ing-software/src/app/page.tsx)
+4. **Navegación en Página Principal:** [`src/app/page.tsx`](../src/app/page.tsx)
    - Botón *"Explorar Capacitaciones"* y tarjetas de unidades conectadas directamente al catálogo.
 
 ---
@@ -73,7 +73,7 @@
 | **CGB-22** | **T1: RED** | `e1f6c84` | Suite de pruebas automatizadas BDD en `tests/catalogo-publico.test.mjs`. |
 | **CGB-23** | **T2: GREEN** | `71ef200` | Implementación del endpoint API público y página del catálogo en Next.js. |
 | **CGB-24** | **T3: REFACTOR** | `79ed962` | Optimización de código, limpieza de tipados y conexión de navegación desde la portada. |
-| **CGB-25** | **T4: VALIDACIÓN** | *(En preparación)* | Validación integral de criterios BDD, 0 errores en ESLint y documentación de entrega. |
+| **CGB-25** | **T4: VALIDACIÓN** | `0d893df` | Validación integral BDD, criterios CA-01 a CA-03, ESLint y documentación final; lista para revisión por pares. |
 
 ---
 
