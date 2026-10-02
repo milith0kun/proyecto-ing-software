@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   calcularProgresoLectura,
+  obtenerDireccionDeslizamiento,
   navegarPorTeclado,
   obtenerAccionSlide,
   obtenerSiguienteSlide,
@@ -13,6 +14,7 @@ import {
 /* eslint-disable @next/next/no-img-element */
 export default function SlideViewer({ slides }: { slides: SlideVisor[] }) {
   const [slideActual, setSlideActual] = useState(1);
+  const inicioToqueX = useRef<number | null>(null);
   const totalSlides = slides.length;
   const progreso = calcularProgresoLectura(slideActual, totalSlides);
   const slide = slides[slideActual - 1];
@@ -21,7 +23,7 @@ export default function SlideViewer({ slides }: { slides: SlideVisor[] }) {
     function manejarTeclado(evento: KeyboardEvent) {
       if (evento.altKey || evento.ctrlKey || evento.metaKey) return;
       const elemento = evento.target as HTMLElement | null;
-      if (elemento && ['INPUT', 'TEXTAREA', 'SELECT'].includes(elemento.tagName)) return;
+      if (elemento?.isContentEditable || elemento?.closest('input, textarea, select')) return;
 
       const siguiente = navegarPorTeclado(evento.key, slideActual, totalSlides);
       if (siguiente !== slideActual) {
@@ -61,6 +63,7 @@ export default function SlideViewer({ slides }: { slides: SlideVisor[] }) {
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={progreso}
+        aria-valuetext={`${slideActual} de ${totalSlides} diapositivas, ${progreso}% completado`}
         style={{ height: '8px', overflow: 'hidden', borderRadius: '999px', backgroundColor: '#DCE5EF', marginBottom: '24px' }}
       >
         <div className="barra-progreso-avance" style={{ width: `${progreso}%` }} />
@@ -71,14 +74,36 @@ export default function SlideViewer({ slides }: { slides: SlideVisor[] }) {
         className="visor-slide-entrada"
         aria-live="polite"
         aria-atomic="true"
-        style={{ minHeight: '260px', padding: 'clamp(20px, 5vw, 40px)', borderRadius: '16px', backgroundColor: '#FFFFFF', border: '1px solid var(--borde-sutil)', boxShadow: 'var(--sombra-tarjeta)' }}
+        onTouchStart={(evento) => {
+          inicioToqueX.current = evento.changedTouches[0]?.clientX ?? null;
+        }}
+        onTouchEnd={(evento) => {
+          const inicioX = inicioToqueX.current;
+          const finX = evento.changedTouches[0]?.clientX;
+          inicioToqueX.current = null;
+          if (inicioX === null || finX === undefined) return;
+
+          const direccion = obtenerDireccionDeslizamiento(inicioX, finX);
+          if (direccion === 'siguiente') {
+            setSlideActual((actual) => obtenerSiguienteSlide(actual, totalSlides));
+          } else if (direccion === 'anterior') {
+            setSlideActual((actual) => obtenerSlideAnterior(actual, totalSlides));
+          }
+        }}
+        onTouchCancel={() => {
+          inicioToqueX.current = null;
+        }}
+        style={{ minHeight: '260px', padding: 'clamp(20px, 5vw, 40px)', borderRadius: '16px', backgroundColor: '#FFFFFF', border: '1px solid var(--borde-sutil)', boxShadow: 'var(--sombra-tarjeta)', touchAction: 'pan-y' }}
       >
         {slide.imagenUrl && (
           <img
             src={slide.imagenUrl}
             alt={slide.titulo}
+            width={1600}
+            height={900}
             loading="lazy"
-            style={{ display: 'block', width: '100%', maxHeight: '420px', objectFit: 'contain', marginBottom: '24px', borderRadius: '8px' }}
+            decoding="async"
+            className="visor-imagen"
           />
         )}
         <p style={{ margin: '0 0 10px', color: 'var(--brand-blue)', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase' }}>
@@ -107,20 +132,24 @@ export default function SlideViewer({ slides }: { slides: SlideVisor[] }) {
         )}
       </article>
 
-      <nav aria-label="Navegación de diapositivas" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginTop: '20px' }}>
+      <nav aria-label="Navegación de diapositivas" className="visor-navegacion">
         <button
           type="button"
+          className="visor-control"
+          aria-label="Ir a la diapositiva anterior"
           onClick={() => setSlideActual((actual) => obtenerSlideAnterior(actual, totalSlides))}
           disabled={slideActual === 1}
-          style={{ minHeight: '46px', padding: '0 20px', border: '1px solid var(--borde-sutil)', borderRadius: '999px', backgroundColor: '#FFFFFF', color: 'var(--brand-navy)', fontWeight: 700, cursor: slideActual === 1 ? 'not-allowed' : 'pointer', opacity: slideActual === 1 ? 0.55 : 1 }}
+          style={{ border: '1px solid var(--borde-sutil)', borderRadius: '999px', backgroundColor: '#FFFFFF', color: 'var(--brand-navy)', fontWeight: 700, cursor: slideActual === 1 ? 'not-allowed' : 'pointer', opacity: slideActual === 1 ? 0.55 : 1 }}
         >
           Anterior
         </button>
         <button
           type="button"
+          className="visor-control"
+          aria-label="Ir a la diapositiva siguiente"
           onClick={() => setSlideActual((actual) => obtenerSiguienteSlide(actual, totalSlides))}
           disabled={slideActual === totalSlides}
-          style={{ minHeight: '46px', padding: '0 22px', border: 0, borderRadius: '999px', backgroundColor: 'var(--brand-navy)', color: '#FFFFFF', fontWeight: 700, cursor: slideActual === totalSlides ? 'not-allowed' : 'pointer', opacity: slideActual === totalSlides ? 0.55 : 1 }}
+          style={{ border: 0, borderRadius: '999px', backgroundColor: 'var(--brand-navy)', color: '#FFFFFF', fontWeight: 700, cursor: slideActual === totalSlides ? 'not-allowed' : 'pointer', opacity: slideActual === totalSlides ? 0.55 : 1 }}
         >
           Siguiente
         </button>

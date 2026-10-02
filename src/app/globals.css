@@ -2736,9 +2736,57 @@ button:disabled {
   animation: visor-slide-entrada var(--dur-fast) var(--ease-out-soft) both;
 }
 
+.visor-navegacion {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.visor-control {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 48px;
+  padding-inline: 20px;
+  transition: transform var(--dur-fast) var(--ease-out-soft);
+}
+
+.visor-control:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.visor-control:focus-visible {
+  outline: 3px solid var(--borde-focus);
+  outline-offset: 3px;
+}
+
+.visor-imagen {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  margin-bottom: 24px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-surface-alt);
+  object-fit: contain;
+}
+
+@media (max-width: 480px) {
+  .visor-navegacion {
+    gap: 10px;
+  }
+
+  .visor-control {
+    padding-inline: 10px;
+    font-size: 14px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .visor-slide-entrada,
-  .barra-progreso-avance {
+  .barra-progreso-avance,
+  .visor-control {
     animation: none;
     transition: none;
   }

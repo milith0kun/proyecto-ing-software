@@ -47,6 +47,16 @@ export function navegarPorTeclado(tecla: string, slideActual: number, totalSlide
   return slideActual;
 }
 
+export function obtenerDireccionDeslizamiento(
+  inicioX: number,
+  finX: number,
+  umbral = 48,
+): 'siguiente' | 'anterior' | null {
+  const desplazamiento = finX - inicioX;
+  if (Math.abs(desplazamiento) < umbral) return null;
+  return desplazamiento < 0 ? 'siguiente' : 'anterior';
+}
+
 export function obtenerAccionSlide(slide: AccionSlide): { texto: string; url: string } | null {
   if (slide.tipo !== 'INTERACTIVE') return null;
 
