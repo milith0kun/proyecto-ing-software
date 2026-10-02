@@ -2720,4 +2720,26 @@ button:disabled {
   .login-formulario h1 { font-size: 21px; }
 }
 
+@keyframes visor-slide-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.visor-slide-entrada {
+  animation: visor-slide-entrada var(--dur-fast) var(--ease-out-soft) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .visor-slide-entrada,
+  .barra-progreso-avance {
+    animation: none;
+    transition: none;
+  }
+}
