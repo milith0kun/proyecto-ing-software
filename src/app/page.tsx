@@ -1,66 +1,132 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+type Escuela = {
+  id: 'CIIP' | 'GEOMINA' | 'BIOMEDIC';
+  nombre: string;
+  area: string;
+  logo: string;
+  descripcion: string;
+  temas: string[];
+};
+
+const escuelas: Escuela[] = [
+  {
+    id: 'CIIP',
+    nombre: 'CIIP LATAM',
+    area: 'Negocios y gestión pública',
+    logo: '/logos/ciip-logo.png',
+    descripcion:
+      'Programas para fortalecer la gestión pública y empresarial, las finanzas, la investigación y la dirección de proyectos.',
+    temas: ['Finanzas', 'Gestión pública', 'Proyectos e investigación'],
+  },
+  {
+    id: 'GEOMINA',
+    nombre: 'GEOMINA LATAM',
+    area: 'Minería y geociencias',
+    logo: '/logos/geomina-logo.png',
+    descripcion:
+      'Formación especializada para los retos de minería, geología, geomecánica, procesamiento y gestión ambiental.',
+    temas: ['Geología', 'Operaciones mineras', 'Ambiente y seguridad'],
+  },
+  {
+    id: 'BIOMEDIC',
+    nombre: 'BIOMEDIC LATAM',
+    area: 'Salud y biociencias',
+    logo: '/logos/biomedic-logo.png',
+    descripcion:
+      'Actualización profesional en biotecnología, salud digital, auditoría médica y gestión de servicios de salud.',
+    temas: ['Biociencias', 'Salud digital', 'Gestión hospitalaria'],
+  },
+];
+
+const atributos = [
+  {
+    numero: '01',
+    titulo: 'Aprende a tu ritmo',
+    descripcion:
+      'Encuentra programas en vivo y cursos asincrónicos para avanzar según tu disponibilidad.',
+  },
+  {
+    numero: '02',
+    titulo: 'Especialízate con propósito',
+    descripcion:
+      'Elige una escuela y explora contenidos pensados para los desafíos de tu campo profesional.',
+  },
+  {
+    numero: '03',
+    titulo: 'Continúa tu recorrido',
+    descripcion:
+      'Revisa las capacitaciones disponibles y vuelve al catálogo cuando quieras descubrir nuevos temas.',
+  },
+];
+
+function MarcaInstitucional() {
+  return (
+    <Link href="/" className="marca-cgb" aria-label="CGB Academy, inicio">
+      <span className="marca-cgb__isotipo">
+        <Image
+          src="/logos/cgb-logo.png"
+          alt=""
+          fill
+          sizes="48px"
+          className="object-contain"
+          priority
+        />
+      </span>
+      <span className="marca-cgb__separador" aria-hidden="true" />
+      <span className="marca-cgb__texto">
+        <span className="marca-cgb__nombre">CGB Academy</span>
+        <span className="marca-cgb__subtitulo">Educación, investigación e innovación</span>
+      </span>
+    </Link>
+  );
+}
+
+function TarjetaEscuela({ escuela }: { escuela: Escuela }) {
+  return (
+    <Link
+      href={`/capacitaciones?unidad=${escuela.id}`}
+      className="tarjeta-cgb tarjeta-escuela group"
+      aria-label={`Explorar capacitaciones de ${escuela.nombre}`}
+    >
+      <div className="tarjeta-escuela__marca">
+        <Image
+          src={escuela.logo}
+          alt={`Logo de ${escuela.nombre}`}
+          fill
+          sizes="140px"
+          className="object-contain object-left"
+        />
+      </div>
+      <p className="tarjeta-escuela__area">{escuela.area}</p>
+      <h3 className="tarjeta-escuela__titulo">{escuela.nombre}</h3>
+      <p className="tarjeta-escuela__descripcion">{escuela.descripcion}</p>
+      <ul className="tarjeta-escuela__temas" aria-label={`Áreas de ${escuela.nombre}`}>
+        {escuela.temas.map((tema) => <li key={tema}>{tema}</li>)}
+      </ul>
+      <span className="tarjeta-escuela__enlace">
+        Ver capacitaciones
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 12h14" />
+          <path d="m12 5 7 7-7 7" />
+        </svg>
+      </span>
+    </Link>
+  );
+}
+
 export default function PaginaInicio() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* 1. Encabezado Institucional Fijo */}
-      <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-[rgba(9,42,96,0.08)]">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="relative h-12 w-36">
-              <Image
-                src="/logos/cgb-logo.png"
-                alt="CGB Academy"
-                fill
-                className="object-contain object-left"
-                priority
-              />
-            </div>
-            <span className="hidden sm:inline-block h-6 w-px bg-[rgba(9,42,96,0.12)]"></span>
-            <span className="hidden sm:inline-block text-xs font-semibold tracking-wide text-[#092A60]">
-              Centro de Capacitación e Inducción
-            </span>
-          </div>
-
-          <nav className="flex items-center gap-3">
-            <Link
-              href="/api/health"
-              target="_blank"
-              className="boton-secundario text-xs"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-              </svg>
-              <span>Estado API</span>
-            </Link>
-
-            <Link
-              href="/capacitaciones"
-              className="boton-primario"
-            >
-              <span>Explorar Capacitaciones</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-50 w-full border-b border-[rgba(9,42,96,0.08)] bg-white/95 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6">
+          <MarcaInstitucional />
+          <nav aria-label="Navegación principal" className="flex items-center">
+            <Link href="/capacitaciones" className="boton-primario header-cgb__cta">
+              <span className="hidden sm:inline">Explorar capacitaciones</span>
+              <span className="sm:hidden">Capacitaciones</span>
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m9 18 6-6-6-6" />
               </svg>
             </Link>
@@ -68,281 +134,112 @@ export default function PaginaInicio() {
         </div>
       </header>
 
-      {/* 2. Acto Principal: Hero Section (Lienzo Claro Canónico #F9FAFB) */}
-      <section className="relative pt-16 pb-20 px-6 bg-[var(--bg-primary)] overflow-hidden">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[rgba(20,98,135,0.08)] mb-6">
-            <span className="kicker-cgb">Plataforma Institucional 2026</span>
-          </div>
-
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-[#092A60] leading-tight">
-            Centro de Capacitación <br className="hidden sm:inline" />
-            <span className="text-[#146287]">e Inducción Corporativa</span>
-          </h1>
-
-          <p className="mt-6 text-base sm:text-lg text-[#434654] max-w-3xl mx-auto leading-relaxed">
-            Ecosistema de aprendizaje y orientación estructurado mediante diapositivas interactivas, rutas jerárquicas de onboarding y microevaluaciones continuas para colaboradores y comunidad educativa.
-          </p>
-
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Link href="#unidades" className="boton-primario">
-              <span>Iniciar Onboarding</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M5 12h14" />
-                <path d="m12 5 7 7-7 7" />
-              </svg>
-            </Link>
-
-            <Link href="#arquitectura" className="boton-secundario">
-              <span>Especificación Técnica</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Superficie Intermedia: Unidades Institucionales (#F3F6FA) */}
-      <section id="unidades" className="py-20 px-6 bg-[var(--bg-surface-alt)]">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <p className="kicker-cgb mb-2">Unidades Especializadas</p>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#092A60]">
-              Formación Especializada CGB Academy
-            </h2>
-            <p className="mt-3 text-sm text-[#5F6673]">
-              Inducción y capacitación transversal articulada para las tres unidades estratégicas de la organización.
+      <main className="flex-1">
+        <section className="relative overflow-hidden bg-[var(--bg-primary)] px-6 pb-20 pt-16">
+          <div className="mx-auto max-w-5xl text-center">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[rgba(20,98,135,0.08)] px-4 py-1.5">
+              <span className="kicker-cgb">Formación para profesionales de Latinoamérica</span>
+            </div>
+            <h1 className="text-3xl font-extrabold leading-tight text-[#092A60] sm:text-5xl md:text-6xl">
+              Aprende. Especialízate. <br className="hidden sm:inline" />
+              <span className="text-[#146287]">Avanza con CGB Academy.</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-[#434654] sm:text-lg">
+              Explora programas en vivo y cursos a tu ritmo en gestión, minería y ciencias de la salud. Elige una escuela y encuentra formación conectada con tu campo profesional.
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Unidad CIIP */}
-            <Link
-              href="/capacitaciones?unidad=CIIP"
-              className="tarjeta-cgb transition-all hover:translate-y-[-4px] hover:shadow-lg block text-inherit no-underline"
-            >
-              <div className="relative h-14 w-32 mb-6">
-                <Image
-                  src="/logos/ciip-logo.png"
-                  alt="CIIP LATAM"
-                  fill
-                  className="object-contain object-left"
-                />
-              </div>
-              <h3 className="text-xl font-bold text-[#092A60] mb-2">
-                CIIP LATAM
-              </h3>
-              <p className="text-sm text-[#434654] leading-relaxed mb-6 flex-1">
-                Centro Internacional de Investigación y Postgrado. Especialización avanzada en ingeniería, gestión de proyectos y desarrollo tecnológico.
-              </p>
-              <div className="pt-4 border-t border-[rgba(9,42,96,0.06)] mt-auto flex flex-col gap-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-[#146287] font-semibold">Ver capacitaciones</span>
-                  <span className="chip-estado chip-estado--completado">CIIP</span>
-                </div>
-                <div className="barra-progreso">
-                  <div className="barra-progreso-avance" style={{ width: '100%' }}></div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Unidad GEOMINA */}
-            <Link
-              href="/capacitaciones?unidad=GEOMINA"
-              className="tarjeta-cgb transition-all hover:translate-y-[-4px] hover:shadow-lg block text-inherit no-underline"
-            >
-              <div className="relative h-14 w-32 mb-6">
-                <Image
-                  src="/logos/geomina-logo.png"
-                  alt="GEOMINA LATAM"
-                  fill
-                  className="object-contain object-left"
-                />
-              </div>
-              <h3 className="text-xl font-bold text-[#092A60] mb-2">
-                GEOMINA LATAM
-              </h3>
-              <p className="text-sm text-[#434654] leading-relaxed mb-6 flex-1">
-                Especialización en geología aplicada, ingeniería de minas, geotecnia y procesamiento minero con enfoque de sostenibilidad ambiental.
-              </p>
-              <div className="pt-4 border-t border-[rgba(9,42,96,0.06)] mt-auto flex flex-col gap-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-[#146287] font-semibold">Ver capacitaciones</span>
-                  <span className="chip-estado chip-estado--en-curso">GEOMINA</span>
-                </div>
-                <div className="barra-progreso">
-                  <div className="barra-progreso-avance" style={{ width: '100%' }}></div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Unidad BIOMEDIC */}
-            <Link
-              href="/capacitaciones?unidad=BIOMEDIC"
-              className="tarjeta-cgb transition-all hover:translate-y-[-4px] hover:shadow-lg block text-inherit no-underline"
-            >
-              <div className="relative h-14 w-32 mb-6">
-                <Image
-                  src="/logos/biomedic-logo.png"
-                  alt="BIOMEDIC LATAM"
-                  fill
-                  className="object-contain object-left"
-                />
-              </div>
-              <h3 className="text-xl font-bold text-[#092A60] mb-2">
-                BIOMEDIC LATAM
-              </h3>
-              <p className="text-sm text-[#434654] leading-relaxed mb-6 flex-1">
-                Capacitación continua en ciencias biomédicas, instrumentación médica, tecnologías para la salud e investigación clínica aplicada.
-              </p>
-              <div className="pt-4 border-t border-[rgba(9,42,96,0.06)] mt-auto flex flex-col gap-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-[#146287] font-semibold">Ver capacitaciones</span>
-                  <span className="chip-estado chip-estado--pendiente">BIOMEDIC</span>
-                </div>
-                <div className="barra-progreso">
-                  <div className="barra-progreso-avance" style={{ width: '100%' }}></div>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Acto Oscuro Curvo Institucional (Navy #092A60) */}
-      <section id="arquitectura" className="acto-oscuro py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-wider mb-4">
-              <span className="indicador-operativo"></span>
-              Plataforma Institucional Activa
-            </span>
-            <h2 className="text-3xl font-extrabold text-white">
-              Arquitectura del Sistema
-            </h2>
-            <p className="mt-3 text-sm text-[rgba(255,255,255,0.72)]">
-              Despliegue ágil en contenedor bajo especificación ISO/IEC 25010 y SWEBOK v4.0.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-[#4DC4D3] mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <ellipse cx="12" cy="5" rx="9" ry="3" />
-                  <path d="M3 5V19A9 3 0 0 0 21 19V5" />
-                  <path d="M3 12A9 3 0 0 0 21 12" />
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+              <Link href="/capacitaciones" className="boton-primario">
+                <span>Explorar capacitaciones</span>
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
                 </svg>
-              </div>
-              <h4 className="text-base font-bold text-white mb-1">Base de Datos</h4>
-              <p className="text-xs text-[rgba(255,255,255,0.72)] leading-relaxed mb-4">
-                MongoDB Atlas Cluster0 conectado mediante Prisma ORM con patrón Singleton.
-              </p>
-              <div className="flex items-center gap-2 text-xs text-[#4DC4D3] font-semibold">
-                <span className="w-2 h-2 rounded-full bg-[#4DC4D3]"></span>
-                <span>Conexión Verificada</span>
-              </div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-[#4DC4D3] mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect width="18" height="18" x="3" y="3" rx="2" />
-                  <path d="M3 9h18" />
-                  <path d="M9 21V9" />
-                </svg>
-              </div>
-              <h4 className="text-base font-bold text-white mb-1">Desarrollo y CI/CD</h4>
-              <p className="text-xs text-[rgba(255,255,255,0.72)] leading-relaxed mb-4">
-                Next.js 16 con motor Turbopack, App Router y compilación automatizada en Dokploy.
-              </p>
-              <div className="flex items-center gap-2 text-xs text-[#4DC4D3] font-semibold">
-                <span className="w-2 h-2 rounded-full bg-[#4DC4D3]"></span>
-                <span>Node.js 20 LTS</span>
-              </div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-[#4DC4D3] mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-              </div>
-              <h4 className="text-base font-bold text-white mb-1">Equipo y Método</h4>
-              <p className="text-xs text-[rgba(255,255,255,0.72)] leading-relaxed mb-4">
-                Scrum + Kanban con límites WIP (Desarrollo: 3, Revisión: 2) y ciclo técnico TDD.
-              </p>
-              <div className="flex items-center gap-2 text-xs text-[#4DC4D3] font-semibold">
-                <span className="w-2 h-2 rounded-full bg-[#4DC4D3]"></span>
-                <span>5 Miembros UNSAAC</span>
-              </div>
+              </Link>
+              <Link href="#unidades" className="boton-secundario">
+                <span>Conocer las escuelas</span>
+              </Link>
             </div>
           </div>
+        </section>
 
-          <div className="mt-12 text-center">
-            <Link
-              href="/api/health"
-              target="_blank"
-              className="boton-secundario-claro"
-            >
-              <span>Consultar Diagnóstico /api/health</span>
-            </Link>
+        <section id="unidades" className="scroll-mt-20 bg-[var(--bg-surface-alt)] px-6 py-20">
+          <div className="mx-auto max-w-6xl">
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <p className="kicker-cgb mb-2">Tres escuelas, distintas especialidades</p>
+              <h2 className="text-2xl font-extrabold text-[#092A60] sm:text-3xl">
+                Encuentra tu área de formación
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-[#5F6673] sm:text-base">
+                CGB Academy reúne a CIIP, GEOMINA y BIOMEDIC para acompañar tu desarrollo en sectores profesionales diferentes.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {escuelas.map((escuela) => <TarjetaEscuela key={escuela.id} escuela={escuela} />)}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 5. Pie de Página Institucional Navy Profundo (#05183A) */}
-      <footer className="acto-oscuro-profundo py-12 px-6 border-t border-white/10">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-[rgba(255,255,255,0.6)]">
-          <div className="flex items-center gap-3">
-            <span className="font-bold text-white">CGB Academy</span>
-            <span>—</span>
-            <span>Universidad Nacional de San Antonio Abad del Cusco (UNSAAC)</span>
+        <section className="acto-oscuro py-20 px-6">
+          <div className="mx-auto max-w-6xl">
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <span className="mb-4 inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
+                CGB Academy
+              </span>
+              <h2 className="text-3xl font-extrabold text-white">
+                Una formación que se adapta a tu camino
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-[rgba(255,255,255,0.76)] sm:text-base">
+                Conoce las modalidades y áreas de estudio desde un solo lugar, y continúa al catálogo de capacitaciones cuando encuentres tu próximo objetivo.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+              {atributos.map((atributo) => (
+                <article key={atributo.numero} className="tarjeta-cgb tarjeta-atributo">
+                  <span className="tarjeta-atributo__numero">{atributo.numero}</span>
+                  <h3>{atributo.titulo}</h3>
+                  <p>{atributo.descripcion}</p>
+                </article>
+              ))}
+            </div>
+            <div className="mt-10 text-center">
+              <Link href="/capacitaciones" className="boton-secundario-claro">
+                Ver catálogo de capacitaciones
+              </Link>
+            </div>
           </div>
+        </section>
+      </main>
 
-          <div>
-            Facultad de Ingeniería Eléctrica, Electrónica, Informática y Mecánica | Semestre 2026-I
+      <footer className="footer-cgb px-6 py-10 sm:py-12">
+        <div className="mx-auto max-w-6xl">
+          <div className="footer-cgb__contenido">
+            <div className="footer-cgb__marca-bloque">
+              <Link href="/" className="footer-cgb__marca" aria-label="CGB Academy, inicio">
+                <span className="footer-cgb__logo">
+                  <Image src="/logos/cgb-logo-footer.png" alt="" fill sizes="220px" className="object-contain" />
+                </span>
+                <strong className="footer-cgb__academy">Academy</strong>
+              </Link>
+              <p>
+                Formación profesional a través de CIIP, GEOMINA y BIOMEDIC. Explora nuevas áreas y encuentra capacitaciones para seguir creciendo.
+              </p>
+            </div>
+
+            <nav className="footer-cgb__enlaces" aria-label="Enlaces del pie de página">
+              <h2>Explora</h2>
+              <Link href="/capacitaciones">Catálogo de capacitaciones</Link>
+              <Link href="#unidades">Nuestras escuelas</Link>
+              <a href="https://cgbacademy.com/" target="_blank" rel="noreferrer">
+                Sitio web de CGB Academy
+                <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7 17 17 7M8 7h9v9" />
+                </svg>
+              </a>
+            </nav>
+          </div>
+          <div className="footer-cgb__base">
+            <span>© {new Date().getFullYear()} CGB Academy</span>
+            <span>CIIP LATAM · GEOMINA LATAM · BIOMEDIC LATAM</span>
           </div>
         </div>
       </footer>

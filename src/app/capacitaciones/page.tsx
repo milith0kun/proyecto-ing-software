@@ -87,11 +87,33 @@ export default function CatalogoPublicoPage() {
   const [capacitaciones, setCapacitaciones] = useState<ItemCapacitacionPublica[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
+  const [filtrosInicializados, setFiltrosInicializados] = useState(false);
 
   // Filtros reactivos
   const [unidadSeleccionada, setUnidadSeleccionada] = useState<string>('TODAS');
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<string>('TODAS');
   const [terminoBusqueda, setTerminoBusqueda] = useState<string>('');
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const params = new URLSearchParams(window.location.search);
+      const unidad = params.get('unidad')?.toUpperCase();
+      const categoria = params.get('categoria');
+      const busqueda = params.get('q');
+
+      if (unidad && UNIDADES.includes(unidad as (typeof UNIDADES)[number])) {
+        setUnidadSeleccionada(unidad);
+      }
+      if (categoria && CATEGORIAS.includes(categoria as (typeof CATEGORIAS)[number])) {
+        setCategoriaSeleccionada(categoria);
+      }
+      if (busqueda) setTerminoBusqueda(busqueda);
+
+      setFiltrosInicializados(true);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, []);
 
   // Carga de datos desde el endpoint público
   const cargarCapacitaciones = useCallback(() => {
@@ -122,12 +144,14 @@ export default function CatalogoPublicoPage() {
   }, [unidadSeleccionada, categoriaSeleccionada, terminoBusqueda]);
 
   useEffect(() => {
+    if (!filtrosInicializados) return;
+
     const handler = setTimeout(() => {
       cargarCapacitaciones();
     }, 150); // Pequeño debounce para optimizar peticiones al escribir
 
     return () => clearTimeout(handler);
-  }, [cargarCapacitaciones]);
+  }, [cargarCapacitaciones, filtrosInicializados]);
 
   // Función para resetear todos los filtros
   function limpiarFiltros() {
@@ -163,6 +187,7 @@ export default function CatalogoPublicoPage() {
                   src="/logos/cgb-logo.png"
                   alt="CGB Academy"
                   fill
+                  sizes="130px"
                   style={{ objectFit: 'contain', objectPosition: 'left' }}
                   priority
                 />
