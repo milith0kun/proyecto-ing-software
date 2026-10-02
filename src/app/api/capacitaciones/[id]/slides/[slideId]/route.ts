@@ -28,6 +28,10 @@ export async function PUT(request: NextRequest, { params }: ContextoRuta) {
       titulo: cuerpo.titulo ?? existente.titulo,
       contenido: cuerpo.contenido ?? existente.contenido,
       tipo: cuerpo.tipo ?? existente.tipo,
+      imagenUrl: cuerpo.imagenUrl ?? existente.imagenUrl ?? null,
+      botonTexto: cuerpo.botonTexto ?? existente.botonTexto ?? null,
+      botonUrl: cuerpo.botonUrl ?? existente.botonUrl ?? null,
+      lista: cuerpo.lista ?? existente.lista ?? [],
     };
     const resultado = validarSlide(datos);
 
@@ -44,6 +48,10 @@ export async function PUT(request: NextRequest, { params }: ContextoRuta) {
         titulo: datos.titulo.trim(),
         contenido: datos.contenido.trim(),
         tipo: datos.tipo.toUpperCase().trim(),
+        imagenUrl: datos.imagenUrl || null,
+        botonTexto: datos.botonTexto || null,
+        botonUrl: datos.botonUrl || null,
+        lista: Array.isArray(datos.lista) ? datos.lista.map((item) => String(item).trim()).filter(Boolean) : [],
       },
     });
 
