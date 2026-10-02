@@ -236,6 +236,21 @@ test('HU-003: T1 - RED - Gestión de slides dentro de una capacitación', async 
     assert.deepEqual(slideInteractivo.errores, {});
   });
 
+  await t.test('CA-03: Debe conservar una imagen subida como data URL en el slide', () => {
+    const imagenSubida = 'data:image/png;base64,aGVsbG8=';
+    const resultado = crearSlide({
+      capacitacionId: 'cap_123',
+      titulo: 'Diagrama del proceso',
+      contenido: 'Explicación del diagrama de seguridad.',
+      tipo: 'IMAGE',
+      imagenUrl: imagenSubida,
+      orden: 1
+    });
+
+    assert.equal(resultado.valido, true);
+    assert.equal(resultado.slide.imagenUrl, imagenSubida);
+  });
+
   await t.test('CA-04: Debe eliminar un slide y reajustar la secuencia de los restantes', () => {
     const slides = [
       { id: 's1', capacitacionId: 'cap_123', orden: 1, titulo: 'Intro', contenido: 'A', tipo: 'TEXT' },
