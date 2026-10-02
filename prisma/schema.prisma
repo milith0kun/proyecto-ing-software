@@ -12,11 +12,26 @@ model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String   @unique
   name      String?
-  role      String   @default("ESTUDIANTE")
+  role      String   @default("COLABORADOR")
+  passwordHash String?
+  activo    Boolean  @default(false)
+  sesiones  Sesion[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
+}
+
+// JWT y sesión persistida: cerrar sesión revoca también el token del servidor.
+model Sesion {
+  id        String   @id @default(uuid()) @map("_id")
+  usuarioId String   @db.ObjectId
+  usuario   User     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  expiraEn  DateTime
+  createdAt DateTime @default(now())
+
+  @@index([usuarioId])
+  @@map("sesiones")
 }
 
 // Modelo principal para la gestión de capacitaciones (HU-002 / HU-004 / HU-005)

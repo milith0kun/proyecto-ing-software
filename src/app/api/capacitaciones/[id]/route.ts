@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validarCapacitacion, normalizarCapacitacion } from '@/lib/validaciones-capacitacion';
+import { exigirAdministrador, esAdministrador } from '@/lib/permisos';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +11,7 @@ export const dynamic = 'force-dynamic';
  * Útil para cargar datos en el formulario de edición.
  */
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -21,18 +22,17 @@ export async function GET(
       include: { slides: { orderBy: { orden: 'asc' } } },
     });
 
-    if (!capacitacion) {
+    const administrador = await esAdministrador(request);
+    if (!capacitacion || (!administrador && (capacitacion.ambito !== 'PUBLICO' || capacitacion.estado !== 'PUBLICADA'))) {
       return NextResponse.json(
         { ok: false, error: 'Capacitación no encontrada.' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ ok: true, datos: capacitacion });
-  } catch (error: unknown) {
-    const mensaje =
-      error instanceof Error ? error.message : 'Error al obtener la capacitación.';
-    return NextResponse.json({ ok: false, error: mensaje }, { status: 500 });
+    return NextResponse.json({ ok: true, datos: capacitacion }, { headers: { 'Cache-Control': 'no-store' } });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'No pudimos obtener la capacitación.' }, { status: 503 });
   }
 }
 
@@ -50,6 +50,8 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const rechazo = await exigirAdministrador(request);
+  if (rechazo) return rechazo;
   try {
     const { id } = await params;
     const cuerpo = await request.json();
@@ -85,10 +87,8 @@ export async function PUT(
       mensaje: 'Capacitación actualizada correctamente.',
       datos: capacitacionActualizada,
     });
-  } catch (error: unknown) {
-    const mensaje =
-      error instanceof Error ? error.message : 'Error al actualizar la capacitación.';
-    return NextResponse.json({ ok: false, error: mensaje }, { status: 500 });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'No pudimos actualizar la capacitación.' }, { status: 503 });
   }
 }
 
@@ -97,9 +97,11 @@ export async function PUT(
  * Elimina una capacitación y todos sus slides asociados (onDelete: Cascade en Prisma).
  */
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const rechazo = await exigirAdministrador(request);
+  if (rechazo) return rechazo;
   try {
     const { id } = await params;
 
@@ -117,9 +119,7 @@ export async function DELETE(
       ok: true,
       mensaje: 'Capacitación eliminada correctamente.',
     });
-  } catch (error: unknown) {
-    const mensaje =
-      error instanceof Error ? error.message : 'Error al eliminar la capacitación.';
-    return NextResponse.json({ ok: false, error: mensaje }, { status: 500 });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'No pudimos eliminar la capacitación.' }, { status: 503 });
   }
 }

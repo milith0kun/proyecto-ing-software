@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+.acceso-contenedor { min-height: 80vh; display: grid; place-items: center; padding: 32px 20px; background: var(--bg-primary); }
+.acceso-tarjeta { width: 100%; max-width: 480px; padding: 32px; background: var(--bg-card); border-radius: 24px; border: 1px solid rgba(9,42,96,.11); box-shadow: 0 10px 24px rgba(9,42,96,.08); }
+.acceso-logo { width: 150px; height: 72px; object-fit: contain; margin-bottom: 24px; }
+.acceso-tarjeta h1 { color: var(--brand-navy); font-family: var(--font-heading); font-size: 28px; margin-bottom: 12px; }
+.acceso-tarjeta p { margin-bottom: 20px; color: var(--text-secondary); }
+.acceso-tarjeta form { display: grid; gap: 12px; margin: 24px 0; }
+.acceso-tarjeta label { color: var(--brand-navy); font-weight: 700; }
+.acceso-tarjeta input { min-height: 48px; padding: 12px; border: 1px solid rgba(9,42,96,.25); border-radius: 8px; }
+.acceso-tarjeta input:focus-visible { outline: 3px solid var(--brand-cyan); outline-offset: 2px; }
+.acceso-tarjeta a { color: var(--brand-blue); text-decoration: underline; }
+.acceso-etiqueta { text-transform: uppercase; font-weight: 700; font-size: 12px; letter-spacing: .08em; }
+.acceso-error { border-left: 4px solid var(--brand-navy); padding: 12px; }
+.barra-sesion { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 24px; background: var(--bg-card); color: var(--brand-navy); }
+button:disabled { opacity: .65; cursor: wait; }
+
 /* ==========================================================================
    GUÍA MAESTRA DE ESTILO Y SISTEMA DE DISEÑO — CGB ACADEMY
    Atmósfera: Institucional, Sobria y Premium
