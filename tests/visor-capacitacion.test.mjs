@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 
 const cargarVisor = () => import('../src/lib/visor-capacitacion.ts');
 
-test('HU-006: T1 - RED - Contratos BDD del visor de capacitaciones', async (t) => {
+test('HU-006: Contratos BDD del visor de capacitaciones', async (t) => {
   await t.test('CA-01: Siguiente y anterior recorren la secuencia sin exceder sus límites', async () => {
     const { obtenerSiguienteSlide, obtenerSlideAnterior } = await cargarVisor();
 
@@ -54,5 +54,13 @@ test('HU-006: T1 - RED - Contratos BDD del visor de capacitaciones', async (t) =
     assert.equal(capacitacionDisponible({ estado: 'BORRADOR', ambito: 'PUBLICO' }), false);
     assert.equal(capacitacionDisponible({ estado: 'PUBLICADA', ambito: 'INTERNO' }), false);
     assert.equal(capacitacionDisponible(null), false);
+  });
+
+  await t.test('T3: El swipe horizontal cambia de dirección solo al superar el umbral', async () => {
+    const { obtenerDireccionDeslizamiento } = await cargarVisor();
+
+    assert.equal(obtenerDireccionDeslizamiento(240, 150), 'siguiente');
+    assert.equal(obtenerDireccionDeslizamiento(150, 240), 'anterior');
+    assert.equal(obtenerDireccionDeslizamiento(200, 170), null);
   });
 });
