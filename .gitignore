@@ -45,3 +45,6 @@ yarn-error.log*
 *.tsbuildinfo
 tsconfig.tsbuildinfo
 
+# Antigravity local secrets & MCP configuration (credenciales locales de Jira)
+.agents/
+
