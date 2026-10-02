@@ -84,7 +84,7 @@ export function buscarEnCatalogoPublico(
 /**
  * Valida que la consulta pública es abierta e inocua para el progreso de onboarding (CA-03).
  */
-export function validarConsultaPublica(_parametros: Record<string, unknown> = {}): ResultadoConsultaPublica {
+export function validarConsultaPublica(): ResultadoConsultaPublica {
   return {
     valido: true,
     requiereAutenticacion: false,
