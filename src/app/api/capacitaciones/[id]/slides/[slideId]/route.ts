@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { validarSlide } from '@/lib/validaciones-slide';
+import { validarSlide } from '@/lib/slides';
 import { exigirAdministrador } from '@/lib/permisos';
 
 export const dynamic = 'force-dynamic';
@@ -10,6 +10,7 @@ type ContextoRuta = { params: Promise<{ id: string; slideId: string }> };
 export async function PUT(request: NextRequest, { params }: ContextoRuta) {
   const rechazo = await exigirAdministrador(request);
   if (rechazo) return rechazo;
+
   try {
     const { id, slideId } = await params;
     if (!/^[a-f\d]{24}$/i.test(id) || !/^[a-f\d]{24}$/i.test(slideId)) {
@@ -27,27 +28,40 @@ export async function PUT(request: NextRequest, { params }: ContextoRuta) {
     }
 
     const datos = {
+      capacitacionId: id,
       titulo: cuerpo.titulo ?? existente.titulo,
       contenido: cuerpo.contenido ?? existente.contenido,
+      tipo: cuerpo.tipo ?? existente.tipo,
     };
-    const { valido, errores } = validarSlide(datos);
-    if (!valido) {
-      return NextResponse.json({ ok: false, error: 'Revisa los datos del slide.', detalles: errores }, { status: 400 });
+
+    const resultado = validarSlide(datos);
+    if (!resultado.valido) {
+      return NextResponse.json(
+        { ok: false, error: 'Revisa los datos del slide.', detalles: resultado.errores },
+        { status: 400 }
+      );
     }
 
     const slide = await prisma.slide.update({
       where: { id: slideId },
-      data: { titulo: String(datos.titulo).trim(), contenido: String(datos.contenido).trim() },
+      data: {
+        titulo: String(datos.titulo).trim(),
+        contenido: String(datos.contenido).trim(),
+        tipo: String(datos.tipo).toUpperCase().trim(),
+      },
     });
-    return NextResponse.json({ ok: true, datos: slide });
-  } catch {
-    return NextResponse.json({ ok: false, error: 'No se pudo actualizar el slide.' }, { status: 500 });
+
+    return NextResponse.json({ ok: true, mensaje: 'Slide actualizado correctamente.', datos: slide });
+  } catch (error: unknown) {
+    const mensaje = error instanceof Error ? error.message : 'Error al actualizar el slide.';
+    return NextResponse.json({ ok: false, error: mensaje }, { status: 500 });
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: ContextoRuta) {
-  const rechazo = await exigirAdministrador(request);
+export async function DELETE(_request: NextRequest, { params }: ContextoRuta) {
+  const rechazo = await exigirAdministrador(_request);
   if (rechazo) return rechazo;
+
   try {
     const { id, slideId } = await params;
     if (!/^[a-f\d]{24}$/i.test(id) || !/^[a-f\d]{24}$/i.test(slideId)) {
@@ -59,9 +73,25 @@ export async function DELETE(request: NextRequest, { params }: ContextoRuta) {
       return NextResponse.json({ ok: false, error: 'Slide no encontrado.' }, { status: 404 });
     }
 
-    await prisma.slide.delete({ where: { id: slideId } });
-    return NextResponse.json({ ok: true, mensaje: 'Slide eliminado.' });
-  } catch {
-    return NextResponse.json({ ok: false, error: 'No se pudo eliminar el slide.' }, { status: 500 });
+    const slides = await prisma.slide.findMany({
+      where: { capacitacionId: id },
+      orderBy: { orden: 'asc' },
+    });
+
+    const restantes = slides.filter((slide) => slide.id !== slideId);
+    await prisma.$transaction(async (transaccion) => {
+      await transaccion.slide.delete({ where: { id: slideId } });
+      for (const [indice, slide] of restantes.entries()) {
+        await transaccion.slide.update({
+          where: { id: slide.id },
+          data: { orden: indice + 1 },
+        });
+      }
+    });
+
+    return NextResponse.json({ ok: true, mensaje: 'Slide eliminado y secuencia reajustada correctamente.' });
+  } catch (error: unknown) {
+    const mensaje = error instanceof Error ? error.message : 'Error al eliminar el slide.';
+    return NextResponse.json({ ok: false, error: mensaje }, { status: 500 });
   }
 }
