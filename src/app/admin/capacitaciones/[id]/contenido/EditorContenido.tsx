@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { useMemo, useState, type FormEvent } from 'react';
+import { CabeceraAdminCgb } from '@/components/institucional/CabeceraAdminCgb';
+import { PieCgb } from '@/components/institucional/PieCgb';
 
 interface Slide {
   id: string;
@@ -182,15 +184,15 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
 
   return (
     <div className="admin-shell contenido-shell">
-      <header className="admin-header">
-        <div className="admin-header__inner">
+      <CabeceraAdminCgb>
+        <div className="contenido-header__acciones">
           <Link href="/admin/capacitaciones" className="contenido-regreso">
             <span className="contenido-regreso__icono"><Icono nombre="arrow" /></span>
             <span><strong>Capacitaciones</strong><small>Volver a la biblioteca</small></span>
           </Link>
           <div className="contenido-header__estado"><Estado estado={inicial.estado} /></div>
         </div>
-      </header>
+      </CabeceraAdminCgb>
 
       <main className="admin-main contenido-main">
         <nav className="contenido-migas" aria-label="Ruta de navegación">
@@ -289,11 +291,12 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
           </section>
         </div>
 
-        <footer className="contenido-footer">
+        <div className="contenido-footer">
           <Link href="/admin/capacitaciones" className="boton-secundario"><Icono nombre="arrow" /><span>Volver a capacitaciones</span></Link>
           <p>{slides.length} {slides.length === 1 ? 'slide listo' : 'slides listos'} para seguir editando.</p>
-        </footer>
+        </div>
       </main>
+      <PieCgb />
     </div>
   );
 }

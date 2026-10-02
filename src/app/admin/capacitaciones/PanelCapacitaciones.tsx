@@ -1,7 +1,8 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
+import { CabeceraAdminCgb } from '@/components/institucional/CabeceraAdminCgb';
+import { PieCgb } from '@/components/institucional/PieCgb';
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { validarCapacitacion } from '@/lib/validaciones-capacitacion';
@@ -250,19 +251,12 @@ export default function PanelCapacitaciones() {
 
   return (
     <div className="admin-shell">
-      <header className="admin-header">
-        <div className="admin-header__inner">
-          <Link href="/" className="admin-brand" aria-label="Volver a CGB Academy">
-            <Image src="/logos/cgb-logo.png" alt="CGB Academy" width={142} height={44} priority />
-            <span className="admin-brand__divider" />
-            <span className="admin-brand__caption">Centro de Capacitación<br />e Inducción</span>
-          </Link>
-          <div className="admin-header__context">
-            <span className="indicador-operativo" />
-            <span>Administración de contenidos</span>
-          </div>
+      <CabeceraAdminCgb>
+        <div className="admin-header__context">
+          <span className="indicador-operativo" />
+          <span>Administración de contenidos</span>
         </div>
-      </header>
+      </CabeceraAdminCgb>
 
       <main className="admin-main">
         <section className="admin-hero" aria-labelledby="titulo-panel">
@@ -544,6 +538,7 @@ export default function PanelCapacitaciones() {
           </section>
         </div>
       )}
+      <PieCgb />
     </div>
   );
 }

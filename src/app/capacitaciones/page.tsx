@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import { CabeceraCgb } from '@/components/institucional/CabeceraCgb';
+import { PieCgb } from '@/components/institucional/PieCgb';
 import { ItemCapacitacionPublica } from '@/lib/catalogo-publico';
 
 // ---------------------------------------------------------------------------
@@ -59,14 +60,6 @@ function IconoFlechaDerecha() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="m9 18 6-6-6-6" />
-    </svg>
-  );
-}
-
-function IconoVolver() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m15 18-6-6 6-6" />
     </svg>
   );
 }
@@ -168,46 +161,7 @@ export default function CatalogoPublicoPage() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-primary)', display: 'flex', flexDirection: 'column' }}>
 
-      {/* ── 1. Encabezado Institucional Fijo ── */}
-      <header style={{
-        position: 'sticky', top: 0, zIndex: 50,
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid var(--borde-sutil)',
-      }}>
-        <div style={{
-          maxWidth: '1200px', margin: '0 auto', padding: '0 24px',
-          height: '76px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        }}>
-          {/* Logo y Kicker */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-              <div style={{ position: 'relative', height: '44px', width: '130px' }}>
-                <Image
-                  src="/logos/cgb-logo.png"
-                  alt="CGB Academy"
-                  fill
-                  sizes="130px"
-                  style={{ objectFit: 'contain', objectPosition: 'left' }}
-                  priority
-                />
-              </div>
-            </Link>
-            <span style={{ height: '24px', width: '1px', backgroundColor: 'var(--borde-sutil)' }} />
-            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--brand-navy)', fontFamily: 'var(--font-heading)' }}>
-              Catálogo Abierto
-            </span>
-          </div>
-
-          {/* Navegación y Botón Volver */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <Link href="/" className="boton-secundario text-xs" style={{ minHeight: '38px', padding: '8px 18px' }}>
-              <IconoVolver />
-              <span>Volver a Inicio</span>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <CabeceraCgb variant="catalogo" contexto="Catálogo abierto" />
 
       {/* ── 2. Hero Section del Catálogo (#F9FAFB) ── */}
       <section style={{
@@ -473,30 +427,7 @@ export default function CatalogoPublicoPage() {
         )}
       </main>
 
-      {/* ── 5. Pie de Página Institucional ── */}
-      <footer style={{
-        backgroundColor: 'var(--brand-navy-hondo)',
-        color: '#FFFFFF',
-        padding: '32px 24px',
-        marginTop: 'auto',
-      }}>
-        <div style={{
-          maxWidth: '1200px', margin: '0 auto',
-          display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px',
-        }}>
-          <div>
-            <p style={{ margin: 0, fontWeight: 700, fontSize: '14px', fontFamily: 'var(--font-heading)' }}>
-              CGB Academy — Centro de Capacitación e Inducción
-            </p>
-            <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'rgba(255, 255, 255, 0.72)' }}>
-              Universidad Nacional de San Antonio Abad del Cusco (UNSAAC) | Semestre 2026-I
-            </p>
-          </div>
-          <p style={{ margin: 0, fontSize: '12px', color: 'rgba(255, 255, 255, 0.60)' }}>
-            CIIP LATAM • GEOMINA LATAM • BIOMEDIC LATAM
-          </p>
-        </div>
-      </footer>
+      <PieCgb />
     </div>
   );
 }

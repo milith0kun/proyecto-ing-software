@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { CabeceraCgb } from '@/components/institucional/CabeceraCgb';
+import { PieCgb } from '@/components/institucional/PieCgb';
 
 type Escuela = {
   id: 'CIIP' | 'GEOMINA' | 'BIOMEDIC';
@@ -61,28 +63,6 @@ const atributos = [
   },
 ];
 
-function MarcaInstitucional() {
-  return (
-    <Link href="/" className="marca-cgb" aria-label="CGB Academy, inicio">
-      <span className="marca-cgb__isotipo">
-        <Image
-          src="/logos/cgb-logo.png"
-          alt=""
-          fill
-          sizes="48px"
-          className="object-contain"
-          priority
-        />
-      </span>
-      <span className="marca-cgb__separador" aria-hidden="true" />
-      <span className="marca-cgb__texto">
-        <span className="marca-cgb__nombre">CGB Academy</span>
-        <span className="marca-cgb__subtitulo">Educación, investigación e innovación</span>
-      </span>
-    </Link>
-  );
-}
-
 function TarjetaEscuela({ escuela }: { escuela: Escuela }) {
   return (
     <Link
@@ -119,20 +99,7 @@ function TarjetaEscuela({ escuela }: { escuela: Escuela }) {
 export default function PaginaInicio() {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-50 w-full border-b border-[rgba(9,42,96,0.08)] bg-white/95 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6">
-          <MarcaInstitucional />
-          <nav aria-label="Navegación principal" className="flex items-center">
-            <Link href="/capacitaciones" className="boton-primario header-cgb__cta">
-              <span className="hidden sm:inline">Explorar capacitaciones</span>
-              <span className="sm:hidden">Capacitaciones</span>
-              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6" />
-              </svg>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <CabeceraCgb />
 
       <main className="flex-1">
         <section className="relative overflow-hidden bg-[var(--bg-primary)] px-6 pb-20 pt-16">
@@ -210,39 +177,7 @@ export default function PaginaInicio() {
         </section>
       </main>
 
-      <footer className="footer-cgb px-6 py-10 sm:py-12">
-        <div className="mx-auto max-w-6xl">
-          <div className="footer-cgb__contenido">
-            <div className="footer-cgb__marca-bloque">
-              <Link href="/" className="footer-cgb__marca" aria-label="CGB Academy, inicio">
-                <span className="footer-cgb__logo">
-                  <Image src="/logos/cgb-logo-footer.png" alt="" fill sizes="220px" className="object-contain" />
-                </span>
-                <strong className="footer-cgb__academy">Academy</strong>
-              </Link>
-              <p>
-                Formación profesional a través de CIIP, GEOMINA y BIOMEDIC. Explora nuevas áreas y encuentra capacitaciones para seguir creciendo.
-              </p>
-            </div>
-
-            <nav className="footer-cgb__enlaces" aria-label="Enlaces del pie de página">
-              <h2>Explora</h2>
-              <Link href="/capacitaciones">Catálogo de capacitaciones</Link>
-              <Link href="#unidades">Nuestras escuelas</Link>
-              <a href="https://cgbacademy.com/" target="_blank" rel="noreferrer">
-                Sitio web de CGB Academy
-                <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M7 17 17 7M8 7h9v9" />
-                </svg>
-              </a>
-            </nav>
-          </div>
-          <div className="footer-cgb__base">
-            <span>© {new Date().getFullYear()} CGB Academy</span>
-            <span>CIIP LATAM · GEOMINA LATAM · BIOMEDIC LATAM</span>
-          </div>
-        </div>
-      </footer>
+      <PieCgb />
     </div>
   );
 }
