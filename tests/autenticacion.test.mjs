@@ -9,6 +9,7 @@ import {
   opcionesCookie,
   solicitudMismoOrigen,
   resolverSesion,
+  usarCookieSegura,
 } from '../src/lib/autenticacion.ts';
 
 const secreto = 'cgb_secret_65a8df241bc489e27304b5618fce1862d7c0e819b5c219f8541e24bc109f635a';
@@ -97,6 +98,13 @@ test('HU-001: TDD Fase RED/GREEN - Validaciones de Acceso Interno y AutenticaciÃ
     const cookieEliminada = opcionesCookie(false, true);
     assert.equal(cookieEliminada.maxAge, 0);
     assert.equal(cookieEliminada.path, '/');
+  });
+
+  await t.test('CA-04: La cookie es Secure solo bajo HTTPS (evita perder la sesion en http://localhost)', () => {
+    assert.equal(usarCookieSegura('https://cgb.latam', 'production'), true);
+    assert.equal(usarCookieSegura('http://localhost:3000', 'production'), false);
+    assert.equal(usarCookieSegura(undefined, 'production'), true);
+    assert.equal(usarCookieSegura(undefined, 'development'), false);
   });
 
   await t.test('Seguridad: PrevenciÃ³n de truncamiento de bcrypt (>72 bytes)', async () => {

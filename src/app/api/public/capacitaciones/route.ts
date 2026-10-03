@@ -72,9 +72,7 @@ export async function GET(request: NextRequest) {
         q: qParam || '',
       },
     });
-  } catch (error: unknown) {
-    const mensaje =
-      error instanceof Error ? error.message : 'Error al obtener el catálogo público.';
-    return NextResponse.json({ ok: false, error: mensaje }, { status: 500 });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'No pudimos obtener el catálogo público.' }, { status: 503 });
   }
 }

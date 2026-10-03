@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validarSlide } from '@/lib/validaciones-slide';
+import { exigirAdministrador } from '@/lib/permisos';
 
 export const dynamic = 'force-dynamic';
 
 type ContextoRuta = { params: Promise<{ id: string }> };
 
 export async function POST(request: NextRequest, { params }: ContextoRuta) {
+  const rechazo = await exigirAdministrador(request);
+  if (rechazo) return rechazo;
   try {
     const { id } = await params;
     if (!/^[a-f\d]{24}$/i.test(id)) {
@@ -45,13 +48,14 @@ export async function POST(request: NextRequest, { params }: ContextoRuta) {
     });
 
     return NextResponse.json({ ok: true, datos: slide }, { status: 201 });
-  } catch (error: unknown) {
-    const mensaje = error instanceof Error ? error.message : 'No se pudo guardar el slide.';
-    return NextResponse.json({ ok: false, error: mensaje }, { status: 500 });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'No se pudo guardar el slide.' }, { status: 500 });
   }
 }
 
 export async function PATCH(request: NextRequest, { params }: ContextoRuta) {
+  const rechazo = await exigirAdministrador(request);
+  if (rechazo) return rechazo;
   try {
     const { id } = await params;
     if (!/^[a-f\d]{24}$/i.test(id)) {
@@ -89,8 +93,7 @@ export async function PATCH(request: NextRequest, { params }: ContextoRuta) {
     }
 
     return NextResponse.json({ ok: true, mensaje: 'Orden actualizado.' });
-  } catch (error: unknown) {
-    const mensaje = error instanceof Error ? error.message : 'No se pudo actualizar el orden.';
-    return NextResponse.json({ ok: false, error: mensaje }, { status: 500 });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'No se pudo actualizar el orden.' }, { status: 500 });
   }
 }
