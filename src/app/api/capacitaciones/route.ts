@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validarCapacitacion, normalizarCapacitacion } from '@/lib/validaciones-capacitacion';
+import { exigirAdministrador, esAdministrador } from '@/lib/permisos';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,9 +11,11 @@ export const dynamic = 'force-dynamic';
  * Utilizada por el panel de gestión del Administrador (HU-002) y el
  * catálogo público (HU-005).
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const administrador = await esAdministrador(request);
     const capacitaciones = await prisma.capacitacion.findMany({
+      where: administrador ? {} : { ambito: 'PUBLICO', estado: 'PUBLICADA' },
       orderBy: { createdAt: 'desc' },
       include: {
         _count: { select: { slides: true } },
@@ -23,11 +26,9 @@ export async function GET() {
       ok: true,
       total: capacitaciones.length,
       datos: capacitaciones,
-    });
-  } catch (error: unknown) {
-    const mensaje =
-      error instanceof Error ? error.message : 'Error al obtener las capacitaciones.';
-    return NextResponse.json({ ok: false, error: mensaje }, { status: 500 });
+    }, { headers: { 'Cache-Control': 'no-store' } });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'No pudimos obtener las capacitaciones.' }, { status: 503 });
   }
 }
 
@@ -41,6 +42,8 @@ export async function GET() {
  *   Entonces el sistema debe crearla y permitir continuar con la construcción de su contenido.
  */
 export async function POST(request: NextRequest) {
+  const rechazo = await exigirAdministrador(request);
+  if (rechazo) return rechazo;
   try {
     const cuerpo = await request.json().catch(() => null);
     if (!cuerpo || typeof cuerpo !== 'object' || Array.isArray(cuerpo)) {
@@ -72,9 +75,7 @@ export async function POST(request: NextRequest) {
       { ok: true, mensaje: 'Capacitación creada correctamente.', datos: nuevaCapacitacion },
       { status: 201 }
     );
-  } catch (error: unknown) {
-    const mensaje =
-      error instanceof Error ? error.message : 'Error al crear la capacitación.';
-    return NextResponse.json({ ok: false, error: mensaje }, { status: 500 });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'No pudimos crear la capacitación.' }, { status: 503 });
   }
 }
