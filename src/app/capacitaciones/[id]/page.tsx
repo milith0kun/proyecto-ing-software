@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { capacitacionDisponible } from '@/lib/visor-capacitacion';
+import { consultarCapacitacionPublica } from '@/lib/consultar-capacitacion-publica';
 import SlideViewer from './SlideViewer';
 
 export const dynamic = 'force-dynamic';
@@ -10,35 +10,36 @@ type ContextoPagina = { params: Promise<{ id: string }> };
 
 export default async function PaginaCapacitacionPublica({ params }: ContextoPagina) {
   const { id } = await params;
-  if (!/^[a-f\d]{24}$/i.test(id)) notFound();
 
-  const capacitacion = await prisma.capacitacion.findFirst({
-    where: { id, estado: 'PUBLICADA', ambito: 'PUBLICO' },
-    select: {
-      id: true,
-      titulo: true,
-      descripcion: true,
-      unidad: true,
-      estado: true,
-      ambito: true,
-      slides: {
-        orderBy: { orden: 'asc' },
-        select: {
-          id: true,
-          orden: true,
-          titulo: true,
-          contenido: true,
-          tipo: true,
-          imagenUrl: true,
-          botonTexto: true,
-          botonUrl: true,
-          lista: true,
+  const capacitacion = await consultarCapacitacionPublica(id, (where) =>
+    prisma.capacitacion.findFirst({
+      where,
+      select: {
+        id: true,
+        titulo: true,
+        descripcion: true,
+        unidad: true,
+        estado: true,
+        ambito: true,
+        slides: {
+          orderBy: { orden: 'asc' },
+          select: {
+            id: true,
+            orden: true,
+            titulo: true,
+            contenido: true,
+            tipo: true,
+            imagenUrl: true,
+            botonTexto: true,
+            botonUrl: true,
+            lista: true,
+          },
         },
       },
-    },
-  });
+    }),
+  );
 
-  if (!capacitacion || !capacitacionDisponible(capacitacion)) notFound();
+  if (!capacitacion) notFound();
 
   return (
     <main style={{ minHeight: '100vh', padding: 'clamp(20px, 5vw, 56px) 20px', backgroundColor: 'var(--bg-primary)' }}>
