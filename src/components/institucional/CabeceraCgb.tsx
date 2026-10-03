@@ -1,10 +1,16 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { MarcaCgb } from './MarcaCgb';
+import { CerrarSesion } from '@/components/cerrar-sesion';
 
 type CabeceraCgbProps = {
   variant?: 'inicio' | 'catalogo';
   contexto?: string;
 };
+
+type EstadoSesion = { autenticado: boolean; nombre?: string; rol?: string; destino?: string };
 
 function IconoFlecha({ atras = false }: { atras?: boolean }) {
   return (
@@ -16,6 +22,16 @@ function IconoFlecha({ atras = false }: { atras?: boolean }) {
 
 export function CabeceraCgb({ variant = 'inicio', contexto }: CabeceraCgbProps) {
   const esCatalogo = variant === 'catalogo';
+  const [sesion, establecerSesion] = useState<EstadoSesion | null>(null);
+
+  useEffect(() => {
+    let activo = true;
+    fetch('/api/auth/sesion', { cache: 'no-store' })
+      .then((respuesta) => respuesta.json())
+      .then((datos: EstadoSesion) => { if (activo) establecerSesion(datos); })
+      .catch(() => { if (activo) establecerSesion({ autenticado: false }); });
+    return () => { activo = false; };
+  }, []);
 
   return (
     <header className="cabecera-cgb">
@@ -36,6 +52,21 @@ export function CabeceraCgb({ variant = 'inicio', contexto }: CabeceraCgbProps) 
               <IconoFlecha />
             </Link>
           )}
+
+          {sesion?.autenticado ? (
+            <div className="cabecera-cgb__sesion">
+              <Link href={sesion.destino || '/colaborador'} className="boton-secundario cabecera-cgb__boton cabecera-cgb__boton--secundario" title={sesion.nombre}>
+                <span className="cabecera-cgb__texto-desktop">{sesion.rol === 'ADMINISTRADOR' ? 'Panel de administración' : 'Mi espacio'}</span>
+                <span className="cabecera-cgb__texto-movil">Mi panel</span>
+              </Link>
+              <CerrarSesion />
+            </div>
+          ) : sesion ? (
+            <Link href="/login" className="boton-secundario cabecera-cgb__boton cabecera-cgb__boton--secundario">
+              <span className="cabecera-cgb__texto-desktop">Acceso interno</span>
+              <span className="cabecera-cgb__texto-movil">Ingresar</span>
+            </Link>
+          ) : null}
         </nav>
       </div>
     </header>

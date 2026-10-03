@@ -1,10 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 export function CerrarSesion() {
-  const router = useRouter();
   const [pendiente, establecerPendiente] = useState(false);
   const [error, establecerError] = useState('');
 
@@ -14,8 +12,7 @@ export function CerrarSesion() {
     try {
       const respuesta = await fetch('/api/auth/logout', { method: 'POST' });
       if (!respuesta.ok) throw new Error('Error al cerrar sesión');
-      router.replace('/');
-      router.refresh();
+      window.location.assign('/');
     } catch {
       establecerError('No se pudo cerrar la sesión.');
       establecerPendiente(false);

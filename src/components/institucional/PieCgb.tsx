@@ -22,6 +22,7 @@ export function PieCgb() {
             <h2>Explora</h2>
             <Link href="/capacitaciones">Catálogo de capacitaciones</Link>
             <Link href="/#unidades">Nuestras escuelas</Link>
+            <Link href="/login">Acceso interno</Link>
             <a href="https://cgbacademy.com/" target="_blank" rel="noreferrer">
               Sitio web de CGB Academy
               <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
