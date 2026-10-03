@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'node:crypto';
 import { prisma } from '@/lib/prisma';
-import { autenticar, crearToken, destinoPorRol, DURACION_SESION, NOMBRE_COOKIE, opcionesCookie } from '@/lib/autenticacion';
+import { autenticar, crearToken, destinoPorRol, DURACION_SESION, NOMBRE_COOKIE, opcionesCookie, usarCookieSegura } from '@/lib/autenticacion';
 import { esSolicitudMismoOrigen } from '@/lib/origen';
 
 export async function POST(solicitud: NextRequest) {
@@ -18,7 +18,7 @@ export async function POST(solicitud: NextRequest) {
     const token = await crearToken(usuario, identificador, process.env.AUTH_SECRET || '');
     await prisma.sesion.create({ data: { id: identificador, usuarioId: usuario.id, expiraEn: new Date(Date.now() + DURACION_SESION * 1000) } });
     const respuesta = NextResponse.json({ destino: destinoPorRol(usuario.role) });
-    respuesta.cookies.set(NOMBRE_COOKIE, token, opcionesCookie(process.env.NODE_ENV === 'production'));
+    respuesta.cookies.set(NOMBRE_COOKIE, token, opcionesCookie(usarCookieSegura(process.env.APP_URL, process.env.NODE_ENV)));
     respuesta.headers.set('Cache-Control', 'no-store');
     return respuesta;
   } catch (error) {

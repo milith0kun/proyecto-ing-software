@@ -79,6 +79,12 @@ export function opcionesCookie(produccion: boolean, eliminar = false) {
   return { httpOnly: true, secure: produccion, sameSite: 'lax' as const, path: '/', maxAge: eliminar ? 0 : DURACION_SESION };
 }
 
+// Secure sólo cuando la aplicación se sirve por HTTPS: un navegador descarta cookies Secure recibidas por HTTP.
+export function usarCookieSegura(appUrl: string | undefined, entorno: string | undefined) {
+  if (appUrl) return appUrl.trim().toLowerCase().startsWith('https://');
+  return entorno === 'production';
+}
+
 export function solicitudMismoOrigen(origen: string | null, url: string, host?: string | null) {
   if (!origen) return false;
   try {

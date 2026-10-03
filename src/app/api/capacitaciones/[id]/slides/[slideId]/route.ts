@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validarSlide } from '@/lib/validaciones-slide';
+import { exigirAdministrador } from '@/lib/permisos';
 
 export const dynamic = 'force-dynamic';
 
 type ContextoRuta = { params: Promise<{ id: string; slideId: string }> };
 
 export async function PUT(request: NextRequest, { params }: ContextoRuta) {
+  const rechazo = await exigirAdministrador(request);
+  if (rechazo) return rechazo;
   try {
     const { id, slideId } = await params;
     if (!/^[a-f\d]{24}$/i.test(id) || !/^[a-f\d]{24}$/i.test(slideId)) {
@@ -37,13 +40,14 @@ export async function PUT(request: NextRequest, { params }: ContextoRuta) {
       data: { titulo: String(datos.titulo).trim(), contenido: String(datos.contenido).trim() },
     });
     return NextResponse.json({ ok: true, datos: slide });
-  } catch (error: unknown) {
-    const mensaje = error instanceof Error ? error.message : 'No se pudo actualizar el slide.';
-    return NextResponse.json({ ok: false, error: mensaje }, { status: 500 });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'No se pudo actualizar el slide.' }, { status: 500 });
   }
 }
 
-export async function DELETE(_request: NextRequest, { params }: ContextoRuta) {
+export async function DELETE(request: NextRequest, { params }: ContextoRuta) {
+  const rechazo = await exigirAdministrador(request);
+  if (rechazo) return rechazo;
   try {
     const { id, slideId } = await params;
     if (!/^[a-f\d]{24}$/i.test(id) || !/^[a-f\d]{24}$/i.test(slideId)) {
@@ -57,8 +61,7 @@ export async function DELETE(_request: NextRequest, { params }: ContextoRuta) {
 
     await prisma.slide.delete({ where: { id: slideId } });
     return NextResponse.json({ ok: true, mensaje: 'Slide eliminado.' });
-  } catch (error: unknown) {
-    const mensaje = error instanceof Error ? error.message : 'No se pudo eliminar el slide.';
-    return NextResponse.json({ ok: false, error: mensaje }, { status: 500 });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'No se pudo eliminar el slide.' }, { status: 500 });
   }
 }

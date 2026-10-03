@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { NOMBRE_COOKIE, opcionesCookie, verificarToken } from '@/lib/autenticacion';
+import { NOMBRE_COOKIE, opcionesCookie, usarCookieSegura, verificarToken } from '@/lib/autenticacion';
 import { esSolicitudMismoOrigen } from '@/lib/origen';
 
 export async function POST(solicitud: NextRequest) {
@@ -9,7 +9,7 @@ export async function POST(solicitud: NextRequest) {
   try {
     if (contenido) await prisma.sesion.deleteMany({ where: { id: contenido.sid, usuarioId: contenido.sub } });
     const respuesta = NextResponse.json({ destino: '/' });
-    respuesta.cookies.set(NOMBRE_COOKIE, '', opcionesCookie(process.env.NODE_ENV === 'production', true));
+    respuesta.cookies.set(NOMBRE_COOKIE, '', opcionesCookie(usarCookieSegura(process.env.APP_URL, process.env.NODE_ENV), true));
     respuesta.headers.set('Cache-Control', 'no-store');
     return respuesta;
   } catch { return NextResponse.json({ error: 'No pudimos cerrar la sesión. Inténtalo nuevamente.' }, { status: 503 }); }
