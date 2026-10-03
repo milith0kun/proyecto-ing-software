@@ -86,7 +86,7 @@ export default function PaginaLogin() {
       <div className="login-tarjeta">
         <aside className="login-marca" aria-label="Información institucional">
           <Link href="/" className="login-marca__logo" aria-label="CGB Academy, volver al inicio">
-            <Image src="/logos/cgb-logo-footer.png" alt="CGB Academy" fill sizes="200px" className="object-contain object-left" priority />
+            <Image src="/logos/recortados/cgb-logo-footer.png" alt="CGB Academy" width={700} height={247} sizes="280px" className="login-marca__logo-img" priority />
           </Link>
 
           <div className="login-marca__cuerpo">
