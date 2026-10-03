@@ -1,4 +1,4 @@
-import Image from 'next/image';
+﻿import Image from 'next/image';
 import Link from 'next/link';
 
 export function PieCgb() {
@@ -9,18 +9,18 @@ export function PieCgb() {
           <div className="footer-cgb__marca-bloque">
             <Link href="/" className="footer-cgb__marca" aria-label="CGB Academy, inicio">
               <span className="footer-cgb__logo">
-                <Image src="/logos/cgb-logo-footer.png" alt="" fill sizes="220px" className="object-contain" />
+                <Image src="/logos/recortados/cgb-logo-footer.png" alt="" fill sizes="220px" className="object-contain" />
               </span>
               <strong className="footer-cgb__academy">Academy</strong>
             </Link>
             <p>
-              Formación profesional a través de CIIP, GEOMINA y BIOMEDIC. Explora nuevas áreas y encuentra capacitaciones para seguir creciendo.
+              FormaciÃ³n profesional a travÃ©s de CIIP, GEOMINA y BIOMEDIC. Explora nuevas Ã¡reas y encuentra capacitaciones para seguir creciendo.
             </p>
           </div>
 
-          <nav className="footer-cgb__enlaces" aria-label="Enlaces del pie de página">
+          <nav className="footer-cgb__enlaces" aria-label="Enlaces del pie de pÃ¡gina">
             <h2>Explora</h2>
-            <Link href="/capacitaciones">Catálogo de capacitaciones</Link>
+            <Link href="/capacitaciones">CatÃ¡logo de capacitaciones</Link>
             <Link href="/#unidades">Nuestras escuelas</Link>
             <Link href="/login">Acceso interno</Link>
             <a href="https://cgbacademy.com/" target="_blank" rel="noreferrer">
@@ -32,8 +32,8 @@ export function PieCgb() {
           </nav>
         </div>
         <div className="footer-cgb__base">
-          <span>© CGB Academy</span>
-          <span>CIIP LATAM · GEOMINA LATAM · BIOMEDIC LATAM</span>
+          <span>Â© CGB Academy</span>
+          <span>CIIP LATAM Â· GEOMINA LATAM Â· BIOMEDIC LATAM</span>
         </div>
       </div>
     </footer>

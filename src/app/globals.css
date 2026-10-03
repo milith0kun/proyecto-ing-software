@@ -2452,3 +2452,63 @@ button:disabled {
   .login-marca__texto { max-width: none; }
   .login-formulario { padding: 32px 28px; }
 }
+
+/* ==========================================================================
+   LOGIN — AJUSTE: logos grandes y sin tarjeta, tipografia y campos mas amplios
+   ========================================================================== */
+.footer-cgb__logo img { filter: brightness(0) invert(1); }
+
+/* Logos de unidades: sin tarjeta, con altura propia por proporcion */
+.unidades-cgb { gap: 20px 32px; align-items: center; }
+.unidades-cgb__item, .unidades-cgb--claro .unidades-cgb__item { padding: 0; background: none; border: 0; border-radius: 0; }
+.unidades-cgb__img { display: block; width: auto; height: 52px; max-width: 150px; object-fit: contain; }
+.unidades-cgb--claro .unidades-cgb__img { filter: brightness(0) invert(1); opacity: .95; }
+
+.login-escena { padding: 40px 24px; }
+.login-tarjeta { max-width: 1120px; min-height: 640px; }
+
+.login-marca { padding: 56px 52px; gap: 36px; }
+.login-marca__logo { width: auto; height: auto; display: inline-block; }
+.login-marca__logo-img { display: block; width: auto; height: 84px; max-width: 100%; filter: brightness(0) invert(1); }
+.login-marca__kicker { font-size: 13px; }
+.login-marca h2 { font-size: clamp(38px, 4.4vw, 56px); }
+.login-marca__texto { max-width: 380px; font-size: 17px; line-height: 1.65; color: rgba(255, 255, 255, .86); }
+.login-marca .unidades-cgb { gap: 18px 30px; }
+.login-marca .unidades-cgb__img { height: 54px; max-width: 130px; }
+
+.login-formulario { justify-content: center; padding: 56px 56px; gap: 8px; }
+.login-formulario h1 { font-size: 34px; line-height: 1.15; }
+.login-formulario__ayuda { font-size: 15px; margin-bottom: 20px; }
+.login-formulario .acceso-etiqueta { font-size: 12px; }
+.login-campos { gap: 20px; }
+.login-formulario .acceso-campo label { font-size: 13.5px; }
+.login-formulario .acceso-campo input[type="email"],
+.login-formulario .acceso-campo input[type="password"],
+.login-formulario .acceso-campo input[type="text"] { min-height: 54px; padding: 12px 16px; font-size: 16px; border-radius: var(--radius-md); color: var(--brand-navy); }
+.login-formulario .login-clave input { padding-right: 56px; }
+.login-clave__ojo { width: 54px; }
+.login-enlace { font-size: 13.5px; }
+.login-recordar { font-size: 14.5px; }
+.login-recordar input { width: 18px; height: 18px; }
+.login-aviso { font-size: 13px; }
+.login-ayuda { font-size: 14px; }
+.login-formulario .acceso-error { font-size: 14px; }
+
+/* Boton principal: cian con texto azul (contraste AA segun el manual de marca) */
+.login-formulario .boton-primario.acceso-boton-submit { min-height: 56px; font-size: 14.5px; color: var(--brand-navy); background-color: var(--brand-cyan); }
+.login-formulario .boton-primario.acceso-boton-submit:hover:not(:disabled) { background-color: var(--brand-navy); color: #FFFFFF; }
+.login-formulario .acceso-volver { font-size: 14px; margin-top: 18px; }
+.login-pie { font-size: 12.5px; }
+
+/* El autocompletado del navegador no debe pintar el campo de azul claro */
+.login-formulario input:-webkit-autofill { -webkit-text-fill-color: var(--brand-navy); box-shadow: 0 0 0 1000px #FFFFFF inset; transition: background-color 9999s ease-out; }
+
+@media (max-width: 960px) {
+  .login-tarjeta { min-height: 0; }
+  .login-marca { padding: 36px 32px; gap: 24px; }
+  .login-marca__logo-img { height: 64px; }
+  .login-marca h2 { font-size: 40px; }
+  .login-marca__texto { font-size: 15.5px; max-width: none; }
+  .login-formulario { padding: 36px 32px; }
+  .login-formulario h1 { font-size: 28px; }
+}
