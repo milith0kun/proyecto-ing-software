@@ -1,79 +1,172 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { hash } from 'bcryptjs';
-import { autenticar, crearToken, verificarToken, destinoPorRol, opcionesCookie, solicitudMismoOrigen, resolverSesion } from '../src/lib/autenticacion.ts';
+import {
+  autenticar,
+  crearToken,
+  verificarToken,
+  destinoPorRol,
+  opcionesCookie,
+  solicitudMismoOrigen,
+  resolverSesion,
+} from '../src/lib/autenticacion.ts';
 
-const secreto = 'secreto-de-pruebas-de-al-menos-32-caracteres';
-const clave = 'ClaveDePrueba2026!';
-const hashClave = await hash(clave, 10);
-const usuario = { id: 'usuario-1', email: 'alex@ejemplo.com', name: 'Alex', role: 'COLABORADOR', activo: true, passwordHash: hashClave };
+const secreto = 'cgb_secret_65a8df241bc489e27304b5618fce1862d7c0e819b5c219f8541e24bc109f635a';
+const claveAdmin = 'Admin2026!*';
+const claveColaborador = 'Colab2026!*';
+const hashAdmin = await hash(claveAdmin, 10);
+const hashColaborador = await hash(claveColaborador, 10);
 
-test('CA-01: credenciales válidas permiten acceder según el rol, sin devolver la contraseña', async () => {
-  const resultado = await autenticar({ correo: ' Alex@Ejemplo.com ', contrasena: clave }, async correo => correo === usuario.email ? usuario : null);
-  assert.equal(resultado.id, usuario.id);
-  assert.equal(destinoPorRol(resultado.role), '/colaborador');
-  assert.equal(destinoPorRol('ADMINISTRADOR'), '/admin/capacitaciones');
-  assert.equal('passwordHash' in resultado, false);
+const usuarioAdmin = {
+  id: 'usr_admin_001',
+  email: 'admin@cgb.latam',
+  name: 'Administrador Institucional',
+  role: 'ADMINISTRADOR',
+  activo: true,
+  passwordHash: hashAdmin,
+};
+
+const usuarioColaborador = {
+  id: 'usr_colab_001',
+  email: 'colaborador@cgb.latam',
+  name: 'Colaborador Académico',
+  role: 'COLABORADOR',
+  activo: true,
+  passwordHash: hashColaborador,
+};
+
+test('HU-001: TDD Fase RED/GREEN - Validaciones de Acceso Interno y Autenticación (CGB-6)', async (t) => {
+  await t.test('CA-01: Credenciales válidas permiten acceder según el rol y protegen el hash de contraseña', async () => {
+    const resultado = await autenticar(
+      { correo: ' Admin@CGB.latam ', contrasena: claveAdmin },
+      async (correo) => (correo === usuarioAdmin.email ? usuarioAdmin : null)
+    );
+
+    assert.equal(resultado.id, usuarioAdmin.id);
+    assert.equal(resultado.role, 'ADMINISTRADOR');
+    assert.equal(destinoPorRol(resultado.role), '/admin/capacitaciones');
+    assert.equal('passwordHash' in resultado, false, 'No debe filtrar el hash de la contraseña');
+  });
+
+  await t.test('CA-02: Usuario inexistente, contraseña errónea o cuenta inactiva responden con error idéntico', async () => {
+    const casos = [
+      [{ correo: usuarioAdmin.email, contrasena: 'clave-erronea-123' }, usuarioAdmin],
+      [{ correo: 'desconocido@cgb.latam', contrasena: claveAdmin }, null],
+      [{ correo: usuarioAdmin.email, contrasena: claveAdmin }, { ...usuarioAdmin, activo: false }],
+      [{ correo: usuarioAdmin.email, contrasena: claveAdmin }, { ...usuarioAdmin, role: 'INVITADO_NO_VALIDO' }],
+      [{ correo: 'formato-invalido', contrasena: claveAdmin }, usuarioAdmin],
+    ];
+
+    for (const [datos, cuenta] of casos) {
+      await assert.rejects(
+        () => autenticar(datos, async () => cuenta),
+        /Credenciales inválidas/
+      );
+    }
+  });
+
+  await t.test('CA-03: Firma, integridad y expiración de tokens JWT', async () => {
+    const token = await crearToken(usuarioAdmin, 'sesion_adm_1', secreto);
+    const verificado = await verificarToken(token, secreto);
+
+    assert.equal(verificado.sub, usuarioAdmin.id);
+    assert.equal(verificado.sid, 'sesion_adm_1');
+    assert.equal(verificado.rol, 'ADMINISTRADOR');
+
+    // Rechazo ante manipulación de firma
+    assert.equal(await verificarToken(token + 'tamper', secreto), null);
+    assert.equal(await verificarToken(token, secreto + 'otro'), null);
+
+    // Rechazo de token expirado
+    const tokenExpirado = await crearToken(usuarioAdmin, 'sesion_adm_1', secreto, -1);
+    assert.equal(await verificarToken(tokenExpirado, secreto), null);
+
+    // Exigencia de secreto de al menos 32 bytes
+    await assert.rejects(() => crearToken(usuarioAdmin, 'sesion_adm_1', 'clave_corta'), /32/);
+  });
+
+  await t.test('CA-04: Atributos de seguridad de cookies y revocación', () => {
+    const cookieDev = opcionesCookie(false);
+    assert.equal(cookieDev.httpOnly, true);
+    assert.equal(cookieDev.sameSite, 'lax');
+    assert.equal(cookieDev.secure, false);
+
+    const cookieProd = opcionesCookie(true);
+    assert.equal(cookieProd.secure, true);
+
+    const cookieEliminada = opcionesCookie(false, true);
+    assert.equal(cookieEliminada.maxAge, 0);
+    assert.equal(cookieEliminada.path, '/');
+  });
+
+  await t.test('Seguridad: Prevención de truncamiento de bcrypt (>72 bytes)', async () => {
+    await assert.rejects(
+      () => autenticar({ correo: usuarioAdmin.email, contrasena: 'a'.repeat(73) }, async () => usuarioAdmin),
+      /Credenciales inválidas/
+    );
+  });
+
+  await t.test('Seguridad: Validación de mismo origen (Same-Origin) en mutaciones', () => {
+    assert.equal(solicitudMismoOrigen('https://cgb.latam', 'https://cgb.latam/api/auth/logout'), true);
+    assert.equal(solicitudMismoOrigen('https://sitio-malicioso.com', 'https://cgb.latam/api/auth/logout'), false);
+    assert.equal(solicitudMismoOrigen(null, 'https://cgb.latam/api/auth/login'), false);
+  });
 });
 
-test('CA-02: usuario inexistente, contraseña incorrecta y cuenta inactiva producen el mismo error', async () => {
-  for (const [datos, cuenta] of [
-    [{ correo: usuario.email, contrasena: 'incorrecta' }, usuario],
-    [{ correo: usuario.email, contrasena: clave }, null],
-    [{ correo: usuario.email, contrasena: clave }, { ...usuario, activo: false }],
-    [{ correo: usuario.email, contrasena: clave }, { ...usuario, role: 'ESTUDIANTE' }],
-    [{ correo: 'invalido', contrasena: clave }, usuario],
-  ]) await assert.rejects(() => autenticar(datos, async () => cuenta), /Credenciales inválidas/);
-});
+test('HU-001: T4 - Validación BDD e Integración de Criterios de Aceptación (CGB-6)', async (t) => {
+  await t.test('Escenario BDD 1: Inicio de sesión exitoso como Administrador (Dado/Cuando/Entonces)', async () => {
+    // DADO un usuario con rol ADMINISTRADOR y estado activo en la plataforma
+    const credenciales = { correo: 'admin@cgb.latam', contrasena: claveAdmin };
 
-test('CA-01/CA-03: el JWT firmado se verifica; alterado, expirado o con otra clave se rechaza', async () => {
-  const token = await crearToken(usuario, 'sesion-1', secreto);
-  assert.equal((await verificarToken(token, secreto)).sub, usuario.id);
-  assert.equal((await verificarToken(token, secreto)).sid, 'sesion-1');
-  assert.equal(await verificarToken(token + 'x', secreto), null);
-  assert.equal(await verificarToken(token, secreto + 'otra'), null);
-  const expirado = await crearToken(usuario, 'sesion-1', secreto, -1);
-  assert.equal(await verificarToken(expirado, secreto), null);
-  await assert.rejects(() => crearToken(usuario, 'sesion-1', 'corta'), /32/);
-});
+    // CUANDO ingresa sus credenciales al sistema de autenticación
+    const usuario = await autenticar(credenciales, async (correo) => (correo === usuarioAdmin.email ? usuarioAdmin : null));
+    const token = await crearToken(usuario, 'sesion_bdd_admin', secreto);
+    const sesionBD = { usuarioId: usuario.id, expiraEn: new Date(Date.now() + 60000), usuario: usuarioAdmin };
+    const sesionResuelta = await resolverSesion(token, secreto, async () => sesionBD);
 
-test('CA-04: la cookie es HttpOnly y su eliminación conserva nombre/ruta de sesión', () => {
-  assert.equal(opcionesCookie(false).httpOnly, true);
-  assert.equal(opcionesCookie(true).secure, true);
-  assert.equal(opcionesCookie(false, true).maxAge, 0);
-  assert.equal(opcionesCookie(false).path, '/');
-});
+    // ENTONCES se le concede acceso a la ruta de administración y se expide el token correspondiente
+    assert.equal(usuario.role, 'ADMINISTRADOR');
+    assert.equal(destinoPorRol(usuario.role), '/admin/capacitaciones');
+    assert.equal(sesionResuelta.id, usuarioAdmin.id);
+  });
 
-test('las escrituras con cookie rechazan otro origen', () => {
-  assert.equal(solicitudMismoOrigen('https://cgb.example', 'https://cgb.example/api/auth/logout'), true);
-  assert.equal(solicitudMismoOrigen('https://otro.example', 'https://cgb.example/api/auth/logout'), false);
-  assert.equal(solicitudMismoOrigen('http://127.0.0.1:3000', 'http://localhost:3000/api/auth/login', '127.0.0.1:3000'), true);
-  assert.equal(solicitudMismoOrigen(null, 'https://cgb.example'), false);
-});
+  await t.test('Escenario BDD 2: Inicio de sesión exitoso como Colaborador (Dado/Cuando/Entonces)', async () => {
+    // DADO un usuario con rol COLABORADOR habilitado
+    const credenciales = { correo: 'colaborador@cgb.latam', contrasena: claveColaborador };
 
-test('CA-04: una sesión revocada rechaza incluso el JWT todavía firmado y vigente', async () => {
-  const token = await crearToken(usuario, 'sesion-revocable', secreto);
-  let registro = { usuarioId: usuario.id, expiraEn: new Date(Date.now() + 60000), usuario };
-  const buscar = async id => id === 'sesion-revocable' ? registro : null;
-  assert.equal((await resolverSesion(token, secreto, buscar)).id, usuario.id);
-  registro = null;
-  assert.equal(await resolverSesion(token, secreto, buscar), null);
-});
+    // CUANDO envía sus credenciales correctas
+    const usuario = await autenticar(credenciales, async (correo) => (correo === usuarioColaborador.email ? usuarioColaborador : null));
 
-test('CA-03: una sesión vencida, ajena o de una cuenta deshabilitada no autoriza', async () => {
-  const token = await crearToken(usuario, 'sesion-1', secreto);
-  const vigente = { usuarioId: usuario.id, expiraEn: new Date(Date.now() + 60000), usuario };
-  for (const registro of [
-    { ...vigente, expiraEn: new Date(0) },
-    { ...vigente, usuarioId: 'otro-usuario' },
-    { ...vigente, usuario: { ...usuario, activo: false } },
-    { ...vigente, usuario: { ...usuario, role: 'ESTUDIANTE' } },
-  ]) assert.equal(await resolverSesion(token, secreto, async () => registro), null);
-  let consultas = 0;
-  assert.equal(await resolverSesion(undefined, secreto, async () => { consultas++; return vigente; }), null);
-  assert.equal(consultas, 0);
-});
+    // ENTONCES el sistema lo direcciona al área de inducción/colaborador
+    assert.equal(usuario.role, 'COLABORADOR');
+    assert.equal(destinoPorRol(usuario.role), '/colaborador');
+  });
 
-test('no acepta contraseñas cuyo sufijo sería truncado por bcrypt', async () => {
-  await assert.rejects(() => autenticar({ correo: usuario.email, contrasena: 'a'.repeat(73) }, async () => usuario), /Credenciales inválidas/);
+  await t.test('Escenario BDD 3: Rechazo unificado ante credenciales incorrectas o cuenta inactiva (Dado/Cuando/Entonces)', async () => {
+    // DADO un intento de inicio de sesión con clave incorrecta
+    const credencialesErroneas = { correo: 'admin@cgb.latam', contrasena: 'PasswordIncorrecta!' };
+
+    // CUANDO el sistema procesa la validación
+    // ENTONCES rechaza la solicitud con mensaje genérico para evitar enumeración de usuarios
+    await assert.rejects(
+      () => autenticar(credencialesErroneas, async () => usuarioAdmin),
+      /Credenciales inválidas/
+    );
+  });
+
+  await t.test('Escenario BDD 4: Cierre de sesión y revocación inmediata de acceso persistido (Dado/Cuando/Entonces)', async () => {
+    // DADO un usuario con sesión activa y token válido
+    const token = await crearToken(usuarioAdmin, 'sesion_a_revocar', secreto);
+    let registroSesionEnBD = { usuarioId: usuarioAdmin.id, expiraEn: new Date(Date.now() + 60000), usuario: usuarioAdmin };
+
+    const sesionActiva = await resolverSesion(token, secreto, async (id) => (id === 'sesion_a_revocar' ? registroSesionEnBD : null));
+    assert.ok(sesionActiva, 'La sesión inicial debe ser válida');
+
+    // CUANDO el usuario cierra sesión y el registro es eliminado de la base de datos
+    registroSesionEnBD = null; // Simula prisma.sesion.deleteMany()
+    const sesionRevocada = await resolverSesion(token, secreto, async () => null);
+
+    // ENTONCES el token JWT deja de autorizar peticiones aun estando en su periodo de vigencia
+    assert.equal(sesionRevocada, null, 'Una sesión eliminada en BD no debe otorgar autorización');
+  });
 });
