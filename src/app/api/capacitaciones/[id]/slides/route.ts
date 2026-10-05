@@ -112,10 +112,30 @@ export async function PATCH(request: NextRequest, { params }: ContextoRuta) {
     }
 
     const cuerpo = await request.json().catch(() => null);
+    const esObjeto = cuerpo && typeof cuerpo === 'object' && !Array.isArray(cuerpo);
+
+    // Formato heredado: lista completa de IDs en el nuevo orden.
+    if (esObjeto && Array.isArray(cuerpo.orden)) {
+      const ids: unknown[] = cuerpo.orden;
+      const actuales = await prisma.slide.findMany({ where: { capacitacionId: id }, select: { id: true } });
+      const idsActuales = new Set(actuales.map((slide) => slide.id));
+      const idsSolicitados = new Set(ids as string[]);
+      if (ids.some((slideId) => typeof slideId !== 'string') || idsSolicitados.size !== ids.length ||
+          idsActuales.size !== ids.length || [...idsActuales].some((slideId) => !idsSolicitados.has(slideId))) {
+        return NextResponse.json({ ok: false, error: 'La lista debe incluir cada slide de esta capacitación una sola vez.' }, { status: 400 });
+      }
+      if (ids.length > 0) {
+        await prisma.$transaction(
+          (ids as string[]).map((slideId, index) =>
+            prisma.slide.update({ where: { id: slideId }, data: { orden: index + 1 } })
+          )
+        );
+      }
+      return NextResponse.json({ ok: true, mensaje: 'Orden actualizado.' });
+    }
+
     if (
-      !cuerpo ||
-      typeof cuerpo !== 'object' ||
-      Array.isArray(cuerpo) ||
+      !esObjeto ||
       typeof cuerpo.slideId !== 'string' ||
       !cuerpo.slideId.trim() ||
       !Number.isInteger(cuerpo.orden) ||
