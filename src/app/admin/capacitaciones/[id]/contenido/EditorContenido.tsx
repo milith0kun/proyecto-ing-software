@@ -1,5 +1,6 @@
 'use client';
 
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 import { useMemo, useState, type FormEvent } from 'react';
 import { CabeceraAdminCgb } from '@/components/institucional/CabeceraAdminCgb';
@@ -11,6 +12,109 @@ interface Slide {
   titulo: string;
   contenido: string;
   tipo: string;
+  imagenUrl?: string | null;
+  botonTexto?: string | null;
+  botonUrl?: string | null;
+  lista?: string[];
+}
+
+interface CamposSlide {
+  titulo: string;
+  contenido: string;
+  tipo: string;
+  imagenUrl: string;
+  botonTexto: string;
+  botonUrl: string;
+  listaTexto: string;
+}
+
+const CAMPOS_VACIOS: CamposSlide = { titulo: '', contenido: '', tipo: 'TEXT', imagenUrl: '', botonTexto: '', botonUrl: '', listaTexto: '' };
+const TIPOS_SLIDE = [
+  { valor: 'TEXT', etiqueta: 'Texto' },
+  { valor: 'IMAGE', etiqueta: 'Imagen' },
+  { valor: 'INTERACTIVE', etiqueta: 'Interactivo (botón)' },
+  { valor: 'INFO', etiqueta: 'Informativo' },
+];
+const TIPOS_IMAGEN = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const MAX_IMAGEN = 5 * 1024 * 1024;
+
+function aCuerpo(campos: CamposSlide) {
+  return {
+    titulo: campos.titulo,
+    contenido: campos.contenido,
+    tipo: campos.tipo,
+    imagenUrl: campos.imagenUrl.trim() || null,
+    botonTexto: campos.botonTexto.trim() || null,
+    botonUrl: campos.botonUrl.trim() || null,
+    lista: campos.listaTexto.split('\n').map((item) => item.trim()).filter(Boolean),
+  };
+}
+
+function leerImagen(archivo: File): Promise<string> {
+  return new Promise((resolver, rechazar) => {
+    const lector = new FileReader();
+    lector.onload = () => resolver(String(lector.result));
+    lector.onerror = () => rechazar(new Error('No se pudo leer la imagen seleccionada.'));
+    lector.readAsDataURL(archivo);
+  });
+}
+
+function CamposAvanzados({ prefijo, valores, onChange, onError }: {
+  prefijo: string;
+  valores: CamposSlide;
+  onChange: (parcial: Partial<CamposSlide>) => void;
+  onError: (mensaje: string) => void;
+}) {
+  async function elegirArchivo(archivo: File | undefined) {
+    if (!archivo) return;
+    if (!TIPOS_IMAGEN.includes(archivo.type)) return onError('Elige una imagen JPG, PNG, WebP o GIF.');
+    if (archivo.size > MAX_IMAGEN) return onError('La imagen no puede superar los 5 MiB.');
+    try {
+      onChange({ imagenUrl: await leerImagen(archivo) });
+      onError('');
+    } catch (e) {
+      onError(e instanceof Error ? e.message : 'No se pudo leer la imagen.');
+    }
+  }
+
+  return (
+    <>
+      <div className="admin-campo">
+        <label htmlFor={prefijo + '-tipo'}>Tipo de slide</label>
+        <select id={prefijo + '-tipo'} className="campo-formulario" value={valores.tipo} onChange={(event) => onChange({ tipo: event.target.value })}>
+          {TIPOS_SLIDE.map((tipo) => <option key={tipo.valor} value={tipo.valor}>{tipo.etiqueta}</option>)}
+        </select>
+      </div>
+      <div className="admin-campo">
+        <label htmlFor={prefijo + '-imagen'}>Imagen (URL o archivo, opcional)</label>
+        <input id={prefijo + '-imagen'} className="campo-formulario" type="text" value={valores.imagenUrl.startsWith('data:') ? '' : valores.imagenUrl} onChange={(event) => onChange({ imagenUrl: event.target.value })} placeholder="https://…" />
+        <input id={prefijo + '-imagen-archivo'} className="campo-formulario" type="file" accept={TIPOS_IMAGEN.join(',')} aria-label="Subir imagen desde el equipo" onChange={(event) => void elegirArchivo(event.target.files?.[0])} />
+        {valores.imagenUrl && (
+          <>
+            { }
+            <img src={valores.imagenUrl} alt="Previsualización de la imagen" style={{ maxWidth: '100%', maxHeight: 140, objectFit: 'cover', borderRadius: 8 }} />
+            <button type="button" className="boton-secundario" onClick={() => onChange({ imagenUrl: '' })}>Quitar imagen</button>
+          </>
+        )}
+      </div>
+      <div className="admin-campo">
+        <label htmlFor={prefijo + '-lista'}>Lista de puntos (uno por línea, opcional)</label>
+        <textarea id={prefijo + '-lista'} className="campo-formulario campo-formulario--area" rows={3} value={valores.listaTexto} onChange={(event) => onChange({ listaTexto: event.target.value })} />
+      </div>
+      {valores.tipo === 'INTERACTIVE' && (
+        <>
+          <div className="admin-campo">
+            <label htmlFor={prefijo + '-boton-texto'}>Texto del botón</label>
+            <input id={prefijo + '-boton-texto'} className="campo-formulario" value={valores.botonTexto} onChange={(event) => onChange({ botonTexto: event.target.value })} maxLength={40} />
+          </div>
+          <div className="admin-campo">
+            <label htmlFor={prefijo + '-boton-url'}>URL del botón</label>
+            <input id={prefijo + '-boton-url'} className="campo-formulario" value={valores.botonUrl} onChange={(event) => onChange({ botonUrl: event.target.value })} placeholder="https://…" />
+          </div>
+        </>
+      )}
+    </>
+  );
 }
 
 interface Capacitacion {
@@ -54,11 +158,9 @@ function Estado({ estado }: { estado: string }) {
 export default function EditorContenido({ inicial }: { inicial: Capacitacion }) {
   const [slides, setSlides] = useState(inicial.slides);
   const [slideActivoId, setSlideActivoId] = useState(inicial.slides[0]?.id ?? '');
-  const [tituloNuevo, setTituloNuevo] = useState('');
-  const [contenidoNuevo, setContenidoNuevo] = useState('');
+  const [nuevo, setNuevo] = useState<CamposSlide>(CAMPOS_VACIOS);
   const [editandoId, setEditandoId] = useState('');
-  const [tituloEditado, setTituloEditado] = useState('');
-  const [contenidoEditado, setContenidoEditado] = useState('');
+  const [editado, setEditado] = useState<CamposSlide>(CAMPOS_VACIOS);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState('');
   const [mensaje, setMensaje] = useState('');
@@ -79,7 +181,7 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
       const respuesta = await fetch('/api/capacitaciones/' + inicial.id + '/slides', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ titulo: tituloNuevo, contenido: contenidoNuevo }),
+        body: JSON.stringify(aCuerpo(nuevo)),
       });
       const resultado = await respuesta.json();
       if (!respuesta.ok || !resultado.ok) {
@@ -90,8 +192,7 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
       const actualizado = [...slides, resultado.datos as Slide];
       setSlides(actualizado);
       setSlideActivoId(resultado.datos.id);
-      setTituloNuevo('');
-      setContenidoNuevo('');
+      setNuevo(CAMPOS_VACIOS);
       setMensaje('Slide agregado. Puedes continuar editándolo o crear el siguiente.');
     } catch {
       setError('No se pudo conectar con el servidor. Inténtalo de nuevo.');
@@ -102,8 +203,15 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
 
   function iniciarEdicion(slide: Slide) {
     setEditandoId(slide.id);
-    setTituloEditado(slide.titulo);
-    setContenidoEditado(slide.contenido);
+    setEditado({
+      titulo: slide.titulo,
+      contenido: slide.contenido,
+      tipo: slide.tipo,
+      imagenUrl: slide.imagenUrl ?? '',
+      botonTexto: slide.botonTexto ?? '',
+      botonUrl: slide.botonUrl ?? '',
+      listaTexto: (slide.lista ?? []).join('\n'),
+    });
     setError('');
     setMensaje('');
   }
@@ -117,7 +225,7 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
       const respuesta = await fetch('/api/capacitaciones/' + inicial.id + '/slides/' + editandoId, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ titulo: tituloEditado, contenido: contenidoEditado }),
+        body: JSON.stringify(aCuerpo(editado)),
       });
       const resultado = await respuesta.json();
       if (!respuesta.ok || !resultado.ok) {
@@ -247,15 +355,16 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
             )}
 
             <form className="contenido-nuevo tarjeta-cgb" onSubmit={crearSlide}>
-              <div className="contenido-nuevo__encabezado"><span className="contenido-nuevo__icono"><Icono nombre="plus" /></span><div><h3>Agregar un slide</h3><p>Comienza con una sección informativa de texto.</p></div></div>
+              <div className="contenido-nuevo__encabezado"><span className="contenido-nuevo__icono"><Icono nombre="plus" /></span><div><h3>Agregar un slide</h3><p>Texto, imagen, lista o botón de acción.</p></div></div>
               <div className="admin-campo">
                 <label htmlFor="nuevo-slide-titulo">Título del slide</label>
-                <input id="nuevo-slide-titulo" className="campo-formulario" value={tituloNuevo} onChange={(event) => setTituloNuevo(event.target.value)} placeholder="Ej. Bienvenida" maxLength={80} required minLength={3} />
+                <input id="nuevo-slide-titulo" className="campo-formulario" value={nuevo.titulo} onChange={(event) => setNuevo({ ...nuevo, titulo: event.target.value })} placeholder="Ej. Bienvenida" maxLength={80} required minLength={3} />
               </div>
               <div className="admin-campo">
                 <label htmlFor="nuevo-slide-contenido">Contenido</label>
-                <textarea id="nuevo-slide-contenido" className="campo-formulario campo-formulario--area" value={contenidoNuevo} onChange={(event) => setContenidoNuevo(event.target.value)} placeholder="Escribe la información que verá la persona que realiza la capacitación…" rows={5} maxLength={10000} required />
+                <textarea id="nuevo-slide-contenido" className="campo-formulario campo-formulario--area" value={nuevo.contenido} onChange={(event) => setNuevo({ ...nuevo, contenido: event.target.value })} placeholder="Escribe la información que verá la persona que realiza la capacitación…" rows={5} maxLength={10000} required />
               </div>
+              <CamposAvanzados prefijo="nuevo-slide" valores={nuevo} onChange={(parcial) => setNuevo((actual) => ({ ...actual, ...parcial }))} onError={setError} />
               <button type="submit" className="boton-primario" disabled={guardando}><Icono nombre="plus" /><span>{guardando ? 'Guardando…' : 'Agregar slide'}</span></button>
             </form>
           </section>
@@ -266,14 +375,15 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
             {editandoId ? (
               <form className="contenido-edicion tarjeta-cgb" onSubmit={guardarEdicion}>
                 <div className="contenido-edicion__heading"><div><p className="kicker-cgb">Editar slide</p><h3>Actualiza la información</h3></div><button type="button" className="contenido-icono-boton" onClick={cerrarEdicion} aria-label="Cancelar edición"><Icono nombre="close" /></button></div>
-                <div className="admin-campo"><label htmlFor="editar-slide-titulo">Título del slide</label><input id="editar-slide-titulo" className="campo-formulario" value={tituloEditado} onChange={(event) => setTituloEditado(event.target.value)} maxLength={80} required minLength={3} /></div>
-                <div className="admin-campo"><label htmlFor="editar-slide-contenido">Contenido</label><textarea id="editar-slide-contenido" className="campo-formulario campo-formulario--area" value={contenidoEditado} onChange={(event) => setContenidoEditado(event.target.value)} rows={10} maxLength={10000} required /></div>
+                <div className="admin-campo"><label htmlFor="editar-slide-titulo">Título del slide</label><input id="editar-slide-titulo" className="campo-formulario" value={editado.titulo} onChange={(event) => setEditado({ ...editado, titulo: event.target.value })} maxLength={80} required minLength={3} /></div>
+                <div className="admin-campo"><label htmlFor="editar-slide-contenido">Contenido</label><textarea id="editar-slide-contenido" className="campo-formulario campo-formulario--area" value={editado.contenido} onChange={(event) => setEditado({ ...editado, contenido: event.target.value })} rows={8} maxLength={10000} required /></div>
+                <CamposAvanzados prefijo="editar-slide" valores={editado} onChange={(parcial) => setEditado((actual) => ({ ...actual, ...parcial }))} onError={setError} />
                 <div className="admin-formulario__acciones"><button type="button" className="boton-secundario" onClick={cerrarEdicion}>Cancelar</button><button type="submit" className="boton-primario" disabled={guardando}><Icono nombre="check" /><span>Guardar slide</span></button></div>
               </form>
             ) : slideActivo ? (
               <div className="visor-diapositiva contenido-preview">
                 <div className="contenido-preview__marco"><span className="contenido-preview__marca">CGB ACADEMY</span><span className="contenido-preview__unidad">{inicial.unidad}</span></div>
-                <div className="contenido-preview__cuerpo"><p className="kicker-cgb">{inicial.categoria || 'Inducción'}</p><h3>{slideActivo.titulo}</h3><p>{slideActivo.contenido}</p></div>
+                <div className="contenido-preview__cuerpo"><p className="kicker-cgb">{inicial.categoria || 'Inducción'}</p><h3>{slideActivo.titulo}</h3>{slideActivo.imagenUrl && (  <img src={slideActivo.imagenUrl} alt={slideActivo.titulo} style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'cover', borderRadius: 8 }} />)}<p>{slideActivo.contenido}</p>{(slideActivo.lista?.length ?? 0) > 0 && <ul>{slideActivo.lista?.map((item, i) => <li key={i}>{item}</li>)}</ul>}{slideActivo.tipo === 'INTERACTIVE' && slideActivo.botonTexto && slideActivo.botonUrl && <a className="boton-primario" href={slideActivo.botonUrl} target="_blank" rel="noopener noreferrer">{slideActivo.botonTexto}</a>}</div>
                 <div className="contenido-preview__pie"><span>Slide {slides.findIndex((slide) => slide.id === slideActivo.id) + 1} de {slides.length}</span><span className="contenido-preview__marca-secundaria">Capacitación CGB</span></div>
               </div>
             ) : (

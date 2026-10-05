@@ -11,7 +11,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/*.test.mjs",
+    "test": "tsx --test tests/*.test.mjs",
     "seed": "node prisma/seed.mjs",
     "postinstall": "prisma generate"
   },
@@ -26,14 +26,18 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
+    "happy-dom": "^20.14.5",
     "picomatch": "^4.0.7",
     "prisma": "^6.19.3",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

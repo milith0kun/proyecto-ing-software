@@ -1,6 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { validarCapacitacion, normalizarCapacitacion } from '../src/lib/validaciones-capacitacion.ts';
+import {
+  crearSlide,
+  reordenarSlides,
+  eliminarSlideYReindexar,
+  validarSlide
+} from '../src/lib/slides.ts';
 
 test('HU-002: TDD Fase RED/GREEN - Validaciones de Creación de Capacitación', async (t) => {
   await t.test('CA-01: Debe rechazar capacitaciones sin título o con título menor a 3 caracteres', () => {
@@ -60,6 +66,18 @@ test('HU-002: TDD Fase RED/GREEN - Validaciones de Creación de Capacitación', 
     assert.equal(datosNormalizados.estado, 'BORRADOR');
     assert.equal(datosNormalizados.duracionMin, 30);
     assert.equal(datosNormalizados.categoria, 'Inducción');
+  });
+
+  await t.test('CA-04: Debe permitir publicar una capacitación desde BORRADOR a PUBLICADA', () => {
+    const datosNormalizados = normalizarCapacitacion({
+      titulo: 'Capacitación de Seguridad',
+      descripcion: 'Curso obligatorio para todos los funcionarios del área',
+      unidad: 'CIIP',
+      ambito: 'PUBLICO',
+      estado: 'PUBLICADA'
+    }, { estado: 'BORRADOR' });
+
+    assert.equal(datosNormalizados.estado, 'PUBLICADA');
   });
 
   await t.test('CA-02: Edición debe conservar el ID original sin generar duplicados', () => {
@@ -158,6 +176,104 @@ test('HU-002: T4 - Validación BDD e Integración de Criterios de Aceptación', 
     assert.ok(validacion.errores.descripcion);
     assert.ok(validacion.errores.unidad);
     assert.ok(validacion.errores.ambito);
+  });
+});
+
+test('HU-003: T1 - RED - Gestión de slides dentro de una capacitación', async (t) => {
+  await t.test('CA-01: Debe crear un slide asociado a una capacitación con contenido válido', () => {
+    const resultado = crearSlide({
+      capacitacionId: 'cap_123',
+      titulo: 'Bienvenida institucional',
+      contenido: 'Texto de bienvenida con enlaces e instrucciones.',
+      tipo: 'TEXT',
+      orden: 1
+    });
+
+    assert.equal(resultado.valido, true);
+    assert.equal(resultado.slide.capacitacionId, 'cap_123');
+    assert.equal(resultado.slide.orden, 1);
+    assert.equal(resultado.slide.titulo, 'Bienvenida institucional');
+  });
+
+  await t.test('CA-01: Debe rechazar un slide sin título o contenido mínimo', () => {
+    const resultado = validarSlide({
+      capacitacionId: 'cap_123',
+      titulo: '',
+      contenido: 'corto',
+      tipo: 'TEXT',
+      orden: 1
+    });
+
+    assert.equal(resultado.valido, false);
+    assert.ok(resultado.errores.titulo);
+    assert.ok(resultado.errores.contenido);
+  });
+
+  await t.test('CA-02: Debe reordenar slides de forma correlativa', () => {
+    const slides = [
+      { id: 's1', capacitacionId: 'cap_123', orden: 1, titulo: 'Intro', contenido: 'A', tipo: 'TEXT' },
+      { id: 's2', capacitacionId: 'cap_123', orden: 2, titulo: 'Tema', contenido: 'B', tipo: 'TEXT' },
+      { id: 's3', capacitacionId: 'cap_123', orden: 3, titulo: 'Cierre', contenido: 'C', tipo: 'TEXT' }
+    ];
+
+    const reordenados = reordenarSlides(slides, 's3', 1);
+
+    assert.deepEqual(reordenados.map((slide) => slide.orden), [1, 2, 3]);
+    assert.equal(reordenados[0].id, 's3');
+  });
+
+  await t.test('CA-03: Debe validar imagen y botón de acción para slides multimedia', () => {
+    const slideSinImagen = validarSlide({
+      capacitacionId: 'cap_123',
+      titulo: 'Slide visual',
+      contenido: 'Texto explicativo del contenido.',
+      tipo: 'IMAGE',
+      orden: 1
+    });
+
+    assert.equal(slideSinImagen.valido, false);
+    assert.match(slideSinImagen.errores.imagenUrl, /imagen/i);
+
+    const slideInteractivo = validarSlide({
+      capacitacionId: 'cap_123',
+      titulo: 'Slide interactivo',
+      contenido: 'Incluye acción para continuar.',
+      tipo: 'INTERACTIVE',
+      orden: 2,
+      botonTexto: 'Continuar',
+      botonUrl: 'https://example.com/continuar'
+    });
+
+    assert.equal(slideInteractivo.valido, true);
+    assert.deepEqual(slideInteractivo.errores, {});
+  });
+
+  await t.test('CA-03: Debe conservar una imagen subida como data URL en el slide', () => {
+    const imagenSubida = 'data:image/png;base64,aGVsbG8=';
+    const resultado = crearSlide({
+      capacitacionId: 'cap_123',
+      titulo: 'Diagrama del proceso',
+      contenido: 'Explicación del diagrama de seguridad.',
+      tipo: 'IMAGE',
+      imagenUrl: imagenSubida,
+      orden: 1
+    });
+
+    assert.equal(resultado.valido, true);
+    assert.equal(resultado.slide.imagenUrl, imagenSubida);
+  });
+
+  await t.test('CA-04: Debe eliminar un slide y reajustar la secuencia de los restantes', () => {
+    const slides = [
+      { id: 's1', capacitacionId: 'cap_123', orden: 1, titulo: 'Intro', contenido: 'A', tipo: 'TEXT' },
+      { id: 's2', capacitacionId: 'cap_123', orden: 2, titulo: 'Tema', contenido: 'B', tipo: 'TEXT' },
+      { id: 's3', capacitacionId: 'cap_123', orden: 3, titulo: 'Cierre', contenido: 'C', tipo: 'TEXT' }
+    ];
+
+    const resultado = eliminarSlideYReindexar(slides, 's2');
+
+    assert.deepEqual(resultado.map((slide) => slide.orden), [1, 2]);
+    assert.equal(resultado[1].titulo, 'Cierre');
   });
 });
 
