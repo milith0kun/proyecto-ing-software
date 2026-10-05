@@ -26,6 +26,7 @@ interface FormularioData {
   descripcion: string;
   unidad: string;
   ambito: string;
+  estado: string;
   categoria: string;
   duracionMin: string;
 }
@@ -35,6 +36,7 @@ const FORMULARIO_INICIAL: FormularioData = {
   descripcion: '',
   unidad: 'CIIP',
   ambito: 'PUBLICO',
+  estado: 'BORRADOR',
   categoria: 'Inducción',
   duracionMin: '30',
 };
@@ -172,6 +174,7 @@ export default function PanelCapacitaciones() {
       descripcion: capacitacion.descripcion,
       unidad: capacitacion.unidad,
       ambito: capacitacion.ambito,
+      estado: capacitacion.estado,
       categoria: capacitacion.categoria || 'Inducción',
       duracionMin: String(capacitacion.duracionMin || 30),
     });
@@ -484,6 +487,15 @@ export default function PanelCapacitaciones() {
                   <option value="INTERNO">Interno</option>
                 </select>
                 <ErrorCampo id="error-cap-ambito">{erroresFormulario.ambito}</ErrorCampo>
+              </div>
+
+              <div className="admin-campo">
+                <label htmlFor="cap-estado">Estado</label>
+                <select id="cap-estado" className="campo-formulario" value={formulario.estado} onChange={(event) => actualizarCampo('estado', event.target.value)} aria-invalid={Boolean(erroresFormulario.estado)} aria-describedby={erroresFormulario.estado ? 'error-cap-estado' : undefined}>
+                  <option value="BORRADOR">Borrador</option>
+                  <option value="PUBLICADA">Publicada</option>
+                </select>
+                <ErrorCampo id="error-cap-estado">{erroresFormulario.estado}</ErrorCampo>
               </div>
 
               <div className="admin-campo">
