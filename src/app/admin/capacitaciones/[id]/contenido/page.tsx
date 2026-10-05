@@ -31,6 +31,10 @@ export default async function PaginaContenido({ params }: { params: Promise<{ id
           titulo: slide.titulo,
           contenido: slide.contenido,
           tipo: slide.tipo,
+          imagenUrl: slide.imagenUrl,
+          botonTexto: slide.botonTexto,
+          botonUrl: slide.botonUrl,
+          lista: slide.lista,
         })),
       }}
     />
