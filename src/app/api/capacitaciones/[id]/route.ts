@@ -86,12 +86,15 @@ export async function PUT(
     }
 
     // Permitir actualizaciones parciales sin borrar valores que el formulario no envíe.
+    const estadoSolicitado = cuerpo.estado !== undefined ? String(cuerpo.estado).toUpperCase().trim() : existente.estado;
+
     const datosParaActualizar = {
       ...cuerpo,
       titulo: cuerpo.titulo ?? existente.titulo,
       descripcion: cuerpo.descripcion ?? existente.descripcion,
       unidad: cuerpo.unidad ?? existente.unidad,
       ambito: cuerpo.ambito ?? existente.ambito,
+      estado: estadoSolicitado,
       categoria: cuerpo.categoria ?? existente.categoria ?? 'Inducción',
       duracionMin: cuerpo.duracionMin ?? existente.duracionMin ?? 30,
     };
@@ -105,9 +108,9 @@ export async function PUT(
       );
     }
 
-    // El formulario edita datos generales; el estado e icono se conservan en el registro.
+    // El formulario puede actualizar el estado de la publicación cuando el administrador la publica.
     const datosNormalizados = normalizarCapacitacion(datosParaActualizar, {
-      estado: existente.estado,
+      estado: estadoSolicitado,
       icono: existente.icono ?? undefined,
     });
 

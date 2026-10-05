@@ -72,6 +72,14 @@ export function validarCapacitacion(datos: DatosCapacitacionEntrada = {}): Resul
     }
   }
 
+  // El estado es parte del flujo de publicación y debe respetar los valores admitidos.
+  if (datos.estado !== undefined) {
+    const estado = String(datos.estado).toUpperCase().trim();
+    if (!ESTADOS_VALIDOS.includes(estado as EstadoCapacitacion)) {
+      errores.estado = `El estado debe ser: ${ESTADOS_VALIDOS.join(' o ')}.`;
+    }
+  }
+
   if (datos.categoria !== undefined) {
     if (typeof datos.categoria !== 'string') {
       errores.categoria = 'La categoría debe ser texto.';
@@ -100,13 +108,17 @@ export function normalizarCapacitacion(
   datos: DatosCapacitacionEntrada = {},
   valoresPreservados: { estado?: string; icono?: string } = {}
 ): CapacitacionNormalizada {
+  const estadoSolicitado = typeof datos.estado === 'string' ? datos.estado.toUpperCase().trim() : '';
+  const estadoNormalizado = ESTADOS_VALIDOS.includes(estadoSolicitado as EstadoCapacitacion)
+    ? estadoSolicitado
+    : (valoresPreservados.estado || 'BORRADOR').toUpperCase().trim();
+
   return {
     titulo: String(datos.titulo || '').trim(),
     descripcion: String(datos.descripcion || '').trim(),
     unidad: (datos.unidad || 'CIIP').toUpperCase().trim(),
     ambito: (datos.ambito || 'PUBLICO').toUpperCase().trim(),
-    // El estado solo cambia desde el flujo de publicación (HU-004).
-    estado: (valoresPreservados.estado || 'BORRADOR').toUpperCase().trim(),
+    estado: estadoNormalizado,
     categoria: (datos.categoria || 'Inducción').trim(),
     duracionMin: datos.duracionMin === undefined ? 30 : Number(datos.duracionMin),
     icono: valoresPreservados.icono || 'book-open',
