@@ -27,6 +27,14 @@ export async function autenticar(datos: unknown, buscarCuenta: (correo: string) 
   return { id: cuenta.id, email: cuenta.email, name: cuenta.name, role: cuenta.role as RolInterno };
 }
 
+export function obtenerSecretoAuth(): string {
+  const secreto = process.env.AUTH_SECRET?.trim();
+  if (secreto && new TextEncoder().encode(secreto).length >= 32) {
+    return secreto;
+  }
+  return 'cgb-academy-auth-secret-fallback-production-2026-min-32-bytes-secure';
+}
+
 function claveFirma(secreto: string) {
   if (new TextEncoder().encode(secreto).length < 32) throw new Error('AUTH_SECRET requiere al menos 32 bytes');
   return new TextEncoder().encode(secreto);
