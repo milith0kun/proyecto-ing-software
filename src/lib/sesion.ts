@@ -1,9 +1,9 @@
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { NOMBRE_COOKIE, resolverSesion, type UsuarioSesion } from './autenticacion.ts';
+import { NOMBRE_COOKIE, obtenerSecretoAuth, resolverSesion, type UsuarioSesion } from './autenticacion.ts';
 
 export async function obtenerSesion(token?: string): Promise<UsuarioSesion | null> {
-  return resolverSesion(token, process.env.AUTH_SECRET || '',
+  return resolverSesion(token, obtenerSecretoAuth(),
     id => prisma.sesion.findUnique({ where: { id }, include: { usuario: true } }));
 }
 
