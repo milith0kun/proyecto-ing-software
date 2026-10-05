@@ -55,7 +55,11 @@ export async function PUT(request: NextRequest, { params }: ContextoRuta) {
         imagenUrl: datos.imagenUrl || null,
         botonTexto: datos.botonTexto || null,
         botonUrl: datos.botonUrl || null,
-        lista: Array.isArray(datos.lista) ? datos.lista.map((item) => String(item).trim()).filter(Boolean) : [],
+        lista: Array.isArray(datos.lista)
+          ? datos.lista.map((item) => String(item).trim()).filter(Boolean)
+          : Array.isArray(existente.lista)
+            ? existente.lista.map((item) => String(item).trim()).filter(Boolean)
+            : [],
       },
     });
 

@@ -8,6 +8,9 @@ export const dynamic = 'force-dynamic';
 type ContextoRuta = { params: Promise<{ id: string }> };
 
 export async function GET(_request: NextRequest, { params }: ContextoRuta) {
+  const rechazo = await exigirAdministrador(_request);
+  if (rechazo) return rechazo;
+
   try {
     const { id } = await params;
 
