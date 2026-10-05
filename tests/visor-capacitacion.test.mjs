@@ -4,10 +4,10 @@ import { Window } from 'happy-dom';
 
 // Prepara un DOM para montar el visor real dentro de las pruebas de integración.
 const dom = new Window({ url: 'http://localhost/' });
-for (const nombre of ['window', 'document', 'navigator', 'HTMLElement', 'Node', 'Event', 'MouseEvent', 'KeyboardEvent', 'MutationObserver']) {
+for (const nombre of ['window', 'self', 'document', 'navigator', 'HTMLElement', 'Node', 'Event', 'MouseEvent', 'KeyboardEvent', 'MutationObserver']) {
   Object.defineProperty(globalThis, nombre, {
     configurable: true,
-    value: nombre === 'window' ? dom : nombre === 'document' ? dom.document : dom[nombre],
+    value: nombre === 'window' || nombre === 'self' ? dom : nombre === 'document' ? dom.document : dom[nombre],
   });
 }
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
@@ -112,7 +112,21 @@ test('HU-006: Contratos BDD del visor de capacitaciones', async (t) => {
 
     fireEvent.keyDown(document.body, { key: 'ArrowRight' });
     assert.ok(screen.getByRole('heading', { name: 'Cierre' }));
-    assert.equal(screen.getByRole('button', { name: 'Ir a la diapositiva siguiente' }).hasAttribute('disabled'), true);
+    const terminar = screen.getByRole('link', { name: 'Terminar capacitación' });
+    assert.equal(terminar.getAttribute('href'), '/capacitaciones');
+    assert.equal(screen.queryByRole('button', { name: 'Ir a la diapositiva siguiente' }), null);
+  });
+
+  await t.test('Integración: el título y el contenido largo se ajustan dentro del slide', async () => {
+    const slideConTextoLargo = [{
+      ...slidesIntegracion[0],
+      titulo: 'Titulo'.repeat(20),
+      contenido: 'Contenido'.repeat(40),
+    }];
+    render(React.createElement(SlideViewer, { slides: slideConTextoLargo }));
+
+    assert.equal(screen.getByRole('heading').style.overflowWrap, 'anywhere');
+    assert.equal(screen.getByText('Contenido'.repeat(40)).style.overflowWrap, 'anywhere');
   });
 
   await t.test('Integración CA-02: el slide interactivo renderiza su enlace de recurso', async () => {
