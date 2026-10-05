@@ -68,6 +68,18 @@ test('HU-002: TDD Fase RED/GREEN - Validaciones de Creación de Capacitación', 
     assert.equal(datosNormalizados.categoria, 'Inducción');
   });
 
+  await t.test('CA-04: Debe permitir publicar una capacitación desde BORRADOR a PUBLICADA', () => {
+    const datosNormalizados = normalizarCapacitacion({
+      titulo: 'Capacitación de Seguridad',
+      descripcion: 'Curso obligatorio para todos los funcionarios del área',
+      unidad: 'CIIP',
+      ambito: 'PUBLICO',
+      estado: 'PUBLICADA'
+    }, { estado: 'BORRADOR' });
+
+    assert.equal(datosNormalizados.estado, 'PUBLICADA');
+  });
+
   await t.test('CA-02: Edición debe conservar el ID original sin generar duplicados', () => {
     const originalId = '654321654321654321654321';
     const actualizacion = {

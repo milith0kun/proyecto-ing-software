@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useCallback } from 'react';
 
 // ---------------------------------------------------------------------------
@@ -45,6 +47,7 @@ interface FormularioData {
   descripcion: string;
   unidad: string;
   ambito: string;
+  estado: string;
   categoria: string;
   duracionMin: string;
 }
@@ -70,6 +73,7 @@ const FORMULARIO_INICIAL: FormularioData = {
   descripcion: '',
   unidad: 'CIIP',
   ambito: 'PUBLICO',
+  estado: 'BORRADOR',
   categoria: 'Inducción',
   duracionMin: '30',
 };
@@ -244,6 +248,7 @@ export default function PanelCapacitaciones() {
       descripcion: cap.descripcion,
       unidad: cap.unidad,
       ambito: cap.ambito,
+      estado: cap.estado,
       categoria: cap.categoria,
       duracionMin: String(cap.duracionMin),
     });
@@ -840,8 +845,24 @@ export default function PanelCapacitaciones() {
                 </div>
               </div>
 
-              {/* Fila: Categoría + Duración */}
+              {/* Fila: Estado + Categoría */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 700, color: 'var(--brand-navy)', fontFamily: 'var(--font-heading)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Estado
+                  </label>
+                  <select
+                    id="campo-estado"
+                    className="campo-formulario"
+                    value={formulario.estado}
+                    onChange={(e) => actualizarCampo('estado', e.target.value)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <option value="BORRADOR">Borrador</option>
+                    <option value="PUBLICADA">Publicada</option>
+                  </select>
+                </div>
+
                 <div>
                   <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 700, color: 'var(--brand-navy)', fontFamily: 'var(--font-heading)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                     Categoría
@@ -855,22 +876,22 @@ export default function PanelCapacitaciones() {
                     placeholder="Inducción"
                   />
                 </div>
+              </div>
 
-                <div>
-                  <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 700, color: 'var(--brand-navy)', fontFamily: 'var(--font-heading)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Duración (min)
-                  </label>
-                  <input
-                    id="campo-duracion"
-                    type="number"
-                    className="campo-formulario cifra-tabular"
-                    value={formulario.duracionMin}
-                    onChange={(e) => actualizarCampo('duracionMin', e.target.value)}
-                    min={1}
-                    max={480}
-                    placeholder="30"
-                  />
-                </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 700, color: 'var(--brand-navy)', fontFamily: 'var(--font-heading)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Duración (min)
+                </label>
+                <input
+                  id="campo-duracion"
+                  type="number"
+                  className="campo-formulario cifra-tabular"
+                  value={formulario.duracionMin}
+                  onChange={(e) => actualizarCampo('duracionMin', e.target.value)}
+                  min={1}
+                  max={480}
+                  placeholder="30"
+                />
               </div>
 
               {/* Botones de acción del formulario */}
