@@ -1,14 +1,32 @@
 @import "tailwindcss";
 
-.publicacion-vista-previa { min-height: 100vh; padding: clamp(20px, 5vw, 56px) 20px; background: var(--bg-primary); }
-.publicacion-contenedor { max-width: 1080px; margin: 0 auto; }
+.capacitacion-pagina { display: flex; flex-direction: column; min-height: 100svh; background: var(--bg-primary); }
+.capacitacion-pagina--previa { min-height: calc(100svh - 64px); }
+.capacitacion-pagina__principal { flex: 1; padding: clamp(24px, 4vw, 48px) 20px 56px; }
+.publicacion-contenedor { width: 100%; max-width: 1080px; margin: 0 auto; min-width: 0; }
+.experiencia-capacitacion__cabecera { margin-bottom: 32px; }
+.experiencia-capacitacion__cabecera .kicker-cgb { margin: 0 0 10px; }
+.experiencia-capacitacion__cabecera h1 { margin: 0 0 14px; color: var(--brand-navy); font-family: var(--font-heading); font-size: clamp(28px, 4vw, 42px); line-height: 1.2; overflow-wrap: anywhere; }
+.experiencia-capacitacion__descripcion { max-width: 760px; margin: 0; color: var(--text-muted); font-size: 16px; line-height: 1.7; overflow-wrap: anywhere; }
 .publicacion-panel { padding: 24px; margin-bottom: 28px; border: 1px solid var(--borde-sutil); border-radius: 16px; background: var(--bg-card); }
 .publicacion-panel p { margin: 0 0 12px; }
 .publicacion-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-.publicacion-confirmacion { max-width: 540px; width: calc(100% - 40px); margin: auto; padding: 28px; border: 1px solid var(--borde-sutil); border-radius: 16px; color: var(--brand-navy); background: var(--bg-card); }
+.publicacion-confirmacion { max-width: 540px; max-height: calc(100dvh - 40px); overflow-y: auto; width: calc(100% - 40px); margin: auto; padding: 28px; border: 1px solid var(--borde-sutil); border-radius: 16px; color: var(--brand-navy); background: var(--bg-card); }
 .publicacion-confirmacion::backdrop { background: rgba(9, 42, 96, .45); }
 .publicacion-confirmacion h2 { margin-bottom: 16px; }
 .publicacion-confirmacion p { margin-bottom: 20px; }
+.publicacion-enlace-final { display: flex; justify-content: center; margin-top: 28px; }
+.visor-sin-contenido { padding: 32px 24px; border: 1px dashed var(--borde-sutil); border-radius: 16px; text-align: center; color: var(--text-muted); background: var(--bg-card); }
+.capacitacion-no-disponible { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; min-height: 40vh; max-width: 600px; margin: auto; text-align: center; }
+.capacitacion-no-disponible h1 { font-family: var(--font-heading); font-size: clamp(28px, 4vw, 36px); line-height: 1.2; color: var(--brand-navy); }
+.capacitacion-no-disponible p { color: var(--text-muted); line-height: 1.7; }
+@media (max-width: 480px) {
+  .capacitacion-pagina__principal { padding: 24px 16px 32px; }
+  .publicacion-panel, .publicacion-confirmacion { padding: 20px; }
+  .publicacion-acciones > a, .publicacion-acciones > button, .publicacion-acciones > div { width: 100%; }
+  .publicacion-acciones > div > button { width: 100%; }
+  .publicacion-acciones .boton-primario, .publicacion-acciones .boton-secundario { min-height: 48px; justify-content: center; text-align: center; }
+}
 
 /* ==========================================================================
    MÓDULO DE AUTENTICACIÓN Y ACCESO INTERNO (HU-001 / CGB-6)
@@ -633,13 +651,13 @@ button:disabled {
 .footer-cgb__logo {
   position: relative;
   display: block;
-  width: 214px;
-  height: 120px;
-  flex: 0 0 214px;
+  width: 180px;
+  height: 70px;
+  flex: 0 0 180px;
 }
 
 .footer-cgb__academy {
-  margin: 7px 0 0 -10px;
+  margin: 7px 0 0 0;
   color: var(--brand-navy);
   font-family: var(--font-heading);
   font-size: 18px;
@@ -835,9 +853,9 @@ button:disabled {
   }
 
   .footer-cgb__logo {
-    width: 174px;
-    height: 98px;
-    flex-basis: 174px;
+    width: 160px;
+    height: 62px;
+    flex-basis: 160px;
   }
 
   .footer-cgb__academy {
@@ -2448,7 +2466,7 @@ button:disabled {
 }
 
 .cabecera-cgb__sesion { display: inline-flex; align-items: center; gap: 8px; }
-.footer-cgb__logo img { filter: brightness(0) invert(1); }
+.footer-cgb__logo img { filter: none; }
 
 /* ==========================================================================
    LOGIN — TARJETA DIVIDIDA (CGB Academy / CGB Leads) - Proporciones equilibradas

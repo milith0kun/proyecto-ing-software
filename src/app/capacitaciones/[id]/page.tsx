@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { consultarCapacitacionPublica } from '@/lib/consultar-capacitacion-publica';
 import { ExperienciaCapacitacion } from '@/components/capacitaciones/ExperienciaCapacitacion';
+import { MarcoCapacitacion } from '@/components/capacitaciones/MarcoCapacitacion';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,13 +42,8 @@ export default async function PaginaCapacitacionPublica({ params }: ContextoPagi
   if (!capacitacion) notFound();
 
   return (
-    <main style={{ minHeight: '100vh', padding: 'clamp(20px, 5vw, 56px) 20px', backgroundColor: 'var(--bg-primary)' }}>
-      <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
-        <Link href="/" style={{ display: 'inline-block', marginBottom: '28px', color: 'var(--brand-blue)', fontWeight: 700, textDecoration: 'none' }}>
-          Volver al inicio
-        </Link>
-        <ExperienciaCapacitacion capacitacion={capacitacion} />
-      </div>
-    </main>
+    <MarcoCapacitacion>
+      <ExperienciaCapacitacion capacitacion={capacitacion} />
+    </MarcoCapacitacion>
   );
 }

@@ -43,6 +43,8 @@ El recorrido inicial de UI usó una diapositiva; en la captura final se comprob�
 
 ## Validación final y entrega
 
+El acabado de cabecera, pie, logo y presentación móvil se completó después de esta aceptación: véase [HU004-ACABADO-VISUAL.md](HU004-ACABADO-VISUAL.md). Esa revisión añadió una cuarta capacitación temporal, ya eliminada con sus slides; en total se limpiaron cuatro registros propios de prueba. El índice sigue siendo la única modificación permanente de estas pruebas en Atlas.
+
 - 67 pruebas automatizadas aprobadas.
 - ESLint sin advertencias.
 - Compilación Next.js y TypeScript correctos tras declarar el índice.

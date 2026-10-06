@@ -6,8 +6,9 @@ import { MarcaCgb } from './MarcaCgb';
 import { CerrarSesion } from '@/components/cerrar-sesion';
 
 type CabeceraCgbProps = {
-  variant?: 'inicio' | 'catalogo';
+  variant?: 'inicio' | 'catalogo' | 'capacitacion';
   contexto?: string;
+  mostrarSesion?: boolean;
 };
 
 type EstadoSesion = { autenticado: boolean; nombre?: string; rol?: string; destino?: string };
@@ -20,18 +21,20 @@ function IconoFlecha({ atras = false }: { atras?: boolean }) {
   );
 }
 
-export function CabeceraCgb({ variant = 'inicio', contexto }: CabeceraCgbProps) {
+export function CabeceraCgb({ variant = 'inicio', contexto, mostrarSesion = true }: CabeceraCgbProps) {
   const esCatalogo = variant === 'catalogo';
+  const esCapacitacion = variant === 'capacitacion';
   const [sesion, establecerSesion] = useState<EstadoSesion | null>(null);
 
   useEffect(() => {
+    if (!mostrarSesion) return;
     let activo = true;
     fetch('/api/auth/sesion', { cache: 'no-store' })
       .then((respuesta) => respuesta.json())
       .then((datos: EstadoSesion) => { if (activo) establecerSesion(datos); })
       .catch(() => { if (activo) establecerSesion({ autenticado: false }); });
     return () => { activo = false; };
-  }, []);
+  }, [mostrarSesion]);
 
   return (
     <header className="cabecera-cgb">
@@ -39,11 +42,11 @@ export function CabeceraCgb({ variant = 'inicio', contexto }: CabeceraCgbProps) 
         <MarcaCgb />
         <nav className="cabecera-cgb__acciones" aria-label="Navegación principal">
           {contexto && <span className="cabecera-cgb__contexto">{contexto}</span>}
-          {esCatalogo ? (
-            <Link href="/" className="boton-secundario cabecera-cgb__boton cabecera-cgb__boton--secundario">
+          {esCatalogo || esCapacitacion ? (
+            <Link href={esCapacitacion ? '/capacitaciones' : '/'} className="boton-secundario cabecera-cgb__boton cabecera-cgb__boton--secundario">
               <IconoFlecha atras />
-              <span className="cabecera-cgb__texto-desktop">Volver a inicio</span>
-              <span className="cabecera-cgb__texto-movil">Inicio</span>
+              <span className="cabecera-cgb__texto-desktop">{esCapacitacion ? 'Volver al catálogo' : 'Volver a inicio'}</span>
+              <span className="cabecera-cgb__texto-movil">{esCapacitacion ? 'Catálogo' : 'Inicio'}</span>
             </Link>
           ) : (
             <Link href="/capacitaciones" className="boton-primario header-cgb__cta">
@@ -53,7 +56,7 @@ export function CabeceraCgb({ variant = 'inicio', contexto }: CabeceraCgbProps) 
             </Link>
           )}
 
-          {sesion?.autenticado ? (
+          {mostrarSesion && (sesion?.autenticado ? (
             <div className="cabecera-cgb__sesion">
               <Link href={sesion.destino || '/colaborador'} className="boton-secundario cabecera-cgb__boton cabecera-cgb__boton--secundario" title={sesion.nombre}>
                 <span className="cabecera-cgb__texto-desktop">{sesion.rol === 'ADMINISTRADOR' ? 'Panel de administración' : 'Mi espacio'}</span>
@@ -66,7 +69,7 @@ export function CabeceraCgb({ variant = 'inicio', contexto }: CabeceraCgbProps) 
               <span className="cabecera-cgb__texto-desktop">Acceso interno</span>
               <span className="cabecera-cgb__texto-movil">Ingresar</span>
             </Link>
-          ) : null}
+          ) : null)}
         </nav>
       </div>
     </header>
