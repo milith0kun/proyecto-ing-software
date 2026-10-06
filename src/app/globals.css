@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+.publicacion-vista-previa { min-height: 100vh; padding: clamp(20px, 5vw, 56px) 20px; background: var(--bg-primary); }
+.publicacion-contenedor { max-width: 1080px; margin: 0 auto; }
+.publicacion-panel { padding: 24px; margin-bottom: 28px; border: 1px solid var(--borde-sutil); border-radius: 16px; background: var(--bg-card); }
+.publicacion-panel p { margin: 0 0 12px; }
+.publicacion-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.publicacion-confirmacion { max-width: 540px; width: calc(100% - 40px); margin: auto; padding: 28px; border: 1px solid var(--borde-sutil); border-radius: 16px; color: var(--brand-navy); background: var(--bg-card); }
+.publicacion-confirmacion::backdrop { background: rgba(9, 42, 96, .45); }
+.publicacion-confirmacion h2 { margin-bottom: 16px; }
+.publicacion-confirmacion p { margin-bottom: 20px; }
+
 /* ==========================================================================
    MÓDULO DE AUTENTICACIÓN Y ACCESO INTERNO (HU-001 / CGB-6)
    Estándar Visual CGB Academy: Sobriedad Académica y Acabado Premium

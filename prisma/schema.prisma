@@ -42,6 +42,7 @@ model Capacitacion {
   unidad      String   @default("CIIP") // "CIIP" | "GEOMINA" | "BIOMEDIC" | "GENERAL"
   ambito      String   @default("PUBLICO") // "PUBLICO" | "INTERNO"
   estado      String   @default("BORRADOR") // "BORRADOR" | "PUBLICADA"
+  publicadaEn DateTime?
   categoria   String?  @default("Inducción")
   duracionMin Int?     @default(30)
   icono       String?  @default("book-open")

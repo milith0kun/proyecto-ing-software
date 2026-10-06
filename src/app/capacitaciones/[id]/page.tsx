@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { consultarCapacitacionPublica } from '@/lib/consultar-capacitacion-publica';
-import SlideViewer from './SlideViewer';
+import { ExperienciaCapacitacion } from '@/components/capacitaciones/ExperienciaCapacitacion';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,18 +47,7 @@ export default async function PaginaCapacitacionPublica({ params }: ContextoPagi
         <Link href="/" style={{ display: 'inline-block', marginBottom: '28px', color: 'var(--brand-blue)', fontWeight: 700, textDecoration: 'none' }}>
           Volver al inicio
         </Link>
-        <header style={{ marginBottom: '28px' }}>
-          <p style={{ margin: '0 0 8px', color: 'var(--brand-blue)', fontSize: '13px', fontWeight: 700, textTransform: 'uppercase' }}>
-            {capacitacion.unidad}
-          </p>
-          <h1 style={{ margin: '0 0 12px', color: 'var(--brand-navy)', fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 5vw, 42px)', lineHeight: 1.15 }}>
-            {capacitacion.titulo}
-          </h1>
-          <p style={{ maxWidth: '760px', margin: 0, color: 'var(--text-muted)', fontSize: '16px', lineHeight: 1.7 }}>
-            {capacitacion.descripcion}
-          </p>
-        </header>
-        <SlideViewer slides={capacitacion.slides} />
+        <ExperienciaCapacitacion capacitacion={capacitacion} />
       </div>
     </main>
   );

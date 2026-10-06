@@ -370,7 +370,7 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
           </section>
 
           <section className="contenido-columna contenido-columna--vista" aria-labelledby="titulo-vista">
-            <div className="contenido-seccion-heading"><div><p className="kicker-cgb">Vista previa</p><h2 id="titulo-vista">Así se verá el contenido</h2></div></div>
+            <div className="contenido-seccion-heading"><div><p className="kicker-cgb">Edición de contenido</p><h2 id="titulo-vista">Diapositiva seleccionada</h2></div></div>
 
             {editandoId ? (
               <form className="contenido-edicion tarjeta-cgb" onSubmit={guardarEdicion}>
@@ -403,6 +403,7 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
 
         <div className="contenido-footer">
           <Link href="/admin/capacitaciones" className="boton-secundario"><Icono nombre="arrow" /><span>Volver a capacitaciones</span></Link>
+          <Link href={`/admin/capacitaciones/${inicial.id}/vista-previa`} className="boton-primario">Vista previa y publicar</Link>
           <p>{slides.length} {slides.length === 1 ? 'slide listo' : 'slides listos'} para seguir editando.</p>
         </div>
       </main>
