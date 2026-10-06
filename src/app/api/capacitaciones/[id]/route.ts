@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { validarCapacitacion, normalizarCapacitacion } from '@/lib/validaciones-capacitacion';
 import { exigirAdministrador, esAdministrador } from '@/lib/permisos';
+import { prepararPublicacion, ErrorPublicacion } from '@/lib/publicacion';
 
 export const dynamic = 'force-dynamic';
 
@@ -77,7 +78,7 @@ export async function PUT(
     }
 
     // 1. Verificar que la capacitación existe antes de editar (CA-02)
-    const existente = await prisma.capacitacion.findUnique({ where: { id } });
+    const existente = await prisma.capacitacion.findUnique({ where: { id }, include: { slides: true } });
     if (!existente) {
       return NextResponse.json(
         { ok: false, error: 'Capacitación no encontrada para editar.' },
@@ -116,7 +117,10 @@ export async function PUT(
 
     const capacitacionActualizada = await prisma.capacitacion.update({
       where: { id },
-      data: datosNormalizados,
+      data: {
+        ...datosNormalizados,
+        ...(estadoSolicitado === 'PUBLICADA' ? prepararPublicacion(existente) : { publicadaEn: null }),
+      },
     });
 
     return NextResponse.json({
@@ -124,7 +128,8 @@ export async function PUT(
       mensaje: 'Capacitación actualizada correctamente.',
       datos: capacitacionActualizada,
     });
-  } catch {
+  } catch (error) {
+    if (error instanceof ErrorPublicacion) return NextResponse.json({ ok: false, error: error.message }, { status: 400 });
     return NextResponse.json({ ok: false, error: 'No pudimos actualizar la capacitación.' }, { status: 503 });
   }
 }

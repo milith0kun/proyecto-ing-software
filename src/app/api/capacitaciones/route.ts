@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Las nuevas capacitaciones siempre comienzan como borrador.
-    const datosNormalizados = normalizarCapacitacion(cuerpo);
+    const datosNormalizados = normalizarCapacitacion({ ...cuerpo, estado: 'BORRADOR' });
 
     // 4. Guardar la nueva capacitación en MongoDB Atlas a través de Prisma
     const nuevaCapacitacion = await prisma.capacitacion.create({

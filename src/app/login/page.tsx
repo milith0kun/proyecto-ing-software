@@ -39,10 +39,13 @@ export default function PaginaLogin() {
 
   // Recupera el correo guardado en este equipo (nunca se guarda la contraseña).
   useEffect(() => {
-    try {
-      const guardado = window.localStorage.getItem(CLAVE_CORREO);
-      if (guardado) { establecerCorreo(guardado); establecerRecordar(true); }
-    } catch { /* almacenamiento no disponible */ }
+    const restaurar = window.setTimeout(() => {
+      try {
+        const guardado = window.localStorage.getItem(CLAVE_CORREO);
+        if (guardado) { establecerCorreo(guardado); establecerRecordar(true); }
+      } catch { /* almacenamiento no disponible */ }
+    }, 0);
+    return () => window.clearTimeout(restaurar);
   }, []);
 
   function detectarMayusculas(evento: KeyboardEvent<HTMLInputElement>) {

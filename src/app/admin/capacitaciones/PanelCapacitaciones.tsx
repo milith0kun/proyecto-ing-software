@@ -394,6 +394,7 @@ export default function PanelCapacitaciones() {
                         <td><span className="admin-tabla__dato"><Icono nombre="clock" size={16} />{capacitacion.duracionMin ?? 30} min</span></td>
                         <td>
                           <div className="admin-acciones">
+                            <Link className="boton-secundario boton-secundario--compacto" href={'/admin/capacitaciones/' + capacitacion.id + '/vista-previa'}>Vista previa</Link>
                             <Link className="boton-secundario boton-secundario--compacto" href={'/admin/capacitaciones/' + capacitacion.id + '/contenido'}>
                               <Icono nombre="layers" size={16} /><span>Contenido</span>
                             </Link>
@@ -426,6 +427,7 @@ export default function PanelCapacitaciones() {
                       <span>{capacitacion.ambito === 'INTERNO' ? 'Interno' : 'Público'}</span>
                     </div>
                     <div className="admin-capacitacion-card__acciones">
+                      <Link className="boton-secundario boton-secundario--compacto" href={'/admin/capacitaciones/' + capacitacion.id + '/vista-previa'}>Vista previa</Link>
                       <Link className="boton-primario boton-primario--compacto" href={'/admin/capacitaciones/' + capacitacion.id + '/contenido'}>
                         <Icono nombre="layers" size={16} /><span>Continuar contenido</span>
                       </Link>
@@ -490,12 +492,9 @@ export default function PanelCapacitaciones() {
               </div>
 
               <div className="admin-campo">
-                <label htmlFor="cap-estado">Estado</label>
-                <select id="cap-estado" className="campo-formulario" value={formulario.estado} onChange={(event) => actualizarCampo('estado', event.target.value)} aria-invalid={Boolean(erroresFormulario.estado)} aria-describedby={erroresFormulario.estado ? 'error-cap-estado' : undefined}>
-                  <option value="BORRADOR">Borrador</option>
-                  <option value="PUBLICADA">Publicada</option>
-                </select>
-                <ErrorCampo id="error-cap-estado">{erroresFormulario.estado}</ErrorCampo>
+                <span>Estado</span>
+                <Estado estado={formulario.estado} />
+                <p>La publicación se confirma desde Vista previa.</p>
               </div>
 
               <div className="admin-campo">
