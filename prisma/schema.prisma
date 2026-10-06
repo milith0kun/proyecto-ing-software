@@ -53,6 +53,7 @@ model Capacitacion {
   // Relación con Slides (para HU-003 / HU-006)
   slides      Slide[]
 
+  @@index([ambito, estado, createdAt(sort: Desc)], map: "capacitaciones_catalogo_publico")
   @@map("capacitaciones")
 }
 
