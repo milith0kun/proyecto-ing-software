@@ -38,7 +38,7 @@ export default function SlideViewer({ slides }: { slides: SlideVisor[] }) {
 
   if (!slide) {
     return (
-      <section role="status" style={{ padding: '28px 0', color: 'var(--text-muted)' }}>
+      <section role="status" className="visor-sin-contenido">
         Esta capacitación todavía no tiene diapositivas.
       </section>
     );

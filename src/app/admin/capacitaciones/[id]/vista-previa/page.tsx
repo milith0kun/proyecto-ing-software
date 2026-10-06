@@ -5,6 +5,7 @@ import { sesionActual } from '@/lib/sesion';
 import { consultarVistaPrevia } from '@/lib/consultar-vista-previa';
 import { ExperienciaCapacitacion } from '@/components/capacitaciones/ExperienciaCapacitacion';
 import { PublicarCapacitacion } from '@/components/capacitaciones/PublicarCapacitacion';
+import { MarcoCapacitacion } from '@/components/capacitaciones/MarcoCapacitacion';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,8 +17,7 @@ export default async function PaginaVistaPrevia({ params }: { params: Promise<{ 
   const capacitacion = await consultarVistaPrevia(id, identificador => prisma.capacitacion.findUnique({ where: { id: identificador }, include: { slides: { orderBy: { orden: 'asc' } } } }));
   if (!capacitacion) notFound();
 
-  return <main className="publicacion-vista-previa">
-    <div className="publicacion-contenedor">
+  return <MarcoCapacitacion vistaPrevia controles={
       <aside className="publicacion-panel" aria-label="Controles de vista previa">
         <div><p className="kicker-cgb">Vista previa · {capacitacion.estado === 'PUBLICADA' ? 'Publicada' : 'Borrador'}</p>
           <p>Revisa la experiencia final. Abrir esta vista no publica ni cambia la capacitación.</p>
@@ -27,8 +27,8 @@ export default async function PaginaVistaPrevia({ params }: { params: Promise<{ 
           <PublicarCapacitacion id={id} titulo={capacitacion.titulo} ambito={capacitacion.ambito} estado={capacitacion.estado} />
         </div>
       </aside>
+    }>
       <ExperienciaCapacitacion capacitacion={capacitacion} />
-      {capacitacion.estado === 'PUBLICADA' && capacitacion.ambito === 'PUBLICO' && <p><Link href={`/capacitaciones/${id}`}>Abrir capacitación pública</Link></p>}
-    </div>
-  </main>;
+      {capacitacion.estado === 'PUBLICADA' && capacitacion.ambito === 'PUBLICO' && <div className="publicacion-enlace-final"><Link className="boton-secundario" href={`/capacitaciones/${id}`}>Abrir capacitación pública</Link></div>}
+  </MarcoCapacitacion>;
 }
