@@ -35,11 +35,11 @@ Las capturas corresponden a datos ficticios guardados temporalmente en Atlas, no
 
 ## Limpieza y límites
 
-Se crearon dos capacitaciones identificadas como PRUEBA HU004 ALEX. Se eliminaron exclusivamente esos registros después de comprobar ID y título. Las consultas finales confirmaron ausencia de esas capacitaciones y de sus slides. Se cerraron las sesiones utilizadas. La única modificación permanente en Atlas es el índice de catálogo.
+Se crearon tres capacitaciones identificadas como PRUEBA HU004 ALEX: una para endpoints, una para el recorrido de formularios y una para reemplazar capturas incompletas. Se eliminaron exclusivamente esos registros después de comprobar ID y título. Las consultas finales confirmaron ausencia de esas capacitaciones y de sus slides. Se cerraron las sesiones utilizadas. La única modificación permanente en Atlas es el índice de catálogo.
 
 La colección ya contiene publicaciones antiguas sin diapositivas. No se cambiaron esos registros ni se aplicó una migración sobre el contenido del equipo. El nuevo flujo impide publicar nuevos borradores vacíos. La corrección de contenido antiguo requiere coordinación con sus responsables.
 
-La prueba de UI real usó una diapositiva; la navegación de varias diapositivas e interacción está cubierta por la suite automatizada y la revisión visual anterior. No se validó edición simultánea por varios administradores ni el despliegue remoto. La clave fija de respaldo de HU001 continúa como observación separada.
+El recorrido inicial de UI usó una diapositiva; en la captura final se comprobó navegación de dos diapositivas, progreso de 50% a 100%, publicación y conservación de la diapositiva seleccionada. La publicación de esa última prueba se confirmó en Atlas a las 2026-10-06T03:27:13.836Z (5 de octubre, Lima). La interacción con enlaces está cubierta por la suite automatizada y la revisión visual anterior. No se validó edición simultánea por varios administradores ni el despliegue remoto. La clave fija de respaldo de HU001 continúa como observación separada.
 
 ## Validación final y entrega
 
