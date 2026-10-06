@@ -2,6 +2,8 @@
 
 Responsable: Alex Carpio. Implementación del 5 de octubre de 2026 sobre `desarrollo` c9bad09, propuesta desde `alex-carpio`.
 
+Estado actualizado: los criterios se comprobaron con MongoDB Atlas y desde el navegador el 5 de octubre (Lima). Véase [aceptación real y capturas](HU004-ACEPTACION-ATLAS.md). Pendientes: revisión por un compañero e integración en desarrollo.
+
 ## Problema y resultado
 
 La base del equipo ya tenía editor de diapositivas y visor público. Su vista de edición tenía una presentación diferente al recorrido final, el estado podía cambiarse a PUBLICADA sin verificar contenido y no se registraba fecha de publicación.
@@ -30,7 +32,7 @@ El código no añade una ruta de aprendizaje interna ni registro de avance, func
 - Pruebas de vista previa: consulta de lectura y navegación del componente compartido con enlace interactivo, sin escrituras.
 - ESLint `--max-warnings=0`: correcto. Se corrigieron un error y una advertencia heredados: restauración del correo recordado y navegación al cerrar sesión. No se cambió la firma/configuración de autenticación en esta entrega.
 - Compilación de producción y TypeScript: correctos.
-- Prisma Client generado con `publicadaEn`; no se ejecutó db push, seed ni se cambió Atlas.
+- Primera validación local: Prisma Client generado con `publicadaEn`, sin db push ni seed. Después, con autorización de Alex, se validó en Atlas con registros temporales y se creó únicamente el índice de catálogo; véase el informe de aceptación real.
 - Auditoría de dependencias de producción: cero vulnerabilidades reportadas. La instalación completa reportó ocho alertas altas en herramientas de desarrollo heredadas; no se aplicaron actualizaciones forzadas.
 
 ## Evidencia visual
@@ -52,11 +54,11 @@ Se ejecutó una página temporal con datos ficticios y los componentes reales pa
 7. Comprobar rechazo de publicación con cuenta Colaborador y sin sesión.
 8. Un compañero revisa el PR, se resuelven observaciones y se integra a desarrollo conforme al acuerdo del equipo.
 
-Pendientes de DoD: recorrido completo con cuenta y datos reales del entorno de prueba, persistencia MongoDB, revisión de compañero e integración. La historia no se marca finalizada por aprobar sólo las pruebas locales.
+El recorrido real, la persistencia y el índice de MongoDB ya fueron comprobados. Pendientes de DoD: revisión de compañero e integración. La historia no se marca finalizada antes de esas dos acciones.
 
 ## Observaciones para coordinación
 
 - La actualización de publicación con POST utiliza transacción; los tests con dobles no validan concurrencia ni transacciones reales. La edición/eliminación simultánea de diapositivas durante publicación no se garantiza como una invariancia de este alcance; coordinar la edición durante la aceptación.
 - El regreso a BORRADOR por el PUT compatible elimina la fecha vigente; una nueva publicación registra una nueva fecha. El formulario nuevo no introduce una acción de despublicar.
-- Usuarios y capacitaciones de prueba deben acordarse con el equipo antes de escribir en su base compartida.
+- Alex autorizó las pruebas reales. Sólo se usaron las cuentas de prueba existentes y dos capacitaciones temporales propias, ambas eliminadas junto con sus diapositivas al finalizar; no se modificaron capacitaciones del equipo.
 - La clave fija de respaldo detectada en autenticación requiere una corrección aparte y coordinación con el responsable de HU001. No se modificó como parte de HU004.
