@@ -29,10 +29,10 @@ export async function autenticar(datos: unknown, buscarCuenta: (correo: string) 
 
 export function obtenerSecretoAuth(): string {
   const secreto = process.env.AUTH_SECRET?.trim();
-  if (secreto && new TextEncoder().encode(secreto).length >= 32) {
-    return secreto;
+  if (!secreto || new TextEncoder().encode(secreto).length < 32) {
+    throw new Error('AUTH_SECRET debe configurarse con al menos 32 bytes');
   }
-  return 'cgb-academy-auth-secret-fallback-production-2026-min-32-bytes-secure';
+  return secreto;
 }
 
 function claveFirma(secreto: string) {

@@ -14,7 +14,7 @@ Implementación de Alex sobre la base compartida `desarrollo` (17471b3). Entrega
 
 ## Configuración pendiente del equipo
 
-1. Configurar `DATABASE_URL` en el entorno privado, `AUTH_SECRET` aleatorio de al menos 32 bytes y `APP_URL` con el origen exacto de la aplicación (HTTPS al desplegar). Nunca guardar secretos en Git.
+1. Configurar `DATABASE_URL` y un `AUTH_SECRET` aleatorio de al menos 32 bytes en el entorno privado, y `APP_URL` con el origen exacto de la aplicación (HTTPS al desplegar). La aplicación ahora falla de forma segura si falta `AUTH_SECRET` o es demasiado corto; ya no usa una clave fija de respaldo. Nunca guardar secretos en Git.
 2. Revisar y aplicar el esquema Prisma en un entorno de pruebas del equipo. Esta entrega **no ejecutó `prisma db push` ni modificó Atlas**.
 3. Confirmar dos cuentas de prueba, Administrador y Colaborador. Ambas necesitan `activo: true`, rol `ADMINISTRADOR` o `COLABORADOR` y `passwordHash` bcrypt. El login no crea usuarios ni convierte cuentas antiguas automáticamente. Nuevas cuentas son inactivas por defecto; la activación corresponde a HU010.
 4. La creación de usuarios de HU009 debe guardar el correo normalizado en minúsculas y el hash bcrypt, con contraseñas de hasta 72 bytes UTF-8. HU009 pertenece a otro integrante; esta entrega no implementa registro.
