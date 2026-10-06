@@ -60,5 +60,5 @@ El recorrido real, la persistencia y el índice de MongoDB ya fueron comprobados
 
 - La actualización de publicación con POST utiliza transacción; los tests con dobles no validan concurrencia ni transacciones reales. La edición/eliminación simultánea de diapositivas durante publicación no se garantiza como una invariancia de este alcance; coordinar la edición durante la aceptación.
 - El regreso a BORRADOR por el PUT compatible elimina la fecha vigente; una nueva publicación registra una nueva fecha. El formulario nuevo no introduce una acción de despublicar.
-- Alex autorizó las pruebas reales. Sólo se usaron las cuentas de prueba existentes y dos capacitaciones temporales propias, ambas eliminadas junto con sus diapositivas al finalizar; no se modificaron capacitaciones del equipo.
+- Alex autorizó las pruebas reales. Sólo se usaron las cuentas de prueba existentes y tres capacitaciones temporales propias, todas eliminadas junto con sus diapositivas al finalizar; no se modificaron capacitaciones del equipo.
 - La clave fija de respaldo detectada en autenticación requiere una corrección aparte y coordinación con el responsable de HU001. No se modificó como parte de HU004.
