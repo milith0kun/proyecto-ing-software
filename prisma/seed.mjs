@@ -4,7 +4,7 @@ import { hash } from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Sembrando capacitaciones por áreas y roles de CGB Academy en MongoDB Atlas...');
+  console.log('🌱 Sembrando capacitaciones por ámbitos (PÚBLICO / INTERNO) y estados (PUBLICADA / BORRADOR)...');
 
   // -------------------------------------------------------------------------
   // 1. Cuentas de Usuario de Prueba
@@ -59,11 +59,11 @@ async function main() {
   await prisma.capacitacion.deleteMany({});
 
   // -------------------------------------------------------------------------
-  // 3. Capacitaciones por Áreas y Roles de la Empresa CGB
+  // 3. Capacitaciones Completas: Públicas, Internas y en Borrador
   // -------------------------------------------------------------------------
-  const capacitacionesPorRol = [
+  const capacitacionesData = [
     // ═══════════════════════════════════════════════════════════════════════
-    // 1. ÁREA DE VENTAS Y FINANZAS
+    // SECCIÓN 1: CAPACITACIONES PÚBLICAS (Catálogo Abierto)
     // ═══════════════════════════════════════════════════════════════════════
     {
       titulo: 'Inducción al Área de Ventas y Finanzas: Facturación, Pasarelas y Matrículas CGB',
@@ -120,10 +120,6 @@ async function main() {
         },
       ],
     },
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // 2. ÁREA ACADÉMICA, ASESORES Y DOCENTES
-    // ═══════════════════════════════════════════════════════════════════════
     {
       titulo: 'Portal Docente y Asesoría Académica: Calificaciones, Asistencia y Tutorías',
       descripcion: 'Guía para profesores, coordinadores y asesores pedagógicos: registro de asistencia, calificación de evaluaciones formativas, edición de módulos de clase y retroalimentación a alumnos.',
@@ -179,10 +175,6 @@ async function main() {
         },
       ],
     },
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // 3. ÁREA DE TI Y SISTEMAS (CIIP)
-    // ═══════════════════════════════════════════════════════════════════════
     {
       titulo: 'Inducción al Área de TI: Administración de Cuentas, Servidores y Soporte LEDS',
       descripcion: 'Capacitación para nuevos desarrolladores, ingenieros de soporte y administradores de sistemas: gestión de accesos, monitoreo de infraestructura VPS y mantenimiento de plataformas.',
@@ -238,10 +230,6 @@ async function main() {
         },
       ],
     },
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // 4. ESTUDIANTES / ALUMNOS (Registro y Campus LEDS)
-    // ═══════════════════════════════════════════════════════════════════════
     {
       titulo: 'Guía de Inicio del Estudiante: Creación de Cuenta y Acceso a CGB Academy',
       descripcion: 'Manual paso a paso para alumnos e ingresantes: registro en cgbacademy.com, activación de cuenta, exploración del catálogo y matrícula en cursos de CIIP, GEOMINA y BIOMEDIC.',
@@ -350,10 +338,6 @@ async function main() {
         },
       ],
     },
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // 5. INDUCCIÓN CORPORATIVA AL EQUIPO DE TRABAJO CGB
-    // ═══════════════════════════════════════════════════════════════════════
     {
       titulo: 'Inducción General: Cultura Organizacional y Valores del Equipo CGB',
       descripcion: 'Capacitación de bienvenida para todo el personal de la empresa: pilares de calidad, dinámica de trabajo por sprints, código de ética y canales de comunicación.',
@@ -408,10 +392,6 @@ async function main() {
         },
       ],
     },
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // 6. ÁREA DE CAMPO Y MINERÍA (GEOMINA)
-    // ═══════════════════════════════════════════════════════════════════════
     {
       titulo: 'Protocolo de Seguridad Operacional y Trabajo en Campo para Personal GEOMINA',
       descripcion: 'Capacitación en seguridad minera para colaboradores de la unidad GEOMINA: lineamientos D.S. 024-2016-EM, matriz IPERC Continuo y uso obligatorio de EPPs.',
@@ -465,10 +445,6 @@ async function main() {
         },
       ],
     },
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // 7. ÁREA DE TECNOLOGÍA MÉDICA Y SALUD (BIOMEDIC)
-    // ═══════════════════════════════════════════════════════════════════════
     {
       titulo: 'Protocolos de Calidad Técnica y Bioseguridad para Personal BIOMEDIC',
       descripcion: 'Capacitación para técnicos e ingenieros de la unidad BIOMEDIC: calibración de equipos médicos, seguridad eléctrica IEC 60601 y bioprotección en clínicas.',
@@ -523,12 +499,170 @@ async function main() {
         },
       ],
     },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // SECCIÓN 2: CAPACITACIONES INTERNAS (Exclusivas para Personal Autenticado)
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      titulo: 'Protocolo Interno de Seguridad de la Información y Gestión de Accesos CGB',
+      descripcion: 'Directiva confidencial para colaboradores: custodia de credenciales, activación de doble factor (2FA), resguardo de datos sensibles y auditorías periódicas de accesos.',
+      unidad: 'GENERAL',
+      ambito: 'INTERNO',
+      estado: 'PUBLICADA',
+      publicadaEn: new Date('2026-10-05T09:00:00Z'),
+      categoria: 'Inducción',
+      duracionMin: 20,
+      icono: 'lock',
+      creadoPor: admin.id,
+      slides: [
+        {
+          orden: 1,
+          titulo: 'Política de Ciberseguridad y Accesos Corporativos',
+          contenido: 'Cada miembro de CGB es responsable de la protección de las cuentas institucionales y del resguardo estricto de los datos de nuestros estudiantes y clientes.',
+          tipo: 'IMAGE',
+          imagenUrl: '/images/capacitaciones/gestion_plataforma.jpg',
+          botonTexto: null,
+          botonUrl: null,
+          lista: [
+            'Uso mandatorio de gestores de contraseñas y claves de al menos 12 caracteres',
+            'Activación obligatoria de 2FA en correos institucionales (@cgb.latam)',
+            'Bloqueo automático de pantalla ante ausencia temporal del puesto',
+          ],
+        },
+        {
+          orden: 2,
+          titulo: 'Respuesta ante Incidentes de Seguridad',
+          contenido: 'Flujo de reporte inmediato ante sospechas de phishing, correos no autorizados o pérdida de equipos corporativos.',
+          tipo: 'TEXT',
+          imagenUrl: null,
+          botonTexto: null,
+          botonUrl: null,
+          lista: [
+            'Notificar inmediatamente a seguridad-ti@cgb.latam',
+            'No ingresar credenciales en enlaces sospechosos o redes Wi-Fi públicas',
+            'Procedimiento de revocación inmediata de sesiones activas',
+          ],
+        },
+      ],
+    },
+    {
+      titulo: 'Manual Interno de Contratos, Remuneraciones y Beneficios Laborales CGB',
+      descripcion: 'Guía exclusiva para colaboradores internos sobre el calendario de pagos, políticas de horas extras, seguro de salud complementario y trámite de permisos y vacaciones.',
+      unidad: 'GENERAL',
+      ambito: 'INTERNO',
+      estado: 'PUBLICADA',
+      publicadaEn: new Date('2026-10-05T11:00:00Z'),
+      categoria: 'Inducción',
+      duracionMin: 25,
+      icono: 'file-text',
+      creadoPor: admin.id,
+      slides: [
+        {
+          orden: 1,
+          titulo: 'Gestión de Planilla y Beneficios del Colaborador',
+          contenido: 'Información oficial sobre el cronograma de pago mensual, entrega de boletas electrónicas y cobertura de salud para el personal de la empresa CGB.',
+          tipo: 'IMAGE',
+          imagenUrl: '/images/capacitaciones/induccion_personal.jpg',
+          botonTexto: null,
+          botonUrl: null,
+          lista: [
+            'Abono de haberes el último día hábil de cada mes',
+            'Emisión de boletas digitales firmadas en el portal del colaborador',
+            'Beneficios de capacitaciones continuas gratuitas en todas las unidades',
+          ],
+        },
+        {
+          orden: 2,
+          titulo: 'Procedimiento para Solicitud de Permisos y Vacaciones',
+          contenido: 'Cómo solicitar licencias, días libres y periodos vacacionales mediante el formulario digital del área de Gestión del Talento.',
+          tipo: 'TEXT',
+          imagenUrl: null,
+          botonTexto: null,
+          botonUrl: null,
+          lista: [
+            'Presentar la solicitud con al menos 15 días de anticipación',
+            'Coordinación previa con el líder de área para garantizar la continuidad operativa',
+          ],
+        },
+      ],
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // SECCIÓN 3: CAPACITACIONES EN ESTADO BORRADOR (Para pruebas del Admin)
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      titulo: 'Taller en Preparación: Automatización y Procesamiento con IA Generativa en CGB',
+      descripcion: 'Módulo formativo en construcción para el personal de innovación. Contiene guías para integrar modelos LLM en flujos de trabajo administrativos.',
+      unidad: 'CIIP',
+      ambito: 'PUBLICO',
+      estado: 'BORRADOR',
+      publicadaEn: null,
+      categoria: 'Docentes',
+      duracionMin: 40,
+      icono: 'cpu',
+      creadoPor: admin.id,
+      slides: [
+        {
+          orden: 1,
+          titulo: 'Borrador 1: Alcance del Taller de IA',
+          contenido: 'Este contenido se encuentra actualmente en fase de redacción por el equipo pedagógico de la unidad CIIP antes de su publicación oficial.',
+          tipo: 'TEXT',
+          imagenUrl: null,
+          botonTexto: null,
+          botonUrl: null,
+          lista: [
+            'Definición de casos de uso en atención al cliente y soporte',
+            'Diseño de prompts estructurados para resúmenes de reuniones',
+          ],
+        },
+        {
+          orden: 2,
+          titulo: 'Borrador 2: Prácticas y Ejercicios',
+          contenido: 'Ejercicios de laboratorio que los docentes podrán realizar en el entorno de pruebas.',
+          tipo: 'TEXT',
+          imagenUrl: null,
+          botonTexto: null,
+          botonUrl: null,
+          lista: [
+            'Conexión mediante API Keys de prueba',
+            'Validación de salidas estructuradas en formato JSON',
+          ],
+        },
+      ],
+    },
+    {
+      titulo: 'Procedimiento Interno de Adquisiciones y Logística de Equipamiento de Campo',
+      descripcion: 'Borrador interno sobre el flujo de compra, recepción y calibración de instrumental geológico y minero para la unidad GEOMINA.',
+      unidad: 'GEOMINA',
+      ambito: 'INTERNO',
+      estado: 'BORRADOR',
+      publicadaEn: null,
+      categoria: 'Inducción',
+      duracionMin: 30,
+      icono: 'truck',
+      creadoPor: admin.id,
+      slides: [
+        {
+          orden: 1,
+          titulo: 'Flujo de Requerimientos de Compra',
+          contenido: 'Guía en borrador para la solicitud y cotización de equipos topográficos e indumentaria de seguridad.',
+          tipo: 'TEXT',
+          imagenUrl: null,
+          botonTexto: null,
+          botonUrl: null,
+          lista: [
+            'Llenado del formato de orden de compra interna',
+            'Revisión técnica de especificaciones por el jefe de operaciones',
+          ],
+        },
+      ],
+    },
   ];
 
   // -------------------------------------------------------------------------
   // 4. Inserción en MongoDB Atlas
   // -------------------------------------------------------------------------
-  for (const cap of capacitacionesPorRol) {
+  for (const cap of capacitacionesData) {
     const { slides, ...datosCapacitacion } = cap;
     const creada = await prisma.capacitacion.create({
       data: datosCapacitacion,
@@ -545,10 +679,10 @@ async function main() {
       }
     }
 
-    console.log(`  ➕ Capacitación creada: [${creada.unidad}] "${creada.titulo}" (${slides.length} slides)`);
+    console.log(`  ➕ Capacitación creada: [${creada.unidad}] [${creada.ambito}] [${creada.estado}] "${creada.titulo}" (${slides.length} slides)`);
   }
 
-  console.log('✨ Siembra por áreas y roles completada exitosamente.');
+  console.log('✨ Siembra completa con ámbitos INTERNO/PÚBLICO y estados PUBLICADA/BORRADOR exitosa.');
 }
 
 main()
