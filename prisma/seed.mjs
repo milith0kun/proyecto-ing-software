@@ -4,10 +4,10 @@ import { hash } from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Sembrando capacitaciones e inducciones reales para el personal de CGB Academy...');
+  console.log('🌱 Sembrando guías interactivas de inducción y acceso a plataformas para CGB Academy...');
 
   // -------------------------------------------------------------------------
-  // 1. Cuentas de Usuario de Prueba (Sin modificar roles ni credenciales)
+  // 1. Cuentas de Usuario de Prueba
   // -------------------------------------------------------------------------
   const claveAdmin = 'Admin2026!*';
   const claveColab = 'Colab2026!*';
@@ -52,340 +52,300 @@ async function main() {
   console.log(`✅ Usuarios preservados: ${admin.email} (ADMINISTRADOR) y ${colaborador.email} (COLABORADOR)`);
 
   // -------------------------------------------------------------------------
-  // 2. Limpieza de capacitaciones anteriores
+  // 2. Limpieza de datos anteriores
   // -------------------------------------------------------------------------
   console.log('🧹 Limpiando capacitaciones anteriores...');
   await prisma.slide.deleteMany({});
   await prisma.capacitacion.deleteMany({});
 
   // -------------------------------------------------------------------------
-  // 3. Capacitaciones del Personal de la Empresa CGB
+  // 3. Cursos e Instructivos Paso a Paso con Capturas de Plataforma
   // -------------------------------------------------------------------------
-  const capacitacionesPersonal = [
+  const cursosGuias = [
     // ═══════════════════════════════════════════════════════════════════════
-    // 1. INDUCCIÓN GENERAL PARA EL PERSONAL DE CGB
+    // GUÍA 1: CÓMO CREAR TU CUENTA Y ACCEDER A CGB ACADEMY
     // ═══════════════════════════════════════════════════════════════════════
     {
-      titulo: 'Inducción al Personal: Bienvenida a la Empresa CGB y Cultura Laboral',
-      descripcion: 'Capacitación obligatoria para todo el personal que se incorpora al equipo CGB. Conoce nuestra estructura organizacional, valores institucionales, canales de comunicación y dinámica de trabajo.',
+      titulo: 'Guía de Inicio: Cómo Crear tu Cuenta y Acceder a CGB Academy',
+      descripcion: 'Instructivo paso a paso para nuevos estudiantes, docentes y miembros de la empresa. Aprende a registrarte en el portal oficial cgbacademy.com, validar tu correo y activar tu perfil institucional.',
       unidad: 'GENERAL',
       ambito: 'PUBLICO',
       estado: 'PUBLICADA',
       publicadaEn: new Date('2026-10-01T08:00:00Z'),
       categoria: 'Inducción',
-      duracionMin: 25,
-      icono: 'award',
+      duracionMin: 15,
+      icono: 'user-plus',
       creadoPor: admin.id,
       slides: [
         {
           orden: 1,
-          titulo: 'Bienvenida al Equipo de Trabajo CGB',
-          contenido: 'En CGB valoramos el talento y el compromiso de cada colaborador. Esta inducción te brindará las pautas esenciales para integrarte rápidamente a nuestras actividades operativas y proyectos.',
+          titulo: 'Paso 1: Formulario de Registro en cgbacademy.com',
+          contenido: 'Para ingresar a nuestros programas, primero debes crear tu cuenta en la plataforma. Completa tus nombres completos, correo electrónico institucional o personal y define una contraseña segura.',
           tipo: 'IMAGE',
-          imagenUrl: '/images/capacitaciones/induccion_personal.jpg',
+          imagenUrl: '/images/slides/registro_cuenta_cgb.jpg',
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Conoce nuestras áreas especializadas: CIIP, GEOMINA y BIOMEDIC',
-            'Ambiente colaborativo enfocado en la excelencia y el respeto mutuo',
-            'Canales de acompañamiento y mentoría durante tus primeras semanas',
+            'Ingresa tus nombres y apellidos completos para la emisión de tus constancias',
+            'Utiliza un correo electrónico al que tengas acceso continuo',
+            'Define una contraseña de al menos 8 caracteres con letras y números',
           ],
         },
         {
           orden: 2,
-          titulo: 'Valores Corporativos y Convivencia Laboral',
-          contenido: 'Nuestra cultura se fundamenta en principios claros que guían el desempeño de todo el personal en la empresa.',
+          titulo: 'Paso 2: Confirmación y Validación de Acceso',
+          contenido: 'Una vez enviado el formulario, recibirás un mensaje de verificación para confirmar tu cuenta. Haz clic en el enlace para habilitar tu acceso al catálogo de capacitaciones.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Compromiso y puntualidad en los compromisos laborales',
-            'Comunicación transparente, horizontal y constructiva',
-            'Protección estricta de la información confidencial de la empresa',
-            'Cero tolerancia a cualquier conducta discriminatoria o de acoso',
+            'Revisa tu bandeja de entrada o carpeta de spam si no ves el mensaje de activación',
+            'Inicia sesión con tu correo y contraseña registrados',
+            'Si eres colaborador de la empresa CGB, solicita a tu supervisor la asignación de tu rol',
           ],
         },
         {
           orden: 3,
-          titulo: 'Canales Oficiales y Portal Corporativo',
-          contenido: 'Accede al portal institucional de la empresa para conocer nuestras iniciativas y novedades académicas.',
+          titulo: 'Paso 3: Ingresar al Portal Oficial de CGB Academy',
+          contenido: '¡Listo! Ya puedes acceder directamente al portal web para explorar todos los programas y contenidos formativos disponibles.',
           tipo: 'INTERACTIVE',
           imagenUrl: null,
-          botonTexto: 'Visitar Portal CGB Academy',
+          botonTexto: 'Crear Cuenta en cgbacademy.com',
           botonUrl: 'https://cgbacademy.com',
           lista: [
-            'Portal web principal: cgbacademy.com',
-            'Coordinación de bienvenida con el área de Talento Humano',
+            'Portal web principal: https://cgbacademy.com',
+            'Soporte técnico de cuentas: soporte@cgb.latam',
           ],
         },
       ],
     },
 
     // ═══════════════════════════════════════════════════════════════════════
-    // 2. OPERACIÓN DE LA PLATAFORMA LEDS (leds.cgbacademy.tech)
+    // GUÍA 2: CÓMO NAVEGAR Y ACCEDER A CURSOS EN LEDS (leds.cgbacademy.tech)
     // ═══════════════════════════════════════════════════════════════════════
     {
-      titulo: 'Operación y Gestión de la Plataforma LEDS para el Personal CGB',
-      descripcion: 'Capacitación para colaboradores y personal administrativo sobre el uso, administración y monitoreo de nuestra plataforma educativa LEDS (leds.cgbacademy.tech).',
+      titulo: 'Manual del Usuario: Navegación y Acceso a Cursos en LEDS (leds.cgbacademy.tech)',
+      descripcion: 'Aprende a utilizar el campus virtual LEDS. Explora tu panel de cursos inscritos, filtra contenidos por unidad (CIIP, GEOMINA, BIOMEDIC), revisa tus avances y accede a los materiales interactivos.',
       unidad: 'CIIP',
       ambito: 'PUBLICO',
       estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-02T09:30:00Z'),
+      publicadaEn: new Date('2026-10-02T09:00:00Z'),
       categoria: 'Estudiantes',
-      duracionMin: 30,
+      duracionMin: 20,
       icono: 'layout',
       creadoPor: admin.id,
       slides: [
         {
           orden: 1,
-          titulo: 'Administración de la Plataforma LEDS CGB',
-          contenido: 'La plataforma LEDS (leds.cgbacademy.tech) es el entorno centralizado donde los estudiantes y docentes interactúan con los programas y contenidos de CGB Academy.',
+          titulo: 'Paso 1: Panel Principal de Cursos (Dashboard LEDS)',
+          contenido: 'Al ingresar a leds.cgbacademy.tech con tu cuenta, verás tu panel principal con los cursos asignados, porcentaje de avance por lección y pestañas de filtrado por área técnica (CIIP, GEOMINA, BIOMEDIC).',
           tipo: 'IMAGE',
-          imagenUrl: '/images/capacitaciones/gestion_plataforma.jpg',
+          imagenUrl: '/images/slides/campus_virtual_leds.jpg',
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Gestión de matrículas y habilitación de usuarios',
-            'Monitoreo de progreso y métricas de participación estudiantil',
-            'Publicación y actualización de contenidos formativos',
+            'Pestañas de unidad: filtra cursos de CIIP, GEOMINA o BIOMEDIC con un solo clic',
+            'Barra de progreso en tiempo real que registra cada diapositiva visualizada',
+            'Acceso rápido a tareas, asignaciones y comunidad académica en el menú lateral',
           ],
         },
         {
           orden: 2,
-          titulo: 'Flujo de Soporte y Asistencia a Usuarios',
-          contenido: 'Pautas para el personal encargado de resolver dudas técnicas y académicas de los participantes en la plataforma LEDS.',
+          titulo: 'Paso 2: Visualizador Interactivo y Descarga de Materiales',
+          contenido: 'Cada curso está compuesto por diapositivas interactivas con recursos multimedia, guías paso a paso y enlaces directos a herramientas de práctica.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Revisión diaria del buzón de consultas y tickets de ayuda',
-            'Restablecimiento seguro de accesos y contraseñas',
-            'Derivación oportuna de casos especiales al docente o coordinador',
+            'Navega con las flechas de tu teclado o mediante los botones Anterior / Siguiente',
+            'En dispositivos móviles puedes deslizar horizontalmente (swipe)',
+            'Al llegar a la última diapositiva haz clic en Terminar Capacitación para registrar tu conformidad',
           ],
         },
         {
           orden: 3,
-          titulo: 'Acceso Directo a la Plataforma LEDS',
-          contenido: 'Ingresa a la plataforma oficial LEDS para explorar el entorno operativo con tu cuenta institucional asignada.',
+          titulo: 'Paso 3: Entrar al Campus Virtual LEDS',
+          contenido: 'Accede a la plataforma de aprendizaje para comenzar con tus cursos matriculados.',
           tipo: 'INTERACTIVE',
           imagenUrl: null,
-          botonTexto: 'Abrir Plataforma LEDS (leds.cgbacademy.tech)',
+          botonTexto: 'Entrar a leds.cgbacademy.tech',
           botonUrl: 'https://leds.cgbacademy.tech',
           lista: [
-            'Entorno de gestión: leds.cgbacademy.tech',
-            'Inicio de sesión mediante credenciales institucionales CGB',
+            'Campus virtual en vivo: https://leds.cgbacademy.tech',
+            'Disponible 24/7 desde cualquier navegador móvil o de escritorio',
           ],
         },
       ],
     },
 
     // ═══════════════════════════════════════════════════════════════════════
-    // 3. ATENCIÓN Y COORDINACIÓN ACADÉMICA CON ESTUDIANTES Y DOCENTES
+    // GUÍA 3: INDUCCIÓN A LOS CURSOS DE LA UNIDAD CIIP
     // ═══════════════════════════════════════════════════════════════════════
     {
-      titulo: 'Protocolo de Atención, Coordinación Académica y Soporte al Usuario',
-      descripcion: 'Guía de servicio y atención de calidad para el personal que coordina con estudiantes y docentes de la comunidad CGB Academy.',
-      unidad: 'GENERAL',
+      titulo: 'Inducción CIIP: Guía de Acceso a Programas de Innovación y Software',
+      descripcion: 'Instructivo para estudiantes y nuevos miembros sobre cómo matricularse y seguir la ruta formativa de la unidad CIIP en la plataforma.',
+      unidad: 'CIIP',
       ambito: 'PUBLICO',
       estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-03T11:00:00Z'),
-      categoria: 'Docentes',
-      duracionMin: 25,
-      icono: 'message-circle',
+      publicadaEn: new Date('2026-10-03T10:30:00Z'),
+      categoria: 'Estudiantes',
+      duracionMin: 20,
+      icono: 'code',
       creadoPor: admin.id,
       slides: [
         {
           orden: 1,
-          titulo: 'Excelencia en el Servicio y Atención CGB',
-          contenido: 'La satisfacción de nuestros estudiantes y docentes depende de una comunicación empática, clara y oportuna en todos los canales de la empresa.',
+          titulo: 'Oferta Formativa de la Unidad CIIP',
+          contenido: 'La unidad CIIP ofrece programas en ingeniería de software, arquitectura en la nube, inteligencia artificial aplicada y desarrollo web moderno.',
           tipo: 'IMAGE',
-          imagenUrl: '/logos/cgb-logo.png',
+          imagenUrl: '/logos/recortados/ciip-logo.png',
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Respuesta ágil y personalizada en menos de 24 horas laborables',
-            'Lenguaje profesional, cordial y respetuoso en todo momento',
-            'Registro y seguimiento de sugerencias de mejora',
+            'Cursos teóricos y talleres prácticos orientados a proyectos reales',
+            'Uso de tecnologías líderes: Next.js, TypeScript, Docker y MongoDB',
+            'Acompañamiento docente y resolución de consultas técnicas',
           ],
         },
         {
           orden: 2,
-          titulo: 'Gestión de Incidencias y Preguntas Frecuentes',
-          contenido: 'Manejo de consultas recurrentes sobre accesos a clases, materiales didácticos y constancias de participación.',
+          titulo: 'Inscripción y Rutas de Aprendizaje CIIP',
+          contenido: 'Revisa los requisitos previos de cada módulo y activa tu participación directamente desde tu panel de usuario.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Uso de plantillas de respuesta estandarizadas para agilizar la atención',
-            'Escalamiento inmediato de problemas técnicos a la unidad CIIP',
-            'Validación de datos antes de proporcionar información de cuentas',
+            'Selecciona el filtro CIIP en el catálogo de cursos',
+            'Sigue la secuencia recomendada desde fundamentos hasta nivel avanzado',
           ],
         },
         {
           orden: 3,
-          titulo: 'Mesa de Ayuda Institucional',
-          contenido: 'Consulta la base de conocimientos y guías rápidas para el personal de soporte.',
+          titulo: 'Explorar Cursos CIIP en LEDS',
+          contenido: 'Ingresa a la sección especializada de CIIP en la plataforma de aprendizaje.',
           tipo: 'INTERACTIVE',
           imagenUrl: null,
-          botonTexto: 'Acceder a Base de Conocimientos',
-          botonUrl: 'https://cgbacademy.com/soporte',
+          botonTexto: 'Ver Cursos CIIP en leds.cgbacademy.tech',
+          botonUrl: 'https://leds.cgbacademy.tech',
           lista: [
-            'Directorio de coordinadores por unidad',
-            'Manuales de usuario para estudiantes y profesores',
+            'Plataforma: https://leds.cgbacademy.tech',
           ],
         },
       ],
     },
 
     // ═══════════════════════════════════════════════════════════════════════
-    // 4. PROTOCOLOS DE SEGURIDAD OPERACIONAL PARA PERSONAL GEOMINA
+    // GUÍA 4: INDUCCIÓN A LOS CURSOS DE LA UNIDAD GEOMINA
     // ═══════════════════════════════════════════════════════════════════════
     {
-      titulo: 'Protocolo de Seguridad Operacional y Trabajo en Campo para Personal GEOMINA',
-      descripcion: 'Capacitación para colaboradores y personal técnico de GEOMINA en procedimientos de seguridad laboral, uso de EPPs y protocolos en salidas de campo.',
+      titulo: 'Inducción GEOMINA: Guía de Acceso a Programas de Minería y Geología',
+      descripcion: 'Instructivo para participantes sobre la oferta formativa de la unidad GEOMINA: topografía digital, seguridad minera, QGIS y geotecnia.',
       unidad: 'GEOMINA',
       ambito: 'PUBLICO',
       estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-04T08:30:00Z'),
-      categoria: 'Inducción',
-      duracionMin: 35,
+      publicadaEn: new Date('2026-10-04T09:00:00Z'),
+      categoria: 'Estudiantes',
+      duracionMin: 20,
       icono: 'shield',
       creadoPor: admin.id,
       slides: [
         {
           orden: 1,
-          titulo: 'Seguridad en Operaciones y Salidas de Campo',
-          contenido: 'Todo el personal de la unidad GEOMINA debe aplicar de manera irrestricta las normas de prevención de riesgos en cada inspección técnica.',
+          titulo: 'Programas de Capacitación GEOMINA',
+          contenido: 'La unidad GEOMINA brinda formación especializada en seguridad minera, sistemas de información geográfica (SIG/QGIS) y análisis geológico.',
           tipo: 'IMAGE',
           imagenUrl: '/logos/recortados/geomina-logo.png',
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Revisión y llenado obligatorio de la matriz IPERC Continuo',
-            'Porte permanente de Equipos de Protección Personal (EPP)',
-            'Reporte preventivo de actos y condiciones subestándar',
+            'Normativa de seguridad y protocolos en operaciones de campo',
+            'Manejo de datos espaciales y modelos digitales de elevación',
+            'Certificaciones alineadas a estándares de la industria minera',
           ],
         },
         {
           orden: 2,
-          titulo: 'Equipamiento de Protección Personal (EPP) Requerido',
-          contenido: 'Elementos indispensables asignados al personal para actividades en campo y zonas de estudio geológico.',
+          titulo: 'Requisitos y Materiales de Descarga',
+          contenido: 'Cada capacitación incluye paquetes cartográficos y manuales en PDF para seguir las sesiones prácticas.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Casco de seguridad certificado con barbiquejo',
-            'Chaleco de alta visibilidad con cintas reflectivas',
-            'Calzado de seguridad con suela antideslizante y puntera reforzada',
-            'Protección visual y solar con filtro UV homologado',
+            'Descarga las capas de prueba y formatos de inspección técnica',
+            'Participa en las evaluaciones de comprobación de conocimientos',
           ],
         },
         {
           orden: 3,
-          titulo: 'Plan de Emergencia y Contacto de Auxilio',
-          contenido: 'Revisa las vías de comunicación y números de emergencia establecidos por la empresa CGB para el personal en campo.',
+          titulo: 'Acceder a Programas GEOMINA',
+          contenido: 'Conoce los cursos abiertos de la unidad GEOMINA en la plataforma institucional.',
           tipo: 'INTERACTIVE',
           imagenUrl: null,
-          botonTexto: 'Ver Protocolo de Emergencias GEOMINA',
-          botonUrl: 'https://cgbacademy.com/geomina/seguridad',
+          botonTexto: 'Ver Cursos GEOMINA en leds.cgbacademy.tech',
+          botonUrl: 'https://leds.cgbacademy.tech',
           lista: [
-            'Canal radial y teléfono de enlace de la cuadrilla',
-            'Ubicación del botiquín y equipos de primeros auxilios',
+            'Portal oficial: https://cgbacademy.com',
           ],
         },
       ],
     },
 
     // ═══════════════════════════════════════════════════════════════════════
-    // 5. PROTOCOLOS DE CALIDAD Y BIOSEGURIDAD PARA PERSONAL BIOMEDIC
+    // GUÍA 5: INDUCCIÓN A LOS CURSOS DE LA UNIDAD BIOMEDIC
     // ═══════════════════════════════════════════════════════════════════════
     {
-      titulo: 'Protocolos de Calidad Técnica y Bioseguridad para Personal BIOMEDIC',
-      descripcion: 'Capacitación para el personal técnico y colaboradores de la unidad BIOMEDIC sobre estándares de servicio en clínicas, calibración de equipos y bioseguridad.',
+      titulo: 'Inducción BIOMEDIC: Guía de Acceso a Programas de Tecnología Médica',
+      descripcion: 'Instructivo para estudiantes y personal sobre los programas de la unidad BIOMEDIC: mantenimiento hospitalario, seguridad eléctrica IEC 60601 y bioseguridad.',
       unidad: 'BIOMEDIC',
       ambito: 'PUBLICO',
       estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-04T15:00:00Z'),
-      categoria: 'Inducción',
-      duracionMin: 30,
+      publicadaEn: new Date('2026-10-04T16:00:00Z'),
+      categoria: 'Docentes',
+      duracionMin: 20,
       icono: 'activity',
       creadoPor: admin.id,
       slides: [
         {
           orden: 1,
-          titulo: 'Estándares de Servicio y Calidad Técnica BIOMEDIC',
-          contenido: 'El personal de BIOMEDIC representa a CGB en cada centro de salud, garantizando la precisión, seguridad eléctrica y operatividad del equipamiento médico.',
+          titulo: 'Programas de Ingeniería y Tecnología Biomédica',
+          contenido: 'La unidad BIOMEDIC capacita en protocolos de calibración metrológica, gestión de equipamiento clínico y normativas sanitarias hospitalarias.',
           tipo: 'IMAGE',
           imagenUrl: '/logos/recortados/biomedic-logo.png',
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Cumplimiento de protocolos de seguridad eléctrica IEC 60601',
-            'Calibración metrológica con patrones certificados vigentes',
-            'Emisión y firma de informes de conformidad de servicio',
+            'Mantenimiento preventivo de monitores, ecógrafos y autoclaves',
+            'Seguridad del paciente y gestión de riesgo clínico',
+            'Talleres prácticos con simuladores e instrumentos certificados',
           ],
         },
         {
           orden: 2,
-          titulo: 'Normas de Bioseguridad en Áreas Hospitalarias',
-          contenido: 'Pautas de bioprotección obligatorias para el personal durante intervenciones técnicas en laboratorios, quirófanos y salas de cuidados intensivos.',
+          titulo: 'Metodología de Estudio y Evaluación',
+          contenido: 'Revisa las diapositivas de cada módulo y completa el cuestionario de bioseguridad para validar tus competencias.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Uso estricto de guantes, mascarilla N95 y batas de bioseguridad',
-            'Desinfección previa y posterior de herramientas de medición',
-            'Segregación responsable de residuos biocontaminados en contenedores rojos',
+            'Lectura correlativa de todas las diapositivas del visor',
+            'Registro automático de tu avance al finalizar la experiencia',
           ],
         },
         {
           orden: 3,
-          titulo: 'Formatos Digitales de Servicio Técnico',
-          contenido: 'Accede al sistema de gestión de órdenes de trabajo para registrar las intervenciones técnicas del personal.',
+          titulo: 'Ver Cursos BIOMEDIC en la Plataforma',
+          contenido: 'Ingresa al catálogo para iniciar tu formación en la unidad BIOMEDIC.',
           tipo: 'INTERACTIVE',
           imagenUrl: null,
-          botonTexto: 'Abrir Formatos de Servicio BIOMEDIC',
-          botonUrl: 'https://cgbacademy.com/biomedic/formatos',
+          botonTexto: 'Acceder a Cursos BIOMEDIC',
+          botonUrl: 'https://leds.cgbacademy.tech',
           lista: [
-            'Ficha técnica de mantenimiento preventivo y correctivo',
-            'Control de inventario de repuestos y accesorios biomédicos',
-          ],
-        },
-      ],
-    },
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // 6. CAPACITACIÓN INTERNA DE SEGURIDAD DE LA INFORMACIÓN
-    // ═══════════════════════════════════════════════════════════════════════
-    {
-      titulo: 'Protocolo de Seguridad de la Información y Gestión de Accesos del Personal',
-      descripcion: 'Capacitación interna sobre políticas de seguridad informática, resguardo de credenciales corporativas y protección de datos de la empresa CGB.',
-      unidad: 'GENERAL',
-      ambito: 'INTERNO',
-      estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-05T10:00:00Z'),
-      categoria: 'Inducción',
-      duracionMin: 20,
-      icono: 'lock',
-      creadoPor: admin.id,
-      slides: [
-        {
-          orden: 1,
-          titulo: 'Seguridad Digital y Manejo de Cuentas',
-          contenido: 'Cada colaborador es responsable de custodiar sus credenciales de acceso y de proteger la información confidencial de la empresa.',
-          tipo: 'TEXT',
-          imagenUrl: null,
-          botonTexto: null,
-          botonUrl: null,
-          lista: [
-            'Uso de contraseñas complejas y activación de doble factor (2FA)',
-            'Prohibición estricta de compartir accesos con terceros',
-            'Bloqueo de pantalla obligatorio al ausentarse del puesto de trabajo',
+            'Plataforma: https://leds.cgbacademy.tech',
           ],
         },
       ],
@@ -395,7 +355,7 @@ async function main() {
   // -------------------------------------------------------------------------
   // 4. Inserción en MongoDB Atlas
   // -------------------------------------------------------------------------
-  for (const cap of capacitacionesPersonal) {
+  for (const cap of cursosGuias) {
     const { slides, ...datosCapacitacion } = cap;
     const creada = await prisma.capacitacion.create({
       data: datosCapacitacion,
@@ -412,10 +372,10 @@ async function main() {
       }
     }
 
-    console.log(`  ➕ Capacitación de Personal CGB creada: [${creada.unidad}] "${creada.titulo}" (${slides.length} slides, ${creada.ambito})`);
+    console.log(`  ➕ Guía / Curso creado: [${creada.unidad}] "${creada.titulo}" (${slides.length} slides, ${creada.ambito})`);
   }
 
-  console.log('✨ Siembra de capacitaciones del personal completada exitosamente.');
+  console.log('✨ Siembra de guías e instructivos de plataforma completada exitosamente.');
 }
 
 main()
