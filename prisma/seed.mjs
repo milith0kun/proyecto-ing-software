@@ -4,10 +4,10 @@ import { hash } from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Iniciando siembra (seed) de datos reales para CGB Academy...');
+  console.log('🌱 Sembrando datos reales de Inducción y Onboarding para nuevos miembros de CGB Academy...');
 
   // -------------------------------------------------------------------------
-  // 1. Cuentas de Usuario de Prueba (Sin modificar roles ni credenciales)
+  // 1. Cuentas de Usuario de Prueba (Preservadas sin alteraciones)
   // -------------------------------------------------------------------------
   const claveAdmin = 'Admin2026!*';
   const claveColab = 'Colab2026!*';
@@ -49,287 +49,415 @@ async function main() {
     },
   });
 
-  console.log(`✅ Usuarios preservados: ${admin.email} y ${colaborador.email}`);
+  console.log(`✅ Usuarios preservados: ${admin.email} (ADMINISTRADOR) y ${colaborador.email} (COLABORADOR)`);
 
   // -------------------------------------------------------------------------
-  // 2. Limpieza de capacitaciones previas para recarga limpia
+  // 2. Limpieza de capacitaciones anteriores
   // -------------------------------------------------------------------------
-  console.log('🧹 Limpiando capacitaciones anteriores para reestructuración con datos reales...');
+  console.log('🧹 Limpiando capacitaciones anteriores para reestructurar el onboarding empresarial...');
   await prisma.slide.deleteMany({});
   await prisma.capacitacion.deleteMany({});
 
   // -------------------------------------------------------------------------
-  // 3. Catálogo de Capacitaciones Reales por Unidad Institucional
+  // 3. Capacitaciones de Inducción para Nuevos Miembros de la Empresa CGB
   // -------------------------------------------------------------------------
-  const capacitacionesData = [
+  const capacitacionesOnboarding = [
     // ═══════════════════════════════════════════════════════════════════════
-    // UNIDAD CIIP: Software, Inteligencia Artificial e Innovación
+    // ÁREA GENERAL / CORPORATIVA: Inducción de Ingreso a la Empresa CGB
     // ═══════════════════════════════════════════════════════════════════════
     {
-      titulo: 'Ingeniería de Software y Arquitectura Cloud con Next.js y MongoDB Atlas',
-      descripcion: 'Aprende los fundamentos de diseño arquitectónico moderno, APIs RESTful seguras, modelado de esquemas en MongoDB Atlas con Prisma ORM y despliegue continuo en entornos de producción.',
+      titulo: 'Inducción General: Bienvenida al Equipo CGB y Cultura Organizacional',
+      descripcion: 'Capacitación introductoria obligatoria para todo nuevo miembro que se incorpora a la empresa CGB. Conoce nuestra misión, estructura de unidades, pilares éticos y dinámica de trabajo.',
+      unidad: 'GENERAL',
+      ambito: 'PUBLICO',
+      estado: 'PUBLICADA',
+      publicadaEn: new Date('2026-10-01T08:00:00Z'),
+      categoria: 'Inducción',
+      duracionMin: 25,
+      icono: 'award',
+      creadoPor: admin.id,
+      slides: [
+        {
+          orden: 1,
+          titulo: '¡Te damos la bienvenida a la empresa CGB!',
+          contenido: 'Es un gusto tenerte con nosotros. En CGB integramos la innovación tecnológica, la ingeniería geológica-minera y las ciencias biomédicas para brindar soluciones de alto impacto en Latinoamérica.',
+          tipo: 'IMAGE',
+          imagenUrl: '/logos/cgb-logo.png',
+          botonTexto: null,
+          botonUrl: null,
+          lista: [
+            'Conoce nuestras 3 marcas especializadas: CIIP, GEOMINA y BIOMEDIC',
+            'Cultura basada en la excelencia técnica, colaboración y transparencia',
+            'Tu rol como nuevo integrante es clave en el crecimiento del equipo',
+          ],
+        },
+        {
+          orden: 2,
+          titulo: 'Nuestros Valores Corporativos y Pilares de Trabajo',
+          contenido: 'En CGB trabajamos bajo cuatro pilares que orientan nuestro día a día y la toma de decisiones en todos los proyectos de la empresa.',
+          tipo: 'TEXT',
+          imagenUrl: null,
+          botonTexto: null,
+          botonUrl: null,
+          lista: [
+            'Rigor y Calidad Técnica: Entregar siempre soluciones robustas y probadas',
+            'Innovación Continua: Adoptar y perfeccionar tecnologías de vanguardia',
+            'Compromiso y Responsabilidad Social con las comunidades y clientes',
+            'Trabajo en Equipo: Comunicación asertiva y respeto mutuo',
+          ],
+        },
+        {
+          orden: 3,
+          titulo: 'Código de Ética y Conducta Empresarial',
+          contenido: 'Todo miembro del equipo CGB se compromete a mantener los más altos estándares éticos, confidencialidad de la información y un ambiente laboral inclusivo y seguro.',
+          tipo: 'TEXT',
+          imagenUrl: null,
+          botonTexto: null,
+          botonUrl: null,
+          lista: [
+            'Protección estricta de datos confidenciales y propiedad intelectual de CGB',
+            'Tolerancia cero a cualquier forma de discriminación o acoso',
+            'Uso responsable de los equipos, cuentas institucionales y plataformas',
+          ],
+        },
+        {
+          orden: 4,
+          titulo: 'Siguiente Paso: Explora el Catálogo de Inducción por Unidad',
+          contenido: 'Has completado la inducción general. Ahora revisa la capacitación específica de tu área asignada (CIIP, GEOMINA o BIOMEDIC) para conocer tus procesos técnicos.',
+          tipo: 'INTERACTIVE',
+          imagenUrl: null,
+          botonTexto: 'Explorar Capacitaciones de tu Unidad',
+          botonUrl: '/capacitaciones',
+          lista: [
+            'Filtra por tu unidad de pertenencia en el catálogo',
+            'Coordina con tu líder de área tu plan de onboarding de la primera semana',
+          ],
+        },
+      ],
+    },
+    {
+      titulo: 'Políticas Internas, Herramientas Digitales y Canales de Comunicación CGB',
+      descripcion: 'Guía práctica sobre el ecosistema de herramientas de la empresa: correo institucional, gestión de tareas en Jira/Kanban, horarios, solicitudes de soporte y canales oficiales.',
+      unidad: 'GENERAL',
+      ambito: 'PUBLICO',
+      estado: 'PUBLICADA',
+      publicadaEn: new Date('2026-10-02T09:00:00Z'),
+      categoria: 'Inducción',
+      duracionMin: 20,
+      icono: 'layout',
+      creadoPor: admin.id,
+      slides: [
+        {
+          orden: 1,
+          titulo: 'Herramientas Digitales de la Empresa',
+          contenido: 'Para asegurar una coordinación fluida y eficiente, en CGB estandarizamos el uso de plataformas para la comunicación diaria y seguimiento de entregas.',
+          tipo: 'IMAGE',
+          imagenUrl: '/logos/cgb-logo.png',
+          botonTexto: null,
+          botonUrl: null,
+          lista: [
+            'Correo Institucional (@cgb.latam) para comunicaciones formales',
+            'Jira y Tableros Kanban para la asignación y avance de tareas',
+            'GitHub Enterprise para el versionamiento y revisión de código',
+          ],
+        },
+        {
+          orden: 2,
+          titulo: 'Políticas de Horario, Asistencia y Trabajo Colaborativo',
+          contenido: 'Respetamos los tiempos del equipo mediante una gestión basada en objetivos, entregas por sprints y puntualidad en las reuniones de sincronización.',
+          tipo: 'TEXT',
+          imagenUrl: null,
+          botonTexto: null,
+          botonUrl: null,
+          lista: [
+            'Sincronización diaria breve (Daily) para reportar avances y bloqueos',
+            'Registro oportuno de actividades en las tarjetas de trabajo',
+            'Canales de solicitud de permisos y soporte administrativo',
+          ],
+        },
+        {
+          orden: 3,
+          titulo: 'Mesa de Ayuda y Soporte Interno',
+          contenido: 'Si requieres accesos, configuración de licencias o equipos de cómputo, nuestro equipo de soporte técnico institucional te asistirá de inmediato.',
+          tipo: 'INTERACTIVE',
+          imagenUrl: null,
+          botonTexto: 'Contactar Soporte Interno CGB',
+          botonUrl: 'https://cgb.latam/soporte',
+          lista: [
+            'Canal de soporte de TI para cuentas y permisos de plataforma',
+            'Área de Recursos Humanos para consultas sobre tu incorporación',
+          ],
+        },
+      ],
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // UNIDAD CIIP LATAM: Onboarding para nuevos miembros de Software y TI
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      titulo: 'Onboarding Técnico CIIP: Estándares de Ingeniería de Software y Flujo de Trabajo en CGB',
+      descripcion: 'Inducción técnica para nuevos desarrolladores e ingenieros de software de la unidad CIIP: estándares de código TypeScript, arquitectura Next.js, bases de datos Atlas y flujo de Git.',
       unidad: 'CIIP',
       ambito: 'PUBLICO',
       estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-01T10:00:00Z'),
+      publicadaEn: new Date('2026-10-02T11:30:00Z'),
       categoria: 'Estudiantes',
-      duracionMin: 45,
+      duracionMin: 35,
       icono: 'code',
       creadoPor: admin.id,
       slides: [
         {
           orden: 1,
-          titulo: 'Bienvenida a la Unidad CIIP',
-          contenido: 'El Centro de Investigación e Innovación Productiva (CIIP) lidera iniciativas tecnológicas de vanguardia. En esta capacitación dominarás el ciclo completo de desarrollo de software escalable.',
+          titulo: 'Bienvenida al Área de Desarrollo y Software CIIP',
+          contenido: 'La unidad CIIP es responsable del desarrollo, mantenimiento y evolución de las plataformas digitales y sistemas empresariales de CGB.',
           tipo: 'IMAGE',
           imagenUrl: '/logos/recortados/ciip-logo.png',
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Arquitectura orientada a componentes desacoplados',
-            'Modelado y migración de esquemas en MongoDB Atlas',
-            'Buenas prácticas de seguridad, CORS y cookies HTTPS',
+            'Stack tecnológico estándar: Next.js (App Router), TypeScript y Prisma',
+            'Persistencia escalable con MongoDB Atlas y esquemas tipados',
+            'Arquitectura orientada a contratos BDD y cobertura con pruebas unitarias',
           ],
         },
         {
           orden: 2,
-          titulo: 'Patrones Arquitectónicos y Prisma ORM',
-          contenido: 'Implementamos el patrón repositorio y separación estricta de capas para garantizar que los modelos de base de datos se mantengan aislados de la lógica de presentación.',
+          titulo: 'Flujo de Ramas y Buenas Prácticas en Git',
+          contenido: 'Para mantener la integridad del repositorio, cada nuevo desarrollador sigue el protocolo de ramas de la empresa antes de solicitar la integración de sus cambios.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Generación determinística de clientes con prisma generate',
-            'Manejo seguro de conexiones agrupadas (Connection Pooling)',
-            'Tipado estricto de extremo a extremo con TypeScript',
+            'Trabajar en tu rama personal asignada (ej. nombre-apellido)',
+            'Escribir commits semánticos: feat(modulo), fix(auth), test(catalogo)',
+            'Garantizar que npm test y npm run lint pasen al 100% antes de solicitar merge',
           ],
         },
         {
           orden: 3,
-          titulo: 'Despliegue Continuo y Monitoreo',
-          contenido: 'Los estándares de la unidad CIIP exigen despliegues reproducibles mediante Nixpacks y contenedores ligeros en Dokploy, con variables de entorno protegidas.',
+          titulo: 'Lineamientos de Seguridad y Variables de Entorno',
+          contenido: 'Nunca se deben subir credenciales o secretos al repositorio. Los entornos locales y de producción se configuran mediante variables protegidas.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Pipeline automatizado de pruebas unitarias y de integración',
-            'Health checks continuos en el endpoint /api/health',
-            'Políticas de revocación y expiración de tokens JWT',
+            'Uso de AUTH_SECRET y claves JWT de alta entropía (>= 32 bytes)',
+            'Protección de cookies con atributos HttpOnly y SameSite estricto',
+            'Sanitización de entradas de usuario para prevenir vulnerabilidades',
           ],
         },
         {
           orden: 4,
-          titulo: 'Taller Práctico y Repositorio de Código',
-          contenido: 'Pon a prueba tus conocimientos clonando la plantilla base y ejecutando la suite de validación BDD. Puedes acceder a los lineamientos y repositorio oficial.',
+          titulo: 'Configura tu Entorno de Desarrollo Local',
+          contenido: 'Sigue la guía técnica del repositorio institucional de CGB para clonar el proyecto, instalar dependencias e iniciar tu servidor de desarrollo.',
           tipo: 'INTERACTIVE',
           imagenUrl: null,
-          botonTexto: 'Consultar Guía Técnica CIIP',
-          botonUrl: 'https://cgb.latam/ciip/docs',
+          botonTexto: 'Ver Manual de Instalación CIIP',
+          botonUrl: 'https://cgb.latam/ciip/setup-dev',
           lista: [
-            'Ejecutar npm test para verificar contratos BDD',
-            'Configurar DATABASE_URL y AUTH_SECRET localmente',
-            'Realizar un Pull Request siguiendo la guía de estilo',
+            'Ejecutar npm install y npx prisma generate',
+            'Ejecutar npm test para verificar los 68 contratos BDD',
+            'Iniciar el servidor con npm run dev en http://localhost:3000',
           ],
         },
       ],
     },
     {
-      titulo: 'Inteligencia Artificial Aplicada: Modelos LLM y Procesamiento del Lenguaje',
-      descripcion: 'Capacitación integral para docentes sobre integración de modelos de lenguaje natural, prompting estructurado, evaluación de sesgos y aplicaciones prácticas en entornos académicos.',
+      titulo: 'Inducción a la Infraestructura Cloud, Despliegues y Monitoreo en CIIP',
+      descripcion: 'Capacitación para nuevos miembros del equipo sobre la infraestructura VPS, automatización con Dokploy/Nixpacks y monitoreo de salud de servicios en producción.',
       unidad: 'CIIP',
       ambito: 'PUBLICO',
       estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-02T14:30:00Z'),
+      publicadaEn: new Date('2026-10-03T10:00:00Z'),
       categoria: 'Docentes',
-      duracionMin: 60,
+      duracionMin: 30,
       icono: 'cpu',
       creadoPor: admin.id,
       slides: [
         {
           orden: 1,
-          titulo: 'Introducción a la Inteligencia Artificial Generativa',
-          contenido: 'Comprende la evolución de los modelos transformadores y cómo los LLMs procesan el contexto semántico para asistir en la docencia e investigación.',
+          titulo: 'Infraestructura y Servidores de Producción',
+          contenido: 'Las aplicaciones de CGB Academy operan sobre servidores VPS optimizados bajo contenedores ligeros para maximizar el rendimiento con recursos controlados.',
           tipo: 'IMAGE',
           imagenUrl: '/logos/recortados/ciip-logo.png',
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Mecanismos de atención y contexto de ventana',
-            'Diferencias entre fine-tuning y Retrieval-Augmented Generation (RAG)',
-            'Políticas de privacidad y confidencialidad de datos',
+            'Despliegues automáticos a través de Dokploy y Nixpacks',
+            'Configuración de Node.js runtime versión 20 LTS',
+            'Manejo de dominios y certificados SSL/TLS automáticos con Let\'s Encrypt',
           ],
         },
         {
           orden: 2,
-          titulo: 'Estrategias de Prompting Estructurado',
-          contenido: 'Diseño sistemático de instrucciones: Few-Shot Prompting, Chain-of-Thought y generación de respuestas en formatos estrictos como JSON estructurado.',
+          titulo: 'Endpoint de Health Check y Métricas Operativas',
+          contenido: 'Todos los servicios de CGB exponen endpoints estandarizados para que las herramientas de supervisión verifiquen el estado en tiempo real.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Delimitación de roles y restricciones de salida',
-            'Validación sintáctica de respuestas automáticas',
-            'Prevención de inyecciones de prompts en aplicaciones web',
+            'Ruta /api/health para verificar latencia y conexión con la base de datos',
+            'Registro centralizado de logs para depuración de incidencias',
+            'Políticas de reinicio automático ante excepciones no controladas',
           ],
         },
         {
           orden: 3,
-          titulo: 'Recursos Didácticos y Casos de Estudio',
-          contenido: 'Accede al repositorio de herramientas docentes preparadas por la Unidad CIIP para la elaboración interactiva de rúbricas y material pedagógico.',
+          titulo: 'Protocolo de Despliegue a Producción',
+          contenido: 'Revisa la lista de verificación (checklist) obligatoria que debe validarse antes de realizar un pase a producción en la rama principal.',
           tipo: 'INTERACTIVE',
           imagenUrl: null,
-          botonTexto: 'Acceder a Recursos Docentes',
-          botonUrl: 'https://cgb.latam/ciip/ia-docentes',
+          botonTexto: 'Ver Checklist de Despliegue',
+          botonUrl: 'https://cgb.latam/ciip/deploy-checklist',
           lista: [
-            'Guías de citación de contenido generado por IA',
-            'Plantillas de evaluación basadas en rúbricas estandarizadas',
+            'Verificación de variables de entorno en el panel de Dokploy',
+            'Validación del build de Next.js sin errores de TypeScript',
           ],
         },
       ],
     },
 
     // ═══════════════════════════════════════════════════════════════════════
-    // UNIDAD GEOMINA: Geología, Topografía y Minería
+    // UNIDAD GEOMINA LATAM: Onboarding para nuevos miembros de Minería y Geología
     // ═══════════════════════════════════════════════════════════════════════
     {
-      titulo: 'Seguridad Operacional y Prevención de Riesgos en Minería Moderna',
-      descripcion: 'Protocolos indispensables de seguridad en mina según el D.S. 024-2016-EM, matriz IPERC continuo, uso correcto de EPPs y planes de respuesta a emergencias.',
+      titulo: 'Inducción Operacional GEOMINA: Normativa de Seguridad y Protocolos de Trabajo en Campo',
+      descripcion: 'Capacitación obligatoria para nuevos ingenieros, geólogos y practicantes de la unidad GEOMINA: lineamientos de seguridad minera, uso de EPPs y matriz IPERC.',
       unidad: 'GEOMINA',
       ambito: 'PUBLICO',
       estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-03T08:15:00Z'),
+      publicadaEn: new Date('2026-10-03T15:00:00Z'),
       categoria: 'Inducción',
-      duracionMin: 40,
+      duracionMin: 35,
       icono: 'shield',
       creadoPor: admin.id,
       slides: [
         {
           orden: 1,
-          titulo: 'Inducción de Seguridad Minera GEOMINA',
-          contenido: 'La seguridad es el valor primordial de la Unidad GEOMINA. Cero accidentes es nuestra meta permanente en cada frente de exploración y explotación.',
+          titulo: 'Seguridad en Operaciones GEOMINA',
+          contenido: 'En la unidad GEOMINA de la empresa CGB la vida y la salud de nuestro personal son lo primero. Cero incidentes es el estándar innegociable en campo.',
           tipo: 'IMAGE',
           imagenUrl: '/logos/recortados/geomina-logo.png',
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Marco normativo del D.S. 024-2016-EM y modificatorias',
-            'Reglas de oro de seguridad en operaciones mineras',
-            'Derecho a la negativa al trabajo inseguro',
+            'Cumplimiento estricto del Reglamento de Seguridad Minera (D.S. 024-2016-EM)',
+            'Conocimiento y firma diaria de la matriz IPERC Continuo',
+            'Uso de Equipos de Protección Personal (EPP) certificados',
           ],
         },
         {
           orden: 2,
-          titulo: 'Identificación de Peligros y Evaluación de Riesgos (IPERC)',
-          contenido: 'El IPERC continuo debe ser completado antes de iniciar cualquier labor crítica en campo o labor subterránea.',
+          titulo: 'Procedimiento IPERC Continuo antes de Iniciar Labores',
+          contenido: 'Antes de realizar cualquier muestreo, mapeo o inspección geológica en terreno, todo miembro debe completar la evaluación de peligros y controles.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Evaluación de la probabilidad y severidad del riesgo',
-            'Jerarquía de controles: Eliminación, Sustitución, Ingeniería, Administrativo y EPP',
-            'Reporte inmediato de condiciones y actos subestándar',
+            'Identificar peligros del entorno (caída de rocas, taludes, clima extremo)',
+            'Evaluar el nivel de riesgo y aplicar la jerarquía de controles de CGB',
+            'Comunicar de inmediato cualquier condición de riesgo a tu supervisor',
           ],
         },
         {
           orden: 3,
-          titulo: 'Equipos de Protección Personal (EPP) Específicos',
-          contenido: 'Todo colaborador y estudiante debe portar los elementos homologados según la zona de trabajo.',
+          titulo: 'Equipos y Herramientas Homologadas en GEOMINA',
+          contenido: 'La empresa provee los instrumentos y elementos de seguridad necesarios para las labores de exploración y topografía.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Casco de seguridad tipo ala completa con barbiquejo',
-            'Botas con puntera de acero y suela dieléctrica antideslizante',
-            'Respirador con filtros para polvo y gases P100',
-            'Protector auditivo tipo copa o tapón certificado',
+            'Casco de seguridad minera con barbiquejo y chaleco de alta visibilidad',
+            'Calzado de seguridad con suela antideslizante para terreno agreste',
+            'GPS geodésico, brújula geológica y martillo de geólogo debidamente custodiados',
           ],
         },
         {
           orden: 4,
-          titulo: 'Protocolo de Emergencias y Canales de Alerta',
-          contenido: 'Familiarízate con las rutas de escape, estaciones de refugio y números de auxilio rápido ante sismos, desprendimiento de rocas o fugas de gas.',
+          titulo: 'Manual de Emergencias y Canales de Rescate',
+          contenido: 'Familiarízate con las frecuencias de radio, zonas de seguridad y protocolos de primeros auxilios en zonas de campo remoto.',
           tipo: 'INTERACTIVE',
           imagenUrl: null,
-          botonTexto: 'Descargar Manual de Evacuación',
-          botonUrl: 'https://cgb.latam/geomina/seguridad',
+          botonTexto: 'Descargar Protocolo de Emergencias GEOMINA',
+          botonUrl: 'https://cgb.latam/geomina/seguridad-campo',
           lista: [
-            'Identificación de refugios mineros y líneas de vida',
-            'Comunicación radial en canal de emergencia asignado',
+            'Puntos de encuentro y botiquín de primeros auxilios de la cuadrilla',
+            'Procedimiento de comunicación satelital y reporte de incidentes',
           ],
         },
       ],
     },
     {
-      titulo: 'Topografía Digital y Sistemas de Información Geográfica (QGIS)',
-      descripcion: 'Manejo de modelos digitales de elevación (DEM), georreferenciación en coordenadas UTM WGS84, fotogrametría con drones y cartografía geológica aplicada.',
+      titulo: 'Protocolo de Gestión de Datos Geoespaciales, Cartografía y QGIS en GEOMINA',
+      descripcion: 'Inducción técnica sobre el manejo del repositorio cartográfico de la empresa CGB: estándares de coordenadas UTM WGS84, simbología geológica y capas SIG.',
       unidad: 'GEOMINA',
       ambito: 'PUBLICO',
       estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-04T11:00:00Z'),
+      publicadaEn: new Date('2026-10-04T08:30:00Z'),
       categoria: 'Estudiantes',
-      duracionMin: 50,
+      duracionMin: 30,
       icono: 'map',
       creadoPor: admin.id,
       slides: [
         {
           orden: 1,
-          titulo: 'Fundamentos de SIG y Cartografía Digital',
-          contenido: 'La unidad GEOMINA integra tecnologías geoespaciales para la planificación territorial, delimitación de concesiones y monitoreo geológico.',
+          titulo: 'Estándares Cartográficos de la Empresa',
+          contenido: 'Todos los planos, mapas temáticos y modelos de elevación generados en GEOMINA deben respetar la nomenclatura institucional y proyecciones geodésicas vigentes.',
           tipo: 'IMAGE',
           imagenUrl: '/logos/recortados/geomina-logo.png',
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Sistemas de coordenadas de referencia (CRS) y proyecciones UTM',
-            'Estructuras de datos vectoriales (Shapefile, GeoJSON) y raster',
-            'Importación de datos de campo tomados con GPS diferencial',
+            'Sistema de Referencia: WGS84 Zona 18S / 19S según la ubicación del proyecto',
+            'Nomenclatura estandarizada de capas vectoriales (Shapefile y GeoPackage)',
+            'Plantilla de membrete oficial de CGB para entrega de planos a clientes',
           ],
         },
         {
           orden: 2,
-          titulo: 'Procesamiento de Modelos Digitales de Terreno (DEM)',
-          contenido: 'Generación de curvas de nivel, cálculo de pendientes, perfiles longitudinales y estimación de volúmenes de movimiento de tierras.',
+          titulo: 'Flujo de Almacenamiento y Control de Versiones SIG',
+          contenido: 'Los archivos geoespaciales de los proyectos de CGB se respaldan en el repositorio institucional estructurado por carpetas de concesión y fecha.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Interpolación de nubes de puntos LiDAR y fotogrametría',
-            'Análisis hidrológico de cuencas y drenajes superficiales',
-            'Diseño de mapas temáticos con simbología normalizada',
+            'Carpeta 01_RAW para datos crudos de GPS y vuelos fotogramétricos',
+            'Carpeta 02_PROCESSED para modelos DEM interpolados y curvas de nivel',
+            'Carpeta 03_MAPS para salidas gráficas en formato PDF de alta resolución',
           ],
         },
         {
           orden: 3,
-          titulo: 'Descarga de Capas y Datos de Práctica',
-          contenido: 'Descarga el paquete cartográfico oficial de la Unidad GEOMINA para realizar los ejercicios del taller.',
+          titulo: 'Descargar Plantilla Oficial de QGIS de la Empresa',
+          contenido: 'Configura tu estación de trabajo con la simbología, estilos y membretes corporativos preconfigurados.',
           tipo: 'INTERACTIVE',
           imagenUrl: null,
-          botonTexto: 'Descargar Capas QGIS de Prueba',
-          botonUrl: 'https://cgb.latam/geomina/gis-datasets',
+          botonTexto: 'Obtener Plantilla QGIS Institucional',
+          botonUrl: 'https://cgb.latam/geomina/plantilla-qgis',
           lista: [
-            'Proyecto base .qgz configurado con simbología institucional',
-            'Capas geológicas e hidrológicas de libre distribución',
+            'Archivo .qgz con paleta de colores oficial de GEOMINA',
+            'Biblioteca de estilos .qml para litologías y fallas estructurales',
           ],
         },
       ],
     },
 
     // ═══════════════════════════════════════════════════════════════════════
-    // UNIDAD BIOMEDIC: Tecnología Médica y Bioseguridad
+    // UNIDAD BIOMEDIC: Onboarding para nuevos miembros de Tecnología Médica
     // ═══════════════════════════════════════════════════════════════════════
     {
-      titulo: 'Gestión y Mantenimiento Preventivo de Equipamiento Hospitalario',
-      descripcion: 'Metodología de inspección técnica, calibración de monitores multiparámetro, seguridad eléctrica bajo la norma IEC 60601 y trazabilidad metrológica hospitalaria.',
+      titulo: 'Inducción Técnica BIOMEDIC: Protocolos de Calidad y Mantenimiento de Equipamiento Hospitalario',
+      descripcion: 'Capacitación para nuevos ingenieros y técnicos biomédicos de la empresa CGB: estándares de inspección técnica, seguridad eléctrica hospitalaria y fichas de servicio.',
       unidad: 'BIOMEDIC',
       ambito: 'PUBLICO',
       estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-04T16:45:00Z'),
+      publicadaEn: new Date('2026-10-04T14:00:00Z'),
       categoria: 'Estudiantes',
       duracionMin: 35,
       icono: 'activity',
@@ -337,259 +465,130 @@ async function main() {
       slides: [
         {
           orden: 1,
-          titulo: 'Mantenimiento Biomédico Hospitalario',
-          contenido: 'La Unidad BIOMEDIC vela por la disponibilidad, precisión y seguridad clínica de los dispositivos médicos en áreas críticas como UCI, quirófanos y emergencias.',
+          titulo: 'Área de Ingeniería Biomédica CGB',
+          contenido: 'En la unidad BIOMEDIC nos especializamos en brindar soporte técnico de alta precisión, calibración metrológica y mantenimiento preventivo a clínicas y hospitales.',
           tipo: 'IMAGE',
           imagenUrl: '/logos/recortados/biomedic-logo.png',
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Clasificación por riesgo de dispositivos (Clase I, IIa, IIb, III)',
-            'Protocolo de seguridad eléctrica hospitalaria IEC 60601-1',
-            'Gestión de inventario de equipos y hoja de vida técnica',
+            'Mantenimiento preventivo y correctivo según manuales de fabricante',
+            'Pruebas de seguridad eléctrica bajo estándar internacional IEC 60601',
+            'Emisión de certificados técnicos de operatividad con trazabilidad',
           ],
         },
         {
           orden: 2,
-          titulo: 'Calibración y Pruebas Funcionales',
-          contenido: 'Inspección de parámetros vitales: ECG, presión no invasiva (NIBP), saturación de oxígeno (SpO2) y capnografía con simuladores de paciente calibrados.',
+          titulo: 'Procedimiento de Servicio Técnico en Instalaciones Clínicas',
+          contenido: 'Todo colaborador de BIOMEDIC debe seguir el protocolo de ingreso, intervención y entrega de equipos en centros hospitalarios.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Medición de corrientes de fuga a tierra y de chasis',
-            'Verificación de curvas de respuesta y tiempos de alarma',
-            'Etiquetado metrológico con fecha de vencimiento visible',
+            'Coordinar previamente con el jefe de servicio o biomédico del hospital',
+            'Portar indumentaria institucional limpia y credencial visible de CGB',
+            'Realizar checklist funcional antes y después de cada mantenimiento',
           ],
         },
         {
           orden: 3,
-          titulo: 'Protocolos Clínicos y Bitácoras de Entrega',
-          contenido: 'Consulta las guías de mantenimiento preventivo y los formatos de recepción y conformidad de equipos médicos.',
+          titulo: 'Llenado de Fichas Técnicas e Informes de Servicio',
+          contenido: 'Cada intervención debe registrarse en la plataforma digital de BIOMEDIC para emitir el informe técnico correspondiente al cliente.',
           tipo: 'INTERACTIVE',
           imagenUrl: null,
-          botonTexto: 'Ver Formatos de Mantenimiento',
-          botonUrl: 'https://cgb.latam/biomedic/protocolos',
+          botonTexto: 'Ver Formatos de Mantenimiento BIOMEDIC',
+          botonUrl: 'https://cgb.latam/biomedic/formatos-servicio',
           lista: [
-            'Llenado de fichas técnicas de inspección preventiva',
-            'Procedimiento de baja y disposición final de equipos',
+            'Registro de número de serie, marca, modelo y ubicación del equipo',
+            'Firma de conformidad del responsable del área hospitalaria',
           ],
         },
       ],
     },
     {
-      titulo: 'Bioseguridad, Esterilización y Normativa Sanitaria en Laboratorios',
-      descripcion: 'Estándares de biocustodia, clasificación de niveles de contención (BSL-1 a BSL-3), manejo de autoclaves y gestión segura de residuos biocontaminados.',
+      titulo: 'Bioseguridad y Procedimientos de Trabajo Seguro en Laboratorios e Instalaciones de Salud',
+      descripcion: 'Capacitación para nuevos miembros sobre bioprotección, uso de barreras primarias, manejo de autoclaves y protocolos de desinfección en áreas críticas.',
       unidad: 'BIOMEDIC',
       ambito: 'PUBLICO',
       estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-05T09:20:00Z'),
+      publicadaEn: new Date('2026-10-05T10:00:00Z'),
       categoria: 'Docentes',
-      duracionMin: 45,
+      duracionMin: 30,
       icono: 'shield',
       creadoPor: admin.id,
       slides: [
         {
           orden: 1,
-          titulo: 'Bioseguridad y Control de Infecciones',
-          contenido: 'Normativas de la OMS y el MINSA para salvaguardar la integridad de docentes, investigadores y alumnos en laboratorios de biotecnología médica.',
+          titulo: 'Protocolo de Bioseguridad en Ambientes de Salud',
+          contenido: 'La protección de nuestro personal técnico frente a agentes biológicos y sustancias químicas es prioritaria en cada servicio realizado por BIOMEDIC.',
           tipo: 'IMAGE',
           imagenUrl: '/logos/recortados/biomedic-logo.png',
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Barreras primarias y secundarias de contención',
-            'Cabinas de flujo laminar y seguridad biológica clase II',
-            'Protocolos de desinfección química y esterilización por vapor',
+            'Uso obligatorio de guantes de nitrilo, mascarilla N95/FFP2 y bata descartable',
+            'Higiene de manos conforme a las directrices de la OMS',
+            'Desinfección previa del equipamiento médico antes de su manipulación',
           ],
         },
         {
           orden: 2,
-          titulo: 'Segregación de Residuos Biocontaminados',
-          contenido: 'Código de colores y rotulado obligatorio para recipientes de residuos punzocortantes, muestras biológicas y sustancias químicas controladas.',
+          titulo: 'Segregación y Manejo de Residuos Biocontaminados',
+          contenido: 'Cumplimiento riguroso de la norma técnica de gestión integral de residuos sólidos en establecimientos de salud.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Bolsas rojas para residuos biocontaminados infecciosos',
-            'Contenedores rígidos imperforables para agujas y bisturís',
-            'Tratamiento previo mediante autoclave antes de disposición externa',
+            'Disposición en bolsas rojas para material en contacto con fluidos biológicos',
+            'Contenedores rígidos de bioseguridad para elementos punzocortantes',
+            'Transporte seguro en recipientes herméticos debidamente identificados',
           ],
         },
         {
           orden: 3,
-          titulo: 'Certificación y Evaluación de Bioseguridad',
-          contenido: 'Completa la evaluación de conocimientos para obtener la acreditación de ingreso a los laboratorios de la Unidad BIOMEDIC.',
+          titulo: 'Evaluación y Acreditación de Bioseguridad',
+          contenido: 'Completa la comprobación de conocimientos de bioseguridad requerida por la empresa antes de tu primera salida a campo.',
           tipo: 'INTERACTIVE',
           imagenUrl: null,
-          botonTexto: 'Iniciar Evaluación de Bioseguridad',
-          botonUrl: 'https://cgb.latam/biomedic/evaluacion',
+          botonTexto: 'Realizar Test de Bioseguridad',
+          botonUrl: 'https://cgb.latam/biomedic/test-bioseguridad',
           lista: [
-            'Cuestionario interactivo de 10 preguntas',
-            'Constancia digital con validez de 1 año académico',
+            'Cuestionario formativo con retroalimentación instantánea',
+            'Habilitación técnica para intervenciones en quirófanos y UCI',
           ],
         },
       ],
     },
 
     // ═══════════════════════════════════════════════════════════════════════
-    // UNIDAD GENERAL: Inducción Institucional y Cultura CGB
+    // CAPACITACIÓN INTERNA: Exclusiva para Colaboradores con Sesión Activa
     // ═══════════════════════════════════════════════════════════════════════
     {
-      titulo: 'Inducción Institucional CGB: Cultura, Misión y Valores Corporativos',
-      descripcion: 'Conoce la historia, estructura de las unidades especializadas, políticas éticas de transparencia y beneficios para los miembros de la comunidad CGB Academy.',
-      unidad: 'GENERAL',
-      ambito: 'PUBLICO',
-      estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-05T12:00:00Z'),
-      categoria: 'Inducción',
-      duracionMin: 30,
-      icono: 'award',
-      creadoPor: admin.id,
-      slides: [
-        {
-          orden: 1,
-          titulo: 'Bienvenido a CGB Academy',
-          contenido: 'CGB Academy es la plataforma insignia de formación continua e inducción institucional que articula el conocimiento de CIIP, GEOMINA y BIOMEDIC.',
-          tipo: 'IMAGE',
-          imagenUrl: '/logos/cgb-logo.png',
-          botonTexto: null,
-          botonUrl: null,
-          lista: [
-            'Excelencia técnica y rigor metodológico',
-            'Compromiso con el desarrollo sostenible regional',
-            'Innovación continua aplicada a problemas reales',
-          ],
-        },
-        {
-          orden: 2,
-          titulo: 'Estructura de Unidades y Canales de Comunicación',
-          contenido: 'Cada unidad cuenta con coordinadores especializados y canales directos de soporte para asistirte en tu trayectoria formativa.',
-          tipo: 'TEXT',
-          imagenUrl: null,
-          botonTexto: null,
-          botonUrl: null,
-          lista: [
-            'CIIP: Software, Inteligencia Artificial e Innovación Digital',
-            'GEOMINA: Geología, Topografía y Seguridad en Minería',
-            'BIOMEDIC: Equipamiento Médico, Bioseguridad y Telemedicina',
-            'Mesa de Ayuda y Soporte Técnico Institucional',
-          ],
-        },
-        {
-          orden: 3,
-          titulo: 'Código de Ética y Convivencia',
-          contenido: 'Principios fundamentales de respeto mutuo, honestidad académica, no discriminación y protección estricta de la propiedad intelectual.',
-          tipo: 'TEXT',
-          imagenUrl: null,
-          botonTexto: null,
-          botonUrl: null,
-          lista: [
-            'Integridad en evaluaciones y proyectos colaborativos',
-            'Uso responsable de los recursos de cómputo y laboratorios',
-            'Canales confidenciales de consulta y sugerencias',
-          ],
-        },
-        {
-          orden: 4,
-          titulo: 'Exploración del Catálogo de Capacitaciones',
-          contenido: '¡Felicitaciones por culminar la inducción inicial! Explora las capacitaciones disponibles en todas las unidades y continúa aprendiendo.',
-          tipo: 'INTERACTIVE',
-          imagenUrl: null,
-          botonTexto: 'Explorar Todo el Catálogo',
-          botonUrl: '/capacitaciones',
-          lista: [
-            'Filtra cursos por unidad y categoría de interés',
-            'Sigue tu avance en cualquier dispositivo móvil o de escritorio',
-          ],
-        },
-      ],
-    },
-    {
-      titulo: 'Metodologías Ágiles Scrum y Gestión Visual con Tableros Kanban',
-      descripcion: 'Marco de trabajo para la gestión ágil de proyectos: definición de historias de usuario con criterios BDD, estimación con Planning Poker y límites de trabajo en curso (WIP).',
-      unidad: 'GENERAL',
-      ambito: 'PUBLICO',
-      estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-06T09:00:00Z'),
-      categoria: 'Docentes',
-      duracionMin: 40,
-      icono: 'layout',
-      creadoPor: admin.id,
-      slides: [
-        {
-          orden: 1,
-          titulo: 'Fundamentos de la Agilidad y Scrum',
-          contenido: 'Descubre cómo los marcos ágiles promueven entregas continuas de valor, transparencia y adaptación rápida a los cambios.',
-          tipo: 'IMAGE',
-          imagenUrl: '/logos/cgb-logo.png',
-          botonTexto: null,
-          botonUrl: null,
-          lista: [
-            'Roles clave: Product Owner, Scrum Master y Equipo de Desarrollo',
-            'Ceremonias: Sprint Planning, Daily Scrum, Review y Retrospectiva',
-            'Artefactos: Product Backlog, Sprint Backlog e Incremento',
-          ],
-        },
-        {
-          orden: 2,
-          titulo: 'Historias de Usuario y Criterios de Aceptación BDD',
-          contenido: 'Redacción de requerimientos bajo la sintaxis Given-When-Then (Dado / Cuando / Entonces) para asegurar que el código cumpla exactamente con lo esperado.',
-          tipo: 'TEXT',
-          imagenUrl: null,
-          botonTexto: null,
-          botonUrl: null,
-          lista: [
-            'Formato: Como [rol], quiero [funcionalidad] para [beneficio]',
-            'Criterios de aceptación verificables mediante pruebas automatizadas',
-            'Reducción de ambigüedades entre el equipo y los interesados',
-          ],
-        },
-        {
-          orden: 3,
-          titulo: 'Guía de Dinámicas Ágiles CGB',
-          contenido: 'Accede a la plantilla oficial de Jira y tableros Kanban configurados con los límites WIP del equipo.',
-          tipo: 'INTERACTIVE',
-          imagenUrl: null,
-          botonTexto: 'Ver Tablero Ágil de Ejemplo',
-          botonUrl: 'https://cgb.latam/agile-guide',
-          lista: [
-            'Límites WIP estrictos para evitar cuellos de botella',
-            'Métricas de flujo: Lead Time, Cycle Time y Diagrama de Flujo Acumulado',
-          ],
-        },
-      ],
-    },
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // CAPACITACIÓN INTERNA (Para verificar filtros de seguridad en catálogo)
-    // ═══════════════════════════════════════════════════════════════════════
-    {
-      titulo: 'Protocolo de Seguridad de la Información y Gestión de Accesos Internos',
-      descripcion: 'Lineamientos internos de auditoría, gestión de secretos, rotación de claves y resguardo de datos sensibles de la plataforma CGB.',
+      titulo: 'Protocolo Interno: Resguardo de Información Confidencial y Ciberseguridad CGB',
+      descripcion: 'Directivas de seguridad digital interna para el personal de la empresa CGB: gestión de contraseñas, doble factor de autenticación y prevención de phishing.',
       unidad: 'GENERAL',
       ambito: 'INTERNO',
       estado: 'PUBLICADA',
-      publicadaEn: new Date('2026-10-06T11:00:00Z'),
+      publicadaEn: new Date('2026-10-05T15:00:00Z'),
       categoria: 'Inducción',
-      duracionMin: 25,
+      duracionMin: 20,
       icono: 'lock',
       creadoPor: admin.id,
       slides: [
         {
           orden: 1,
-          titulo: 'Confidencialidad y Seguridad Interna',
-          contenido: 'Esta capacitación contiene directivas de cumplimiento obligatorio para administradores y colaboradores autorizados.',
+          titulo: 'Ciberseguridad y Protección de Datos en CGB',
+          contenido: 'Directivas internas de cumplimiento estricto para colaboradores de todas las unidades de la empresa.',
           tipo: 'TEXT',
           imagenUrl: null,
           botonTexto: null,
           botonUrl: null,
           lista: [
-            'Políticas de autenticación de dos factores',
-            'Manejo seguro de variables de entorno en producción',
-            'Protocolo ante detección de accesos no autorizados',
+            'Uso mandatorio de contraseñas robustas y gestor seguro institucional',
+            'Activación de autenticación en dos pasos (2FA) en todos los servicios de la empresa',
+            'Reporte inmediato ante sospechas de correos fraudulentos o enlaces no verificados',
           ],
         },
       ],
@@ -597,9 +596,9 @@ async function main() {
   ];
 
   // -------------------------------------------------------------------------
-  // 4. Inserción de Capacitaciones y Diapositivas en Base de Datos
+  // 4. Inserción en la base de datos MongoDB Atlas
   // -------------------------------------------------------------------------
-  for (const cap of capacitacionesData) {
+  for (const cap of capacitacionesOnboarding) {
     const { slides, ...datosCapacitacion } = cap;
     const creada = await prisma.capacitacion.create({
       data: datosCapacitacion,
@@ -616,10 +615,10 @@ async function main() {
       }
     }
 
-    console.log(`  ➕ Capacitación creada: [${creada.unidad}] "${creada.titulo}" (${slides.length} slides, ${creada.ambito})`);
+    console.log(`  ➕ Capacitación de Onboarding creada: [${creada.unidad}] "${creada.titulo}" (${slides.length} slides, ${creada.ambito})`);
   }
 
-  console.log('✨ Siembra de datos reales completada exitosamente.');
+  console.log('✨ Siembra de Inducción y Onboarding completada exitosamente en MongoDB Atlas.');
 }
 
 main()
