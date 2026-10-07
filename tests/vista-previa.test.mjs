@@ -4,8 +4,8 @@ import { Window } from 'happy-dom';
 import { consultarVistaPrevia } from '../src/lib/consultar-vista-previa.ts';
 
 const dom = new Window({ url: 'http://localhost/' });
-for (const nombre of ['window', 'document', 'navigator', 'HTMLElement', 'Node', 'Event', 'MouseEvent', 'KeyboardEvent', 'MutationObserver']) {
-  Object.defineProperty(globalThis, nombre, { configurable: true, value: nombre === 'window' ? dom : nombre === 'document' ? dom.document : dom[nombre] });
+for (const nombre of ['window', 'self', 'document', 'navigator', 'HTMLElement', 'Node', 'Event', 'MouseEvent', 'KeyboardEvent', 'MutationObserver']) {
+  Object.defineProperty(globalThis, nombre, { configurable: true, value: nombre === 'window' || nombre === 'self' ? dom : nombre === 'document' ? dom.document : dom[nombre] });
 }
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 const React = await import('react');

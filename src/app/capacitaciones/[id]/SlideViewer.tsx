@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import {
   calcularProgresoLectura,
   obtenerDireccionDeslizamiento,
@@ -109,14 +110,14 @@ export default function SlideViewer({ slides }: { slides: SlideVisor[] }) {
         <p style={{ margin: '0 0 10px', color: 'var(--brand-blue)', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase' }}>
           {slide.tipo}
         </p>
-        <h2 style={{ margin: '0 0 16px', color: 'var(--brand-navy)', fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 4vw, 32px)', lineHeight: 1.2 }}>
+        <h2 style={{ margin: '0 0 16px', color: 'var(--brand-navy)', fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 4vw, 32px)', lineHeight: 1.2, overflowWrap: 'anywhere' }}>
           {slide.titulo}
         </h2>
-        <p style={{ margin: 0, color: 'var(--text-primary)', fontSize: '16px', lineHeight: 1.75, whiteSpace: 'pre-wrap' }}>
+        <p style={{ margin: 0, color: 'var(--text-primary)', fontSize: '16px', lineHeight: 1.75, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>
           {slide.contenido}
         </p>
         {slide.lista.length > 0 && (
-          <ul style={{ display: 'grid', gap: '10px', margin: '20px 0 0', paddingLeft: '22px', color: 'var(--text-primary)', lineHeight: 1.6 }}>
+          <ul style={{ display: 'grid', gap: '10px', margin: '20px 0 0', paddingLeft: '22px', color: 'var(--text-primary)', lineHeight: 1.6, overflowWrap: 'anywhere' }}>
             {slide.lista.map((elemento, indice) => <li key={`${slide.id}-${indice}`}>{elemento}</li>)}
           </ul>
         )}
@@ -143,16 +144,25 @@ export default function SlideViewer({ slides }: { slides: SlideVisor[] }) {
         >
           Anterior
         </button>
-        <button
-          type="button"
-          className="visor-control"
-          aria-label="Ir a la diapositiva siguiente"
-          onClick={() => setSlideActual((actual) => obtenerSiguienteSlide(actual, totalSlides))}
-          disabled={slideActual === totalSlides}
-          style={{ border: 0, borderRadius: '999px', backgroundColor: 'var(--brand-navy)', color: '#FFFFFF', fontWeight: 700, cursor: slideActual === totalSlides ? 'not-allowed' : 'pointer', opacity: slideActual === totalSlides ? 0.55 : 1 }}
-        >
-          Siguiente
-        </button>
+        {slideActual === totalSlides ? (
+          <Link
+            href="/capacitaciones"
+            className="visor-control"
+            style={{ border: 0, borderRadius: '999px', backgroundColor: 'var(--brand-navy)', color: '#FFFFFF', fontWeight: 700, textDecoration: 'none' }}
+          >
+            Terminar capacitación
+          </Link>
+        ) : (
+          <button
+            type="button"
+            className="visor-control"
+            aria-label="Ir a la diapositiva siguiente"
+            onClick={() => setSlideActual((actual) => obtenerSiguienteSlide(actual, totalSlides))}
+            style={{ border: 0, borderRadius: '999px', backgroundColor: 'var(--brand-navy)', color: '#FFFFFF', fontWeight: 700, cursor: 'pointer' }}
+          >
+            Siguiente
+          </button>
+        )}
       </nav>
     </section>
   );

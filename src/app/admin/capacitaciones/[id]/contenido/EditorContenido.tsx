@@ -158,6 +158,7 @@ function Estado({ estado }: { estado: string }) {
 export default function EditorContenido({ inicial }: { inicial: Capacitacion }) {
   const [slides, setSlides] = useState(inicial.slides);
   const [slideActivoId, setSlideActivoId] = useState(inicial.slides[0]?.id ?? '');
+  const [detalleAbiertoId, setDetalleAbiertoId] = useState('');
   const [nuevo, setNuevo] = useState<CamposSlide>(CAMPOS_VACIOS);
   const [editandoId, setEditandoId] = useState('');
   const [editado, setEditado] = useState<CamposSlide>(CAMPOS_VACIOS);
@@ -166,6 +167,13 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
   const [mensaje, setMensaje] = useState('');
 
   const slideActivo = useMemo(() => slides.find((slide) => slide.id === slideActivoId) ?? slides[0] ?? null, [slideActivoId, slides]);
+
+  function alternarDetalles(slide: Slide) {
+    setSlideActivoId(slide.id);
+    setEditandoId('');
+    setDetalleAbiertoId((actual) => actual === slide.id ? '' : slide.id);
+    setError('');
+  }
 
   function cerrarEdicion() {
     setEditandoId('');
@@ -192,6 +200,7 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
       const actualizado = [...slides, resultado.datos as Slide];
       setSlides(actualizado);
       setSlideActivoId(resultado.datos.id);
+      setDetalleAbiertoId(resultado.datos.id);
       setNuevo(CAMPOS_VACIOS);
       setMensaje('Slide agregado. Puedes continuar editándolo o crear el siguiente.');
     } catch {
@@ -202,6 +211,8 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
   }
 
   function iniciarEdicion(slide: Slide) {
+    setSlideActivoId(slide.id);
+    setDetalleAbiertoId(slide.id);
     setEditandoId(slide.id);
     setEditado({
       titulo: slide.titulo,
@@ -255,6 +266,7 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
       const actualizados = slides.filter((item) => item.id !== slide.id);
       setSlides(actualizados);
       if (slideActivoId === slide.id) setSlideActivoId(actualizados[0]?.id ?? '');
+      if (detalleAbiertoId === slide.id) setDetalleAbiertoId('');
       if (editandoId === slide.id) setEditandoId('');
       setMensaje('Slide eliminado.');
     } catch (errorEliminacion) {
@@ -322,8 +334,8 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
         {mensaje && <div className="admin-alerta admin-alerta--exito" role="status"><span className="admin-alerta__icono"><Icono nombre="check" /></span>{mensaje}<button type="button" className="admin-alerta__cerrar" onClick={() => setMensaje('')} aria-label="Cerrar mensaje"><Icono nombre="close" size={16} /></button></div>}
         {error && <div className="admin-alerta admin-alerta--error" role="alert"><strong>No se pudo completar la acción.</strong><span>{error}</span></div>}
 
-        <div className="contenido-layout">
-          <section className="contenido-columna" aria-labelledby="titulo-estructura">
+          <div className="contenido-layout">
+          <section className="contenido-columna contenido-columna--lista" aria-labelledby="titulo-estructura">
             <div className="contenido-seccion-heading">
               <div><p className="kicker-cgb">Estructura</p><h2 id="titulo-estructura">Slides de la capacitación</h2></div>
               <span className="admin-panel__count cifra-tabular">{slides.length} {slides.length === 1 ? 'slide' : 'slides'}</span>
@@ -337,24 +349,53 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
               </div>
             ) : (
               <ol className="contenido-lista">
-                {slides.map((slide, index) => (
-                  <li key={slide.id} className={'contenido-slide ' + (slide.id === slideActivo?.id ? 'contenido-slide--activo' : '')}>
-                    <button type="button" className="contenido-slide__seleccion" onClick={() => { setSlideActivoId(slide.id); cerrarEdicion(); }} aria-current={slide.id === slideActivo?.id ? 'step' : undefined}>
-                      <span className="contenido-slide__numero cifra-tabular">{String(index + 1).padStart(2, '0')}</span>
-                      <span className="contenido-slide__texto"><strong>{slide.titulo}</strong><small>{slide.contenido.slice(0, 88)}{slide.contenido.length > 88 ? '…' : ''}</small></span>
-                    </button>
-                    <div className="contenido-slide__acciones">
-                      <button type="button" className="contenido-icono-boton" onClick={() => void moverSlide(slide.id, -1)} disabled={index === 0 || guardando} aria-label={'Mover ' + slide.titulo + ' arriba'} title="Mover arriba"><Icono nombre="up" size={16} /></button>
-                      <button type="button" className="contenido-icono-boton" onClick={() => void moverSlide(slide.id, 1)} disabled={index === slides.length - 1 || guardando} aria-label={'Mover ' + slide.titulo + ' abajo'} title="Mover abajo"><Icono nombre="down" size={16} /></button>
-                      <button type="button" className="contenido-icono-boton" onClick={() => iniciarEdicion(slide)} aria-label={'Editar ' + slide.titulo} title="Editar"><Icono nombre="edit" size={15} /></button>
-                      <button type="button" className="contenido-icono-boton contenido-icono-boton--peligro" onClick={() => void eliminarSlide(slide)} disabled={guardando} aria-label={'Eliminar ' + slide.titulo} title="Eliminar"><Icono nombre="trash" size={15} /></button>
-                    </div>
-                  </li>
-                ))}
+                {slides.map((slide, index) => {
+                  const detallesAbiertos = detalleAbiertoId === slide.id;
+                  return (
+                    <li key={slide.id} className="contenido-slide__item">
+                      <div className={'contenido-slide ' + (slide.id === slideActivo?.id ? 'contenido-slide--activo' : '')}>
+                        <button type="button" className="contenido-slide__seleccion" onClick={() => { setSlideActivoId(slide.id); cerrarEdicion(); }} aria-current={slide.id === slideActivo?.id ? 'step' : undefined}>
+                          <span className="contenido-slide__numero cifra-tabular">{String(index + 1).padStart(2, '0')}</span>
+                          <span className="contenido-slide__texto"><strong>{slide.titulo}</strong></span>
+                        </button>
+                        <div className="contenido-slide__acciones">
+                          <button type="button" className="contenido-icono-boton" onClick={() => void moverSlide(slide.id, -1)} disabled={index === 0 || guardando} aria-label={'Mover ' + slide.titulo + ' arriba'} title="Mover arriba"><Icono nombre="up" size={16} /></button>
+                          <button type="button" className="contenido-icono-boton" onClick={() => void moverSlide(slide.id, 1)} disabled={index === slides.length - 1 || guardando} aria-label={'Mover ' + slide.titulo + ' abajo'} title="Mover abajo"><Icono nombre="down" size={16} /></button>
+                          <button type="button" className="contenido-icono-boton" onClick={() => iniciarEdicion(slide)} aria-label={'Editar ' + slide.titulo} title="Editar"><Icono nombre="edit" size={15} /></button>
+                          <button type="button" className="contenido-icono-boton contenido-icono-boton--peligro" onClick={() => void eliminarSlide(slide)} disabled={guardando} aria-label={'Eliminar ' + slide.titulo} title="Eliminar"><Icono nombre="trash" size={15} /></button>
+                        </div>
+                      </div>
+                        <button type="button" className={'contenido-slide__detalle-toggle ' + (slide.id === slideActivo?.id ? 'contenido-slide__detalle-toggle--activo' : '')} onClick={() => alternarDetalles(slide)} aria-expanded={detallesAbiertos} aria-controls={'contenido-detalle-' + slide.id}>
+                          <span>{detallesAbiertos ? 'Ocultar detalles' : 'Ver detalles'}</span><Icono nombre={detallesAbiertos ? 'up' : 'down'} size={15} />
+                        </button>
+                      {detallesAbiertos && (
+                        <div className="contenido-slide__detalle" id={'contenido-detalle-' + slide.id}>
+                          <div className="contenido-slide__detalle-meta"><span className="kicker-cgb">{TIPOS_SLIDE.find((tipo) => tipo.valor === slide.tipo)?.etiqueta ?? slide.tipo}</span><span>Slide {index + 1} de {slides.length}</span></div>
+                          <h3>{slide.titulo}</h3>
+                          {slide.contenido && <p className="contenido-slide__detalle-texto">{slide.contenido}</p>}
+                          {slide.imagenUrl && <img className="contenido-slide__detalle-imagen" src={slide.imagenUrl} alt={slide.titulo} />}
+                          {(slide.lista?.length ?? 0) > 0 && <ul>{slide.lista?.map((item, itemIndex) => <li key={itemIndex}>{item}</li>)}</ul>}
+                          {slide.tipo === 'INTERACTIVE' && slide.botonTexto && slide.botonUrl && <a className="boton-primario" href={slide.botonUrl} target="_blank" rel="noopener noreferrer">{slide.botonTexto}</a>}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
               </ol>
             )}
+          </section>
 
-            <form className="contenido-nuevo tarjeta-cgb" onSubmit={crearSlide}>
+          <section className="contenido-columna contenido-columna--formulario" aria-label={editandoId ? 'Editar diapositiva' : 'Agregar diapositiva'}>
+              {editandoId ? (
+                <form className="contenido-edicion tarjeta-cgb" onSubmit={guardarEdicion}>
+                  <div className="contenido-edicion__heading"><div><p className="kicker-cgb">Editar slide</p><h3 id="titulo-formulario">Actualiza la información</h3></div><button type="button" className="contenido-icono-boton" onClick={cerrarEdicion} aria-label="Cancelar edición"><Icono nombre="close" /></button></div>
+                  <div className="admin-campo"><label htmlFor="editar-slide-titulo">Título del slide</label><input id="editar-slide-titulo" className="campo-formulario" value={editado.titulo} onChange={(event) => setEditado({ ...editado, titulo: event.target.value })} maxLength={80} required minLength={3} /></div>
+                  <div className="admin-campo"><label htmlFor="editar-slide-contenido">Contenido</label><textarea id="editar-slide-contenido" className="campo-formulario campo-formulario--area" value={editado.contenido} onChange={(event) => setEditado({ ...editado, contenido: event.target.value })} rows={8} maxLength={10000} required /></div>
+                  <CamposAvanzados prefijo="editar-slide" valores={editado} onChange={(parcial) => setEditado((actual) => ({ ...actual, ...parcial }))} onError={setError} />
+                  <div className="admin-formulario__acciones"><button type="button" className="boton-secundario" onClick={cerrarEdicion}>Cancelar</button><button type="submit" className="boton-primario" disabled={guardando}><Icono nombre="check" /><span>Guardar slide</span></button></div>
+                </form>
+              ) : (
+                <form className="contenido-nuevo tarjeta-cgb" onSubmit={crearSlide}>
               <div className="contenido-nuevo__encabezado"><span className="contenido-nuevo__icono"><Icono nombre="plus" /></span><div><h3>Agregar un slide</h3><p>Texto, imagen, lista o botón de acción.</p></div></div>
               <div className="admin-campo">
                 <label htmlFor="nuevo-slide-titulo">Título del slide</label>
@@ -367,37 +408,7 @@ export default function EditorContenido({ inicial }: { inicial: Capacitacion }) 
               <CamposAvanzados prefijo="nuevo-slide" valores={nuevo} onChange={(parcial) => setNuevo((actual) => ({ ...actual, ...parcial }))} onError={setError} />
               <button type="submit" className="boton-primario" disabled={guardando}><Icono nombre="plus" /><span>{guardando ? 'Guardando…' : 'Agregar slide'}</span></button>
             </form>
-          </section>
-
-          <section className="contenido-columna contenido-columna--vista" aria-labelledby="titulo-vista">
-            <div className="contenido-seccion-heading"><div><p className="kicker-cgb">Edición de contenido</p><h2 id="titulo-vista">Diapositiva seleccionada</h2></div></div>
-
-            {editandoId ? (
-              <form className="contenido-edicion tarjeta-cgb" onSubmit={guardarEdicion}>
-                <div className="contenido-edicion__heading"><div><p className="kicker-cgb">Editar slide</p><h3>Actualiza la información</h3></div><button type="button" className="contenido-icono-boton" onClick={cerrarEdicion} aria-label="Cancelar edición"><Icono nombre="close" /></button></div>
-                <div className="admin-campo"><label htmlFor="editar-slide-titulo">Título del slide</label><input id="editar-slide-titulo" className="campo-formulario" value={editado.titulo} onChange={(event) => setEditado({ ...editado, titulo: event.target.value })} maxLength={80} required minLength={3} /></div>
-                <div className="admin-campo"><label htmlFor="editar-slide-contenido">Contenido</label><textarea id="editar-slide-contenido" className="campo-formulario campo-formulario--area" value={editado.contenido} onChange={(event) => setEditado({ ...editado, contenido: event.target.value })} rows={8} maxLength={10000} required /></div>
-                <CamposAvanzados prefijo="editar-slide" valores={editado} onChange={(parcial) => setEditado((actual) => ({ ...actual, ...parcial }))} onError={setError} />
-                <div className="admin-formulario__acciones"><button type="button" className="boton-secundario" onClick={cerrarEdicion}>Cancelar</button><button type="submit" className="boton-primario" disabled={guardando}><Icono nombre="check" /><span>Guardar slide</span></button></div>
-              </form>
-            ) : slideActivo ? (
-              <div className="visor-diapositiva contenido-preview">
-                <div className="contenido-preview__marco"><span className="contenido-preview__marca">CGB ACADEMY</span><span className="contenido-preview__unidad">{inicial.unidad}</span></div>
-                <div className="contenido-preview__cuerpo"><p className="kicker-cgb">{inicial.categoria || 'Inducción'}</p><h3>{slideActivo.titulo}</h3>{slideActivo.imagenUrl && (  <img src={slideActivo.imagenUrl} alt={slideActivo.titulo} style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'cover', borderRadius: 8 }} />)}<p>{slideActivo.contenido}</p>{(slideActivo.lista?.length ?? 0) > 0 && <ul>{slideActivo.lista?.map((item, i) => <li key={i}>{item}</li>)}</ul>}{slideActivo.tipo === 'INTERACTIVE' && slideActivo.botonTexto && slideActivo.botonUrl && <a className="boton-primario" href={slideActivo.botonUrl} target="_blank" rel="noopener noreferrer">{slideActivo.botonTexto}</a>}</div>
-                <div className="contenido-preview__pie"><span>Slide {slides.findIndex((slide) => slide.id === slideActivo.id) + 1} de {slides.length}</span><span className="contenido-preview__marca-secundaria">Capacitación CGB</span></div>
-              </div>
-            ) : (
-              <div className="visor-diapositiva contenido-preview contenido-preview--vacio">
-                <span className="admin-vacio__icono"><Icono nombre="slides" size={27} /></span>
-                <h3>La vista previa aparecerá aquí</h3>
-                <p>Agrega el primer slide para ver cómo se presenta la información.</p>
-              </div>
-            )}
-
-            <div className="contenido-pie-ayuda">
-              <span className="indicador-operativo" />
-              <p>Los cambios se guardan en la capacitación. Puedes volver a esta pantalla desde la biblioteca.</p>
-            </div>
+          )}
           </section>
         </div>
 
