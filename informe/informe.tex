@@ -92,10 +92,11 @@
 \section{Datos Generales del Proyecto}
 \begin{itemize}[leftmargin=*]
     \item \textbf{Denominación del Sistema:} Centro de Capacitación e Inducción CGB Academy.
-    \item \textbf{Organización Beneficiaria:} CGB Academy, integrando los programas de CIIP LATAM, GEOMINA LATAM y BIOMEDIC sin generar plataformas dispersas.
-    \item \textbf{Repositorio Central en GitHub (Público):} \url{https://github.com/milith0kun/proyecto-ing-software}
-    \item \textbf{Ramas Principales de Trabajo:} \texttt{main} / \texttt{edmil-saire} (código estable de producción) y \texttt{desarrollo} (integración continua colaborativa).
-    \item \textbf{Alcance del MVP:} 15 Historias de Usuario funcionales agrupadas en 3 Sprints de dos semanas de duración cada uno.
+    \item \textbf{Tipo de Aplicación:} Plataforma Web Modular (Orientación Pública y Onboarding Privado).
+    \item \textbf{Organización Beneficiaria:} CGB Academy, integrando las divisiones CIIP LATAM, GEOMINA LATAM y BIOMEDIC.
+    \item \textbf{Repositorio Oficial en GitHub (Público):} \url{https://github.com/milith0kun/proyecto-ing-software}
+    \item \textbf{Ramas Principales de Trabajo:} \texttt{main} / \texttt{edmil-saire} (producción estable) y \texttt{desarrollo} (integración continua colaborativa).
+    \item \textbf{Cadencia y Tamaño del MVP:} 15 Historias de Usuario funcionales ejecutadas en 3 Sprints de dos semanas.
 \end{itemize}
 
 \section{Objetivo General y Específicos}
@@ -106,8 +107,8 @@ Diseñar, implementar y validar el \textbf{Centro de Capacitación e Inducción 
 \begin{enumerate}[leftmargin=*]
     \item Especificar y priorizar 15 historias de usuario funcionales para el MVP conforme al estándar internacional \textbf{ISO/IEC/IEEE 29148:2018} \cite{iso29148} y el marco INVEST \cite{cohn2004}, con criterios de aceptación verificables en formato BDD (\textit{Dado que / Cuando / Entonces}).
     \item Diseñar una arquitectura web ligera, desacoplada y responsiva conforme a las áreas de conocimiento de Arquitectura y Construcción de Software de \textbf{SWEBOK V4.0} \cite{swebok2024}, apta para desplegarse sobre una infraestructura VPS objetivo de 2 vCPU y 8 GB de RAM.
-    \item Implementar el motor de creación y publicación de capacitaciones mediante \textit{slides} administrables sin requerir conocimientos de programación (\textit{no-code}).
-    \item Modelar el módulo organizacional de onboarding relacionando \textit{Área $\rightarrow$ Puesto $\rightarrow$ Ruta $\rightarrow$ Capacitación}, garantizando activación segura y registro automático de progreso.
+    \item Implementar el motor de creación y publicación de capacitaciones mediante \textit{slides} administrables sin requerir edición manual de código (\textit{no-code}).
+    \item Modelar el módulo organizacional de onboarding relacionando \textit{Área $\rightarrow$ Puesto $\rightarrow$ Ruta $\rightarrow$ Capacitación}, garantizando activación segura de cuentas y registro automático de progreso.
     \item Incorporar microtests formativos con retroalimentación inmediata orientados al aprendizaje sin penalizaciones punitivas.
     \item Aplicar un método ágil híbrido combinando la cadencia de Scrum \cite{scrumguide2020}, el control de flujo Kanban con límites WIP fundamentados en la Ley de Little \cite{little1961, anderson2010} y las disciplinas de ingeniería de XP/TDD \cite{beck2000}.
 \end{enumerate}
@@ -115,19 +116,26 @@ Diseñar, implementar y validar el \textbf{Centro de Capacitación e Inducción 
 \section{Alcance del Sistema}
 \subsection{Funcionalidades Incluidas (In-Scope -- MVP)}
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Sprint 1 (Motor y Acceso Público):} Autenticación con control de acceso por roles (Admin/Colaborador), creador de capacitaciones, editor interactivo de slides (texto, imágenes, listas, indicaciones, botones), previsualización, gestión de estados (Borrador/Publicada) y catálogo público libre sin autenticación.
+    \item \textbf{Sprint 1 (Motor y Acceso Público):} Autenticación basada en roles (Admin/Colaborador), creador de capacitaciones, editor interactivo de slides (texto enriquecido, imágenes locales/VPS, listas de pasos y botones de acción), previsualización en tiempo real, gestión de estados (Borrador/Publicada) y catálogo público libre sin registro.
     \item \textbf{Sprint 2 (Onboarding Interno):} Mantenimiento de áreas y puestos con integridad referencial, construcción de rutas de onboarding, registro de colaboradores, activación mediante token seguro de uso único y módulo privado ``Mi Onboarding''.
-    \item \textbf{Sprint 3 (Microtests y Supervisión):} Creación de evaluaciones cortas de opción múltiple, resolución con retroalimentación inmediata al colaborador y panel administrativo para supervisar el avance individual y colectivo.
+    \item \textbf{Sprint 3 (Microtests y Supervisión):} Creación de evaluaciones de opción múltiple con feedback pedagógico, resolución interactiva y panel administrativo para supervisar el avance individual y por área.
 \end{itemize}
 
-\subsection{Exclusiones Expresas (Out-of-Scope)}
+\subsection{Exclusiones Expresas del Alcance (Out-of-Scope)}
 Se excluyen deliberadamente para el MVP: venta de cursos, carritos de compra y pasarelas de pago; aulas virtuales en vivo; emisión automatizada de diplomas o certificados oficiales; almacenamiento de video pesado o biblioteca de descargas masivas; soporte multi-idioma (versión 1.0 exclusivamente en español); y migración de historiales legados.
 
-\section{Requerimientos del Sistema (ISO/IEC/IEEE 29148:2018)}
+\section{Justificación del Proyecto}
+\subsection{Justificación Práctica y Organizacional}
+CGB Academy agrupa tres marcas líderes: CIIP LATAM, GEOMINA LATAM y BIOMEDIC. Previamente, la inducción de personal dependía de documentos estáticos en PDF y explicaciones verbales desarticuladas, generando dispersión operativa. La plataforma centraliza las capacitaciones, estandariza el onboarding por puesto y permite a los colaboradores dominar sus funciones desde el primer día.
+
+\subsection{Justificación Académica y de Ingeniería de Software}
+Desde la disciplina de Ingeniería de Software \cite{sommerville2011, pressman2010}, el proyecto materializa la integración práctica de estándares internacionales (ISO/IEC/IEEE 29148 e ISO/IEC 25010), el desarrollo guiado por pruebas (TDD), el modelado formal BDD y la optimización de recursos web sobre infraestructuras modernas de bajo consumo.
+
+\section{Contexto del Proyecto y Restricciones}
+\subsection{Contexto Operativo}
+La aplicación opera en la nube con acceso multiplataforma responsive para colaboradores y estudiantes distribuidos geográficamente en Latinoamérica, optimizada para redes 4G y entornos corporativos.
 
 \subsection{Requerimientos Funcionales (RF-001 a RF-015)}
-La especificación de los quince requerimientos funcionales del MVP se estructura con base en el estándar internacional \textbf{ISO/IEC/IEEE 29148:2018} y su correspondencia con el Backlog de Historias de Usuario:
-
 \begin{table}[H]
 \centering
 \scriptsize
@@ -171,9 +179,7 @@ La especificación de los quince requerimientos funcionales del MVP se estructur
 \caption{Matriz de Requerimientos Funcionales del Sistema (ISO/IEC/IEEE 29148:2018).}
 \end{table}
 
-\subsection{Requerimientos No Funcionales (Mapeo Taxonómico ISO/IEC 25010:2023)}
-Los diez Requerimientos No Funcionales (RNF) del sistema se clasifican rigurosamente conforme al modelo de calidad de producto de la norma internacional \textbf{ISO/IEC 25010:2023 (Serie SQuaRE)} \cite{iso25010}:
-
+\subsection{Restricciones y Requerimientos No Funcionales (ISO/IEC 25010:2023)}
 \begin{table}[H]
 \centering
 \scriptsize
@@ -207,9 +213,7 @@ Los diez Requerimientos No Funcionales (RNF) del sistema se clasifican rigurosam
 \caption{Matriz de Requerimientos No Funcionales del Sistema (ISO/IEC 25010:2023).}
 \end{table}
 
-\section{Tecnologías Utilizadas y Fundamentación Arquitectónica}
-Conforme a las directrices de las Áreas de Conocimiento de \textbf{Arquitectura de Software (KA 2)} y \textbf{Construcción de Software (KA 4)} de \textbf{SWEBOK V4.0 (IEEE, 2024)} \cite{swebok2024}, la selección tecnológica responde a criterios de mantenibilidad, eficiencia y desacoplamiento:
-
+\section{Tecnologías Utilizadas}
 \begin{table}[H]
 \centering
 \scriptsize
@@ -225,7 +229,7 @@ Conforme a las directrices de las Áreas de Conocimiento de \textbf{Arquitectura
 \hline
 \textbf{Arquitectura Full-Stack} & \textbf{Next.js 16 (App Router)} & Framework unificado: Route Handlers (\texttt{/app/api/...}) para backend y Server Components + Client Components para frontend reactivo con compilación ultrarrápida Turbopack. \\
 \hline
-\textbf{Estilos y Maquetación} & \textbf{CSS Moderno / Modular} & Sistema de diseño institucional basado en tokens visuales corporativos, garantizando coherencia visual y rendimiento sin código muerto. \\
+\textbf{Estilos y Maquetación} & \textbf{TailwindCSS / CSS Moderno} & Sistema de diseño institucional basado en tokens visuales corporativos, garantizando coherencia visual y rendimiento sin código muerto. \\
 \hline
 \textbf{Lenguaje de Desarrollo} & \textbf{TypeScript} & Tipado estático de extremo a extremo que previene inconsistencias de tipo en tiempo de compilación entre modelos de datos, APIs y componentes de interfaz. \\
 \hline
@@ -264,55 +268,102 @@ Conforme a las directrices de las Áreas de Conocimiento de \textbf{Arquitectura
 \end{table}
 
 \section{Enfoque de Desarrollo Seleccionado y Justificación}
-Se ha seleccionado un \textbf{Enfoque Ágil Híbrido} que toma a \textbf{Scrum} como estructura marco e incorpora la visibilidad y límites de \textbf{Kanban}, junto con las disciplinas técnicas de la \textbf{Programación Extrema (XP)} y el soporte asistido de \textbf{Inteligencia Artificial}:
+\subsection{Descarte del Modelo Tradicional en Cascada}
+El modelo en cascada se descartó debido a su inflexibilidad ante requerimientos emergentes y la postergación de pruebas hasta etapas tardías, lo cual eleva el riesgo de desfases en entregas semestrales.
 
+\subsection{Justificación del Enfoque Híbrido}
+Se seleccionó un modelo híbrido integrando:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{De Scrum se toma:} La cadencia fija en sprints cortos (2 semanas), las ceremonias de planificación, sincronización diaria, revisión y retrospectiva, y la unidad de trabajo en historias de usuario priorizadas.
-    \item \textbf{De Kanban se toma:} La transparencia visual mediante el tablero Kanban por fases, la limitación explícita del trabajo en curso (\textit{WIP limits}) y la política de bloqueo para visibilizar impedimentos.
-    \item \textbf{De XP se toma:} Las prácticas de integración continua (\textit{CI}), desarrollo guiado por pruebas (\textit{TDD} en lógica crítica), propiedad colectiva del código, diseño simple y revisión por pares (\textit{Peer Review}).
+    \item \textbf{Scrum:} Cadencia fija en Sprints de 2 semanas, ceremonias regulares y entregables por historias de usuario.
+    \item \textbf{Kanban:} Transparencia visual mediante tablero de 4 columnas y límites WIP justificados con la Ley de Little.
+    \item \textbf{XP (Extreme Programming):} Desarrollo guiado por pruebas (TDD), integración continua y revisión de código por pares.
 \end{itemize}
 
 \section{Prácticas Adoptadas del Proceso}
 \subsection{Aportes de Scrum}
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Sprints de 2 Semanas:} Tres iteraciones planificadas para completar las 15 historias del MVP.
-    \item \textbf{Capacidad de Desarrollo:} 3 desarrolladores activos en paralelo (\text{Dev 1:} Alex Carpio, \text{Dev 2:} Domingo Quispe, \text{Dev 3:} Ronaldo Ticona), respaldados por el Product Owner (Edmil Saire) y Scrum Master (Héctor Barazorda).
-    \item \textbf{Ceremonias Regulares:} Sprint Planning con Planning Poker, Daily Scrum de 15 minutos, Sprint Review con software demostrable y Retrospectiva con compromisos de mejora.
+    \item \textbf{Sprints de 2 Semanas:} 3 iteraciones para completar las 15 historias del MVP.
+    \item \textbf{Ceremonias:} Sprint Planning con Planning Poker, Daily Scrum (15 min), Sprint Review y Retrospectiva.
 \end{itemize}
 
-\subsection{Aportes de Kanban y Política WIP}
+\subsection{Aportes de Kanban}
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Tablero Visual con 4 Columnas:} $\text{TO DO} \rightarrow \mathbf{\text{DESARROLLO [WIP 3]}} \rightarrow \mathbf{\text{REVISIÓN [WIP 2]}} \rightarrow \text{DONE}$.
-    \item \textbf{Fundamentación en la Ley de Little:} $\text{WIP} = \lambda \times W$ \cite{little1961}. Se establece un $\text{WIP} = 3$ en Desarrollo (1 historia por cada desarrollador activo) y $\text{WIP} = 2$ en Revisión para evitar congestión de revisiones por pares.
-    \item \textbf{Regla de Intervención:} Cuando la columna Revisión alcanza su capacidad máxima (2/2), los desarrolladores priorizan desatorar la revisión y pruebas antes de abrir nuevas tareas (\textit{``Stop starting, start finishing''}).
-    \item \textbf{Gestión de Bloqueos:} Las tarjetas impedidas permanecen en su columna física con la etiqueta $\mathbf{\oslash\text{ BLOQUEADA}}$, registrando motivo, responsable y acción en Jira.
+    \item \textbf{Tablero Visual de 4 Columnas:} $\text{TO DO} \rightarrow \mathbf{\text{DESARROLLO [WIP 3]}} \rightarrow \mathbf{\text{REVISIÓN [WIP 2]}} \rightarrow \text{DONE}$.
+    \item \textbf{Principio Lean:} Priorización absoluta de culminar revisiones antes de abrir nuevas tareas (\textit{``Stop starting, start finishing''}).
 \end{itemize}
 
 \subsection{Aportes de XP y Ciclo TDD}
-Cada Historia de Usuario se desglosa técnicamente en 4 subtareas obligatorias:
+Cada Historia de Usuario se desglosa internamente en 4 subtareas técnicas obligatorias:
 \begin{enumerate}[leftmargin=*]
     \item \textbf{T1 -- RED (Pruebas):} Creación de pruebas unitarias y de integración que inicialmente fallan.
     \item \textbf{T2 -- GREEN (Implementación):} Código mínimo indispensable para satisfacer las pruebas con éxito.
-    \item \textbf{T3 -- REFACTOR (Calidad):} Optimización de estructura, modularización y rendimiento sin alterar el comportamiento.
-    \item \textbf{T4 -- VALIDACIÓN E INTEGRACIÓN:} Verificación de criterios BDD, pruebas de extremo a extremo y preparación del Pull Request.
+    \item \textbf{T3 -- REFACTOR (Calidad):} Optimización de estructura y rendimiento sin alterar el comportamiento.
+    \item \textbf{T4 -- VALIDACIÓN E INTEGRACIÓN:} Verificación de criterios BDD y preparación del Pull Request.
 \end{enumerate}
 
-\section{Definición de Hecho (Definition of Done -- DoD)}
-Para que una Historia de Usuario sea declarada formalmente \textbf{Done}, debe satisfacer sin excepciones:
+\subsection{Uso de Inteligencia Artificial en el Proceso}
 \begin{itemize}[leftmargin=*]
-    \item[\checkmark] Cumplir al 100\% todos los Criterios de Aceptación especificados en formato BDD (\textit{Dado que / Cuando / Entonces}).
-    \item[\checkmark] Contar con suite de pruebas automáticas superadas en verde (ciclo TDD).
-    \item[\checkmark] No generar advertencias ni errores de compilación en Next.js 16 ni TypeScript.
-    \item[\checkmark] Contar con persistencia validada en MongoDB Atlas a través de los esquemas de Prisma ORM.
-    \item[\checkmark] Haber sido revisada y aprobada por pares mediante Pull Request en GitHub.
-    \item[\checkmark] Estar fusionada e integrada limpiamente en la rama \texttt{desarrollo}.
-    \item[\checkmark] Haber sido demostrada y validada por el Product Owner antes del paso a la rama principal \texttt{edmil-saire} / \texttt{main}.
+    \item Asistencia agéntica en estructuración de especificaciones funcionales y criterios BDD.
+    \item Generación de fixtures de datos, esqueletos de endpoints y suites de prueba unitaria en Jest.
+    \item Validación humana obligatoria: todo código asistido por IA es compilado, probado y auditado por el equipo.
+\end{itemize}
+
+\section{Roles, Responsabilidades y Forma de Coordinación}
+\subsection{Política de Roles Rotativos por Sprint}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{gray!15}
+\textbf{Integrante} & \textbf{Rol en Sprint 1} & \textbf{Acciones y Responsabilidades Principales} \\
+\hline
+\textbf{Saire Bustamante, Edmil Jampier} & \textbf{Product Owner} & Priorización del backlog, validación de criterios BDD y aceptación de entregables. \\
+\hline
+\textbf{Barazorda Cuellar, Hector} & \textbf{Scrum Master} & Facilitación de ceremonias diarias, remoción de bloqueos y control de límites WIP. \\
+\hline
+\textbf{Carpio Hermoza, Alex} & \textbf{Desarrollador Full-Stack} & Implementación autónoma de HU-001 y HU-004 bajo ciclo TDD y revisión por pares. \\
+\hline
+\textbf{Quispe Mamani, Domingo de Guzman} & \textbf{Desarrollador Full-Stack} & Implementación autónoma de HU-002 y HU-005 bajo ciclo TDD y revisión por pares. \\
+\hline
+\textbf{Ticona Jancco, Ronaldo} & \textbf{Desarrollador Full-Stack} & Implementación autónoma de HU-003 y HU-006 bajo ciclo TDD y revisión por pares. \\
+\hline
+\end{tabularx}
+\caption{Matriz de Roles y Responsabilidades del Equipo (Sprint 1).}
+\end{table}
+
+\subsection{Protocolo de Coordinación y Arquitectura de Ramas Git}
+Se utiliza la rama principal \texttt{main} / \texttt{edmil-saire} para producción, la rama \texttt{desarrollo} para integración continua y ramas personales por desarrollador (\texttt{alex-carpio}, \texttt{domingo-quispe}, \texttt{ronaldo-ticona}, \texttt{hector-barazorda}, \texttt{edmil-saire}). Toda integración requiere un Pull Request aprobado y validado mediante la suite de pruebas automatizadas.
+
+\section{Flujo de Trabajo del Equipo}
+\subsection{Estados del Tablero Visual}
+El flujo se organiza en 4 estados continuos: $\text{TO DO} \longrightarrow \text{DESARROLLO} \longrightarrow \text{REVISIÓN} \longrightarrow \text{DONE}$.
+
+\subsection{Límites WIP y Fundamentación Matemática (Ley de Little)}
+Conforme a la Ley de Little ($\text{WIP} = \lambda \times W$) \cite{little1961}, se fijan los siguientes límites estrictos:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Desarrollo [WIP = 3]:} 1 Historia de Usuario activa por cada desarrollador asignado para evitar multitarea.
+    \item \textbf{Revisión [WIP = 2]:} Amortiguador óptimo para asegurar que el equipo desbloquee revisiones pendientes antes de abrir nuevas tareas.
+\end{itemize}
+
+\subsection{Política de Bloqueo}
+Las tarjetas impedidas permanecen en su columna física con la etiqueta $\mathbf{\oslash\text{ BLOQUEADA}}$, registrando en Jira el motivo técnico, responsable y acción de destrabe a cargo del Scrum Master.
+
+\subsection{Definición de Hecho (Definition of Done -- DoD)}
+Para que una Historia de Usuario sea declarada formalmente \textbf{Done}, debe satisfacer:
+\begin{itemize}[leftmargin=*]
+    \item[\checkmark] Cumplir al 100\% los Criterios de Aceptación BDD (\textit{Dado que / Cuando / Entonces}).
+    \item[\checkmark] Pruebas automáticas superadas en verde (T1 a T4 del ciclo TDD).
+    \item[\checkmark] Cero errores ni advertencias de compilación en Next.js y TypeScript.
+    \item[\checkmark] Persistencia validada en MongoDB Atlas vía Prisma ORM.
+    \item[\checkmark] Pull Request revisado, aprobado y fusionado en la rama \texttt{desarrollo}.
+    \item[\checkmark] Demostración y validación satisfactoria por el Product Owner.
 \end{itemize}
 
 \section{Incrementos Presentados del Proyecto}
 \subsection{Incremento 1 (Sprint 1 -- Núcleo de Capacitación y Acceso Público)}
-El primer incremento del proyecto comprende la construcción del núcleo operativo funcional de la plataforma, completado al 100\%:
-
+\subsubsection{Funcionalidad Desarrollada}
 \begin{table}[H]
 \centering
 \scriptsize
@@ -338,28 +389,30 @@ El primer incremento del proyecto comprende la construcción del núcleo operati
 \caption{Resumen de Entregables del Sprint 1 (Incremento 1).}
 \end{table}
 
+\subsubsection{Evidencia de Funcionamiento}
+Interfaces responsivas en producción local y servidas en VPS con base de datos MongoDB Atlas sembrada con cursos reales de las unidades CIIP LATAM, GEOMINA LATAM y BIOMEDIC.
+
+\subsubsection{Pruebas o Validaciones Realizadas}
+68 de 68 pruebas automatizadas superadas con éxito (\texttt{npm test}) y compilación limpia con Turbopack (\texttt{npm run build}) en $< 600\text{ms}$.
+
+\subsubsection{Cambios Realizados Respecto al Avance Anterior}
+Consolidación del alcance MVP eliminando pasarelas de pago y módulos pesados de video para garantizar una entrega vertical 100\% funcional.
+
+\section{Métricas y Seguimiento del Proceso}
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Métricas de Calidad:} 68 de 68 pruebas automatizadas ejecutadas y superadas en verde (\texttt{npm test}).
-    \item \textbf{Compilación y Rendimiento:} Compilación de producción con Turbopack exitosa en $< 600\text{ms}$ (\texttt{npm run build}).
-    \item \textbf{Sincronización en Jira:} 100\% de las historias (CGB-1 a CGB-30) transicionadas al estado \textbf{Finalizada}.
-    \item \textbf{Despliegue y Persistencia:} Base de datos MongoDB Atlas sembrada con capacitaciones reales organizadas por áreas y roles, servidas desde el VPS en producción.
+    \item \textbf{Velocidad del Sprint (Velocity):} 6 Historias de Usuario completadas en el Sprint 1 (100\% de lo comprometido).
+    \item \textbf{Tiempo de Ciclo (Cycle Time):} Promedio de 3 a 4 días hábiles por Historia de Usuario desde \textit{TO DO} hasta \textit{DONE}.
+    \item \textbf{Tasa de Aceptación:} 100\% de criterios BDD superados antes del pase a producción.
 \end{itemize}
 
-\section{Implementación de Inteligencia Artificial en el Flujo de Desarrollo}
+\section{Acuerdos de Mejora para el Siguiente Incremento}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Prototipado Rápido de Interfaces UI/UX:} Diseñar y validar interfaces directamente en código con React, Next.js y TailwindCSS asistidos por Antigravity junto con el Product Owner antes del Día 2 del sprint.
+    \item \textbf{Automatización de Pruebas de Endpoints:} Extender las pruebas de integración en backend para cubrir casos límite de tokens expirados y esquemas inválidos.
+    \item \textbf{Refinamiento de Dependencias:} Coordinar esquemas Prisma en sesión conjunta de Sprint Planning para el Sprint 2 (Áreas y Onboarding).
+\end{enumerate}
 
-El equipo adoptó un enfoque de desarrollo agéntico asistido por \textbf{Antigravity AI Assistant} y modelos de lenguaje de última generación, utilizándolos como aceleradores técnicos y verificadores de calidad en todas las fases del ciclo de vida del software:
-
-\subsection{Aplicación de la IA en las Fases de Ingeniería}
-\begin{itemize}[leftmargin=*]
-    \item \textbf{Ingeniería de Requisitos y Formulación BDD:} Asistencia en la extracción estructurada del documento institucional de CGB Academy para formalizar los 15 Requerimientos Funcionales (RF-001 a RF-015) bajo la norma \textbf{ISO/IEC/IEEE 29148:2018} y redactar los Criterios de Aceptación verificables en lenguaje Gherkin (\textit{Dado que / Cuando / Entonces}).
-    \item \textbf{Prototipado Rápido y Construcción de Interfaces UI/UX:} Maquetación y diseño de componentes frontend reactivos en Next.js 16 y TailwindCSS dentro del entorno interactivo, eliminando la necesidad de herramientas de diseño estáticas externas y permitiendo validar flujos reales directamente en el navegador.
-    \item \textbf{Desarrollo Guiado por Pruebas (Ciclo TDD):} Generación y parametrización de fixtures y casos de prueba unitaria/integración para la fase \textbf{RED (T1)}, apoyo en la codificación mínima de Route Handlers y esquemas Prisma para la fase \textbf{GREEN (T2)}, y refactorización orientada a principios SOLID y código limpio en \textbf{REFACTOR (T3)}.
-    \item \textbf{Automatización y Trazabilidad con MCP (Model Context Protocol):} Integración directa con Jira Cloud para sincronizar las 77 tareas del backlog (sprints, estados, descripciones y transiciones a Done) y automatización de la integración de ramas en Git/GitHub sin desalineaciones de código.
-\end{itemize}
-
-\subsection{Registro y Bitácora Real de Uso de Inteligencia Artificial}
-Conforme a las políticas éticas y de autoría responsable de la UNSAAC, todos los aportes asistidos por IA fueron inspeccionados, compilados y validados empíricamente por los desarrolladores humanos:
-
+\section{Política de Uso de IA y Registro de Uso}
 \begin{table}[H]
 \centering
 \scriptsize
@@ -369,11 +422,11 @@ Conforme a las políticas éticas y de autoría responsable de la UNSAAC, todos 
 \rowcolor{gray!15}
 \textbf{Fecha} & \textbf{Herramienta / Modelo} & \textbf{Actividad Técnica Realizada} & \textbf{Validación Técnica Humana} \\
 \hline
-30/09/2026 & Antigravity / Gemini & Formalización de la especificación técnica CGB Academy y matriz de requisitos ISO 29148. & Revisión de coherencia con el alcance del MVP y validación de criterios BDD. \\
+30/09/2026 & Antigravity / Gemini & Formalización de especificación técnica y matriz de requisitos ISO 29148. & Revisión de coherencia con el alcance del MVP y validación de criterios BDD. \\
 \hline
 01/10/2026 -- 06/10/2026 & Antigravity Assistant & Construcción de componentes Next.js 16, Route Handlers, esquemas Prisma y suites de prueba TDD. & Compilación con Turbopack (\texttt{npm run build}) y aprobación del 100\% de pruebas (\texttt{npm test}). \\
 \hline
-07/10/2026 & Antigravity Assistant / MCP Jira & Sincronización automática de ramas Git, sembrado de MongoDB Atlas y cierre del Sprint 1 en Jira. & Verificación empírica de 32 tareas finalizadas en Jira Cloud y pruebas en base de datos. \\
+07/10/2026 & Antigravity Assistant / MCP Jira & Sincronización de ramas Git, sembrado de MongoDB Atlas y cierre de tareas del Sprint 1 en Jira. & Verificación empírica de 32 tareas finalizadas en Jira Cloud y pruebas en base de datos. \\
 \hline
 \end{tabularx}
 \caption{Bitácora de Uso Real de Inteligencia Artificial en el Proyecto.}
@@ -381,7 +434,7 @@ Conforme a las políticas éticas y de autoría responsable de la UNSAAC, todos 
 
 \section{Conclusiones}
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Eficacia del Método Híbrido:} La combinación de la estructura de Scrum con el control de flujo Kanban y las disciplinas de XP/TDD permitió completar las 6 Historias de Usuario del Sprint 1 con cero regresiones de código y alta previsibilidad.
+    \item \textbf{Eficacia del Método Híbrido:} La combinación de Scrum con el control de flujo Kanban (Ley de Little) y TDD de XP permitió completar las 6 Historias de Usuario del Sprint 1 con cero regresiones de código y alta previsibilidad.
     \item \textbf{Rigor en Requerimientos:} La formalización de 15 Requerimientos Funcionales bajo ISO/IEC/IEEE 29148 y 10 Requerimientos No Funcionales bajo ISO/IEC 25010 asegura la trazabilidad técnica total desde la fase de diseño hasta la validación de aceptación.
     \item \textbf{Calidad Verificable y Mantenibilidad:} La integración de contratos BDD, esquemas tipados en TypeScript y pruebas continuas garantiza que el sistema sea extensible y robusto para los siguientes sprints de la organización CGB Academy.
 \end{enumerate}
