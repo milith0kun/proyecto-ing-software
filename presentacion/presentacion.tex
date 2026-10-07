@@ -1,0 +1,558 @@
+\documentclass[aspectratio=169, 10pt, spanish]{beamer}
+
+% ===== Codificación e idioma =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[spanish, es-tabla, es-nodecimaldot]{babel}
+
+% ===== Gráficos y diagramas =====
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds, shadows}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{amsmath, amssymb}
+\usepackage{colortbl}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+
+% Configuración general de Beamer
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{background canvas}{bg=white}
+
+% Paleta de Colores Institucional / Técnica CGB & UNSAAC
+\definecolor{cgbNavy}{RGB}{15, 23, 42}       % #0F172A - Barra superior y títulos
+\definecolor{cgbBlue}{RGB}{37, 99, 235}      % #2563EB - Primario / Tecnología
+\definecolor{cgbCyan}{RGB}{14, 165, 233}     % #0EA5E9 - Acento interactivo
+\definecolor{cgbGold}{RGB}{217, 119, 6}      % #D97706 - Objetivos y valor
+\definecolor{cgbGreen}{RGB}{22, 163, 74}     % #16A34A - Validado / Éxito
+\definecolor{cgbDark}{RGB}{30, 41, 59}       % #1E293B - Texto principal
+\definecolor{cgbLightGray}{RGB}{248, 250, 252}% #F8FAFC - Fondo técnico
+\definecolor{cgbBorder}{RGB}{226, 232, 240}  % #E2E8F0 - Bordes sutiles
+
+% Personalización del Título de Diapositiva (Frametitle)
+\setbeamertemplate{frametitle}{
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[cgbNavy] (current page.north west) rectangle ([yshift=-1.05cm]current page.north east);
+        \fill[cgbBlue] ([yshift=-1.00cm]current page.north west) rectangle ([yshift=-1.05cm]current page.north east);
+        \node[anchor=west, text=white, font=\bfseries\sffamily\normalsize] at ([xshift=0.6cm, yshift=-0.52cm]current page.north west) {
+            \insertframetitle
+        };
+        \node[anchor=east, text=white!75!white, font=\tiny\sffamily\bfseries] at ([xshift=-0.6cm, yshift=-0.52cm]current page.north east) {
+            UNSAAC $\mid$ INGENIERÍA DE SOFTWARE I (IF614)
+        };
+    \end{tikzpicture}
+    \vspace{0.25cm}
+}
+
+% Pie de página institucional
+\setbeamertemplate{footline}{
+    \begin{tikzpicture}[remember picture, overlay]
+        \draw[cgbBorder, line width=0.8pt] ([yshift=0.5cm]current page.south west) -- ([yshift=0.5cm]current page.south east);
+        \node[anchor=west, text=cgbNavy!80!black, font=\tiny\sffamily] at ([xshift=0.6cm, yshift=0.25cm]current page.south west) {
+            \textbf{CGB Academy} $\cdot$ Centro de Capacitación e Inducción $\mid$ Sprint 1 Finalizado
+        };
+        \node[anchor=east, text=cgbNavy!80!black, font=\tiny\sffamily\bfseries] at ([xshift=-0.6cm, yshift=0.25cm]current page.south east) {
+            \insertframenumber{} / \inserttotalframenumber
+        };
+    \end{tikzpicture}
+}
+
+% Estilo de cajas personalizadas tcolorbox
+\newtcolorbox{techbox}[2][]{
+    enhanced,
+    colback=cgbLightGray,
+    colframe=cgbBlue,
+    coltitle=white,
+    fonttitle=\bfseries\sffamily\scriptsize,
+    title=#2,
+    arc=2mm,
+    boxrule=0.8pt,
+    left=2mm, right=2mm, top=1.5mm, bottom=1.5mm,
+    #1
+}
+
+\newtcolorbox{alertbox}[2][]{
+    enhanced,
+    colback=cgbLightGray,
+    colframe=cgbGold,
+    coltitle=white,
+    fonttitle=\bfseries\sffamily\scriptsize,
+    title=#2,
+    arc=2mm,
+    boxrule=0.8pt,
+    left=2mm, right=2mm, top=1.5mm, bottom=1.5mm,
+    #1
+}
+
+\newtcolorbox{greenbox}[2][]{
+    enhanced,
+    colback=cgbLightGray,
+    colframe=cgbGreen,
+    coltitle=white,
+    fonttitle=\bfseries\sffamily\scriptsize,
+    title=#2,
+    arc=2mm,
+    boxrule=0.8pt,
+    left=2mm, right=2mm, top=1.5mm, bottom=1.5mm,
+    #1
+}
+
+\begin{document}
+
+% =========================================================================
+% SLIDE 1: PORTADA INSTITUCIONAL
+% =========================================================================
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture, overlay]
+    % Fondo superior
+    \fill[cgbNavy] (current page.north west) rectangle ([yshift=-4.2cm]current page.north east);
+    \fill[cgbBlue] ([yshift=-4.15cm]current page.north west) rectangle ([yshift=-4.25cm]current page.north east);
+    
+    % Logo UNSAAC
+    \node[anchor=north west] at ([xshift=0.8cm, yshift=-0.5cm]current page.north west) {
+        \includegraphics[height=1.7cm]{unsaac_logo.png}
+    };
+    
+    % Títulos Institucionales
+    \node[anchor=north west, text=white, font=\sffamily\tiny] at ([xshift=2.8cm, yshift=-0.6cm]current page.north west) {
+        UNIVERSIDAD NACIONAL DE SAN ANTONIO ABAD DEL CUSCO $\cdot$ FACULTAD DE FIEIM
+    };
+    \node[anchor=north west, text=white!85!white, font=\sffamily\tiny\bfseries] at ([xshift=2.8cm, yshift=-0.9cm]current page.north west) {
+        ESCUELA PROFESIONAL DE INGENIERÍA DE SISTEMAS E INFORMÁTICA $\cdot$ IF614
+    };
+    
+    % Título del Proyecto
+    \node[anchor=north west, text=white, font=\bfseries\sffamily\Large] at ([xshift=0.8cm, yshift=-2.2cm]current page.north west) {
+        Centro de Capacitación e Inducción CGB Academy
+    };
+    \node[anchor=north west, text=cgbCyan!90!white, font=\sffamily\small] at ([xshift=0.8cm, yshift=-3.1cm]current page.north west) {
+        \textit{Informe de Avance: Requisitos ISO 29148/25010, Arquitectura Full-Stack y Método Ágil Híbrido}
+    };
+    
+    % Tarjeta de Entidad Beneficiaria
+    \node[anchor=north west] at ([xshift=0.8cm, yshift=-4.5cm]current page.north west) {
+        \begin{minipage}{0.42\textwidth}
+            \begin{techbox}{Entidad Beneficiaria}
+                {\scriptsize \textbf{CGB Academy} (CIIP LATAM, GEOMINA LATAM y BIOMEDIC)}\\
+                {\tiny Ecosistema corporativo de educación técnica y postgrado.}
+            \end{techbox}
+            \vspace{1mm}
+            \begin{alertbox}{Repositorio Oficial (Público)}
+                {\tiny \textbf{GitHub:} \url{https://github.com/milith0kun/proyecto-ing-software}}\\
+                {\tiny \textbf{Ramas:} \texttt{edmil-saire} (Main) $\mid$ \texttt{desarrollo} (Integración)}
+            \end{alertbox}
+        \end{minipage}
+    };
+    
+    % Tarjeta de Integrantes y Roles
+    \node[anchor=north east] at ([xshift=-0.8cm, yshift=-4.5cm]current page.north east) {
+        \begin{minipage}{0.48\textwidth}
+            \begin{greenbox}{Equipo del Proyecto (Roles Sprint 1)}
+                \tiny
+                \begin{tabular}{ll}
+                    \textbf{Saire Bustamante, Edmil Jampier} & \textit{Product Owner} \\
+                    \textbf{Barazorda Cuellar, Hector} & \textit{Scrum Master} \\
+                    \textbf{Carpio Hermoza, Alex} & \textit{Desarrollador Full-Stack} \\
+                    \textbf{Quispe Mamani, Domingo de Guzman} & \textit{Desarrollador Full-Stack} \\
+                    \textbf{Ticona Jancco, Ronaldo} & \textit{Desarrollador Full-Stack} \\
+                \end{tabular}
+            \end{greenbox}
+            \vspace{1mm}
+            \centering
+            {\tiny \textbf{Semestre Académico 2026-I} $\cdot$ Cusco, Perú}
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{frame}
+
+% =========================================================================
+% SLIDE 2: CONTEXTO Y PROBLEMÁTICA
+% =========================================================================
+\begin{frame}{1. Problemática y Justificación del Proyecto}
+\begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+        \begin{alertbox}{Situación Previa en CGB Academy}
+            \scriptsize
+            \begin{itemize}
+                \item \textbf{Dispersión Institucional:} Tres marcas corporativas (CIIP, GEOMINA y BIOMEDIC) con procesos formativos desarticulados.
+                \item \textbf{Proceso de Inducción Ineficiente:} Inducción manual basada en documentos PDF estáticos y charlas verbales repetitivas.
+                \item \textbf{Cero Trazabilidad:} Sin registro del nivel de comprensión ni del avance real del colaborador ingresante.
+                \item \textbf{Sobrecarga de LMS Clásicos:} Plataformas pesadas tipo Moodle generan fricción técnica innecesaria.
+            \end{itemize}
+        \end{alertbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+        \begin{greenbox}{Solución Propuesta: Plataforma Modular}
+            \scriptsize
+            \begin{itemize}
+                \item \textbf{Motor de Slides Liviano:} Creación visual (\textit{no-code}) de capacitaciones interactivas paso a paso.
+                \item \textbf{Doble Ámbito Operativo:}
+                \begin{itemize}
+                    \item \textit{Público:} Orientación libre para estudiantes y docentes.
+                    \item \textit{Interno:} Onboarding jerárquico por Área y Puesto.
+                \end{itemize}
+                \item \textbf{Microtests Formativos:} Evaluación interactiva inmediata sin fines punitivos.
+                \item \textbf{Infraestructura Eficiente:} Operación fluida en VPS (2 vCPU / 8 GB RAM).
+            \end{itemize}
+        \end{greenbox}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% =========================================================================
+% SLIDE 3: OBJETIVOS Y ALCANCE MVP
+% =========================================================================
+\begin{frame}{2. Objetivos y Alcance del Producto (MVP)}
+\begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+        \begin{techbox}{Objetivo General}
+            \scriptsize
+            Desarrollar el \textbf{Centro de Capacitación e Inducción CGB Academy}, garantizando la creación de contenidos en diapositivas, estructuración de rutas de aprendizaje y persistencia automática de progreso bajo una arquitectura web escalable.
+        \end{techbox}
+        \vspace{2mm}
+        \begin{techbox}{Delimitación Temporal del MVP (3 Sprints)}
+            \scriptsize
+            \begin{itemize}
+                \item \textbf{Sprint 1 (Finalizado):} Motor de Slides y Catálogo Público (HU-001 a HU-006).
+                \item \textbf{Sprint 2:} Estructura de Áreas, Puestos y Onboarding (HU-007 a HU-012).
+                \item \textbf{Sprint 3:} Microtests Formativos y Reportes (HU-013 a HU-015).
+            \end{itemize}
+        \end{techbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+        \begin{alertbox}{Exclusiones Expresas (Out-of-Scope)}
+            \scriptsize
+            Para evitar el desvío de alcance (\textit{Scope Creep}), se excluyen deliberadamente:
+            \begin{itemize}
+                \item[$\times$] Pasarelas de pago, carritos de compra y venta de cursos.
+                \item[$\times$] Aulas virtuales sincrónicas en vivo o videoconferencias.
+                \item[$\times$] Emisión de certificados oficiales o notas punitivas.
+                \item[$\times$] Almacenamiento o streaming de videos pesados.
+                \item[$\times$] Multi-idioma (versión 1.0 100\% en español).
+            \end{itemize}
+        \end{alertbox}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% =========================================================================
+% SLIDE 4: MATRIZ DE REQUERIMIENTOS FUNCIONALES (ISO 29148)
+% =========================================================================
+\begin{frame}{3. Requerimientos Funcionales (ISO/IEC/IEEE 29148:2018)}
+\begin{center}
+\scriptsize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{|c|>{\bfseries}p{3.2cm}|c|c|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{cgbNavy!15}
+\textbf{Código} & \textbf{Requerimiento Funcional} & \textbf{HU} & \textbf{Sprint} & \textbf{Criterio de Aceptación / Alcance BDD} \\
+\hline
+\rowcolor{green!10}
+RF-001 & Autenticación y Sesión Segura & HU-001 & 1 & Login seguro JWT y control de acceso por roles (Admin/Colaborador). \\
+\hline
+\rowcolor{green!10}
+RF-002 & Gestión CRUD de Capacitaciones & HU-002 & 1 & Creación, listado y edición con estados Borrador/Publicada. \\
+\hline
+\rowcolor{green!10}
+RF-003 & Constructor de Slides & HU-003 & 1 & Diapositivas con textos, imágenes locales, listas de pasos y botones. \\
+\hline
+\rowcolor{green!10}
+RF-004 & Previsualización y Publicación & HU-004 & 1 & Vista previa interactiva fiel y validación de slides mínimos. \\
+\hline
+\rowcolor{green!10}
+RF-005 & Catálogo Público & HU-005 & 1 & Exploración abierta por unidad (CIIP/GEOMINA/BIOMEDIC) sin registro. \\
+\hline
+\rowcolor{green!10}
+RF-006 & Visor Interactivo de Slides & HU-006 & 1 & Navegación secuencial, táctil (\textit{swipe}), teclado y barra de avance. \\
+\hline
+RF-007..12 & Áreas, Puestos y Onboarding & HU-07..12 & 2 & Rutas formativas, activación por token y panel ``Mi Onboarding''. \\
+\hline
+RF-013..15 & Microtests y Supervisión & HU-13..15 & 3 & Preguntas de opción múltiple, feedback formativo y métricas de avance. \\
+\hline
+\end{tabularx}
+\end{center}
+\vspace{-1mm}
+{\tiny \textbf{Leyenda Verde:} Entregables 100\% construidos, probados e integrados en el Incremento 1 (Sprint 1).}
+\end{frame}
+
+% =========================================================================
+% SLIDE 5: REQUERIMIENTOS NO FUNCIONALES (ISO 25010)
+% =========================================================================
+\begin{frame}{4. Requerimientos No Funcionales (ISO/IEC 25010:2023)}
+\begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+        \begin{techbox}{Usabilidad y Rendimiento}
+            \scriptsize
+            \begin{itemize}
+                \item \textbf{RNF-001 (Diseño Responsive):} Adaptación móvil y desktop fluida ($\ge 360\text{px}$).
+                \item \textbf{RNF-002 (Idioma):} Interfaz y contenidos 100\% en español neutral.
+                \item \textbf{RNF-003 (Infraestructura VPS):} Operación en 2 vCPU / 8 GB RAM sin fugas de memoria.
+                \item \textbf{RNF-004 (Tiempo de Carga):} Carga $< 1.5\text{s}$ en 4G, compresión WebP y cero videos pesados.
+            \end{itemize}
+        \end{techbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+        \begin{techbox}{{Seguridad, Fiabilidad y Mantenibilidad}}
+            \scriptsize
+            \begin{itemize}
+                \item \textbf{RNF-005 (Control de Acceso):} Middleware con códigos HTTP 401/403 en rutas privadas.
+                \item \textbf{RNF-006 (Credenciales):} Hashing seguro bcrypt ($\text{costo} \ge 10$) y tokens de uso único.
+                \item \textbf{RNF-007 (Privacidad):} Minimización de datos personales.
+                \item \textbf{RNF-008 (Consistencia Visual):} Sistema de diseño TailwindCSS corporativo CGB.
+                \item \textbf{RNF-010 (Integridad de Datos):} Integridad referencial en Prisma/MongoDB Atlas.
+            \end{itemize}
+        \end{techbox}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% =========================================================================
+% SLIDE 6: ARQUITECTURA Y TECNOLOGÍAS
+% =========================================================================
+\begin{frame}{5. Arquitectura del Sistema y Pila Tecnológica}
+\begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+        \begin{techbox}{Capas de Arquitectura Web (SWEBOK V4)}
+            \scriptsize
+            \begin{itemize}
+                \item \textbf{Frontend Reactivo:} Next.js 16 (App Router) combinando Server Components (RSC) y Client Components con motor \textbf{Turbopack}.
+                \item \textbf{Backend RESTful:} Next.js Route Handlers (\texttt{/app/api/...}) y Server Actions con validación estricta de esquemas.
+                \item \textbf{Capa de Datos ORM:} Prisma ORM con patrón \textbf{Singleton} para reutilizar conexiones en pool y prevenir saturación de sockets.
+                \item \textbf{Base de Datos:} MongoDB Atlas (Cluster NoSQL documental optimizado para slides polimórficos).
+            \end{itemize}
+        \end{techbox}
+    \end{column}
+    \begin{column}{0.43\textwidth}
+        \begin{techbox}{Herramientas y Entorno}
+            \scriptsize
+            \begin{itemize}
+                \item \textbf{Tipado Estático:} TypeScript end-to-end.
+                \item \textbf{Estilos:} TailwindCSS / Tokens de diseño.
+                \item \textbf{Gestión Ágil:} Jira Software Cloud (Tablero Kanban y límites WIP).
+                \item \textbf{Control de Versiones:} Git / GitHub con ramas protegidas.
+                \item \textbf{Desarrollo Asistido:} Entorno agéntico \textbf{Antigravity AI Assistant}.
+            \end{itemize}
+        \end{techbox}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% =========================================================================
+% SLIDE 7: ENFOQUE METODOLÓGICO HÍBRIDO (SCRUM + KANBAN + XP)
+% =========================================================================
+\begin{frame}{6. Enfoque Ágil Híbrido y Ciclo TDD}
+\begin{center}
+\begin{tikzpicture}[node distance=1.2cm, auto, >=Latex, scale=0.85, transform shape]
+    \tikzstyle{block} = [rectangle, draw=cgbNavy, fill=cgbLightGray, text width=2.8cm, text centered, rounded corners=2mm, minimum height=1.2cm, font=\scriptsize\sffamily]
+    \tikzstyle{scrum} = [rectangle, draw=cgbBlue, fill=cgbBlue!15, text width=3.2cm, text centered, rounded corners=2mm, minimum height=1.2cm, font=\scriptsize\sffamily]
+    \tikzstyle{tdd} = [rectangle, draw=cgbGreen, fill=cgbGreen!15, text width=2.4cm, text centered, rounded corners=2mm, minimum height=1.0cm, font=\tiny\sffamily]
+    
+    % Bloques Principales
+    \node [scrum] (scrum) {\textbf{Scrum Framework}\\Sprints 2 sem $\mid$ Ceremonias $\mid$ PO + SM + Devs};
+    \node [block, right=0.8cm of scrum] (kanban) {\textbf{Kanban Flow}\\Tablero 4 cols $\mid$ WIP Dev=3, Rev=2 $\mid$ Little's Law};
+    \node [block, right=0.8cm of kanban] (xp) {\textbf{XP Disciplines}\\TDD $\mid$ Peer Review $\mid$ Integración Continua};
+    
+    \draw[->, thick, cgbNavy] (scrum) -- (kanban);
+    \draw[->, thick, cgbNavy] (kanban) -- (xp);
+\end{tikzpicture}
+\end{center}
+\vspace{-2mm}
+\begin{techbox}{Estructura Interna TDD dentro de cada Historia de Usuario}
+\scriptsize
+\centering
+\textbf{T1: RED} (Pruebas unitarias que fallan) $\longrightarrow$ 
+\textbf{T2: GREEN} (Implementación mínima en Next.js) $\longrightarrow$ 
+\textbf{T3: REFACTOR} (Código limpio y modular) $\longrightarrow$ 
+\textbf{T4: VALIDACIÓN} (Criterios BDD y Pull Request)
+\end{techbox}
+\end{frame}
+
+% =========================================================================
+% SLIDE 8: TABLERO KANBAN Y LEY DE LITTLE
+% =========================================================================
+\begin{frame}{7. Flujo Kanban y Fundamentación de Límites WIP}
+\begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+        \begin{techbox}{Límites WIP y Ley de Little}
+            \scriptsize
+            $$\text{WIP} = \text{Throughput (TH)} \times \text{Cycle Time (CT)}$$
+            \begin{itemize}
+                \item \textbf{Desarrollo [WIP = 3]:} 1 desarrollador activo = Máximo 1 Historia de Usuario simultánea (Alex, Domingo, Ronaldo).
+                \item \textbf{Revisión [WIP = 2]:} Amortiguador óptimo para control de calidad y pruebas de integración.
+                \item \textbf{Regla Lean:} Si Revisión se satura (2/2), se detiene el inicio de nuevo código y se prioriza terminar revisiones (\textit{``Stop starting, start finishing''}).
+            \end{itemize}
+        \end{techbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+        \begin{alertbox}{Política de Bloqueos ($\oslash$ BLOQUEADA)}
+            \scriptsize
+            \begin{itemize}
+                \item Las tareas impedidas permanecen en su columna física para no distorsionar métricas de tiempo de ciclo.
+                \item Se etiquetan como $\mathbf{\oslash\text{ BLOQUEADA}}$ registrando motivo, responsable y acción mitigadora.
+                \item El \textbf{Scrum Master} asume la remoción prioritaria del bloqueo durante la Daily Scrum.
+            \end{itemize}
+        \end{alertbox}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% =========================================================================
+% SLIDE 9: ROLES Y ARQUITECTURA DE RAMAS GIT
+% =========================================================================
+\begin{frame}{8. Roles del Equipo y Arquitectura de Ramas Git}
+\begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+        \begin{greenbox}{Roles en Sprint 1 (Política Rotativa)}
+            \tiny
+            \renewcommand{\arraystretch}{1.1}
+            \begin{tabularx}{\textwidth}{|>{\bfseries}p{2.8cm}|>{\raggedright\arraybackslash}X|}
+                \hline
+                Edmil Saire & \textbf{Product Owner} (Gestión del backlog y validación de criterios BDD). \\
+                \hline
+                Hector Barazorda & \textbf{Scrum Master} (Facilitador de ceremonias y control de límites WIP). \\
+                \hline
+                Alex Carpio & \textbf{Dev 1} (HU-001 Autenticación y HU-004 Publicación). \\
+                \hline
+                Domingo Quispe & \textbf{Dev 2} (HU-002 Creador y HU-005 Catálogo Público). \\
+                \hline
+                Ronaldo Ticona & \textbf{Dev 3} (HU-003 Slides y HU-006 Visor Interactivo). \\
+                \hline
+            \end{tabularx}
+        \end{greenbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+        \begin{techbox}{Flujo de Ramas en GitHub}
+            \scriptsize
+            \begin{enumerate}
+                \item \textbf{Rama Principal (\texttt{edmil-saire} / \texttt{main}):} Código de producción validado por el Product Owner.
+                \item \textbf{Rama de Integración (\texttt{desarrollo}):} Donde confluyen los avances y se ejecutan las pruebas integradas.
+                \item \textbf{Ramas Personales por Desarrollador:} \texttt{alex-carpio}, \texttt{domingo-quispe}, \texttt{ronaldo-ticona}, etc.
+                \item \textbf{Pull Request Obligatorio:} Aprobación de pares previa al merge en \texttt{desarrollo}.
+            \end{enumerate}
+        \end{techbox}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% =========================================================================
+% SLIDE 10: DEFINITION OF DONE (DoD)
+% =========================================================================
+\begin{frame}{9. Definición de Hecho (Definition of Done -- DoD)}
+\begin{center}
+\begin{minipage}{0.85\textwidth}
+    \begin{greenbox}{Criterios Obligatorios para Declarar una Historia como DONE}
+        \scriptsize
+        \begin{itemize}
+            \item[\checkmark] \textbf{Criterios BDD:} Cumplir al 100\% los Criterios de Aceptación especificados (\textit{Dado que / Cuando / Entonces}).
+            \item[\checkmark] \textbf{Pruebas Automatizadas:} Suite completa superada en verde (subtareas T1 a T4 del ciclo TDD).
+            \item[\checkmark] \textbf{Calidad de Código:} Cero advertencias ni errores en TypeScript y Next.js 16.
+            \item[\checkmark] \textbf{Persistencia Real:} Modelos de datos validados y sembrados en MongoDB Atlas mediante Prisma.
+            \item[\checkmark] \textbf{Revisión por Pares:} Pull Request aprobado por otro desarrollador e integrado en la rama \texttt{desarrollo}.
+            \item[\checkmark] \textbf{Validación de Aceptación:} Demostración funcional al Product Owner antes del paso a la rama principal.
+        \end{itemize}
+    \end{greenbox}
+\end{minipage}
+\end{center}
+\end{frame}
+
+% =========================================================================
+% SLIDE 11: ENTREGABLES SPRINT 1 (INCREMENTO 1)
+% =========================================================================
+\begin{frame}{10. Incremento 1: Entregables del Sprint 1 (100\% Finalizado)}
+\begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+        \begin{techbox}{Funcionalidades Entregadas (HU-001 a HU-006)}
+            \tiny
+            \begin{itemize}
+                \item \textbf{HU-001 (Acceso Interno):} Login con JWT, roles y middleware.
+                \item \textbf{HU-002 (Crear Capacitación):} Panel CRUD con ámbito público e interno.
+                \item \textbf{HU-003 (Constructor Slides):} Editor enriquecido con imágenes locales/VPS.
+                \item \textbf{HU-004 (Publicación):} Previsualización interactiva y flujo Borrador/Publicada.
+                \item \textbf{HU-005 (Catálogo Público):} Filtrado por unidades CIIP, GEOMINA y BIOMEDIC.
+                \item \textbf{HU-006 (Visor de Slides):} Navegación táctil, teclado y barra de avance.
+            \end{itemize}
+        \end{techbox}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+        \begin{greenbox}{Métricas de Calidad y Jira}
+            \scriptsize
+            \begin{itemize}
+                \item \textbf{Pruebas Unitarias:} 68/68 tests superados al 100\% (\texttt{npm test}).
+                \item \textbf{Compilación:} Build en Turbopack en $< 600\text{ms}$ (\texttt{npm run build}).
+                \item \textbf{Sincronización Jira:} 32/32 tareas del Sprint 1 en estado \textbf{Finalizada}.
+                \item \textbf{Base de Datos:} Cursos reales por áreas y roles sembrados en MongoDB Atlas.
+            \end{itemize}
+        \end{greenbox}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% =========================================================================
+% SLIDE 12: USO REAL DE IA (ANTIGRAVITY AI)
+% =========================================================================
+\begin{frame}{11. Implementación Real de IA (Antigravity AI Assistant)}
+\begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+        \begin{techbox}{Integración en el Ciclo de Vida}
+            \scriptsize
+            \begin{itemize}
+                \item \textbf{Requisitos y BDD:} Extracción estructurada y especificación de 15 RF bajo ISO 29148.
+                \item \textbf{Prototipado Ágil Directo:} Maquetación de interfaces reactivas en Next.js y TailwindCSS en el IDE, prescindiendo de herramientas externas estáticas.
+                \item \textbf{TDD Automatizado:} Generación de fixtures y casos de prueba para la fase RED y optimización en REFACTOR.
+                \item \textbf{Automatización MCP:} Conexión con Jira Cloud para sincronizar las 77 issues del backlog.
+            \end{itemize}
+        \end{techbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+        \begin{greenbox}{Bitácora y Validación Humana Obligatoria}
+            \tiny
+            \begin{itemize}
+                \item \textbf{30/09/2026:} Modelado de requisitos funcionales y matriz ISO 29148 $\rightarrow$ Validado contra especificación real de CGB.
+                \item \textbf{01/10 -- 06/10/2026:} Componentes Next.js 16, esquemas Prisma y tests $\rightarrow$ Compilación limpia en Turbopack y 68 tests en verde.
+                \item \textbf{07/10/2026:} Sincronización de ramas Git, seed MongoDB Atlas y cierre Sprint 1 $\rightarrow$ Verificado en Jira Cloud y base de datos en producción.
+            \end{itemize}
+        \end{greenbox}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% =========================================================================
+% SLIDE 13: CONCLUSIONES Y PASE A DEMOSTRACIÓN
+% =========================================================================
+\begin{frame}{12. Conclusiones y Demostración en Vivo}
+\begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+        \begin{greenbox}{Conclusiones de Ingeniería de Software}
+            \scriptsize
+            \begin{enumerate}
+                \item \textbf{Previsibilidad del Método Híbrido:} La articulación de Scrum, Kanban (WIP controlado) y TDD garantizó la entrega del 100\% del Sprint 1 sin defectos bloqueantes.
+                \item \textbf{Trazabilidad Total:} Los 15 Requerimientos Funcionales (ISO 29148) y 10 No Funcionales (ISO 25010) aseguran una base sólida y extensible para los Sprints 2 y 3.
+                \item \textbf{Arquitectura Eficiente:} Aplicación web responsiva de alta velocidad, optimizada para infraestructura VPS corporativa.
+            \end{enumerate}
+        \end{greenbox}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+        \centering
+        \vspace{2mm}
+        \begin{alertbox}{Demostración en Vivo}
+            \centering \scriptsize
+            \textbf{Pase a la Demostración del Sistema:}\\
+            \vspace{2mm}
+            {\tiny
+            1. Catálogo Público de Orientación\\
+            2. Visor Interactivo de Slides\\
+            3. Panel de Administración y Creador\\
+            4. Persistencia en MongoDB Atlas
+            }
+        \end{alertbox}
+        \vspace{3mm}
+        {\tiny \textbf{¡Muchas Gracias!} $\cdot$ Preguntas del Jurado}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\end{document}
