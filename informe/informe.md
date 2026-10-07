@@ -105,7 +105,31 @@ Desde la perspectiva de la Ingeniería de Software (*Sommerville, 2011; Pressman
 ### 5.1 Contexto Operativo
 La plataforma operará en la nube, consumida por usuarios distribuidos geográficamente en Perú y Latinoamérica. Los usuarios públicos accederán principalmente desde computadoras personales y smartphones en busca de guías rápidas, mientras que los colaboradores accederán durante su jornada laboral para cumplir con sus rutas de inducción institucional.
 
-### 5.2 Restricciones del Sistema (Mapeo Taxonómico ISO/IEC 25010:2023)
+### 5.2 Requerimientos Funcionales del Sistema (ISO/IEC/IEEE 29148:2018)
+
+La especificación de los quince requerimientos funcionales del MVP se estructura con base en el estándar internacional **ISO/IEC/IEEE 29148:2018** y su correspondencia con el Backlog de Historias de Usuario:
+
+| Código RF | Requerimiento Funcional | Historia de Usuario | Sprint | Descripción Funcional / Criterio de Aceptación Principal |
+|---|---|---|:---:|---|
+| **RF-001** | **Autenticación y Sesión Segura** | HU-001 | 1 | Acceso interno mediante credenciales institucionales, generación de sesión segura/JWT y redirección estricta según rol (Admin/Colaborador). |
+| **RF-002** | **Gestión CRUD de Capacitaciones** | HU-002 | 1 | Creación, edición, listado y eliminación de capacitaciones con estado inicial Borrador y asignación de unidad corporativa. |
+| **RF-003** | **Constructor de Slides Multimedia** | HU-003 | 1 | Editor de diapositivas interactivas con bloques de texto enriquecido, imágenes optimizadas locales/VPS, listas de pasos y enlaces de acción. |
+| **RF-004** | **Vista Previa y Publicación** | HU-004 | 1 | Previsualización fiel de la experiencia del participante y transición de estado a Publicada con validación de diapositivas mínimas. |
+| **RF-005** | **Catálogo Público de Orientación** | HU-005 | 1 | Visualización y filtrado público de capacitaciones abiertas por unidad corporativa (CIIP, GEOMINA, BIOMEDIC, GENERAL) y categoría sin login. |
+| **RF-006** | **Visor Interactivo de Diapositivas** | HU-006 | 1 | Recorrido secuencial de slides con navegación por teclado, táctil (*swipe*), barra de progreso dinámico y botón de finalización. |
+| **RF-007** | **Estructura de Áreas y Puestos** | HU-007 | 2 | Mantenimiento jerárquico de la estructura organizacional con reglas de integridad referencial para evitar borrados accidentales de puestos con personal. |
+| **RF-008** | **Secuenciación de Rutas de Onboarding** | HU-008 | 2 | Creación y ordenamiento correlativo de rutas formativas asignadas a puestos específicos o transversales a toda el área. |
+| **RF-009** | **Registro y Asignación de Personal** | HU-009 | 2 | Registro de nuevos colaboradores con vinculación automática a su ruta de inducción y generación de credenciales iniciales. |
+| **RF-010** | **Activación de Cuenta mediante Token** | HU-010 | 2 | Activación segura de cuenta mediante enlace con token criptográfico de uso único y establecimiento de contraseña definitiva. |
+| **RF-011** | **Panel Privado "Mi Onboarding"** | HU-011 | 2 | Vista personalizada del colaborador con lista de capacitaciones de su ruta, porcentaje de avance en tiempo real y estado general. |
+| **RF-012** | **Persistencia de Avance y Completitud** | HU-012 | 2 | Registro automático de diapositivas completadas y actualización del porcentaje de progreso y estado de finalización del colaborador. |
+| **RF-013** | **Constructor de Microtests Formativos** | HU-013 | 3 | Creación y edición de cuestionarios de opción múltiple vinculados a capacitaciones con explicaciones pedagógicas por respuesta. |
+| **RF-014** | **Ejecución de Microtest con Feedback** | HU-014 | 3 | Resolución interactiva del cuestionario por parte del colaborador con retroalimentación formativa inmediata orientada al aprendizaje. |
+| **RF-015** | **Supervisión y Reportes de Avance** | HU-015 | 3 | Panel de monitoreo para administradores con métricas de avance por área, porcentaje de rutas concluidas y reportes de colaboradores. |
+
+---
+
+### 5.3 Restricciones y Requerimientos No Funcionales (Mapeo Taxonómico ISO/IEC 25010:2023)
 
 Para asegurar el rigor en el aseguramiento de la calidad, los diez Requerimientos No Funcionales (RNF) del sistema se clasifican formalmente bajo el modelo de calidad de producto de la norma internacional **ISO/IEC 25010:2023 (Serie SQuaRE)**:
 
