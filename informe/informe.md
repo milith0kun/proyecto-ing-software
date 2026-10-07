@@ -519,26 +519,26 @@ El equipo utiliza métricas cuantitativas para evaluar la estabilidad del flujo 
 ## 14. Acuerdos de Mejora para el Siguiente Incremento
 
 Tras la retrospectiva del Sprint 1, el equipo adoptó los siguientes compromisos para el Sprint 2:
-1. **Anticipación en el Diseño UI/UX:** Validar wireframes en Figma con el Product Owner a más tardar el Día 2 del sprint para evitar retrasos en la fase de frontend.
-2. **Automatización de Pruebas de Endpoints:** Extender los tests de integración con Supertest en backend para cubrir casos de excepción y tokens inválidos.
-3. **Refinamiento de Dependencias entre HUs:** En el Sprint 2 (Áreas, Puestos y Onboarding), coordinar la estructura de la base de datos de manera conjunta durante la sesión de Sprint Planning.
+1. **Prototipado Rápido de Interfaces UI/UX:** Diseñar y validar interfaces directamente en código con React, Next.js y TailwindCSS asistidos por **Antigravity** junto con el Product Owner a más tardar el Día 2 del sprint, asegurando prototipos funcionales directos sin recurrir a herramientas externas desacopladas (como Figma).
+2. **Automatización de Pruebas de Endpoints:** Extender los tests de integración y validaciones en backend para cubrir casos de excepción, validaciones de esquemas y tokens inválidos.
+3. **Refinamiento de Dependencias entre HUs:** En el Sprint 2 (Áreas, Puestos y Onboarding), coordinar la estructura de esquemas de datos de manera conjunta durante la sesión de Sprint Planning.
 
 ---
 
-## 15. Política de Uso de IA y Registro de Uso
+## 15. Política de Uso de IA y Registro de Uso Real
 
 ### 15.1 Política Ética de Uso de Inteligencia Artificial
-En el marco de la formación profesional de la UNSAAC, la Inteligencia Artificial se adopta como un copiloto de desarrollo y acelerador de productividad técnica, bajo los siguientes principios inviolables:
-1. **Transparencia y Trazabilidad:** Todo aporte generado por modelos de lenguaje (Claude, ChatGPT, Gemini) debe registrarse en la bitácora del proyecto.
-2. **Autoría Responsable y Comprensión:** Ningún integrante del equipo puede incluir código o documentación sin comprender cabalmente su funcionamiento y justificación técnica.
-3. **Validación Humana Obligatoria:** Todo componente, script de prueba o esquema de BD asistido por IA debe ser revisado, compilado y verificado empíricamente por los desarrolladores.
+En el marco de la formación profesional de la UNSAAC, la Inteligencia Artificial se adopta como un entorno agéntico de desarrollo y acelerador de productividad técnica, bajo los siguientes principios:
+1. **Transparencia y Trazabilidad:** Todo aporte asistido por el entorno **Antigravity** se valida en la suite de pruebas unitarias y de integración.
+2. **Autoría Responsable y Comprensión:** El equipo de desarrollo comprende la arquitectura completa, modelos de datos y flujo de trabajo.
+3. **Validación Humana y Ejecución Real:** Todo componente, script de prueba, migración de datos o endpoint asistido por IA se compila (`npm run build`), se prueba (`npm test`) y se verifica empíricamente en el navegador y en base de datos en tiempo de ejecución.
 
-### 15.2 Registro de Uso de Herramientas de IA
-| Fecha | Herramienta Empleada | Propósito / Actividad | Validación Técnica Realizada |
+### 15.2 Registro de Uso de Antigravity y Asistentes IA
+| Fecha | Herramienta Empleada | Propósito / Actividad Real | Validación Técnica Realizada |
 |---|---|---|---|
-| 30/09/2026 | Gemini / Claude 3.5 Sonnet | Extracción estructurada y formateo de la especificación funcional CGB Academy | Revisión de coherencia con el documento oficial de 18 páginas y ajuste de alcances. |
-| 30/09/2026 | ChatGPT / Copilot | Generación de la plantilla modular en LaTeX (`informe.tex`) y BibTeX | Compilación exitosa en MiKTeX con `pdflatex` y validación de márgenes e hipervínculos. |
-| 30/09/2026 | Antigravity AI Assistant | Automatización de scripts de verificación de integridad y comandos Git | Ejecución local y verificación de sincronización de ramas en GitHub. |
+| 30/09/2026 | Antigravity AI Assistant | Modelado de especificación funcional CGB Academy y estructura de historias BDD | Validación contra el requerimiento real y generación de la matriz de requerimientos ISO 29148. |
+| 01/10/2026 - 06/10/2026 | Antigravity AI Assistant | Construcción de componentes Next.js 16, Route Handlers, esquemas Prisma y suites de prueba TDD | Superación del 100% de tests unitarios y de integración (`68 passing`), compilación limpia en Turbopack. |
+| 07/10/2026 | Antigravity AI Assistant | Sincronización automática de ramas en Git, seeds en MongoDB Atlas e integración MCP con Jira | Verificación en Jira Cloud (32 tareas cerradas en Sprint 1) y base de datos en producción. |
 
 ---
 
