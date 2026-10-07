@@ -61,7 +61,7 @@
     \begin{tikzpicture}[remember picture, overlay]
         \draw[unsaacBorder, line width=0.6pt] ([yshift=0.45cm]current page.south west) -- ([yshift=0.45cm]current page.south east);
         \node[anchor=west, text=unsaacGray, font=\tiny\sffamily] at ([xshift=0.6cm, yshift=0.22cm]current page.south west) {
-            Centro de Capacitación e Inducción -- CGB Academy $\mid$ Escuela Profesional de Ingeniería de Sistemas e Informática
+            Sustentación de Proyecto $\cdot$ Centro de Capacitación e Inducción CGB Academy $\mid$ EPISI -- UNSAAC
         };
         \node[anchor=east, text=unsaacBlue, font=\tiny\sffamily\bfseries] at ([xshift=-0.6cm, yshift=0.22cm]current page.south east) {
             \insertframenumber{} / \inserttotalframenumber
@@ -99,7 +99,7 @@
 \begin{document}
 
 % =========================================================================
-% SLIDE 1: PORTADA ACADÉMICA FORMAL
+% SLIDE 1: PORTADA DE SUSTENTACIÓN
 % =========================================================================
 \begin{frame}[plain]
 \begin{tikzpicture}[remember picture, overlay]
@@ -128,7 +128,7 @@
         Centro de Capacitación e Inducción CGB Academy
     };
     \node[anchor=north west, text=white!90!white, font=\sffamily\scriptsize] at ([xshift=0.8cm, yshift=-2.9cm]current page.north west) {
-        \textit{Informe de Ingeniería de Software: Requisitos ISO 29148/25010, Arquitectura y Método Híbrido}
+        \textit{Sustentación de Proyecto de Software: Requisitos ISO 29148/25010, Arquitectura y Método Híbrido}
     };
     
     % Columna izquierda: Datos del proyecto
@@ -167,33 +167,33 @@
 \end{frame}
 
 % =========================================================================
-% SLIDE 2: PROBLEMÁTICA Y JUSTIFICACIÓN
+% SLIDE 2: PROBLEMÁTICA Y DIAGNÓSTICO
 % =========================================================================
-\begin{frame}{1. Problemática y Justificación del Proyecto}
+\begin{frame}{1. Problemática y Diagnóstico Institucional}
 \begin{columns}[T]
     \begin{column}{0.48\textwidth}
-        \begin{academicbox}{Situación Previa en CGB Academy}
+        \begin{academicbox}{Diagnóstico en CGB Academy}
             \scriptsize
             \begin{itemize}
-                \item \textbf{Dispersión de Procesos:} Tres marcas formativas (CIIP, GEOMINA, BIOMEDIC) con metodologías de inducción no estandarizadas.
-                \item \textbf{Costos en Horas Hombre:} Inducción manual mediante archivos PDF estáticos y reuniones verbales repetitivas.
-                \item \textbf{Falta de Trazabilidad:} Ausencia de métricas sobre la comprensión y el progreso del personal ingresante.
-                \item \textbf{Inviabilidad de LMS Pesados:} Sistemas tradicionales tipo Moodle agregan complejidad técnica y sobrecarga de servidor.
+                \item \textbf{Dispersión de Procesos:} Tres marcas corporativas (CIIP, GEOMINA, BIOMEDIC) con metodologías de inducción no unificadas.
+                \item \textbf{Altos Costos Operativos:} Inducción manual mediante archivos PDF estáticos y charlas verbales repetitivas.
+                \item \textbf{Falta de Trazabilidad:} Sin métricas objetivas del progreso ni validación de comprensión del personal ingresante.
+                \item \textbf{Sobrecarga de LMS Clásicos:} Plataformas tradicionales tipo Moodle agregan fricción técnica y saturación de recursos.
             \end{itemize}
         \end{academicbox}
     \end{column}
     \begin{column}{0.48\textwidth}
-        \begin{formalbox}{Solución de Ingeniería Propuesta}
+        \begin{formalbox}{Solución de Ingeniería de Software}
             \scriptsize
             \begin{itemize}
-                \item \textbf{Motor de Diapositivas Ágil:} Constructor de capacitaciones interactivas paso a paso (\textit{no-code}).
+                \item \textbf{Motor Ligero de Diapositivas:} Creación ágil de capacitaciones interactivas paso a paso (\textit{no-code}).
                 \item \textbf{Doble Ámbito Estructurado:}
                 \begin{itemize}
                     \item \textit{Público:} Orientación libre para estudiantes y docentes.
                     \item \textit{Interno:} Rutas jerárquicas de onboarding por Área y Puesto.
                 \end{itemize}
                 \item \textbf{Microtests Formativos:} Retroalimentación pedagógica instantánea sin penalizaciones punitivas.
-                \item \textbf{Infraestructura Eficiente:} Despliegue optimizado en servidor VPS (2 vCPU / 8 GB RAM).
+                \item \textbf{Despliegue Eficiente:} Operación fluida en VPS (2 vCPU / 8 GB RAM).
             \end{itemize}
         \end{formalbox}
     \end{column}
@@ -201,9 +201,9 @@
 \end{frame}
 
 % =========================================================================
-% SLIDE 3: OBJETIVOS Y ALCANCE
+% SLIDE 3: OBJETIVOS Y DELIMITACIÓN DEL MVP
 % =========================================================================
-\begin{frame}{2. Objetivos y Alcance del Producto (MVP)}
+\begin{frame}{2. Objetivos y Delimitación del MVP}
 \begin{columns}[T]
     \begin{column}{0.48\textwidth}
         \begin{academicbox}{Objetivo General}
@@ -215,7 +215,7 @@
             \scriptsize
             \begin{itemize}
                 \item \textbf{Sprint 1 (Finalizado):} Motor de Slides y Catálogo Público (HU-001 a HU-006).
-                \item \textbf{Sprint 2:} Áreas, Puestos y Onboarding (HU-007 a HU-012).
+                \item \textbf{Sprint 2:} Estructura de Áreas, Puestos y Onboarding (HU-007 a HU-012).
                 \item \textbf{Sprint 3:} Microtests Formativos y Reportes (HU-013 a HU-015).
             \end{itemize}
         \end{formalbox}
@@ -227,9 +227,9 @@
             \begin{itemize}
                 \item Pasarelas de pago, carritos de compra y venta de cursos.
                 \item Aulas virtuales sincrónicas en vivo o videoconferencias.
-                \item Emisión de diplomas o calificaciones punitivas.
+                \item Emisión automatizada de diplomas o certificados oficiales.
                 \item Almacenamiento o streaming de video pesado.
-                \item Soporte multi-idioma (versión 1.0 en español).
+                \item Soporte multi-idioma (versión 1.0 exclusivamente en español).
             \end{itemize}
         \end{formalbox}
     \end{column}
@@ -237,28 +237,53 @@
 \end{frame}
 
 % =========================================================================
-% SLIDE 4: MATRIZ DE REQUERIMIENTOS FUNCIONALES (ISO 29148)
+% SLIDE 4: MATRIZ DE STAKEHOLDERS
 % =========================================================================
-\begin{frame}{3. Requerimientos Funcionales (ISO/IEC/IEEE 29148:2018)}
+\begin{frame}{3. Stakeholders (Matriz de Interesados del Proyecto)}
 \begin{center}
 \scriptsize
-\renewcommand{\arraystretch}{1.12}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\bfseries}p{3.2cm}p{3.2cm}ccX}
+\toprule
+\textbf{Stakeholder / Actor} & \textbf{Rol en el Ecosistema} & \textbf{Tipo} & \textbf{Influencia} & \textbf{Interés Principal / Expectativa} \\
+\midrule
+Colaborador CGB & Usuario interno activo & Directo & Alto & Completar su inducción sin fricciones y conocer sus tareas. \\
+\rowcolor{unsaacLight}
+Administrador & Gestor de contenidos y personal & Directo & Alto & Carga ágil de slides, armado de rutas y reportes en tiempo real. \\
+Público (Estudiantes/Docentes) & Visitantes anónimos & Directo & Medio & Acceso inmediato a guías CIIP, GEOMINA y BIOMEDIC sin login. \\
+\rowcolor{unsaacLight}
+Directorio CGB Academy & Patrocinador institucional & Clave & Crítico & Estandarización de procesos y cumplimiento de plazos del MVP. \\
+Equipo de Desarrollo & 5 Ingenieros de Sistemas & Interno & Alto & Código mantenible, arquitectura escalable y rigor metodológico. \\
+\rowcolor{unsaacLight}
+Docente Evaluador UNSAAC & Evaluador académico & Académico & Crítico & Trazabilidad de requisitos, calidad de software y método ágil. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{frame}
+
+% =========================================================================
+% SLIDE 5: MATRIZ DE REQUERIMIENTOS FUNCIONALES (ISO 29148)
+% =========================================================================
+\begin{frame}{4. Requerimientos Funcionales (ISO/IEC/IEEE 29148:2018)}
+\begin{center}
+\scriptsize
+\renewcommand{\arraystretch}{1.10}
 \begin{tabularx}{\textwidth}{c>{\bfseries}p{3.2cm}ccX}
 \toprule
 \textbf{Código} & \textbf{Requerimiento Funcional} & \textbf{HU} & \textbf{Sprint} & \textbf{Criterio de Aceptación Principal (BDD)} \\
 \midrule
 \rowcolor{unsaacLight}
-RF-001 & Autenticación y Sesión & HU-001 & 1 & Acceso interno JWT y control por roles (Admin/Colaborador). \\
+RF-001 & Autenticación y Sesión Segura & HU-001 & 1 & Acceso interno JWT y control por roles (Admin/Colaborador). \\
 \rowcolor{unsaacLight}
-RF-002 & Gestión de Capacitaciones & HU-002 & 1 & CRUD con estados Borrador/Publicada y ámbito. \\
+RF-002 & Gestión de Capacitaciones & HU-002 & 1 & CRUD con estados Borrador/Publicada y asignación de ámbito. \\
 \rowcolor{unsaacLight}
-RF-003 & Constructor de Slides & HU-003 & 1 & Diapositivas con bloques de texto, imágenes, pasos y botones. \\
+RF-003 & Constructor de Slides Multimedia & HU-003 & 1 & Diapositivas con texto enriquecido, imágenes, listas y botones. \\
 \rowcolor{unsaacLight}
-RF-004 & Vista Previa y Publicación & HU-004 & 1 & Previsualización interactiva y validación antes de publicar. \\
+RF-004 & Vista Previa y Publicación & HU-004 & 1 & Previsualización interactiva fiel y validación de slides mínimos. \\
 \rowcolor{unsaacLight}
-RF-005 & Catálogo Público & HU-005 & 1 & Búsqueda y filtrado libre por unidad corporativa. \\
+RF-005 & Catálogo Público de Orientación & HU-005 & 1 & Búsqueda y filtrado libre por unidad corporativa sin login. \\
 \rowcolor{unsaacLight}
-RF-006 & Visor de Diapositivas & HU-006 & 1 & Navegación por teclado, soporte táctil (\textit{swipe}) y progreso. \\
+RF-006 & Visor Interactivo de Slides & HU-006 & 1 & Navegación por teclado, soporte táctil (\textit{swipe}) y progreso. \\
 \midrule
 RF-007..12 & Áreas, Puestos y Onboarding & HU-07..12 & 2 & Rutas formativas, activación con token y panel personal. \\
 RF-013..15 & Microtests y Supervisión & HU-13..15 & 3 & Cuestionarios formativos con feedback y métricas de avance. \\
@@ -270,17 +295,17 @@ RF-013..15 & Microtests y Supervisión & HU-13..15 & 3 & Cuestionarios formativo
 \end{frame}
 
 % =========================================================================
-% SLIDE 5: REQUERIMIENTOS NO FUNCIONALES (ISO 25010)
+% SLIDE 6: REQUERIMIENTOS NO FUNCIONALES (ISO 25010)
 % =========================================================================
-\begin{frame}{4. Requerimientos No Funcionales (ISO/IEC 25010:2023)}
+\begin{frame}{5. Requerimientos No Funcionales (ISO/IEC 25010:2023)}
 \begin{columns}[T]
     \begin{column}{0.48\textwidth}
         \begin{academicbox}{Usabilidad y Eficiencia de Rendimiento}
             \scriptsize
             \begin{itemize}
-                \item \textbf{RNF-001 (Diseño Responsive):} Adaptación móvil y desktop fluida ($\ge 360\text{px}$) sin solapamientos.
+                \item \textbf{RNF-001 (Diseño Responsive):} Adaptación móvil y desktop fluida ($\ge 360\text{px}$) sin pérdida de información.
                 \item \textbf{RNF-002 (Idioma de Operación):} Interfaz y contenidos 100\% en español neutral.
-                \item \textbf{RNF-003 (Infraestructura VPS):} Operación en 2 vCPU / 8 GB RAM sin fugas de memoria.
+                \item \textbf{RNF-003 (Infraestructura VPS):} Operación en 2 vCPU / 8 GB RAM sin degradación de memoria.
                 \item \textbf{RNF-004 (Carga Rápida):} Tiempo $< 1.5\text{s}$ en 4G, compresión WebP/SVG y cero video pesado.
             \end{itemize}
         \end{academicbox}
@@ -289,9 +314,9 @@ RF-013..15 & Microtests y Supervisión & HU-13..15 & 3 & Cuestionarios formativo
         \begin{academicbox}{Seguridad y Fiabilidad ISO 25010}
             \scriptsize
             \begin{itemize}
-                \item \textbf{RNF-005 (Control de Acceso):} Middleware con respuestas HTTP 401/403 en rutas privadas.
+                \item \textbf{RNF-005 (Control de Acceso):} Middleware con códigos HTTP 401/403 en rutas privadas.
                 \item \textbf{RNF-006 (Protección de Datos):} Hashing bcrypt ($\text{costo} \ge 10$) y tokens de uso único.
-                \item \textbf{RNF-007 (Minimización):} Captura exclusiva de datos indispensables.
+                \item \textbf{RNF-007 (Minimización):} Captura exclusiva de datos indispensables para la inducción.
                 \item \textbf{RNF-008 (Consistencia Visual):} Sistema de diseño TailwindCSS corporativo.
                 \item \textbf{RNF-010 (Integridad Referencial):} Validación en Prisma ORM y MongoDB Atlas.
             \end{itemize}
@@ -301,16 +326,16 @@ RF-013..15 & Microtests y Supervisión & HU-13..15 & 3 & Cuestionarios formativo
 \end{frame}
 
 % =========================================================================
-% SLIDE 6: ARQUITECTURA Y TECNOLOGÍAS
+% SLIDE 7: ARQUITECTURA Y TECNOLOGÍAS
 % =========================================================================
-\begin{frame}{5. Arquitectura del Sistema y Pila Tecnológica}
+\begin{frame}{6. Arquitectura del Sistema y Pila Tecnológica}
 \begin{columns}[T]
     \begin{column}{0.55\textwidth}
         \begin{academicbox}{Arquitectura Web Modular (SWEBOK V4)}
             \scriptsize
             \begin{itemize}
                 \item \textbf{Frontend Reactivo:} Next.js 16 (App Router) con Server Components (RSC) y Client Components optimizados mediante \textbf{Turbopack}.
-                \item \textbf{Backend RESTful:} Route Handlers (\texttt{/app/api/...}) y Server Actions con validación estricta de esquemas de datos.
+                \item \textbf{Backend RESTful:} Route Handlers (\texttt{/app/api/...}) y Server Actions con validación estricta de esquemas.
                 \item \textbf{Capa de Persistencia ORM:} Prisma ORM implementando el patrón \textbf{Singleton} en \texttt{src/lib/prisma.ts} para reutilizar sockets del pool.
                 \item \textbf{Base de Datos:} MongoDB Atlas (Cluster NoSQL documental optimizado para estructuras polimórficas de slides).
             \end{itemize}
@@ -332,9 +357,9 @@ RF-013..15 & Microtests y Supervisión & HU-13..15 & 3 & Cuestionarios formativo
 \end{frame}
 
 % =========================================================================
-% SLIDE 7: ENFOQUE METODOLÓGICO HÍBRIDO (SCRUM + KANBAN + XP)
+% SLIDE 8: ENFOQUE METODOLÓGICO HÍBRIDO (SCRUM + KANBAN + XP)
 % =========================================================================
-\begin{frame}{6. Enfoque Ágil Híbrido y Disciplina TDD}
+\begin{frame}{7. Enfoque Ágil Híbrido y Disciplina TDD}
 \begin{center}
 \begin{tikzpicture}[node distance=0.9cm, auto, >=Latex, scale=0.85, transform shape]
     \tikzstyle{block} = [rectangle, draw=unsaacBlue, fill=unsaacLight, text width=3.2cm, text centered, rounded corners=1.5mm, minimum height=1.1cm, font=\scriptsize\sffamily]
@@ -360,9 +385,9 @@ RF-013..15 & Microtests y Supervisión & HU-13..15 & 3 & Cuestionarios formativo
 \end{frame}
 
 % =========================================================================
-% SLIDE 8: TABLERO KANBAN Y LEY DE LITTLE
+% SLIDE 9: TABLERO KANBAN Y LEY DE LITTLE
 % =========================================================================
-\begin{frame}{7. Flujo Kanban y Justificación de Límites WIP}
+\begin{frame}{8. Flujo Kanban y Justificación de Límites WIP}
 \begin{columns}[T]
     \begin{column}{0.48\textwidth}
         \begin{academicbox}{Fundamentación Matemática: Ley de Little}
@@ -389,9 +414,9 @@ RF-013..15 & Microtests y Supervisión & HU-13..15 & 3 & Cuestionarios formativo
 \end{frame}
 
 % =========================================================================
-% SLIDE 9: ROLES Y ARQUITECTURA DE RAMAS GIT
+% SLIDE 10: ROLES Y ARQUITECTURA DE RAMAS GIT
 % =========================================================================
-\begin{frame}{8. Roles del Equipo y Arquitectura de Ramas Git}
+\begin{frame}{9. Roles del Equipo y Arquitectura de Ramas Git}
 \begin{columns}[T]
     \begin{column}{0.48\textwidth}
         \begin{academicbox}{Asignación de Roles (Política Rotativa)}
@@ -427,9 +452,9 @@ RF-013..15 & Microtests y Supervisión & HU-13..15 & 3 & Cuestionarios formativo
 \end{frame}
 
 % =========================================================================
-% SLIDE 10: DEFINITION OF DONE (DoD)
+% SLIDE 11: DEFINITION OF DONE (DoD)
 % =========================================================================
-\begin{frame}{9. Definición de Hecho (Definition of Done -- DoD)}
+\begin{frame}{10. Definición de Hecho (Definition of Done -- DoD)}
 \begin{center}
 \begin{minipage}{0.85\textwidth}
     \begin{academicbox}{Criterios Formales para el Estado DONE}
@@ -448,9 +473,9 @@ RF-013..15 & Microtests y Supervisión & HU-13..15 & 3 & Cuestionarios formativo
 \end{frame}
 
 % =========================================================================
-% SLIDE 11: ENTREGABLES SPRINT 1 (INCREMENTO 1)
+% SLIDE 12: ENTREGABLES SPRINT 1 (INCREMENTO 1)
 % =========================================================================
-\begin{frame}{10. Incremento 1: Entregables del Sprint 1 (100\% Finalizado)}
+\begin{frame}{11. Incremento 1: Entregables del Sprint 1 (100\% Finalizado)}
 \begin{columns}[T]
     \begin{column}{0.52\textwidth}
         \begin{academicbox}{Funcionalidades Entregadas (HU-001 a HU-006)}
@@ -480,9 +505,38 @@ RF-013..15 & Microtests y Supervisión & HU-13..15 & 3 & Cuestionarios formativo
 \end{frame}
 
 % =========================================================================
-% SLIDE 12: USO REAL DE IA (ANTIGRAVITY AI)
+% SLIDE 13: MÉTRICAS Y ACUERDOS DE MEJORA
 % =========================================================================
-\begin{frame}{11. Implementación Real de IA (Antigravity AI Assistant)}
+\begin{frame}{12. Métricas del Proceso y Acuerdos de Mejora}
+\begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+        \begin{academicbox}{Métricas del Sprint 1}
+            \scriptsize
+            \begin{itemize}
+                \item \textbf{Velocidad del Sprint:} 6 Historias de Usuario completadas de 6 comprometidas (100\% de efectividad).
+                \item \textbf{Tiempo de Ciclo (Cycle Time):} Promedio de 3 a 4 días hábiles por Historia de Usuario.
+                \item \textbf{Tasa de Aceptación:} 100\% de criterios BDD validados sin regresiones.
+                \item \textbf{Deuda Técnica:} 0 errores en build y cobertura de pruebas completa.
+            \end{itemize}
+        \end{academicbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+        \begin{formalbox}{Acuerdos para Sprint 2 (Retrospectiva)}
+            \scriptsize
+            \begin{enumerate}
+                \item \textbf{Prototipado Ágil Directo:} Diseñar y validar interfaces directamente en código reactivo con Antigravity antes del Día 2 del sprint.
+                \item \textbf{Automatización de Endpoints:} Extender pruebas backend para cubrir casos límite de tokens expirados y esquemas inválidos.
+                \item \textbf{Refinamiento Conjunto:} Sincronizar esquemas Prisma en Sprint Planning para el módulo de Áreas y Onboarding.
+            \end{enumerate}
+        \end{formalbox}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% =========================================================================
+% SLIDE 14: USO REAL DE IA (ANTIGRAVITY AI)
+% =========================================================================
+\begin{frame}{13. Implementación Real de IA (Antigravity AI Assistant)}
 \begin{columns}[T]
     \begin{column}{0.48\textwidth}
         \begin{academicbox}{Integración en el Ciclo de Vida}
@@ -509,9 +563,9 @@ RF-013..15 & Microtests y Supervisión & HU-13..15 & 3 & Cuestionarios formativo
 \end{frame}
 
 % =========================================================================
-% SLIDE 13: CONCLUSIONES Y PASE A DEMOSTRACIÓN
+% SLIDE 15: CONCLUSIONES Y PASE A DEMOSTRACIÓN
 % =========================================================================
-\begin{frame}{12. Conclusiones y Demostración en Vivo}
+\begin{frame}{14. Conclusiones y Demostración en Vivo}
 \begin{columns}[T]
     \begin{column}{0.55\textwidth}
         \begin{academicbox}{Conclusiones de Ingeniería de Software}
