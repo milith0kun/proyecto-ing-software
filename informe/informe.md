@@ -48,7 +48,7 @@ Desarrollar e implementar el **Centro de Capacitación e Inducción CGB Academy*
 3. **Implementar el motor de creación y visualización de capacitaciones mediante slides**, permitiendo la administración intuitiva (*no-code*) de contenidos de inducción tanto para el ámbito público como privado.
 4. **Construir el módulo de onboarding organizacional jerárquico**, modelando la relación *Área $\rightarrow$ Puesto $\rightarrow$ Ruta de Onboarding $\rightarrow$ Capacitaciones*, garantizando la activación segura de colaboradores y la persistencia automática de su progreso.
 5. **Incorporar microtests formativos de evaluación inmediata**, brindando retroalimentación pedagógica al colaborador sin penalizaciones de puntajes punitivos.
-6. **Aplicar un método de desarrollo ágil híbrido (Scrum base, Kanban visual con límites WIP y prácticas técnicas de XP/TDD)** respaldado matemáticamente por la teoría de colas (Ley de Little) e inspección continua de código.
+6. **Aplicar un enfoque de desarrollo iterativo e incremental (Scrum base, Kanban visual con límites WIP y prácticas técnicas de XP/TDD)** respaldado matemáticamente por la teoría de colas (Ley de Little) e inspección continua de código.
 
 ---
 
@@ -186,7 +186,7 @@ Se ha seleccionado un **Enfoque Ágil Híbrido** que toma a **Scrum** como estru
 ### 8.1 Descarte del Modelo Tradicional en Cascada (*Waterfall*)
 El modelo secuencial en Cascada se descartó porque presupone requerimientos inmutables y difiere la integración y pruebas hasta etapas tardías, lo cual incrementa exponencialmente el riesgo de discrepancias funcionales al cierre del semestre.
 
-### 8.2 Justificación del Modelo Híbrido
+### 8.2 Justificación del Modelo Iterativo e Incremental
 - **De Scrum se toma:** La cadencia fija en sprints cortos (2 semanas), las ceremonias de planificación, sincronización diaria, revisión y retrospectiva, y la unidad de trabajo en historias de usuario priorizadas.
 - **De Kanban se toma:** La transparencia visual mediante el tablero Kanban por fases, la limitación explícita del trabajo en curso (*WIP limits*) y la política de bloqueo para visibilizar impedimentos.
 - **De XP se toma:** Las prácticas de integración continua (*CI*), desarrollo guiado por pruebas (*TDD* en lógica crítica), propiedad colectiva del código, diseño simple y revisión por pares (*Peer Review*).
@@ -453,7 +453,7 @@ El equipo adopta como norma de ingeniería de software vinculante la siguiente d
 ---
 
 ### 11.11 Flujo Metodológico Integrado Scrum + Kanban + TDD
-Sintetizando la arquitectura del método híbrido, el ciclo operativo global del proyecto se resume en el siguiente esquema:
+Sintetizando la arquitectura del modelo iterativo e incremental, el ciclo operativo global del proyecto se resume en el siguiente esquema:
 
 $$\text{BACKLOG} \longrightarrow \text{SPRINT} \longrightarrow \text{TO DO} \longrightarrow \mathbf{\text{DESARROLLO [WIP 3]}} \longrightarrow \mathbf{\text{REVISIÓN [WIP 2]}} \longrightarrow \text{DONE}$$
 
@@ -544,7 +544,7 @@ En el marco de la formación profesional de la UNSAAC, la Inteligencia Artificia
 
 ## 16. Conclusiones
 
-1. **Eficacia del Método Híbrido:** La sinergia entre la cadencia predecible de Scrum (sprints de 2 semanas), la limitación matemática del trabajo en curso de Kanban (Ley de Little con $\text{WIP} = 3$ en Desarrollo y $\text{WIP} = 2$ en Revisión) y la disciplina técnica de XP/TDD proporciona un flujo continuo, minimiza el tiempo de ciclo y previene la dispersión del equipo de cinco integrantes.
+1. **Eficacia del Modelo Iterativo e Incremental:** La sinergia entre la cadencia predecible de Scrum (sprints de 2 semanas), la limitación matemática del trabajo en curso de Kanban (Ley de Little con $\text{WIP} = 3$ en Desarrollo y $\text{WIP} = 2$ en Revisión) y la disciplina técnica de XP/TDD proporciona un flujo continuo, minimiza el tiempo de ciclo y previene la dispersión del equipo de cinco integrantes.
 2. **Delimitación Rigurosa del MVP bajo Estándares:** La especificación de requerimientos conforme a **ISO/IEC/IEEE 29148:2018** y los atributos **INVEST**, sumada a la clasificación taxonómica de restricciones bajo **ISO/IEC 25010:2023**, asegura un producto de software enfocado, técnicamente verificable y de alto valor institucional sin incurrir en deuda técnica temprana.
 3. **Calidad Integrada Mediante Ciclo TDD y Políticas Explícitas:** Estructurar cada Historia de Usuario en las cuatro subtareas técnicas de ingeniería ($T1$ Pruebas/RED, $T2$ Implementación/GREEN, $T3$ Refactorización y $T4$ Validación e Integración) garantiza que ningún incremento alcance el estado de *Done* sin respaldo automatizado, persistencia comprobada en MongoDB Atlas y validación por pares en GitHub.
 

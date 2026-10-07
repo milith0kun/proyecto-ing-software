@@ -67,7 +67,7 @@
   \rule{\linewidth}{0.5mm}\\[0.3cm]
   {\huge\bfseries Centro de Capacitación e Inducción\\[0.2cm] CGB Academy\par}
   \vspace{0.2cm}
-  {\large\textit{Informe de Ingeniería de Software: Requisitos, Arquitectura y Método Híbrido}\par}
+  {\large\textit{Informe de Ingeniería de Software: Requisitos, Arquitectura y Método Iterativo e Incremental}\par}
   \rule{\linewidth}{0.5mm}\\[0.6cm]
 
   \textbf{Entidad Beneficiaria:}\\[0.15cm]
@@ -110,7 +110,7 @@ Diseñar, implementar y validar el \textbf{Centro de Capacitación e Inducción 
     \item Implementar el motor de creación y publicación de capacitaciones mediante \textit{slides} administrables sin requerir edición manual de código (\textit{no-code}).
     \item Modelar el módulo organizacional de onboarding relacionando \textit{Área $\rightarrow$ Puesto $\rightarrow$ Ruta $\rightarrow$ Capacitación}, garantizando activación segura de cuentas y registro automático de progreso.
     \item Incorporar microtests formativos con retroalimentación inmediata orientados al aprendizaje sin penalizaciones punitivas.
-    \item Aplicar un método ágil híbrido combinando la cadencia de Scrum \cite{scrumguide2020}, el control de flujo Kanban con límites WIP fundamentados en la Ley de Little \cite{little1961, anderson2010} y las disciplinas de ingeniería de XP/TDD \cite{beck2000}.
+    \item Aplicar un enfoque de desarrollo iterativo e incremental combinando la cadencia de Scrum \cite{scrumguide2020}, el control de flujo Kanban con límites WIP fundamentados en la Ley de Little \cite{little1961, anderson2010} y las disciplinas de ingeniería de XP/TDD \cite{beck2000}.
 \end{enumerate}
 
 \section{Alcance del Sistema}
@@ -271,8 +271,8 @@ La aplicación opera en la nube con acceso multiplataforma responsive para colab
 \subsection{Descarte del Modelo Tradicional en Cascada}
 El modelo en cascada se descartó debido a su inflexibilidad ante requerimientos emergentes y la postergación de pruebas hasta etapas tardías, lo cual eleva el riesgo de desfases en entregas semestrales.
 
-\subsection{Justificación del Enfoque Híbrido}
-Se seleccionó un modelo híbrido integrando:
+\subsection{Justificación del Enfoque Iterativo e Incremental}
+Se seleccionó un modelo de desarrollo iterativo e incremental integrando:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Scrum:} Cadencia fija en Sprints de 2 semanas, ceremonias regulares y entregables por historias de usuario.
     \item \textbf{Kanban:} Transparencia visual mediante tablero de 4 columnas y límites WIP justificados con la Ley de Little.
@@ -434,7 +434,7 @@ Consolidación del alcance MVP eliminando pasarelas de pago y módulos pesados d
 
 \section{Conclusiones}
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Eficacia del Método Híbrido:} La combinación de Scrum con el control de flujo Kanban (Ley de Little) y TDD de XP permitió completar las 6 Historias de Usuario del Sprint 1 con cero regresiones de código y alta previsibilidad.
+    \item \textbf{Eficacia del Modelo Iterativo e Incremental:} La combinación de Scrum con el control de flujo Kanban (Ley de Little) y TDD de XP permitió completar las 6 Historias de Usuario del Sprint 1 con cero regresiones de código y alta previsibilidad.
     \item \textbf{Rigor en Requerimientos:} La formalización de 15 Requerimientos Funcionales bajo ISO/IEC/IEEE 29148 y 10 Requerimientos No Funcionales bajo ISO/IEC 25010 asegura la trazabilidad técnica total desde la fase de diseño hasta la validación de aceptación.
     \item \textbf{Calidad Verificable y Mantenibilidad:} La integración de contratos BDD, esquemas tipados en TypeScript y pruebas continuas garantiza que el sistema sea extensible y robusto para los siguientes sprints de la organización CGB Academy.
 \end{enumerate}
