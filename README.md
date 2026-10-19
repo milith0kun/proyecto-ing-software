@@ -43,6 +43,10 @@ De acuerdo a la arquitectura técnica del sistema:
 
 `main` es la única rama permanente de integración. Cada cambio parte de `origin/main` en una rama corta por tarea Jira y llega a `main` mediante Pull Request revisado. No se crean ramas permanentes por integrante ni una rama intermedia `develop`/`desarrollo`. La guía completa incluye comandos seguros, nombres de rama, commits, limpieza, revisión y control de cambios: [`docs/FLUJO_DE_TRABAJO.md`](docs/FLUJO_DE_TRABAJO.md).
 
+## Actividad: validación de necesidades
+
+El [informe breve de necesidades y requisitos](informe/actividad_necesidades.pdf) enlaza las historias refinadas [CGB-51](https://cgb-academy.atlassian.net/browse/CGB-51) y [CGB-56](https://cgb-academy.atlassian.net/browse/CGB-56). La [fuente Markdown](informe/actividad_necesidades.md), la [plantilla de entrevista y observación](informe/plantilla_entrevista_usuario.md) y la [evaluación de pendientes](docs/ANALISIS_FALTANTES_ACTIVIDAD_INGENIERIA_REQUISITOS.md) explican qué está documentado y cómo validar lo pendiente.
+
 ## 📊 Metodología de Desarrollo: Scrum + Kanban con Límites WIP + TDD
 
 El proyecto combina la cadencia de **Scrum** (sprints de 2 semanas), la fluidez de **Kanban** y el rigor técnico de **TDD**:

@@ -1,0 +1,85 @@
+\documentclass[10pt,a4paper]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[a4paper,margin=1.25cm,headheight=12pt]{geometry}
+\usepackage{tabularx,array,booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+\setlist{nosep,leftmargin=1.3em}
+\renewcommand{\arraystretch}{1.12}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{CGB Academy · Ingeniería de Software I}
+\fancyhead[R]{Actividad de necesidades y requisitos}
+\fancyfoot[C]{\thepage}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\begin{document}
+\small
+\begin{center}
+{\Large\bfseries Identificación y validación de necesidades}\par
+Proyecto CGB Academy · Informe breve · 19 de octubre de 2026
+\end{center}
+\vspace{-4pt}
+\textbf{Estado de evidencia:} revisión documental completa; entrevista y observación preparadas, aún pendientes. Las necesidades y la persona son hipótesis, no hallazgos de usuarios.
+
+Base consultada: RF-011/RF-012, CGB-51/CGB-56 y \texttt{src/app/colaborador/page.tsx}, que indica que las rutas de onboarding llegarán en un incremento posterior. Esto confirma una brecha del producto, no la necesidad del usuario.
+
+\section*{A. Stakeholders y persona}
+\footnotesize
+\begin{tabularx}{\linewidth}{P{2.8cm} Y P{1.5cm} P{1.5cm} P{1.5cm}}
+\toprule
+Stakeholder & Expectativa & Poder & Interés & Prioridad \\
+\midrule
+Colaborador interno & Completar inducción y saber qué sigue & Medio & Alto & Alta \\
+Administrador & Organizar rutas y contenido; consultar avance autorizado & Alto & Alto & Alta \\
+Directorio de CGB Academy & Estandarizar inducción y reducir orientación repetida & Alto & Alto & Alta \\
+Público (estudiantes/docentes) & Encontrar orientación pública sin iniciar sesión & Bajo & Alto & Media \\
+\bottomrule
+\end{tabularx}
+\normalsize
+Estimaciones preliminares basadas en \texttt{informe/informe.md} y Jira; falta confirmarlas. \textbf{Persona hipotética:} colaborador que debe completar una ruta asignada; necesita conocer el siguiente contenido y retomar donde se quedó. Se deben validar obstáculos, dispositivo y quién puede ver el avance. No se atribuyen nombre, cita ni conducta observada.
+
+La matriz poder--interés guía la prioridad: alto/alto se gestiona de cerca; bajo/alto se mantiene informado. Se consulta al colaborador por su experiencia directa aunque su poder sea medio. Prioridades provisionales.
+
+\textbf{Elicitación prevista:} entrevista semiestructurada y observación de una tarea. Preguntas: (1) Cuéntame la última vez que completaste una capacitación. (2) ¿Cómo supiste qué te correspondía y en qué orden? (3) ¿Qué hiciste la última vez que te interrumpieron? (4) ¿Cómo comprobaste que el avance quedó guardado? (5) ¿Quién debería ver ese avance y qué debería quedar privado? En la observación se pedirá encontrar una capacitación, avanzar y retomarla; registrar pasos y dudas con consentimiento, sin datos personales innecesarios.
+
+\section*{B. Requisitos revisados}
+\footnotesize
+\begin{tabularx}{\linewidth}{P{2.8cm} P{3.5cm} Y}
+\toprule
+Tipo e inicial & Problema & Reformulación y verificación \\
+\midrule
+\textbf{Funcional — RF-011:} panel con capacitaciones y porcentaje ``en tiempo real''. & ``Tiempo real'' y estados sin definir. & Mi Onboarding muestra ruta ordenada y estados Pendiente/En progreso/Completada. Para N capacitaciones y M completadas calcula $\mathrm{round}(100\times M/N)$; si N=0 muestra 0\%. \textbf{Verificar:} pruebas de ruta vacía y estados mixtos; comparar lista y porcentaje. \\
+\textbf{No funcional — RNF-004:} carga inicial $<1{,}5$ s en 4G. & No fija pantalla, perfil de red ni medición. & En build de producción, el contenido principal de Mi Onboarding tendrá LCP p95 $<1{,}5$ s en 20 mediciones con dispositivo, perfil 4G y datos acordados. \textbf{Verificar:} registrar parámetros y las 20 medidas; el PO confirma el umbral. \\
+\textbf{Regla de negocio — CGB-56:} capacitación pasa a Completada al finalizar. & No define si basta llegar al último slide ni cómo se desbloquea el siguiente módulo. & Se marca Completada solo tras recorrer la secuencia y confirmar Finalizar en el último slide; el módulo siguiente se habilita si sus prerrequisitos están completados. \textbf{Verificar:} BDD para avance parcial, confirmación final y desbloqueo. Pendiente de aprobar con el PO. \\
+\textbf{Restricción MVP:} certificados excluidos. & CGB-51 incluía constancia descargable, fuera de alcance. & El MVP no genera insignias ni certificados; al completar solo muestra el estado de ruta. \textbf{Verificar:} revisar criterios Jira y que la interfaz no ofrezca descarga. \\
+\bottomrule
+\end{tabularx}
+\normalsize
+
+\newpage
+\section*{C. Backlog refinado y trazabilidad}
+\textbf{Necesidad N2 — retomar y confiar en el guardado.} \textbf{\href{https://cgb-academy.atlassian.net/browse/CGB-56}{CGB-56 · HU-012}} (prioridad \textbf{Highest}; ``Crítica'' en la especificación). Como colaborador, quiero guardar y retomar el último slide confirmado para continuar sin perder avance y reducir repetición de orientación (impacto social/económico esperado, hipótesis). Stakeholder: colaborador interno, interés alto y poder medio estimados; entrevista/observación pendientes.
+\begin{itemize}
+\item \textbf{Aceptación:} guardar el slide confirmado; reanudar allí; completar tras confirmar todos los slides y pulsar Finalizar en el último; desbloquear la siguiente capacitación al cumplir prerrequisitos; bloquear lectura/escritura entre cuentas; repetir una confirmación no duplica avance.
+\item \textbf{Tareas Jira existentes:} CGB-57 pruebas; CGB-58 endpoint y persistencia; CGB-59 idempotencia y UX; CGB-60 BDD y PR a \texttt{main}.
+\item \textbf{AG-C01:} progreso privado y aviso claro de guardado; pruebas de autorización con dos cuentas. El beneficio de reducir repetición queda por validar.
+\end{itemize}
+
+\textbf{Necesidad N1 — conocer lo asignado y el siguiente paso.} \textbf{\href{https://cgb-academy.atlassian.net/browse/CGB-51}{CGB-51 · HU-011}} (prioridad \textbf{Highest}; ``Crítica'' en la especificación), consume el avance de CGB-56. Como colaborador autenticado, quiero ver mi ruta, estados y porcentaje para saber qué me falta y reducir consultas manuales (impacto esperado, hipótesis). Evidencia: RF-011 y Jira; entrevista/observación pendientes.
+\begin{itemize}
+\item \textbf{Aceptación:} lista ordenada y estados visibles; porcentaje según fórmula de pág. 1; continuar desde el punto guardado; aislar datos por cuenta y explicar el guardado; no ofrecer certificado fuera del MVP.
+\item \textbf{Tareas Jira existentes:} CGB-52 pruebas; CGB-53 API autenticada; CGB-54 panel accesible; CGB-55 BDD y PR a \texttt{main}.
+\item \textbf{AG-C01:} no autenticados no reciben datos y cada cuenta consulta solo su avance; verificar con dos cuentas.
+\end{itemize}
+
+\textbf{Nota Jira:} CGB no ofrece tipo de issue ``Historia''; se conservaron los issues existentes de tipo ``Tarea'' con contenido de historia de usuario. Se conservaron estado, sprint y responsables. Ambos issues tienen la etiqueta \texttt{evidence-pending}.
+
+\section*{Reflexión y pendientes}
+Pasamos por alto que una barra de avance solo sirve si el colaborador confía en que el guardado es correcto y privado. El siguiente sprint debe implementar primero el registro y reanudación de CGB-56, luego el panel CGB-51, después de validar la necesidad con entrevista y observación. Faltan la elicitación real, completar la persona con evidencia, confirmar el umbral de rendimiento y obtener aprobación del PO para la regla de visibilidad.
+\end{document}
