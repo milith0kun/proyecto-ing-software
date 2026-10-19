@@ -1,0 +1,25 @@
+<mxfile host="Electron" modified="2026-10-12T19:00:00.000Z" agent="Draw.io" version="24.0.0" type="device">
+  <diagram id="clases_cgb" name="Diagrama de Clases CGB Academy">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="cls_user" value="User&#xa;--&#xa;- id: String&#xa;- email: String&#xa;- name: String?&#xa;- role: String&#xa;- passwordHash: String?&#xa;- activo: Boolean&#xa;--&#xa;+ autenticar(pass): Boolean&#xa;+ esAdministrador(): Boolean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="60" y="40" width="220" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="cls_sesion" value="Sesion&#xa;--&#xa;- id: String&#xa;- usuarioId: String&#xa;- expiraEn: DateTime&#xa;--&#xa;+ estaExpirada(): Boolean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="360" y="40" width="180" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cls_cap" value="Capacitacion&#xa;--&#xa;- id: String&#xa;- titulo: String&#xa;- descripcion: String&#xa;- unidad: String&#xa;- ambito: String&#xa;- estado: String&#xa;- duracionMin: Int&#xa;--&#xa;+ publicar(): Resultado&#xa;+ validarContenido(): Boolean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="60" y="280" width="220" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="cls_slide" value="Slide&#xa;--&#xa;- id: String&#xa;- capacitacionId: String&#xa;- orden: Int&#xa;- titulo: String&#xa;- contenido: String&#xa;- tipo: String&#xa;--&#xa;+ validarEstructura(): Boolean&#xa;+ cambiarOrden(n): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="360" y="280" width="200" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="cls_progreso" value="ProgresoColaborador&#xa;--&#xa;- id: String&#xa;- colaboradorId: String&#xa;- capacitacionId: String&#xa;- slideActual: Int&#xa;- completado: Boolean&#xa;--&#xa;+ avanzarSlide(s): void&#xa;+ marcarFinalizada(): void" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="640" y="280" width="220" height="180" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,58 @@
+<mxfile host="Electron" modified="2026-10-12T19:00:00.000Z" agent="Draw.io" version="24.0.0" type="device">
+  <diagram id="casos_uso_cgb" name="Casos de Uso CGB Academy">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="boundary" value="Sistema CGB Academy (Capacitaciones e Inducciones)" style="shape=swimlane;whiteSpace=wrap;html=1;startSize=26;fillColor=#fafafa;strokeColor=#000000;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="240" y="40" width="560" height="740" as="geometry" />
+        </mxCell>
+        <mxCell id="cu1" value="CU-01: Autenticarse en Plataforma (RBAC)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontStyle=1;" vertex="1" parent="boundary">
+          <mxGeometry x="170" y="50" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cu2" value="CU-02: Explorar Catálogo Público" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="boundary">
+          <mxGeometry x="30" y="140" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cu3" value="CU-03: Filtrar por Escuela (CIIP/Geomina)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="boundary">
+          <mxGeometry x="30" y="240" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cu4" value="CU-04: Visualizar Capacitación (Slides)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="boundary">
+          <mxGeometry x="30" y="340" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cu5" value="CU-05: Navegar Slides Interactivas" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="boundary">
+          <mxGeometry x="30" y="440" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cu6" value="CU-06: Consultar Panel 'Mi Onboarding'" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="boundary">
+          <mxGeometry x="30" y="540" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cu7" value="CU-07: Crear Borrador de Capacitación" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="boundary">
+          <mxGeometry x="310" y="140" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cu8" value="CU-08: Administrar Slides (Editor No-Code)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="boundary">
+          <mxGeometry x="310" y="240" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cu9" value="CU-09: Previsualizar Capacitación Interna" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="boundary">
+          <mxGeometry x="310" y="340" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cu10" value="CU-10: Publicar Capacitación en Catálogo" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="boundary">
+          <mxGeometry x="310" y="440" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cu11" value="CU-11: Consultar Métricas y Reportes" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="boundary">
+          <mxGeometry x="310" y="540" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cu12" value="CU-12: Validar Tokens JWT y Sesión Activa" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="boundary">
+          <mxGeometry x="170" y="650" width="230" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="actor_colab" value="Colaborador / Estudiante" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="70" y="260" width="40" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="actor_admin" value="Administrador Institucional" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="70" y="500" width="40" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="actor_sys" value="Sistema (Backend/JWT)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="380" width="40" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,330 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Paquetes Esenciales ---
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tabularx}
+
+% --- Colores Institucionales y Estilo Visual ---
+\definecolor{unsaacblue}{RGB}{18, 52, 102}
+\definecolor{boxbg}{RGB}{248, 250, 252}
+\definecolor{boxborder}{RGB}{203, 213, 225}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=unsaacblue,
+    filecolor=unsaacblue,
+    urlcolor=unsaacblue,
+    citecolor=unsaacblue
+}
+
+% --- Encabezados y Pies de Página ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textbf{UNSAAC} -- Ingeniería de Software}
+\fancyhead[R]{\small\textbf{Laboratorio 2}: Gestión de Capacitaciones (CIIP Latam)}
+\fancyfoot[L]{\small\textbf{Grupo de Laboratorio} -- Ingeniería de Software}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0.8pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% --- Formato de Títulos ---
+\titleformat{\section}{\Large\bfseries\color{unsaacblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{unsaacblue}}{\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{unsaacblue}}{\thesubsubsection.}{0.5em}{}
+
+% --- Cajas de Texto Destacadas ---
+\newtcolorbox{visionbox}[1]{
+    colback=boxbg,
+    colframe=unsaacblue,
+    fonttitle=\bfseries\color{white},
+    title={#1},
+    arc=2mm,
+    boxrule=1pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    enhanced
+}
+
+\begin{document}
+
+% ==============================================================================
+% CARÁTULA INSTITUCIONAL
+% ==============================================================================
+\begin{titlepage}
+    \centering
+    {\Large\textbf{UNIVERSIDAD NACIONAL DE SAN ANTONIO ABAD DEL CUSCO}}\\[0.25cm]
+    {\large\textbf{FACULTAD DE INGENIERÍA ELÉCTRICA, ELECTRÓNICA, INFORMÁTICA Y MECÁNICA}}\\[0.15cm]
+    {\large\textbf{ESCUELA PROFESIONAL DE INGENIERÍA INFORMÁTICA Y DE SISTEMAS}}\\[0.8cm]
+
+    \includegraphics[height=3.8cm,keepaspectratio]{capturas/logo_unsaac.png}\\[0.8cm]
+
+    {\LARGE\bfseries\color{unsaacblue} INFORME DE LABORATORIO N$^\circ$ 2}\\[0.35cm]
+    {\Large\textbf{Agile Inception del Sistema de Gestión de Capacitaciones}}\\[0.2cm]
+    {\large\textit{Integración Departamental: Académica, Ventas, Marketing y Finanzas}}\\[0.15cm]
+    {\normalsize CIIP Latam}\\[0.9cm]
+
+    \begin{minipage}{0.92\textwidth}
+        \normalsize
+        \begin{tabular}{@{}ll@{}}
+            \textbf{Asignatura:} & Ingeniería de Software \\
+            \textbf{Docente:} & Ing. Lisha Sabah Diaz Caceres \\
+            \textbf{Semestre Académico:} & 2026-I \\
+        \end{tabular}\\[0.35cm]
+        \textbf{Integrantes del Grupo:}\\[0.15cm]
+        \begin{tabular}{@{}lp{8.2cm}c@{}}
+            \toprule
+            \textbf{N$^\circ$} & \textbf{Apellidos y Nombres} & \textbf{Código} \\
+            \midrule
+            1 & Barazorda Cuellar, Hector & 145003 \\
+            2 & Carpio Hermoza, Alex & 164563 \\
+            3 & Quispe Mamani, Domingo de Guzman & 191978 \\
+            4 & Saire Bustamante, Edmil Jampier & 174449 \\
+            5 & Ticona Jancco, Ronaldo & 211816 \\
+            \bottomrule
+        \end{tabular}
+    \end{minipage}
+
+    \vfill
+    {\large\textbf{Cusco -- Perú}}\\[0.15cm]
+    {\large 2026}
+\end{titlepage}
+
+\newpage
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+% ==============================================================================
+% 1. OBJETIVO
+% ==============================================================================
+\section{Objetivo}
+Definir la visión del sistema, los stakeholders departamentales, los objetivos y el alcance inicial del proyecto de \textbf{Gestión de Capacitaciones de CIIP Latam} mediante técnicas de \textbf{Agile Inception}, articulando de forma sinérgica las áreas de \textbf{Académica}, \textbf{Ventas} (asesores comerciales), \textbf{Marketing} y \textbf{Finanzas}, garantizando la centralización de la información institucional, la eficiencia operativa y una experiencia accesible para estudiantes y docentes.
+
+% ==============================================================================
+% 2. FUNDAMENTO TEÓRICO
+% ==============================================================================
+\section{Fundamento Teórico}
+
+\subsection{Agile Inception}
+El \textbf{Agile Inception} es una fase de alineamiento colaborativo que se realiza al inicio de un proyecto de software (típicamente durante el \textit{Sprint 0}). Su propósito no es construir especificaciones exhaustivas que se desactualicen, sino generar un entendimiento compartido entre desarrolladores y líderes del negocio sobre el problema a resolver, el alcance del Producto Mínimo Viable (\textit{MVP}) y la eliminación de silos de información entre las diferentes áreas.
+
+\subsection{Stakeholders}
+Un \textit{stakeholder} o parte interesada es cualquier persona, grupo o departamento que interviene o es impactado por el sistema. En una institución de capacitación continua, los stakeholders involucran tanto al personal interno (Coordinación Académica, Asesores de Ventas, Marketing y Finanzas) como a los usuarios externos (Estudiantes y Docentes), cada uno con diferentes niveles de interés e influencia sobre el producto.
+
+\subsection{Visión del Producto}
+La visión del producto sintetiza en una declaración concisa y estructurada (\textit{Elevator Pitch}) para quién es el sistema, qué necesidad insatisfecha atiende, cómo se define la solución y cuál es su factor diferenciador frente a las alternativas tradicionales manuales o no integradas.
+
+\subsection{Experiencia de Usuario (UX) y Arquitectura de la Información}
+La arquitectura de la información se encarga de organizar el sistema para reducir la carga cognitiva del usuario. Mediante un control de acceso basado en roles (\textit{Role-Based Access Control} -- RBAC), se estructuran paneles de trabajo específicos para cada área interna y un portal público intuitivo, accesible y con diseño \textit{Mobile-First} para la consulta y matrícula de los estudiantes.
+
+% ==============================================================================
+% 3. CASO PRÁCTICO: SISTEMA CIIP LATAM
+% ==============================================================================
+\section{Caso Práctico: Sistema de Capacitaciones CIIP Latam}
+\textbf{CIIP Latam} (Centro de Investigación e Innovación Profesional) es una institución que imparte capacitaciones, diplomados y cursos de especialización profesional en América Latina.
+
+\subsection{Diagnóstico y Problemática Actual}
+Actualmente, las áreas operan de forma desconectada a través de WhatsApp, formularios independientes y hojas de cálculo:
+\begin{enumerate}
+    \item \textbf{Desarticulación entre Ventas y Académica:} Los asesores comerciales matriculan alumnos sin visibilidad en tiempo real sobre el aforo de los grupos o los horarios oficiales definidos por coordinación.
+    \item \textbf{Cuello de botella en Finanzas:} La validación de pagos se realiza revisando comprobantes bancarios en chats individuales, provocando demoras en la emisión de comprobantes y en la confirmación de matrícula.
+    \item \textbf{Desfase con Marketing:} Las campañas en redes sociales promocionan cursos con temarios o fechas que a veces sufren cambios no notificados oportunamente por la coordinación académica.
+    \item \textbf{Falta de trazabilidad para el Alumno:} El estudiante debe esperar confirmaciones manuales por correo o chat para conocer el estado de su inscripción y sus accesos de clase.
+\end{enumerate}
+
+% ==============================================================================
+% 4. ACTIVIDADES DESARROLLADAS
+% ==============================================================================
+\section{Actividades Desarrolladas}
+
+\subsection{Parte 1: Identificación y Caracterización de Stakeholders}
+Se identificaron y caracterizaron los actores que intervienen en el ciclo de vida de las capacitaciones:
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabularx}{\textwidth}{@{}p{3.5cm}ccX@{}}
+        \toprule
+        \textbf{Stakeholder / Área} & \textbf{Interés} & \textbf{Influencia} & \textbf{Necesidades y Expectativas Clave del Sistema} \\
+        \midrule
+        \textbf{Área Académica\newline(Coordinación CIIP)} & Alto & Alta & 
+        \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+            \item Crear y actualizar cursos, temarios y fechas de inicio.
+            \item Asignar docentes y gestionar aforos máximos por grupo.
+            \item Supervisar asistencia y actas de calificaciones.
+            \item Emitir certificados y constancias modulares.
+        \end{itemize} \\
+        \midrule
+        \textbf{Área de Ventas\newline(Asesores Comerciales)} & Alto & Alta & 
+        \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+            \item Registro y seguimiento ágil de prospectos (\textit{leads}).
+            \item Consultar en tiempo real el catálogo oficial y vacantes por curso.
+            \item Registrar matrículas y asociarlas al asesor asignado.
+            \item Historial de contacto y comunicación con el cliente.
+        \end{itemize} \\
+        \midrule
+        \textbf{Área de Marketing} & Medio-Alto & Media & 
+        \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+            \item Catálogo web público sincronizado automáticamente con la oferta académica.
+            \item Enlaces de seguimiento para medir efectividad de campañas.
+            \item Métricas de demanda por programa y perfil de postulantes.
+        \end{itemize} \\
+        \midrule
+        \textbf{Área de Finanzas} & Alto & Alta & 
+        \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+            \item Validación ágil de comprobantes de pago (transferencias, Yape/Plin, tarjetas).
+            \item Emisión y registro de boletas y facturas electrónicas.
+            \item Reportes consolidados de ingresos y saldos pendientes.
+        \end{itemize} \\
+        \midrule
+        \textbf{Estudiantes y\newline Profesionales} & Alto & Media & 
+        \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+            \item Explorar la oferta académica desde cualquier dispositivo.
+            \item Proceso de matrícula rápido con carga digital de pago.
+            \item Portal personal para consultar notas y certificados.
+        \end{itemize} \\
+        \midrule
+        \textbf{Docentes /\newline Capacitadores} & Medio-Alto & Media & 
+        \begin{itemize}[leftmargin=*,noitemsep,topsep=0pt]
+            \item Visualizar la nómina oficial de alumnos inscritos.
+            \item Acceso al cronograma de sesiones y enlaces de clase.
+            \item Módulo para registro de asistencia y evaluaciones.
+        \end{itemize} \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Matriz de Caracterización de Stakeholders del Sistema de Capacitaciones CIIP Latam.}
+\end{table}
+
+\subsection{Parte 2: Definición de la Visión del Producto}
+Aplicando la plantilla de visión de producto, se consolidó la siguiente declaración:
+
+\begin{visionbox}{Declaración de Visión del Producto -- CIIP Latam}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\linewidth}{@{}p{3.2cm}X@{}}
+    \textbf{Para:} & Profesionales, estudiantes y organizaciones que buscan capacitarse y actualizarse continuamente, junto al equipo operativo de CIIP Latam. \\[0.2cm]
+    \textbf{El sistema:} & Sistema Web Integral de Gestión de Capacitaciones de CIIP Latam. \\[0.2cm]
+    \textbf{Que permite:} & Centralizar en tiempo real la administración académica, el seguimiento comercial de ventas, la promoción de marketing y el control financiero de cobranzas en una sola plataforma institucional. \\[0.2cm]
+    \textbf{A diferencia de:} & La gestión manual y fragmentada basada en múltiples hojas de cálculo, chats dispersos de WhatsApp y falta de comunicación entre las áreas de académica, ventas y finanzas, lo que provoca demoras, información desfasada y pérdida de alumnos. \\
+\end{tabularx}
+\end{visionbox}
+
+\subsection{Parte 3: Identificación y Gestión de Riesgos}
+Se analizaron los riesgos operativos y técnicos del proyecto, planteando estrategias de mitigación en el diseño del software:
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabularx}{\textwidth}{@{}p{3.2cm}ccXX@{}}
+        \toprule
+        \textbf{Riesgo} & \textbf{Prob.} & \textbf{Impacto} & \textbf{Consecuencia} & \textbf{Estrategia de Mitigación Técnica en el Software} \\
+        \midrule
+        \textbf{Baja adopción del sistema} & Media & Alto & Asesores de ventas o coordinadores prefieren seguir usando sus libretas o Excel personales por resistencia al cambio. & 
+        • Diseñar una interfaz limpia con registro rápido de matrículas ($<$ 1 min).\newline
+        • Vistas segmentadas por rol para no saturar al usuario con herramientas de otras áreas. \\
+        \midrule
+        \textbf{Fallas en la concurrencia de inscripciones} & Media & Crítico & Dos asesores matriculan en el último cupo disponible de un grupo al mismo tiempo ocasionando sobreaforo. & 
+        • Bloqueo transaccional temporal en la base de datos (\textit{optimistic locking} en PostgreSQL).\newline
+        • Actualización en vivo del aforo disponible. \\
+        \midrule
+        \textbf{Desactualización de la información} & Alta & Medio & Cursos desfasados entre lo que se promociona en redes y lo que programa coordinación académica. & 
+        • Catálogo web público que consume directamente la API del módulo académico centralizado (\textit{Single Source of Truth}). \\
+        \midrule
+        \textbf{Inconsistencia en la conciliación de pagos} & Alta & Alto & Comprobantes bancarios duplicados o errores en la verificación manual de transferencias. & 
+        • Bandeja de revisión rápida de comprobantes en el módulo de Finanzas.\newline
+        • Validación automática de números de operación bancaria duplicados en base de datos. \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Matriz de Riesgos Iniciales y Plan de Mitigación Técnica.}
+\end{table}
+
+% ==============================================================================
+% 5. ENTREGABLES
+% ==============================================================================
+\section{Entregables}
+Los entregables solicitados se consolidan en:
+\begin{enumerate}
+    \item \textbf{Documento de Visión del Producto:} Declaración estructurada con alcance, público objetivo y factor diferenciador frente a canales informales.
+    \item \textbf{Lista de Stakeholders:} Matriz de interesados que clasifica a Académica, Ventas, Marketing, Finanzas, Alumnos y Docentes según interés, influencia y necesidades funcionales.
+    \item \textbf{Riesgos Iniciales:} Catálogo de contingencias analizadas con sus respectivas medidas de mitigación a nivel de software.
+\end{enumerate}
+
+% ==============================================================================
+% 6. REFLEXIÓN
+% ==============================================================================
+\section{Reflexión}
+
+\subsection{¿Por qué Git es crítico en proyectos colaborativos?}
+En un sistema empresarial que abarca módulos tan diversos como el módulo académico, el embudo comercial de ventas, el catálogo público y el módulo de cobranzas, Git es indispensable porque:
+\begin{itemize}
+    \item \textbf{Desarrollo modular paralelo:} Permite que distintos programadores trabajen en paralelo sobre ramas independientes (por ejemplo: \texttt{feature/modulo-academico}, \texttt{feature/crm-ventas}, \texttt{feature/modulo-finanzas}) sin interferir entre sí ni arriesgar el código funcional.
+    \item \textbf{Control distribuido y aislamiento de cambios:} Cada integrante dispone del historial completo en su máquina local para probar y depurar su módulo antes de proponer su incorporación a la rama principal (\texttt{main}).
+    \item \textbf{Trazabilidad y auditoría de decisiones:} Cada modificación queda registrada con fecha, hora, autor y mensaje descriptivo, facilitando auditar qué regla de negocio fue alterada y con qué justificación técnica.
+\end{itemize}
+
+\subsection{¿Qué problemas específicos evita el uso de Git?}
+\begin{itemize}
+    \item \textbf{Sobreescritura accidental entre módulos:} Impide que los cambios del desarrollador del módulo de ventas eliminen accidentalmente las validaciones creadas por el desarrollador de finanzas.
+    \item \textbf{Reversibilidad inmediata ante fallos:} Si una actualización rompe el registro contable o la asignación de cursos, permite regresar a la versión estable previa en cuestión de segundos.
+    \item \textbf{Eliminación del caos de versiones manuales:} Erradica las carpetas informales como \texttt{sistema\_v1\_finanzas.zip} o \texttt{capacitaciones\_ventas\_final.rar}, unificando el avance en un único repositorio limpio.
+    \item \textbf{Revisión colaborativa de código:} Mediante \textit{Pull Requests}, el equipo revisa y aprueba los cambios antes de desplegarlos a producción, garantizando estándares de calidad y seguridad.
+\end{itemize}
+
+% ==============================================================================
+% 7. TRABAJO EXTRA: INVESTIGACIÓN DE SOLUCIONES SIMILARES
+% ==============================================================================
+\section{Trabajo Extra: Investigación de Soluciones Similares}
+Se investigaron y contrastaron los enfoques comunes en la gestión de programas educativos frente a la solución propuesta para CIIP Latam:
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabularx}{\textwidth}{@{}p{3.2cm}p{3.5cm}p{3.5cm}X@{}}
+        \toprule
+        \textbf{Criterio de Evaluación} & \textbf{LMS Tradicional (Moodle)} & \textbf{ERP Educativo Genérico} & \textbf{CIIP Latam (Propuesta a Medida)} \\
+        \midrule
+        \textbf{Enfoque Principal} & Gestión del aula virtual, tareas, foros y material didáctico. & Gestión administrativa escolar clásica (colegios y universidades). & \textbf{Gestión integral de capacitación continua: ventas, finanzas, académica y alumnos.} \\
+        \midrule
+        \textbf{Módulo de Ventas / CRM} & Inexistente; depende de integraciones complejas externas. & Rígido y poco adaptado a la venta rápida de cursos cortos y diplomados. & \textbf{Diseñado a la medida del embudo comercial de los asesores de CIIP Latam.} \\
+        \midrule
+        \textbf{Módulo Financiero Local} & Soporte limitado a pasarelas globales (PayPal/Stripe). & Procesos bancarios pesados y poco flexibles. & \textbf{Soporte ágil para pagos locales (Yape, Plin y transferencias con validación rápida).} \\
+        \midrule
+        \textbf{Articulación de Áreas} & Asesores de ventas y marketing no tienen acceso a la plataforma. & Difícil de personalizar; interfaces sobrecargadas y lentas. & \textbf{Paneles por rol (Académica, Ventas, Marketing, Finanzas) conectados a una sola base de datos.} \\
+        \midrule
+        \textbf{Experiencia del Alumno} & Interfaz académica tradicional y poco amigable en móviles. & Poco intuitiva para el usuario contemporáneo. & \textbf{Interfaz moderna, ligera, Mobile-First y de carga rápida.} \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Benchmark comparativo de soluciones frente a la propuesta para CIIP Latam.}
+\end{table}
+
+\subsection{Mejores Prácticas de UX y Arquitectura Adoptadas}
+\begin{enumerate}
+    \item \textbf{Arquitectura Modular:} Desacoplar el módulo comercial de ventas del aula virtual, sincronizando las etapas mediante estados de matrícula transparentes.
+    \item \textbf{Bandeja de validación para Finanzas:} Diseñar una vista estilo bandeja de entrada donde Finanzas valide los comprobantes con un solo clic, notificando automáticamente a Académica para la activación del alumno.
+    \item \textbf{Stack Tecnológico Recomendado:} Implementar la aplicación con \textbf{Next.js} para un rendimiento óptimo y diseño responsivo, con base de datos relacional \textbf{PostgreSQL} para garantizar la integridad transaccional de pagos y matrículas.
+\end{enumerate}
+
+% ==============================================================================
+% 8. CONCLUSIONES
+% ==============================================================================
+\section{Conclusiones}
+\begin{itemize}
+    \item La ejecución de la sesión de \textbf{Agile Inception} permitió conceptualizar con éxito el sistema como una plataforma integral de gestión de capacitaciones, articulando coordinadamente las áreas de Académica, Ventas, Marketing y Finanzas de CIIP Latam.
+    \item Se definió un flujo de valor institucional completo que inicia en la prospección comercial de ventas y concluye en la certificación académica.
+    \item La caracterización de los stakeholders y sus puntos de contacto identificó mecanismos de software concretos para erradicar el desorden actual provocado por el uso aislado de hojas de cálculo y WhatsApp.
+    \item El análisis de riesgos y la investigación de soluciones proporcionan una hoja de ruta rigurosa para emprender el desarrollo del MVP con altos estándares de calidad, seguridad y eficiencia operativa.
+\end{itemize}
+
+\end{document}
