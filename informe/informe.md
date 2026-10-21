@@ -19,7 +19,7 @@
   5. **Ticona Jancco, Ronaldo** — *Desarrollador Full-Stack*
 - **Entidad Beneficiaria:** CGB Academy (Integrando las unidades CIIP LATAM, GEOMINA LATAM y BIOMEDIC)
 - **Repositorio Oficial en GitHub:** `https://github.com/milith0kun/proyecto-ing-software`
-- **Ramas Principales de Trabajo:** `edmil-saire` (rama principal / producción) y `develop` (integración y pruebas conjuntas)
+- **Estrategia de ramas:** `main` como única rama permanente de integración; ramas cortas por issue y Pull Request revisado.
 
 ---
 
@@ -31,7 +31,7 @@
 | **Tipo de Aplicación** | Plataforma Web Modular (Área Pública de Orientación y Entorno Privado de Onboarding) |
 | **Organización Destino** | CGB Academy (Ecosistema corporativo: CIIP LATAM, GEOMINA LATAM, BIOMEDIC) |
 | **Repositorio Central** | `https://github.com/milith0kun/proyecto-ing-software` |
-| **Ramas Git** | `main` (entregas estables) y `develop` (integración ágil continua) |
+| **Ramas Git** | `main` (integración revisada) y ramas cortas por issue; sin ramas permanentes personales o `develop` |
 | **Cadencia de Trabajo** | Sprints de 2 semanas (10 días hábiles por iteración) |
 | **Tamaño del MVP** | 15 Historias de Usuario funcionales distribuidas en 3 Sprints |
 
@@ -161,7 +161,7 @@ Conforme a las directrices de las Áreas de Conocimiento de **Arquitectura de So
 | **Estilos y Maquetación** | TailwindCSS / CSS Moderno | Sistema de diseño basado en clases utilitarias que previene la sobrecarga de hojas de estilo (*dead code elimination*) y garantiza consistencia visual corporativa. |
 | **Lenguaje de Desarrollo** | TypeScript | Tipado estático de extremo a extremo que previene errores de tipo en tiempo de compilación entre modelos de base de datos, APIs y componentes de interfaz. |
 | **Seguridad de Configuración** | Variables de Entorno (`.env`) | Gestión segura de credenciales y URIs de base de datos protegidas por `.gitignore`, cumpliendo con las pautas de prevención de fuga de secretos del marco **NIST SSDF SP 800-218**. |
-| **Control de Versiones** | Git & GitHub | Arquitectura de ramas con rama principal `edmil-saire`, rama de integración `desarrollo` y ramas personales por desarrollador. |
+| **Control de Versiones** | Git & GitHub | `main` como rama de integración, ramas temporales por issue Jira y Pull Request revisado. |
 | **Gestión Ágil** | Jira / GitHub Projects | Tablero Kanban con límites WIP, estimación con Planning Poker (*Mike Cohn, 2004*) y seguimiento de métricas DORA y Cycle Time. |
 
 ---
@@ -189,7 +189,7 @@ El modelo secuencial en Cascada se descartó porque presupone requerimientos inm
 ### 8.2 Justificación del Modelo Iterativo e Incremental
 - **De Scrum se toma:** La cadencia fija en sprints cortos (2 semanas), las ceremonias de planificación, sincronización diaria, revisión y retrospectiva, y la unidad de trabajo en historias de usuario priorizadas.
 - **De Kanban se toma:** La transparencia visual mediante el tablero Kanban por fases, la limitación explícita del trabajo en curso (*WIP limits*) y la política de bloqueo para visibilizar impedimentos.
-- **De XP se toma:** Las prácticas de integración continua (*CI*), desarrollo guiado por pruebas (*TDD* en lógica crítica), propiedad colectiva del código, diseño simple y revisión por pares (*Peer Review*).
+- **De XP se toma:** Desarrollo guiado por pruebas (*TDD* en lógica crítica), propiedad colectiva del código, diseño simple y revisión por pares (*Peer Review*). La integración continua automatizada queda como mejora pendiente: el repositorio revisado no contiene workflows de GitHub Actions.
 
 ---
 
@@ -197,26 +197,26 @@ El modelo secuencial en Cascada se descartó porque presupone requerimientos inm
 
 ### 9.1 Aportes de Scrum
 - **Sprints de 2 Semanas:** Tres iteraciones para completar las 15 historias del MVP.
-- **Capacidad Fija:** Cuatro historias de usuario por sprint (exactamente 1 HU completa por cada integrante del equipo).
+- **Selección de historias:** el Product Owner prioriza el backlog y el equipo compromete trabajo según su capacidad y dependencias; la cantidad no se fija por número de integrantes.
 - **Ceremonias Regulares:**
   - *Sprint Planning:* Estimación con Planning Poker y compromiso de entrega.
   - *Daily Scrum:* 15 minutos diarios para alinear avances y destrabar bloqueos.
-  - *Sprint Review:* Demostración del software funcionando al Product Owner sobre la rama de integración.
+  - *Sprint Review:* Demostración del incremento integrado en `main` al Product Owner.
   - *Retrospectiva:* Análisis introspectivo y formulación de acuerdos de mejora para la siguiente iteración.
 
 ### 9.2 Aportes de Kanban
-- **Tablero Visual con Límites de Trabajo en Curso:** Estructura de flujo controlable de 4 columnas: $\text{TO DO} \rightarrow \text{DESARROLLO [WIP 3]} \rightarrow \text{REVISIÓN [WIP 2]} \rightarrow \text{DONE}$.
-- **Límites WIP Justificados:** Para el equipo de 3 desarrolladores activos, se define $\text{WIP} = 3$ en Desarrollo (1 desarrollador = máximo 1 HU activa) y $\text{WIP} = 2$ en Revisión para evitar saturación y cuellos de botella.
+- **Tablero Visual con Límites de Trabajo en Curso:** Estructura de flujo controlable de 4 columnas: $\text{POR HACER} \rightarrow \text{DESARROLLO [WIP 3]} \rightarrow \text{REVISIÓN [WIP 2]} \rightarrow \text{HECHO en main}$.
+- **Límites WIP acordados:** El equipo mantiene $\text{WIP} = 3$ en Desarrollo (máximo una HU activa por desarrollador) y $\text{WIP} = 2$ en Revisión. Revisará esos límites si cambia la capacidad del equipo.
 - **Principio Fundamental de Flujo:** Cuando la columna Revisión alcanza su capacidad máxima (2/2), la prioridad del equipo cambia inmediatamente: *dejar de iniciar trabajo nuevo y colaborar en terminar la revisión e integración existente* (*"Stop starting, start finishing"*).
 - **Gestión Visual de Bloqueos:** Identificación mediante etiqueta destacada `🚫 BLOQUEADA` en la columna actual, sin crear columnas artificiales que distorsionen las métricas.
 
 ### 9.3 Aportes de Programación Extrema (XP) y Ciclo TDD
-- **Desarrollo Guiado por Pruebas (TDD):** Cada Historia de Usuario desglosa internamente 4 subtareas técnicas obligatorias:
+- **Desarrollo Guiado por Pruebas (TDD):** Para cambios de comportamiento, el equipo aplica prueba, implementación, refactorización y validación. Puede reflejar esos pasos en subtareas Jira cuando ayuden a coordinar el trabajo; no son obligatorias para tareas documentales.
   1. **T1 — Pruebas / RED:** Creación de pruebas unitarias y de integración que inicialmente fallan.
   2. **T2 — Implementación / GREEN:** Programación mínima necesaria para hacer pasar las pruebas con éxito.
   3. **T3 — Refactorización:** Optimización de estructura, legibilidad y rendimiento sin modificar el comportamiento funcional.
-  4. **T4 — Validación e integración:** Verificación completa de criterios de aceptación y preparación del pull request.
-- **Integración Continua (CI):** Cada pull request a la rama `desarrollo` compila y ejecuta verificaciones de TypeScript y pruebas automáticas.
+  4. **T4 — Validación y PR:** Verificación de criterios de aceptación y preparación del pull request hacia `main`.
+- **Verificación previa al PR:** el autor ejecuta y registra las pruebas y comprobaciones disponibles; GitHub Actions aún no está configurado, por lo que no se afirma que estas comprobaciones corran automáticamente.
 - **Revisión de Código por Pares (*Peer Review*):** Ningún código se integra a la rama común sin al menos una aprobación formal de otro integrante.
 - **Diseño Simple y Propiedad Colectiva del Código:** Código semántico, componentes modulares en Next.js y tipado estricto con Prisma y TypeScript.
 
@@ -248,54 +248,31 @@ El equipo adopta una estructura de **roles rotativos**, donde las funciones de l
 | **Quispe Mamani, Domingo de Guzman** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
 | **Ticona Jancco, Ronaldo** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
 
-### 10.2 Protocolo de Coordinación y Ramas de Git para los Desarrolladores
-Para asegurar un trabajo colaborativo ordenado y evitar colisiones de código, se establece la siguiente arquitectura de ramas:
+### 10.2 Protocolo de coordinación y ramas Git
 
-1. **Rama Principal (`edmil-saire`):** Es la rama `main` del repositorio remoto. Contiene código 100% estable, validado y libre de errores para entregas oficiales.
-2. **Rama de Desarrollo e Integración (`desarrollo` / `develop`):** Rama común donde confluyen todos los avances para testear la unión de los desarrolladores antes de enviar a producción.
-3. **Ramas Individuales de cada Desarrollador:**  
-   Cada desarrollador cuenta con su rama personal vinculada a su cuenta de GitHub:
-   - `hector-barazorda`
-   - `alex-carpio`
-   - `domingo-quispe`
-   - `edmil-saire`
-   - `ronaldo-ticona`
+`main` es la única rama permanente de integración. Cada historia o cambio acotado se desarrolla en una rama corta nombrada `<tipo>/<CGB-ID>-<resumen>`, creada desde `origin/main`; por ejemplo, `feature/CGB-51-mi-onboarding` o `docs/CGB-123-flujo-git`. Las ramas con nombres de integrantes y `desarrollo`/`develop` son referencias históricas y no bases para trabajo nuevo.
 
-#### Ciclo de Trabajo Obligatorio para cada Desarrollador:
-```bash
-# 1. Situarse en su rama y sincronizar los últimos cambios de desarrollo
-git checkout <tu-nombre-de-rama>
-git pull origin desarrollo
+Antes de editar, cada colaborador inspecciona `git status` y los diffs. Conserva archivos ajenos, agrega rutas explícitas y nunca usa `git add .` como rutina. No incluye `.env`, tokens, dependencias instaladas ni artefactos generados. Los commits siguen Conventional Commits (`feat(onboarding): guardar el avance (CGB-56)`) y describen una intención por commit.
 
-# 2. Realizar avances y confirmar con su cuenta de GitHub
-git add .
-git commit -m "feat(modulo): descripción del avance de la HU"
-git push origin <tu-nombre-de-rama>
-
-# 3. Crear Pull Request en GitHub:
-#    Base: desarrollo  <---  Compare: <tu-nombre-de-rama>
-
-# 4. Probar la integración conjunta en la rama 'desarrollo'.
-# 5. Pase a la rama principal 'edmil-saire' una vez superado el testing.
-```
+El autor sincroniza su rama propia con `origin/main`, ejecuta las comprobaciones pertinentes y abre un Pull Request hacia `main` con issue Jira, cambio, evidencia y riesgos. Otra persona revisa y aprueba; los comentarios se resuelven antes del **Squash and merge**. Jira pasa a Hecho cuando se cumple la Definition of Done. Las instrucciones completas y comandos están en [`docs/FLUJO_DE_TRABAJO.md`](../docs/FLUJO_DE_TRABAJO.md).
 
 ---
 
 ## 11. Flujo de Trabajo del Equipo
 
-Para garantizar un flujo de entrega ágil, continuo y predecible, el equipo implementa un **Tablero Kanban con Límites WIP** integrado al ciclo iterativo de Scrum y a las prácticas de desarrollo guiado por pruebas (TDD) de XP.
+Para gestionar el flujo de entrega, el equipo usa un **Tablero Kanban con Límites WIP** integrado al ciclo iterativo de Scrum y a las prácticas de desarrollo guiado por pruebas (TDD) de XP.
 
 ### 11.1 Arquitectura del Tablero Kanban Oficial
 El tablero visual del equipo se estructura en cuatro columnas de flujo continuo:
 
-$$\text{TO DO} \longrightarrow \text{DESARROLLO [WIP 3]} \longrightarrow \text{REVISIÓN [WIP 2]} \longrightarrow \text{DONE}$$
+$$\text{POR HACER} \longrightarrow \text{DESARROLLO [WIP 3]} \longrightarrow \text{REVISIÓN [WIP 2]} \longrightarrow \text{HECHO en main}$$
 
 | Columna | Significado Operativo | Límite WIP Recomendado |
 |---|---|:---:|
-| **TO DO** | Historias de Usuario del Sprint comprometidas que aún no han sido iniciadas. | Sin límite fijo |
+| **POR HACER** | Historias preparadas y comprometidas para el Sprint que aún no han sido iniciadas. | Sin límite fijo |
 | **DESARROLLO** | Historias de Usuario que actualmente se encuentran en proceso activo de codificación y pruebas. | **3** |
 | **REVISIÓN** | Desarrollo e implementación local terminados; pendiente de revisión por pares (*Peer Review*), pruebas automatizadas e integración. | **2** |
-| **DONE** | Historias de Usuario completamente probadas, integradas en la rama común y aceptadas por el Product Owner según los criterios de aceptación. | Sin límite |
+| **HECHO** | Historias que cumplen la Definition of Done, se integraron en `main` y fueron aceptadas según sus criterios. | Sin límite |
 
 ---
 
@@ -311,7 +288,7 @@ Donde:
 - **$\text{Throughput (TH)}$:** Tasa de entrega o velocidad efectiva del equipo (historias terminadas por unidad de tiempo).
 - **$\text{Cycle Time (CT)}$:** Tiempo promedio que tarda una historia desde que inicia su implementación hasta ser desplegada y aceptada.
 
-Bajo una capacidad productiva fija de 3 desarrolladores ($\text{TH}$ cuasi-constante), cualquier incremento descontrolado del $\text{WIP}$ genera un aumento lineal directo en el $\text{Cycle Time}$, disparando la multitarea, las esperas en cola y la probabilidad de defectos por cambio de contexto (*context switching*). Limitar el $\text{WIP}$ es la única garantía matemática de mantener un $\text{Cycle Time}$ mínimo, predecible y estable.
+La Ley de Little relaciona WIP, throughput y tiempo de ciclo cuando el flujo es estable; no demuestra por sí sola que un límite produzca un tiempo mínimo. El límite 3/2 es una política operativa para contener multitarea y colas. El equipo debe medir throughput y tiempo de ciclo en Jira y ajustar los límites según los resultados y la capacidad disponible.
 
 #### ¿Por qué Desarrollo = 3?
 El equipo cuenta con **3 integrantes en el rol de Development** dedicados a la construcción técnica de las historias de usuario de cada Sprint (mientras que los roles de Product Owner y Scrum Master facilitan la priorización, refinamiento, gestión de bloqueos y apoyo técnico). La regla operativa fundamental es:
@@ -330,19 +307,19 @@ Esto materializa el axioma de ingeniería Lean: *"Stop starting, start finishing
 ---
 
 ### 11.3 Unidad de Flujo: Las Historias de Usuario
-En el tablero Kanban, la tarjeta que se mueve a través de las columnas es la **Historia de Usuario (HU)** completa (por ejemplo, *HU-002: Crear una capacitación*). Conforme a **ISO/IEC/IEEE 29148:2018**, la HU representa el incremento vertical de valor que viaja desde *TO DO* hasta *DONE*. **No se crean tarjetas separadas para cada paso técnico**.
+En el tablero Kanban, la tarjeta que se mueve a través de las columnas es la **Historia de Usuario (HU)** completa (por ejemplo, *HU-002: Crear una capacitación*). Conforme a **ISO/IEC/IEEE 29148:2018**, la HU representa el incremento vertical de valor que viaja desde *Por hacer* hasta *Hecho*. Las subtareas técnicas se agregan cuando facilitan la coordinación y no sustituyen la historia.
 
 ---
 
-### 11.4 Las 4 Subtareas Técnicas TDD dentro de cada Historia de Usuario
-Para materializar las disciplinas de la Programación Extrema (XP) postuladas por *Kent Beck (2000, 2002)* y los estándares de verificación y prueba de **ISTQB CTFL v4.0 (2023)**, cada Historia de Usuario en Jira contiene internamente **cuatro subtareas técnicas estructuradas bajo el ciclo TDD**:
+### 11.4 Aplicación de TDD en historias con cambios de comportamiento
+Para materializar las disciplinas de la Programación Extrema (XP) postuladas por *Kent Beck (2000, 2002)* y los estándares de verificación y prueba de **ISTQB CTFL v4.0 (2023)**, el equipo aplica el ciclo TDD cuando el cambio incorpora o modifica comportamiento. Las subtareas pueden representar estos pasos si aportan coordinación; no son obligatorias para tareas documentales:
 
 | Subtarea Técnica | Actividad Concreta en el Ciclo TDD | Fundamento de Ingeniería de Calidad |
 |---|---|---|
 | **T1 — Pruebas / RED** | Diseñar y codificar pruebas unitarias y de integración que inicialmente fallan por ausencia de implementación. | Prevención de defectos por diseño (*Defect Prevention* - ISTQB) y especificación ejecutable. |
 | **T2 — Implementación / GREEN** | Desarrollar el código mínimo y necesario para que la suite de pruebas pase exitosamente a verde. | Verificación de funcionalidad básica y eliminación del sobre-diseño (*YAGNI - You Aren't Gonna Need It*). |
 | **T3 — Refactorización** | Reestructurar el código interno sin alterar su comportamiento observable: modularizar en Next.js, optimizar consultas Prisma y suprimir duplicidades. | Control riguroso de la Deuda Técnica (*Martin Fowler, 2018; Robert C. Martin, 2008*) para mantener la mantenibilidad ISO 25010. |
-| **T4 — Validación e integración** | Ejecutar la suite completa de pruebas de regresión, contrastar con los criterios de aceptación BDD (*Dado/Cuando/Entonces*) y preparar el Pull Request hacia la rama `desarrollo`. | Validación de integración continua (*Continuous Integration*) y cumplimiento de la Definition of Done. |
+| **T4 — Validación y Pull Request** | Ejecutar las pruebas pertinentes, contrastar los criterios BDD (*Dado/Cuando/Entonces*) y preparar el Pull Request hacia `main`. | Evidencia de verificación en el PR y cumplimiento de la Definition of Done. Los checks automáticos quedan pendientes de configurar en GitHub Actions. |
 
 En el tablero de Jira, la tarjeta principal visualmente visible es la **HU**, y a medida que el desarrollador completa sus subtareas $T1 \rightarrow T2 \rightarrow T3 \rightarrow T4$, la historia transita fluidamente de Desarrollo a Revisión.
 
@@ -352,7 +329,7 @@ En el tablero de Jira, la tarjeta principal visualmente visible es la **HU**, y 
 
 Para que una tarjeta pueda avanzar entre columnas, debe cumplir estrictamente las siguientes políticas explícitas:
 
-#### 1. Transición: TO DO $\longrightarrow$ DESARROLLO
+#### 1. Transición: POR HACER $\longrightarrow$ DESARROLLO
 Una Historia de Usuario puede ingresar a Desarrollo únicamente cuando:
 - Pertenece formalmente al Sprint actual aprobado en el Sprint Planning.
 - Se encuentra suficientemente refinada y estimada por el equipo.
@@ -366,16 +343,16 @@ Una Historia de Usuario puede pasar a Revisión únicamente cuando:
 - Se ejecutó el proceso de refactorización ($T3$).
 - La funcionalidad completa opera correctamente en el entorno local.
 - Las pruebas unitarias locales pasan al 100% sin advertencias.
-- El código se encuentra confirmado y subido a la rama personal de GitHub del desarrollador.
+- El código se encuentra en una rama temporal por issue y el Pull Request hacia `main` está abierto con sus evidencias.
 - **Existe capacidad disponible dentro del límite WIP de Revisión ($\le 2$).**
 
-#### 3. Transición: REVISIÓN $\longrightarrow$ DONE
+#### 3. Transición: REVISIÓN $\longrightarrow$ HECHO
 Una Historia de Usuario alcanza el estado final de Done únicamente cuando:
 - El código ha sido revisado y aprobado formalmente por al menos otro desarrollador (*Peer Review* en GitHub).
-- Las pruebas de integración en la rama `desarrollo` pasan sin regresiones.
+- Las pruebas pertinentes registradas en el PR pasan sin regresiones; el repositorio todavía no configura ejecución automática en GitHub Actions.
 - No existen errores bloqueantes de compilación en Next.js ni TypeScript.
 - Se validaron satisfactoriamente todos los criterios de aceptación junto al Product Owner.
-- El Pull Request ha sido fusionado limpiamente en la rama `desarrollo`.
+- El Pull Request ha sido fusionado limpiamente en `main`.
 
 ---
 
@@ -397,7 +374,7 @@ Cuando una historia de usuario se ve imposibilitada de continuar (por ejemplo, d
 El Sprint 1 comprende las primeras seis historias del MVP. El flujo operativo se distribuye de la siguiente manera:
 
 #### Estado Inicial del Tablero (Arranque del Sprint 1):
-| TO DO | DESARROLLO [WIP: 3] | REVISIÓN [WIP: 2] | DONE |
+| POR HACER | DESARROLLO [WIP: 3] | REVISIÓN [WIP: 2] | HECHO |
 |---|---|---|---|
 | HU-004 — Previsualizar y publicar | **HU-001** — Acceder al área interna *(Dev 1)* | *(vacío)* | *(vacío)* |
 | HU-005 — Explorar públicas | **HU-002** — Crear una capacitación *(Dev 2)* | | |
@@ -408,14 +385,14 @@ Los tres desarrolladores inician en paralelo sus respectivas historias de usuari
 #### Escenario de Saturación de Revisión y Aplicación de WIP:
 Conforme avanza la iteración, puede presentarse el siguiente estado:
 
-| TO DO | DESARROLLO [WIP: 3] | REVISIÓN [WIP: 2] | DONE |
+| POR HACER | DESARROLLO [WIP: 3] | REVISIÓN [WIP: 2] | HECHO |
 |---|---|---|---|
 | HU-006 — Consultar pública | HU-004 *(Dev 1)* | **HU-002** | HU-001 |
 | | HU-005 *(Dev 2)* | **HU-003** | |
 
 En este momento:
 $$\text{Desarrollo} = 2/3 \quad | \quad \text{Revisión} = 2/2 \text{ (CAPACIDAD MÁXIMA ALCANZADA)}$$
-**Regla de intervención:** Ningún desarrollador puede mover una nueva historia a Revisión hasta que se libere al menos una tarjeta. El equipo prioriza revisar el código de HU-002 o HU-003, realizar pruebas e integrarlas en `desarrollo` para que avancen a **DONE**, desbloqueando así el flujo.
+**Regla de intervención:** Ningún desarrollador puede mover una nueva historia a Revisión hasta que se libere al menos una tarjeta. El equipo prioriza revisar el código de las historias que ya están en Revisión, realizar pruebas e integrarlas en `main` para que avancen a **Hecho**, desbloqueando así el flujo.
 
 ---
 
@@ -423,7 +400,7 @@ $$\text{Desarrollo} = 2/3 \quad | \quad \text{Revisión} = 2/2 \text{ (CAPACIDAD
 El Sprint 2 modela la estructura organizacional de Áreas, Puestos y Onboarding:
 - **Arranque:**
   - `DESARROLLO [3]`: HU-007 (Crear área y puestos), HU-008 (Crear ruta de onboarding), HU-009 (Registrar colaboradores).
-  - `TO DO [3]`: HU-010 (Activar cuenta con token), HU-011 (Consultar Mi Onboarding), HU-012 (Completar capacitación interna).
+  - `POR HACER [3]`: HU-010 (Activar cuenta con token), HU-011 (Consultar Mi Onboarding), HU-012 (Completar capacitación interna).
 - **Flujo:** Conforme se liberan las historias del primer bloque hacia Revisión y Done, HU-010, HU-011 y HU-012 ingresan ordenadamente a Desarrollo, garantizando que nunca coexistan más de 3 historias simultáneas en codificación.
 
 ---
@@ -432,8 +409,8 @@ El Sprint 2 modela la estructura organizacional de Áreas, Puestos y Onboarding:
 El Sprint 3 aborda los microtests formativos y la supervisión de progreso:
 - **Arranque:**
   - `DESARROLLO [3]`: HU-013 (Configurar microtest), HU-014 (Realizar microtest), HU-015 (Consultar avance de colaboradores).
-  - `TO DO`: *(vacío)*.
-- **Correspondencia Exacta:** 3 Historias de Usuario para 3 Desarrolladores $\rightarrow$ Asignación inicial de 1 HU por desarrollador.
+  - `POR HACER`: *(vacío)*.
+- **Asignación inicial:** el equipo puede iniciar hasta tres historias según el límite WIP vigente; la asignación real depende de disponibilidad y dependencias registradas en Jira.
 - **Gestión de Dependencias Técnicas:** Dado que HU-014 depende funcionalmente de la estructura creada en HU-013, el desarrollador a cargo de HU-014 avanza en las pruebas ($T1$) y maquetación de componentes frontend, sincronizando la integración de backend una vez consolidado el modelo de datos de HU-013.
 
 ---
@@ -448,14 +425,14 @@ El equipo adopta como norma de ingeniería de software vinculante la siguiente d
 > 3. **Límite de Revisión:** La columna *Revisión* tendrá un límite estricto de **2 Historias de Usuario simultáneas**.
 > 4. **Prioridad de Desatoro:** Cuando la columna *Revisión* alcance su límite (2/2), el equipo priorizará de forma absoluta revisar, probar e integrar las historias existentes antes de iniciar o promover nuevas historias.
 > 5. **Manejo de Bloqueos:** Las tarjetas impedidas permanecerán en su columna física identificadas con la etiqueta visible **$\mathbf{\oslash\text{ BLOQUEADA}}$**, especificando causa técnica, responsable y acción mitigadora.
-> 6. **Condición de Finalización:** Ninguna Historia de Usuario podrá pasar al estado **DONE** sin satisfacer al 100% sus criterios de aceptación, pruebas automatizadas en verde y fusión validada en la rama `desarrollo`.
+> 6. **Condición de Finalización:** Ninguna Historia de Usuario pasa a **HECHO** sin satisfacer sus criterios de aceptación, registrar las comprobaciones ejecutadas, obtener aprobación por pares y fusionarse en `main`. Los checks automáticos quedan pendientes de configurar.
 
 ---
 
 ### 11.11 Flujo Metodológico Integrado Scrum + Kanban + TDD
 Sintetizando la arquitectura del modelo iterativo e incremental, el ciclo operativo global del proyecto se resume en el siguiente esquema:
 
-$$\text{BACKLOG} \longrightarrow \text{SPRINT} \longrightarrow \text{TO DO} \longrightarrow \mathbf{\text{DESARROLLO [WIP 3]}} \longrightarrow \mathbf{\text{REVISIÓN [WIP 2]}} \longrightarrow \text{DONE}$$
+$$\text{BACKLOG} \longrightarrow \text{SPRINT} \longrightarrow \text{POR HACER} \longrightarrow \mathbf{\text{DESARROLLO [WIP 3]}} \longrightarrow \mathbf{\text{REVISIÓN [WIP 2]}} \longrightarrow \text{HECHO en main}$$
 
 y a nivel interno de cada Historia de Usuario en desarrollo:
 
@@ -465,13 +442,13 @@ $$\mathbf{\text{T1: RED (Pruebas)}} \longrightarrow \mathbf{\text{T2: GREEN (Có
 
 ### 11.12 Definición de Hecho (*Definition of Done* — DoD)
 Para que una Historia de Usuario sea declarada formalmente **Done**, debe satisfacer sin excepciones:
-- [x] Cumplir al 100% todos los Criterios de Aceptación especificados en formato BDD (*Dado que / Cuando / Entonces*).
-- [x] Contar con suite de pruebas automáticas superadas en verde (ciclo TDD).
-- [x] No generar advertencias ni errores de compilación en Next.js 16 ni TypeScript.
-- [x] Contar con persistencia validada en MongoDB Atlas a través de los esquemas de Prisma ORM.
-- [x] Haber sido revisada y aprobada por pares mediante Pull Request en GitHub.
-- [x] Estar fusionada e integrada limpiamente en la rama `desarrollo`.
-- [x] Haber sido demostrada y validada por el Product Owner antes del paso a la rama principal `edmil-saire`.
+- [ ] Cumplir los criterios de aceptación BDD de la historia y registrar cómo se comprobaron.
+- [ ] Ejecutar las pruebas pertinentes y registrar los resultados reales; no afirmar checks automáticos mientras CI no esté configurada.
+- [ ] Revisar compilación o configuración cuando el cambio lo requiera; documentar comprobaciones pendientes.
+- [ ] Validar la persistencia en MongoDB Atlas solo cuando la historia modifique datos o acceso a datos.
+- [ ] Obtener aprobación por pares y resolver comentarios del Pull Request.
+- [ ] Integrar en `main` y enlazar Jira, PR y commit.
+- [ ] Obtener aceptación del Product Owner según los criterios de la historia.
 
 ---
 
@@ -491,7 +468,7 @@ El primer incremento del proyecto comprende la construcción del núcleo operati
 
 - **Evidencias de Funcionamiento:**
   - Interfaces construidas bajo estándares responsive en Next.js.
-  - Repositorio activo con control de versiones en GitHub (`edmil-saire` y `desarrollo`).
+  - Repositorio activo con control de versiones en GitHub; las referencias vigentes se registran en `main` y las entregas se enlazan a sus issues y Pull Requests.
   - Base de datos relacional con modelos para `Usuario`, `Rol`, `Capacitación` y `Slide`.
 - **Pruebas y Validaciones Realizadas:**
   - Pruebas de integración sobre endpoints de autenticación y CRUD de capacitaciones.
@@ -506,13 +483,13 @@ El primer incremento del proyecto comprende la construcción del núcleo operati
 El equipo utiliza métricas cuantitativas para evaluar la estabilidad del flujo y la cadencia de entrega:
 
 1. **Velocidad del Sprint (Sprint Velocity):** 
-   - Sprint 1: 6 Historias de Usuario completadas (HU-001 a HU-006).
-   - Sprint 2: 6 Historias de Usuario (HU-007 a HU-012).
-   - Sprint 3: 3 Historias de Usuario (HU-013 a HU-015).
-   - Total MVP: 15 Historias de Usuario terminadas bajo Definition of Done.
-2. **Tiempo de Ciclo (*Cycle Time*):** Tiempo promedio medido desde que una HU pasa de `TO DO` a `DONE` (meta promedio: 3 a 4 días laborables por HU).
-3. **Tasa de Criterios de Aceptación Superados:** 100% de criterios de aceptación verificados antes del cierre de cada historia.
-4. **Métricas de Calidad de Código:** Cero regresiones críticas en la rama `desarrollo` mediante validación por pares y suite de pruebas TDD.
+   - Sprint 1: seis historias planificadas (HU-001 a HU-006). En la consulta de Jira del 19 de octubre de 2026, cuatro figuraban en Hecho y HU-004/HU-006 seguían en Revisión; también había dos tareas de gestión pendientes.
+   - Sprint 2: seis historias planificadas (HU-007 a HU-012); consultar Jira para su estado vigente.
+   - Sprint 3: tres historias planificadas (HU-013 a HU-015); consultar Jira para su estado vigente.
+   - Total MVP: 15 historias definidas; el total terminado se calcula desde Jira aplicando la Definition of Done, no desde la planificación.
+2. **Tiempo de Ciclo (*Cycle Time*):** Tiempo promedio medido desde que una HU pasa de `Por hacer` a `Hecho` (meta de planificación: 3 a 4 días laborables por HU; contrastar la meta con datos registrados en Jira).
+3. **Tasa de Criterios de Aceptación Superados:** calcularla con la evidencia BDD registrada por historia; no reportar un 100% agregado mientras haya historias en Revisión.
+4. **Métricas de Calidad de Código:** Registrar defectos y resultados de revisión/prueba por historia. No afirmar una ejecución automática de CI mientras no exista un workflow configurado.
 
 ---
 
@@ -537,16 +514,16 @@ En el marco de la formación profesional de la UNSAAC, la Inteligencia Artificia
 | Fecha | Herramienta Empleada | Propósito / Actividad Real | Validación Técnica Realizada |
 |---|---|---|---|
 | 30/09/2026 | Antigravity AI Assistant | Modelado de especificación funcional CGB Academy y estructura de historias BDD | Validación contra el requerimiento real y generación de la matriz de requerimientos ISO 29148. |
-| 01/10/2026 - 06/10/2026 | Antigravity AI Assistant | Construcción de componentes Next.js 16, Route Handlers, esquemas Prisma y suites de prueba TDD | Superación del 100% de tests unitarios y de integración (`68 passing`), compilación limpia en Turbopack. |
+| 01/10/2026 - 06/10/2026 | Antigravity AI Assistant | Construcción de componentes Next.js 16, Route Handlers, esquemas Prisma y suites de prueba TDD | La bitácora registra `68 passing` y una compilación de Turbopack en esa ejecución; no representa un check automático de CI ni el estado actual de todas las historias. |
 | 07/10/2026 | Antigravity AI Assistant | Sincronización automática de ramas en Git, seeds en MongoDB Atlas e integración MCP con Jira | Verificación en Jira Cloud (32 tareas cerradas en Sprint 1) y base de datos en producción. |
 
 ---
 
 ## 16. Conclusiones
 
-1. **Eficacia del Modelo Iterativo e Incremental:** La sinergia entre la cadencia predecible de Scrum (sprints de 2 semanas), la limitación matemática del trabajo en curso de Kanban (Ley de Little con $\text{WIP} = 3$ en Desarrollo y $\text{WIP} = 2$ en Revisión) y la disciplina técnica de XP/TDD proporciona un flujo continuo, minimiza el tiempo de ciclo y previene la dispersión del equipo de cinco integrantes.
+1. **Eficacia del Modelo Iterativo e Incremental:** Scrum, Kanban y TDD definen la cadencia, los límites de trabajo y la verificación. En Jira, al 19/10/2026, cuatro de las seis historias del Sprint 1 figuraban en Hecho y HU-004/HU-006 seguían en Revisión; deben cerrarse y reconciliarse antes de declarar completo el incremento.
 2. **Delimitación Rigurosa del MVP bajo Estándares:** La especificación de requerimientos conforme a **ISO/IEC/IEEE 29148:2018** y los atributos **INVEST**, sumada a la clasificación taxonómica de restricciones bajo **ISO/IEC 25010:2023**, asegura un producto de software enfocado, técnicamente verificable y de alto valor institucional sin incurrir en deuda técnica temprana.
-3. **Calidad Integrada Mediante Ciclo TDD y Políticas Explícitas:** Estructurar cada Historia de Usuario en las cuatro subtareas técnicas de ingeniería ($T1$ Pruebas/RED, $T2$ Implementación/GREEN, $T3$ Refactorización y $T4$ Validación e Integración) garantiza que ningún incremento alcance el estado de *Done* sin respaldo automatizado, persistencia comprobada en MongoDB Atlas y validación por pares en GitHub.
+3. **Calidad Integrada Mediante TDD y Políticas Explícitas:** Aplicar TDD a cambios de comportamiento, verificar criterios BDD y exigir revisión por pares deja evidencia trazable desde Jira hasta `main`. Las subtareas técnicas se usan cuando ayudan a coordinar; las cinco condiciones comunes de cierre están en [`docs/definition-of-done.md`](../docs/definition-of-done.md). La ejecución automática de CI queda pendiente.
 
 ---
 
