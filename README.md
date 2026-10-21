@@ -45,7 +45,7 @@ De acuerdo a la arquitectura técnica del sistema:
 
 ## Actividad: validación de necesidades
 
-El [informe breve de necesidades y requisitos](informe/actividad_necesidades.pdf) enlaza las historias refinadas [CGB-51](https://cgb-academy.atlassian.net/browse/CGB-51) y [CGB-56](https://cgb-academy.atlassian.net/browse/CGB-56). La [fuente Markdown](informe/actividad_necesidades.md), el [registro anonimizado de conversatorios y análisis documental](informe/registro_conversatorios.md), la [plantilla de entrevista y observación](informe/plantilla_entrevista_usuario.md) y la [evaluación de pendientes](docs/ANALISIS_FALTANTES_ACTIVIDAD_INGENIERIA_REQUISITOS.md) explican qué está documentado y qué sigue por validar.
+El [informe breve de necesidades y requisitos](informe/actividad-necesidades-latex/actividad_necesidades.pdf) y su [proyecto LaTeX](informe/actividad-necesidades-latex/main.tex) enlazan las historias refinadas [CGB-51](https://cgb-academy.atlassian.net/browse/CGB-51) y [CGB-56](https://cgb-academy.atlassian.net/browse/CGB-56). La [fuente Markdown](informe/actividad_necesidades.md), el [registro anonimizado de conversatorios y análisis documental](informe/registro_conversatorios.md), la [plantilla de entrevista y observación](informe/plantilla_entrevista_usuario.md) y la [evaluación de pendientes](docs/ANALISIS_FALTANTES_ACTIVIDAD_INGENIERIA_REQUISITOS.md) explican qué está documentado y qué sigue por validar.
 
 ## 📊 Metodología de Desarrollo: Scrum + Kanban con Límites WIP + TDD
 
