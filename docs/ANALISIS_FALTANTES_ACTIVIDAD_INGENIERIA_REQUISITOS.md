@@ -12,7 +12,9 @@ El equipo aclara que la captura de requerimientos y los conversatorios ya se rea
 
 El informe breve y su PDF fueron actualizados para reflejar que la captura y los conversatorios se realizaron, incluir las cuatro fotografías y señalar que la venta de cursos está fuera del alcance aprobado. Jira se reconsultó y se actualizaron las secciones de evidencia de CGB-51 y CGB-56 el 21/10. Ambos siguen en Sprint 2, Tareas por hacer, prioridad Highest y `evidence-pending`; no cambiaron estado, sprint, prioridad ni responsables. Falta citar en Jira el hallazgo específico de la captura que respalda N1 y N2.
 
-## Estado general al corte del 19/10/2026
+## Estado histórico al corte del 19/10/2026 (antes de la actualización del 21/10)
+
+La comparación y las notas históricas que siguen reflejan el estado del repositorio antes de que el equipo confirmara la captura y los conversatorios. Para el estado vigente, prevalece la actualización del 21/10/2026 al inicio de este documento. No debe interpretarse la mención histórica de entrevistas pendientes como una tarea actual.
 
 El repositorio ya contiene un informe provisional de dos páginas, matriz preliminar, persona hipotética, cinco preguntas, observación propuesta y cuatro requisitos revisados. CGB-51 y CGB-56 fueron refinadas en Jira y enlazadas textualmente a necesidades N1/N2, con criterios verificables, prioridad, tareas técnicas y criterios AG-C01. La actividad sigue pendiente de validación con usuarios: no se han realizado entrevistas ni observaciones, por lo que el informe identifica los hallazgos como hipótesis pendientes.
 
