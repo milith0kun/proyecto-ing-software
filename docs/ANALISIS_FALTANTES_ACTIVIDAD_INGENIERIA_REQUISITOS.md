@@ -10,7 +10,9 @@
 
 El equipo aclara que la captura de requerimientos y los conversatorios ya se realizaron con administración de ventas, TI y operaciones académicas; también se conversó con otros participantes. Las cuatro fotos compartidas se incorporaron al proyecto LaTeX como evidencia visual contextual, sin asignar cada imagen a un rol individual. Se revisaron la especificación funcional/no funcional y un manual comercial local de seguimiento por WhatsApp. El análisis por rol, sus fuentes y sus límites están en [`informe/registro_conversatorios.md`](../informe/registro_conversatorios.md). El manual comercial no se incorporó al repositorio.
 
-El informe breve y su PDF fueron actualizados para reflejar que la captura y los conversatorios se realizaron, incluir las cuatro fotografías y señalar que la venta de cursos está fuera del alcance aprobado. Jira se reconsultó y se actualizaron las secciones de evidencia de CGB-51 y CGB-56 el 21/10. Ambos siguen en Sprint 2, Tareas por hacer, prioridad Highest y `evidence-pending`; no cambiaron estado, sprint, prioridad ni responsables. Falta citar en Jira el hallazgo específico de la captura que respalda N1 y N2.
+El informe breve ahora distingue los dos recorridos del producto: formación privada de empleados y orientación pública para estudiantes/docentes sobre plataformas y casos de uso. Incluye las cuatro fotos de sesiones sin atribuirles roles. Ventas figura como área entrevistada y stakeholder, no como una función de seguimiento comercial del producto.
+
+Jira se reconsultó el 21/10. Se actualizaron las descripciones de CGB-26 (guías públicas), CGB-56 (avance interno) y su dependencia CGB-51 para separar las audiencias y enlazar RF-005/RF-006 y RF-011/RF-012. CGB-51 y CGB-56 siguen en Sprint 2, Tareas por hacer, Highest; CGB-26 está en Revisión, Medium, aunque HU-006 indica prioridad Alta en la especificación. No se cambiaron estados, sprints, responsables ni prioridades; el PO debe resolver esa discrepancia. Se retiró `evidence-pending` de CGB-51/CGB-56 porque el equipo confirmó la captura y los conversatorios.
 
 ## Estado histórico al corte del 19/10/2026 (antes de la actualización del 21/10)
 
