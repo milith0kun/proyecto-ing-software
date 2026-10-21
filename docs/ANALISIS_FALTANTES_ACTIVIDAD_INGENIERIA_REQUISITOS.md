@@ -6,7 +6,13 @@
 
 **Proceso reutilizable para asistentes:** [`skills/cgb-academy-requirements/SKILL.md`](../skills/cgb-academy-requirements/SKILL.md).
 
-## Estado general actualizado
+## Actualización de evidencia — 21 de octubre de 2026
+
+El equipo informa que realizó conversatorios con administración de ventas, TI y operaciones académicas. Las fotos compartidas documentan el contexto de trabajo, no las respuestas de los participantes. Se revisaron la especificación funcional/no funcional y un manual comercial local de seguimiento por WhatsApp. El análisis por rol, sus fuentes y sus límites están en [`informe/registro_conversatorios.md`](../informe/registro_conversatorios.md). No se incorporaron las fotos ni el manual comercial al repositorio.
+
+El informe breve y su PDF fueron actualizados para reflejar los conversatorios reportados, separar las necesidades documentales de los testimonios y señalar que la venta de cursos está fuera del alcance aprobado. Jira se reconsultó y se actualizaron las secciones de evidencia de CGB-51 y CGB-56 el 21/10. Ambos siguen en Sprint 2, Tareas por hacer, prioridad Highest y `evidence-pending`; no cambiaron estado, sprint, prioridad ni responsables. La evidencia todavía no valida N1/N2.
+
+## Estado general al corte del 19/10/2026
 
 El repositorio ya contiene un informe provisional de dos páginas, matriz preliminar, persona hipotética, cinco preguntas, observación propuesta y cuatro requisitos revisados. CGB-51 y CGB-56 fueron refinadas en Jira y enlazadas textualmente a necesidades N1/N2, con criterios verificables, prioridad, tareas técnicas y criterios AG-C01. La actividad sigue pendiente de validación con usuarios: no se han realizado entrevistas ni observaciones, por lo que el informe identifica los hallazgos como hipótesis pendientes.
 
@@ -84,7 +90,7 @@ Enlaces de Jira revisados:
 - [CGB-16 — HU-004: previsualizar y publicar](https://cgb-academy.atlassian.net/browse/CGB-16)
 - [CGB-26 — HU-006: consultar capacitación pública](https://cgb-academy.atlassian.net/browse/CGB-26)
 
-## Pendientes para cerrar la validación
+## Pendientes al corte del 19/10/2026
 
 1. Realizar la entrevista al colaborador y la observación; guardar fecha y notas anonimizadas.
 2. Reemplazar hipótesis por hallazgos confirmados; ajustar persona, matriz, prioridades y criterios si hace falta.
@@ -92,4 +98,4 @@ Enlaces de Jira revisados:
 4. Actualizar CGB-51/CGB-56 con resultados reales y quitar `evidence-pending` solo cuando exista evidencia.
 5. Adjuntar evidencia de las entrevistas y pruebas futuras; mantener la reflexión sobre el siguiente sprint.
 
-**Estado actual:** CGB-51/CGB-56 ya fueron editadas y verificadas de vuelta en Jira; no se cambiaron estado, sprint ni responsables. El informe PDF tiene dos páginas. No se realizaron entrevistas ni pruebas de aceptación nuevas; la validación con usuarios sigue pendiente.
+**Estado al corte del 19/10/2026:** CGB-51/CGB-56 ya fueron editadas y verificadas de vuelta en Jira; no se cambiaron estado, sprint ni responsables. El informe PDF tenía dos páginas. A esa fecha no se habían realizado entrevistas ni pruebas de aceptación; la actualización del 21/10 se registra al inicio de este documento.
