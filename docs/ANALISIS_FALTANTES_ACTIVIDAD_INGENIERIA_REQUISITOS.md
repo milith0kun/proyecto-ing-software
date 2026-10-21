@@ -8,9 +8,9 @@
 
 ## Actualización de evidencia — 21 de octubre de 2026
 
-El equipo informa que realizó conversatorios con administración de ventas, TI y operaciones académicas. Las fotos compartidas documentan el contexto de trabajo, no las respuestas de los participantes. Se revisaron la especificación funcional/no funcional y un manual comercial local de seguimiento por WhatsApp. El análisis por rol, sus fuentes y sus límites están en [`informe/registro_conversatorios.md`](../informe/registro_conversatorios.md). No se incorporaron las fotos ni el manual comercial al repositorio.
+El equipo aclara que la captura de requerimientos y los conversatorios ya se realizaron con administración de ventas, TI y operaciones académicas; también se conversó con otros participantes. Las cuatro fotos compartidas se incorporaron al proyecto LaTeX como evidencia visual contextual, sin asignar cada imagen a un rol individual. Se revisaron la especificación funcional/no funcional y un manual comercial local de seguimiento por WhatsApp. El análisis por rol, sus fuentes y sus límites están en [`informe/registro_conversatorios.md`](../informe/registro_conversatorios.md). El manual comercial no se incorporó al repositorio.
 
-El informe breve y su PDF fueron actualizados para reflejar los conversatorios reportados, separar las necesidades documentales de los testimonios y señalar que la venta de cursos está fuera del alcance aprobado. Jira se reconsultó y se actualizaron las secciones de evidencia de CGB-51 y CGB-56 el 21/10. Ambos siguen en Sprint 2, Tareas por hacer, prioridad Highest y `evidence-pending`; no cambiaron estado, sprint, prioridad ni responsables. La evidencia todavía no valida N1/N2.
+El informe breve y su PDF fueron actualizados para reflejar que la captura y los conversatorios se realizaron, incluir las cuatro fotografías y señalar que la venta de cursos está fuera del alcance aprobado. Jira se reconsultó y se actualizaron las secciones de evidencia de CGB-51 y CGB-56 el 21/10. Ambos siguen en Sprint 2, Tareas por hacer, prioridad Highest y `evidence-pending`; no cambiaron estado, sprint, prioridad ni responsables. Falta citar en Jira el hallazgo específico de la captura que respalda N1 y N2.
 
 ## Estado general al corte del 19/10/2026
 

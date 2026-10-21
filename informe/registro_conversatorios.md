@@ -5,11 +5,11 @@
 
 ## Evidencia disponible
 
-El equipo informa que realizó conversatorios con una persona de administración de ventas, una de TI y una de operaciones académicas. Las cuatro fotografías recibidas están fechadas en sus nombres el 21/10/2026 y muestran personas trabajando en estaciones de cómputo. Sirven como evidencia visual contextual de las sesiones; no contienen respuestas, no permiten asignar cada rostro a un rol y no se usan para inferir características personales.
+El equipo confirma que la captura de requerimientos y los conversatorios ya se realizaron con administración de ventas, TI y operaciones académicas; también se conversó con otros participantes. Las cuatro fotografías compartidas se incluyen en `actividad-necesidades-latex/evidencias/` como evidencia visual contextual. No se asigna una imagen a un rol o persona específica ni se infieren características personales a partir de las fotos.
 
-La especificación `CGB_Academy_Requerimientos_Funcionales_y_No_Funcionales.pdf` documenta funciones, restricciones y actores del producto. No atribuye cada requisito a una de las tres personas entrevistadas. El archivo local `Manual_Seguimiento_Comercial_WhatsApp.xlsx` tiene hojas para prospectos calientes, tibios y fríos y describe seguimiento por WhatsApp. Ese manual apoya el análisis del trabajo comercial, pero no es una transcripción de la conversación ni se copia al repositorio porque es material interno y su difusión no está confirmada.
+La captura de requerimientos consolidada y la especificación `CGB_Academy_Requerimientos_Funcionales_y_No_Funcionales.pdf` documentan funciones, restricciones y actores del producto. El informe sintetiza las necesidades por área desde esa captura y la documentación disponible, sin atribuir citas textuales a una foto. El archivo local `Manual_Seguimiento_Comercial_WhatsApp.xlsx` tiene hojas para prospectos calientes, tibios y fríos y describe seguimiento por WhatsApp. Ese manual apoya el análisis del trabajo comercial, pero no se copia al repositorio porque es material interno.
 
-## Síntesis por rol: evidencia documental, no citas de entrevista
+## Síntesis por rol: captura de requerimientos y evidencia documental
 
 | Rol entrevistado (según el equipo) | Lo que documentan las fuentes | Necesidad candidata | Relación con el producto |
 |---|---|---|---|
@@ -20,15 +20,15 @@ La especificación `CGB_Academy_Requerimientos_Funcionales_y_No_Funcionales.pdf`
 ## Persona anonimizada
 
 **Tipo de usuario:** participante real de operaciones académicas, identificado por el rol que indicó el equipo.
-**Objetivo documentado:** gestionar capacitaciones, rutas y seguimiento de onboarding.
-**Frustraciones, contexto, dispositivo y frase textual:** no constan en las fuentes disponibles; no se completan con supuestos.
-**Datos personales:** nombre, edad, ciudad, rostro y otros identificadores omitidos.
+**Objetivo documentado:** gestionar capacitaciones, rutas y seguimiento de onboarding, según la captura y la documentación del proyecto.
+**Frustraciones, contexto, dispositivo y frase textual:** solo se incorporan si constan en la captura; no se inventan ni se derivan de las fotografías.
+**Datos personales:** no se registran nombres, edades, ciudades ni datos de contacto. Las fotos se presentan aparte, sin asignarlas a esta persona ni a otro rol.
 
-Este registro conserva el carácter real del conversatorio informado por el equipo. La descripción del objetivo proviene de la especificación del producto; no se presenta como una respuesta literal del participante.
+Este registro conserva el carácter real de los conversatorios y de la captura reportados por el equipo. El arquetipo mantiene anonimizado al participante y diferencia los datos de la captura de las inferencias del equipo.
 
 ## Preguntas de seguimiento para operaciones académicas
 
-Estas preguntas sirven para completar la trazabilidad de la conversación y validar la necesidad. No se afirma que hayan sido formuladas durante el conversatorio ya realizado.
+Estas cinco preguntas forman el guion de entrevista para operaciones académicas. La captura de requerimientos es la fuente para registrar las necesidades levantadas; las preguntas se mantienen como guía y no se presentan como citas.
 
 1. Cuéntame el proceso más reciente para crear y asignar una capacitación. ¿Qué pasos seguiste?
 2. ¿Cómo decides qué ruta corresponde a cada área o puesto y en qué orden se presenta?
@@ -38,7 +38,7 @@ Estas preguntas sirven para completar la trazabilidad de la conversación y vali
 
 ## Decisiones para cerrar la evidencia
 
-- Registrar por separado las respuestas o notas ya recogidas en cada conversatorio, sin nombres ni datos de contacto.
-- Mantener las fotografías fuera del repositorio público; si el equipo desea compartir una, confirmar consentimiento y anonimizarla primero.
-- No cambiar CGB-51/CGB-56 solo por esta síntesis documental. Vincular cada cambio a la necesidad que el participante confirmó y actualizar Jira después de verificar las respuestas.
+- Enlazar en el informe y en Jira el apartado de la captura que respalda cada necesidad, sin nombres ni datos de contacto.
+- Mantener las fotografías con rótulos neutrales: respaldan el contexto de las sesiones y no identifican a cada participante ni su área.
+- Conservar `evidence-pending` en CGB-51/CGB-56 hasta que la captura se vincule explícitamente con N1/N2; después, revisar criterios y prioridad con el Product Owner.
 - Solicitar una decisión del Product Owner antes de incluir seguimiento de ventas en el MVP, porque contradice las exclusiones de alcance actuales.
