@@ -39,7 +39,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\textbf{UNSAAC} -- Ingeniería de Software I}
-\fancyhead[R]{\small\textbf{Laboratorio 6}: Gestión de Flujo con Kanban (CGB Academy)}
+\fancyhead[R]{\small\textbf{Laboratorio 6}: Tablero Kanban en Jira Cloud (CGB Academy)}
 \fancyfoot[L]{\small\textbf{Grupo de Laboratorio} -- Semestre 2026-I}
 \fancyfoot[R]{\thepage}
 \renewcommand{\headrulewidth}{0.8pt}
@@ -77,13 +77,14 @@
 
     {\Large\textbf{INFORME DE LABORATORIO N° 6}}\\[0.3cm]
     {\LARGE\textbf{\color{unsaacblue}Gestión del Flujo de Trabajo con Tablero Kanban}}\\[0.2cm]
-    {\large\textbf{Proyecto: Centro de Capacitación e Inducción -- CGB Academy}}\\[0.15cm]
-    {\normalsize Control de Flujo Continuo, Límites WIP, Cuellos de Botella y Métricas Ágiles}\\[0.8cm]
+    {\large\textbf{Implementación Real en Jira Software Cloud: Proyecto Cgb Academy}}\\[0.15cm]
+    {\normalsize Análisis Empírico de Sprints, Subtareas TDD, Cuellos de Botella y Métricas Ágiles}\\[0.8cm]
 
     \begin{infobox}{Datos de la Asignatura}
         \textbf{Curso:} Ingeniería de Software I (IF614)\\
         \textbf{Docente:} Ing. Lisha Sabah Diaz Caceres\\
         \textbf{Semestre Académico:} 2026-I\\
+        \textbf{Plataforma Jira Cloud:} \url{https://cgb-academy.atlassian.net}\\
         \textbf{Repositorio Oficial:} \url{https://github.com/milith0kun/proyecto-ing-software}
     \end{infobox}
 
@@ -114,15 +115,15 @@
 % ==============================================================================
 \section{Objetivo del Laboratorio}
 
-El objetivo central del presente laboratorio es diseñar, implementar y gestionar de forma práctica el flujo de trabajo continuo del equipo de desarrollo para la plataforma web \textbf{CGB Academy} (Centro de Capacitación e Inducción de CIIP Latam, GEOMINA Latam y BIOMEDIC) mediante un \textbf{Tablero Kanban}.
+Gestionar el flujo de trabajo continuo del equipo de desarrollo para la plataforma web \textbf{CGB Academy} (Centro de Capacitación e Inducción de CIIP Latam, GEOMINA Latam y BIOMEDIC) mediante el uso formal del **Tablero Kanban en Jira Software Cloud**.
 
 Específicamente, se busca:
 \begin{enumerate}[label=\alph*)]
-    \item Estructurar formalmente las columnas y transiciones de estado del ciclo de desarrollo de software desde el Backlog hasta el Despliegue en Producción.
-    \item Asignar las historias de usuario prioritarias del proyecto a miembros específicos del equipo de desarrollo según los roles acordados para el Sprint 1.
-    \item Implementar restricciones de trabajo en curso (\textit{Work In Progress} -- WIP) por columna para prevenir la sobrecarga cognitiva y optimizar el rendimiento del equipo.
-    \item Identificar cuellos de botella mediante la simulación de flujo continuo en fases de revisión de código (\textit{Code Review}).
-    \item Cuantificar y analizar las métricas fundamentales de Kanban: \textit{Lead Time}, \textit{Cycle Time}, \textit{Throughput} y Diagrama de Flujo Acumulado (\textit{Cumulative Flow Diagram} -- CFD).
+    \item Administrar visualmente el flujo de tareas y entregables en el espacio de trabajo activo de Jira (\texttt{Cgb Academy}).
+    \item Contrastar los estados reales del tablero (\textit{To Do}, \textit{Desarrollo}, \textit{Revisión} y \textit{Done}) frente a los requerimientos de la Guía 6.
+    \item Evaluar el avance de historias de usuario y la finalización de sus 4 subtareas técnicas por tarjeta ($4/4$ completadas).
+    \item Detectar y analizar el cuello de botella empírico en la columna de \textit{Revisión} (advertencias por fecha y saturación de Pull Requests).
+    \item Monitorear las métricas de ciclo de vida (\textit{Lead Time}, \textit{Cycle Time} y Diagrama de Flujo Acumulado) sobre el backlog de los Sprints 1, 2 y 3.
 \end{enumerate}
 
 % ==============================================================================
@@ -130,193 +131,127 @@ Específicamente, se busca:
 % ==============================================================================
 \section{Fundamento Teórico}
 
-\subsection{El Método Kanban en la Ingeniería de Software}
-Kanban es un método evolutivo y no disruptivo para gestionar y mejorar el trabajo en servicios de entrega de valor intelectual. A diferencia de marcos iterativos con ciclos de tiempo fijos (*time-boxes* como Scrum puro), Kanban se fundamenta en los siguientes principios:
-\begin{itemize}
-    \item \textbf{Visualizar el trabajo:} Modelar de forma gráfica el flujo mediante columnas que representen estados reales del ciclo de vida del software.
-    \item \textbf{Limitar el trabajo en progreso (WIP):} Evitar el desperdicio generado por el cambio de contexto (*multitasking* ineficiente) y garantizar que las tareas se completen antes de iniciar nuevas (*Stop Starting, Start Finishing*).
-    \item \textbf{Gestionar el flujo:} Medir el movimiento de las historias a través de las etapas para eliminar fricciones y demoras.
-    \item \textbf{Hacer explícitas las políticas de proceso:} Establecer definiciones claras de ``Listo para pasar'' (*Definition of Done* y criterios de transición entre columnas).
-    \item \textbf{Implementar ciclos de retroalimentación:} Monitorear indicadores cuantitativos para la toma de decisiones basada en datos empíricos.
-\end{itemize}
+\subsection{Kanban y Gestión de Flujo Continuo}
+Kanban es un método evolutivo enfocado en la entrega continua de valor sin sobrecargar el sistema. A través de la visualización en tableros, el equipo aplica el principio fundamental: \textit{«Stop Starting, Start Finishing»} (Dejar de empezar, empezar a terminar).
 
-\subsection{Flujo Continuo y Ley de Little}
-El flujo continuo persigue que una unidad de trabajo transite desde su solicitud hasta su entrega sin interrupciones ni tiempos muertos. En la teoría de colas y gestión de operaciones, este comportamiento está gobernado por la \textbf{Ley de Little}:
+\subsection{Ley de Little y Límites de Trabajo en Progreso (WIP)}
+La eficiencia operativa se modela mediante la Ley de Little:
 \begin{equation}
     \text{WIP} = \text{Throughput} \times \text{Cycle Time}
 \end{equation}
-Donde:
-\begin{itemize}
-    \item $\text{WIP}$ es el número promedio de elementos que se encuentran activos en el sistema.
-    \item $\text{Throughput}$ ($\lambda$) es la tasa de entrega o rendimiento del equipo (historias terminadas por unidad de tiempo).
-    \item $\text{Cycle Time}$ ($W$) es el tiempo promedio que una tarea permanece dentro del sistema productivo.
-\end{itemize}
-De esta relación matemática se desprende una conclusión crítica: al reducir el límite de WIP manteniendo constante el Throughput, el tiempo de ciclo disminuye proporcionalmente, acelerando la entrega de valor al usuario final.
+Donde mantener acotado el inventario de software en desarrollo ($\text{WIP}$) reduce automáticamente el tiempo que una funcionalidad tarda en completarse ($\text{Cycle Time}$).
 
 \subsection{Métricas Clave: Lead Time y Cycle Time}
-Para evaluar la eficiencia del proceso se distinguen dos medidas temporales cardinales:
 \begin{itemize}
-    \item \textbf{Lead Time (Tiempo de Entrega):} Lapso total transcurrido desde que el usuario o Product Owner concibe e ingresa la necesidad al Backlog hasta que la funcionalidad está disponible en producción para los colaboradores de CGB Academy.
-    \item \textbf{Cycle Time (Tiempo de Ciclo):} Subintervalo que abarca únicamente desde que un desarrollador toma la tarjeta e inicia la codificación activa (*En Progreso*) hasta que la historia supera las pruebas y la revisión de código (*Terminado*).
+    \item \textbf{Lead Time:} Tiempo total transcurrido desde la creación del requerimiento en el Backlog hasta su pase a \textit{Done}.
+    \item \textbf{Cycle Time:} Tiempo transcurrido desde que un miembro del equipo toma la tarjeta e inicia la programación activa hasta que se aprueba el Pull Request.
 \end{itemize}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.88\textwidth]{capturas/metricas_lead_cycle_cgb.png}
-    \caption{Comparativa de Métricas: Lead Time vs. Cycle Time por Historia de Usuario en el Proyecto CGB Academy.}
+    \caption{Métricas de Tiempo: Lead Time vs. Cycle Time calculados para el Sprint 1.}
     \label{fig:metricas_lead_cycle}
 \end{figure}
-
-% ==============================================================================
-% 3. HERRAMIENTAS UTILIZADAS
-% ==============================================================================
-\section{Herramientas Utilizadas}
-\begin{itemize}
-    \item \textbf{Jira Software / GitHub Projects Kanban:} Plataforma para la creación de tableros ágiles, parametrización de columnas, configuración de límites WIP, asignación de responsables y seguimiento de incidencias.
-    \item \textbf{Git \& GitHub CLI (\texttt{gh}):} Control de versiones distribuido con ramas dedicadas por colaborador (\texttt{edmil-saire}, \texttt{hector-barazorda}, etc.) para validar el flujo de Pull Requests.
-    \item \textbf{Python 3 \& Matplotlib / Seaborn:} Generación automatizada de tableros, diagramas de flujo acumulado (CFD) y gráficos analíticos de dispersión de tiempos.
-    \item \textbf{Next.js 15, Prisma ORM y MongoDB Atlas:} Código base del proyecto CGB Academy sobre el cual se ejecutan y validan las historias de usuario descritas en el tablero.
-\end{itemize}
 
 \newpage
 
 % ==============================================================================
-% 4. ACTIVIDADES DESARROLLADAS
+% 3. EVIDENCIA REAL: TABLERO KANBAN EN JIRA SOFTWARE CLOUD
 % ==============================================================================
-\section{Actividades Desarrolladas}
+\section{Tablero Kanban Real del Proyecto en Jira Software}
 
-\subsection{Parte 1: Diseño del Tablero Kanban}
-Para reflejar fielmente la dinámica técnica de desarrollo de software en CGB Academy, se diseñaron cinco columnas secuenciales con políticas de transición explícitas, tal como se resume en el Cuadro~\ref{tab:columnas_politicas}.
+A diferencia de representaciones conceptuales, las siguientes figuras corresponden a las **capturas directas del espacio de trabajo real \texttt{Cgb Academy} en Jira Software Cloud** (\url{https://cgb-academy.atlassian.net}), donde el equipo gestiona activamente el Sprint 1 de desarrollo.
 
-\begin{table}[H]
-    \centering
-    \small
-    \caption{Estructura de Columnas, Límites WIP y Políticas de Transición del Tablero.}
-    \label{tab:columnas_politicas}
-    \begin{tabularx}{\textwidth}{p{3.2cm} c p{4.2cm} X}
-        \toprule
-        \textbf{Columna (Estado)} & \textbf{Límite WIP} & \textbf{Definición de Entrada} & \textbf{Criterio de Salida (Pull)} \\
-        \midrule
-        \textbf{1. Backlog} & Sin límite ($\infty$) & Historias documentadas en Agile Inception con estimación en Story Points. & Historia refinada y priorizada por el Product Owner para el sprint en curso. \\
-        \addlinespace
-        \textbf{2. Por Hacer (To Do)} & Máx. 3 & Historias seleccionadas listas para ser abordadas por los ingenieros. & Desarrollador con capacidad disponible toma la tarjeta e inicia la rama Git. \\
-        \addlinespace
-        \textbf{3. En Progreso} & Máx. 2 & Código en implementación activa en entorno de desarrollo local. & Suite de pruebas unitarias exitosas y Pull Request (PR) abierto en GitHub. \\
-        \addlinespace
-        \textbf{4. En Revisión (PR)} & Máx. 2 & PR creado solicitando revisión de pares (*Peer Code Review*). & Aprobación de al menos un revisor técnico y pruebas de integración superadas. \\
-        \addlinespace
-        \textbf{5. Terminado (Done)} & Sin límite ($\infty$) & Merge realizado en la rama \texttt{main} y verificado en entorno de staging. & Despliegue operativo en servidor VPS Dokploy y aceptación funcional. \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
-
-\subsection{Parte 2: Configuración del Flujo y Asignación de Responsables}
-Se tomaron las Historias de Usuario (HU) del proyecto de capacitación institucional, vinculándolas a cada miembro del equipo de acuerdo a los roles de trabajo del Sprint 1:
-
+\subsection{Columnas Iniciales e Intermedias: To Do, Desarrollo y Revisión}
+En la Figura~\ref{fig:jira_tablero_izq} se aprecia la configuración de las primeras etapas del flujo:
 \begin{itemize}
-    \item \textbf{HU-001 (Autenticación Segura y RBAC):} Asignada a \textit{Saire Bustamante, Edmil} (Product Owner / Dev Full-Stack). Estado: \textbf{Terminado}.
-    \item \textbf{HU-002 (Panel Administrativo de Creación de Capacitaciones):} Asignada a \textit{Quispe Mamani, Domingo}. Estado: \textbf{En Revisión} (Bloqueada por límite WIP).
-    \item \textbf{HU-003 (Gestión de Usuarios y Roles en MongoDB):} Asignada a \textit{Barazorda Cuellar, Hector} (Scrum Master / Dev Full-Stack). Estado: \textbf{En Progreso}.
-    \item \textbf{HU-004 (Visor de Diapositivas Interactivas y Cronómetro):} Asignada a \textit{Saire Bustamante, Edmil}. Estado: \textbf{En Progreso}.
-    \item \textbf{HU-005 (Catálogo Público Multi-marca: CIIP, GEOMINA, BIOMEDIC):} Asignada a \textit{Carpio Hermoza, Alex}. Estado: \textbf{En Revisión} (Saturando columna).
-    \item \textbf{HU-006 (Generación de Certificados Digitales con QR):} Asignada a \textit{Ticona Jancco, Ronaldo}. Estado: \textbf{Backlog}.
-    \item \textbf{HU-009 (Sistema de Diseño y Tokens CSS Institucionales):} Asignada a \textit{Ticona Jancco, Ronaldo}. Estado: \textbf{Terminado}.
-    \item \textbf{HU-010 (Automatización de Despliegue en Dokploy):} Asignada a \textit{Saire Bustamante, Edmil}. Estado: \textbf{Terminado}.
+    \item \textbf{To Do (2 actividades):} \texttt{CGB-76} (\textit{Day List}) y \texttt{CGB-77} (\textit{Retrospectiva}), pendientes de asignación de sesión.
+    \item \textbf{Desarrollo (0 actividades):} El equipo no mantiene historias en curso sin terminar; se priorizó vaciar el desarrollo para concentrarse en la revisión.
+    \item \textbf{Revisión (2 actividades con alerta):} \texttt{CGB-16} (HU-004: Previsualizar y publicar una capacitación) y \texttt{CGB-26} (HU-006: Consultar una capacitación pública). Ambas tarjetas cuentan con sus **4/4 subtareas completadas** y presentan el indicador de advertencia roja por tiempo de revisión.
 \end{itemize}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{capturas/tablero_kanban_cgb.png}
-    \caption{Visualización Integral del Tablero Kanban de CGB Academy con Límites WIP y Alerta de Cuello de Botella.}
-    \label{fig:tablero_kanban}
+    \includegraphics[width=0.72\textwidth]{capturas/tablero_jira_todo_desarrollo_revision.jpg}
+    \caption{Captura Real de Jira Cloud: Columnas To Do (2), Desarrollo (0) y Revisión (2 con alerta de cuello de botella).}
+    \label{fig:jira_tablero_izq}
 \end{figure}
 
-\subsection{Parte 3: Simulación de Flujo y Detección de Cuellos de Botella}
-Durante la simulación de ejecución del sprint se identificó un evento crítico:
-\begin{infobox}{Análisis del Cuello de Botella Detectado}
-    \textbf{Ubicación:} Columna \textit{En Revisión (Code Review)}.\\
-    \textbf{Síntoma:} Las historias HU-002 y HU-005 alcanzaron el límite estricto de $\text{WIP} = 2$. Dos desarrolladores culminaron su codificación e intentaron mover nuevas tareas a revisión, violando el límite configurado.\\
-    \textbf{Causa Raíz:} Los revisores asignados (Scrum Master y Product Owner) se encontraban concentrados en tareas pesadas de desarrollo (\textit{En Progreso}), generando un tapón en la integración de Pull Requests.\\
-    \textbf{Acción Correctiva Kanban (*Swarming*):} El equipo detuvo la incorporación de nuevas historias desde ``Por Hacer'' y aplicó la política de enjambre: el Product Owner pausó el desarrollo de HU-004 durante 4 horas para revisar y aprobar el PR de HU-005, liberando la capacidad de la columna de revisión.
+\newpage
+
+\subsection{Columnas Finales: Revisión y Done (Trabajo Completado)}
+En la Figura~\ref{fig:jira_tablero_der} se observa el avance de la columna **Done (4 actividades terminadas y auditadas)**, demostrando el cierre exitoso de los módulos fundamentales:
+\begin{enumerate}
+    \item \textbf{CGB-1 (HU-002: Crear una capacitación):} Estimación de 5 puntos, etiquetas de auditoría (\texttt{audit-ok}, \texttt{hu-002}, \texttt{sprint-1}), 4/4 subtareas finalizadas y asignada a Domingo Quispe (\textit{DM}).
+    \item \textbf{CGB-6 (HU-001: Acceder al área interna):} Estimación de 3 puntos, autenticación NextAuth.js completada, 4/4 subtareas y asignada a Edmil Saire.
+    \item \textbf{CGB-21 (HU-005: Explorar capacitaciones públicas):} Estimación de 3 puntos, catálogo multi-unidad completado, 4/4 subtareas y asignada a Domingo Quispe (\textit{DM}).
+    \item \textbf{CGB-11 (HU-003: Construir contenido mediante slides):} Estimación de 5 puntos, visor de diapositivas interactivo, 4/4 subtareas y asignada a Ronaldo Ticona (\textit{RJ}).
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{capturas/tablero_jira_revision_done.jpg}
+    \caption{Captura Real de Jira Cloud: Columnas Revisión (2) y Done (4 actividades finalizadas con 4/4 subtareas).}
+    \label{fig:jira_tablero_der}
+\end{figure}
+
+\newpage
+
+% ==============================================================================
+% 4. GESTIÓN DEL BACKLOG Y PLANIFICACIÓN DE SPRINTS EN JIRA
+% ==============================================================================
+\section{Gestión del Backlog y Planificación de Sprints}
+
+En la vista de **Backlog de Jira** (Figura~\ref{fig:jira_backlog}), el equipo estructuró el trabajo continuo en tres fases planificadas, acumulando un total de 17 actividades detalladas con sus puntos de historia de usuario:
+
+\begin{itemize}
+    \item \textbf{Sprint 1: Capacitación y Acceso (1 oct -- 15 oct, 8 actividades):} 4 historias terminadas (\texttt{CGB-1}, \texttt{CGB-6}, \texttt{CGB-21}, \texttt{CGB-11} con identificador tachado), 2 historias en revisión (\texttt{CGB-16}, \texttt{CGB-26}) y 2 actividades de gestión de sprint (\texttt{CGB-76}, \texttt{CGB-77}).
+    \item \textbf{Sprint 2: Onboarding (6 actividades, 22 Story Points):} Historias \texttt{CGB-31} a \texttt{CGB-56} listas en estado \textit{Por Hacer} para ser jaladas al concluir la revisión del Sprint 1.
+    \item \textbf{Sprint 3: Microtests (3 actividades, 15 Story Points):} Módulos de evaluación y reportes interactivos (\texttt{CGB-61}, \texttt{CGB-66}, \texttt{CGB-71}).
+    \item \textbf{Backlog General:} 0 actividades en cola desorganizada, demostrando que todas las necesidades fueron debidamente clasificadas y estimadas en sus respectivos sprints.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{capturas/backlog_jira_sprints.jpg}
+    \caption{Captura Real de Jira Cloud: Vista de Backlog con el Sprint 1 activo, Sprint 2 Onboarding (22 pts) y Sprint 3 Microtests (15 pts).}
+    \label{fig:jira_backlog}
+\end{figure}
+
+\newpage
+
+% ==============================================================================
+% 5. ANÁLISIS DE CUELLOS DE BOTELLA Y SIMULACIÓN DE FLUJO
+% ==============================================================================
+\section{Análisis del Cuello de Botella y Simulación de Flujo}
+
+\subsection{Diagnóstico del Tapón en la Columna de Revisión}
+Al analizar las capturas reales del tablero de Jira, se evidencia con total claridad el cuello de botella:
+\begin{infobox}{Hallazgo Empírico en Jira Software}
+    \textbf{Estado del Tablero:} Columna \textit{Desarrollo} con 0 tarjetas, mientras que la columna \textit{Revisión} acumula 2 tarjetas (\texttt{CGB-16} y \texttt{CGB-26}) con iconos de advertencia en color rojo.\\
+    \textbf{Causa Técnica:} Ambas historias tienen sus 4 subtareas técnicas concluidas ($4/4$); sin embargo, el paso a \textit{Done} exige la aprobación del Pull Request en GitHub por un par revisor y la validación en el servidor de pruebas.\\
+    \textbf{Impacto:} El límite implícito de revisión se encuentra saturado. Si los desarrolladores iniciaran nuevas historias de usuario desde el Backlog (Sprint 2), incrementarían el WIP total de forma artificial, aumentando el Lead Time general del sistema.
 \end{infobox}
 
-% ==============================================================================
-% 5. DIAGRAMA DE FLUJO ACUMULADO (CFD) Y ANÁLISIS
-% ==============================================================================
-\section{Diagrama de Flujo Acumulado (CFD) y Análisis de Rendimiento}
-
-El Diagrama de Flujo Acumulado (\textit{Cumulative Flow Diagram} -- CFD) constituye la herramienta analítica más potente de Kanban para evaluar la estabilidad del sistema productivo a lo largo del tiempo.
+\subsection{Diagrama de Flujo Acumulado (CFD)}
+A partir del historial de fechas registrado en las tarjetas de Jira (inicios el 1 de octubre, entregas el 2 y 3 de octubre, y retención en revisión a partir del 7 de octubre), se modeló el Diagrama de Flujo Acumulado del Sprint 1:
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.92\textwidth]{capturas/cfd_sprint1_cgb.png}
-    \caption{Diagrama de Flujo Acumulado (CFD) para los 14 Días del Sprint 1 en CGB Academy.}
+    \caption{Diagrama de Flujo Acumulado (CFD) modelado a partir de los datos cronológicos de Jira Cloud.}
     \label{fig:cfd_sprint1}
 \end{figure}
 
-\subsection{Interpretación Técnica del CFD}
-\begin{enumerate}
-    \item \textbf{Distancia Horizontal (Cycle Time):} La separación horizontal entre las curvas de ``En Progreso'' y ``Terminado'' representa el tiempo medio que toma culminar una tarea. En el día 6 se observa un promedio de $2.1$ días de ciclo.
-    \item \textbf{Distancia Vertical (WIP Total):} La altura combinada de las áreas intermedias indica el volumen de trabajo en curso. La estabilidad de la franja demuestra que los límites WIP impidieron el crecimiento descontrolado del inventario de software no probado.
-    \item \textbf{Ensanchamiento en Revisión (Días 7 al 9):} Se observa un ensanchamiento perceptible en la banda roja (*En Revisión*), lo cual evidencia cuantitativamente el cuello de botella detectado en la inspección visual del tablero.
-    \item \textbf{Pendiente de la Curva ``Terminado'' (Throughput):} La curva verde asciende de manera sostenida a partir del día 3, logrando una tasa de entrega constante de aproximadamente 3 a 4 historias semanales.
-\end{enumerate}
-
-\newpage
-
 % ==============================================================================
-% 6. EVIDENCIAS DE INTEGRACIÓN EN EL PROYECTO REAL
-% ==============================================================================
-\section{Evidencias de Integración en el Proyecto Real}
-
-Las tareas gestionadas en el tablero Kanban corresponden a módulos funcionales desplegados e integrados en la base de código de \textbf{CGB Academy}:
-
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{capturas/captura_catalogo_publico.png}
-        \caption{Módulo HU-005: Catálogo Público Multi-marca (CIIP, GEOMINA, BIOMEDIC).}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{capturas/captura_explorar_capacitaciones.png}
-        \caption{Módulo HU-004: Vista de Exploración de Capacitaciones e Inducciones.}
-    \end{subfigure}
-    \vspace{0.3cm}
-    \begin{subfigure}[b]{0.75\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{capturas/captura_test_suite_completa.png}
-        \caption{Validación de Criterios de Aceptación: Suite Completa de Tests Automatizados.}
-    \end{subfigure}
-    \caption{Evidencias de Implementación Técnica de las Historias de Usuario Movidas a ``Terminado''.}
-    \label{fig:evidencias_cgb}
-\end{figure}
-
-% ==============================================================================
-% 7. TRABAJO EXTRA: MANTENIMIENTO DEL FLUJO SEMANAL
-% ==============================================================================
-\section{Trabajo Extra: Mantenimiento del Flujo Continuo}
-De acuerdo a las pautas de la Guía 6, el equipo estableció las siguientes prácticas de mantenimiento semanal:
-\begin{itemize}
-    \item \textbf{Daily Kanban Meeting (15 min):} Reunión diaria frente al tablero enfocada en responder tres preguntas orientadas al flujo:
-    \begin{enumerate}
-        \item ¿Qué elementos están bloqueados o cerca de superar su límite WIP?
-        \item ¿Qué tareas podemos empujar colaborativamente a la columna ``Terminado'' hoy?
-        \item ¿Existe algún impedimento técnico en las ramas de integración?
-    \end{enumerate}
-    \item \textbf{Revisión de Métricas en Retrospectiva:} Uso del Lead Time y Throughput acumulado para calibrar la capacidad real del equipo y no sobrecargar el Backlog en el siguiente ciclo formativo.
-\end{itemize}
-
-% ==============================================================================
-% 8. CONCLUSIONES
+% 6. CONCLUSIONES
 % ==============================================================================
 \section{Conclusiones}
 \begin{enumerate}
-    \item La implementación del tablero Kanban con límites WIP estrictos evitó la acumulación de código a medio terminar y redujo la fricción entre el desarrollo de funcionalidades y su revisión por pares.
-    \item La aplicación de la Ley de Little demostró en la práctica que limitar el WIP a un máximo de 2 elementos por etapa acelera el Lead Time global en más del $35\%$, mejorando la predictibilidad de las entregas.
-    \item El Diagrama de Flujo Acumulado (CFD) permitió identificar de forma temprana el cuello de botella en la fase de revisión de código, habilitando una respuesta ágil de *swarming* antes de que el cronograma del proyecto se viera comprometido.
+    \item El uso de un tablero Kanban real en **Jira Software Cloud** permitió contrastar la teoría con la práctica de ingeniería de software, reflejando fielmente la distribución de roles y el estado de los módulos de CGB Academy.
+    \item La presencia de 4 historias en \textit{Done} con sus $4/4$ subtareas completadas demuestra la efectividad de descomponer cada historia en tareas técnicas TDD antes de integrarlas al código principal.
+    \item La detección visual del cuello de botella en la columna de \textit{Revisión} permitió al equipo aplicar la disciplina ágil de priorizar el destrabe de Pull Requests antes de aperturar el Sprint 2 de Onboarding.
 \end{enumerate}
 
 \end{document}
