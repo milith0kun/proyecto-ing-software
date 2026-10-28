@@ -1,47 +1,39 @@
-# Documentación del Estado y Control de Ramas Git
+# Estado de ramas y configuración de GitHub
 
-**Fecha de consolidación:** 7 de Octubre de 2026  
-**Repositorio Remoto (`origin`):** `https://github.com/milith0kun/proyecto-ing-software.git`  
-**Rama por Defecto (`origin/HEAD`):** `origin/edmil-saire`  
-**Ramas Principales Sincronizadas:** `main`, `desarrollo`, `edmil-saire`
+**Revisión:** 19 de octubre de 2026.
+**Rama permanente:** `main`.
+**Proceso vigente:** [`FLUJO_DE_TRABAJO.md`](FLUJO_DE_TRABAJO.md).
 
----
+## Configuración aplicada
 
-## 1. Arquitectura y Consolidación de Ramas
+- `main` es la rama predeterminada de GitHub y la referencia `origin/HEAD` apunta a `origin/main`.
+- `main` requiere Pull Request y una aprobación de otra persona; la aprobación anterior se invalida si el autor vuelve a subir cambios y la última actualización debe tener aprobación independiente.
+- Las conversaciones del Pull Request deben estar resueltas. Force-push y eliminación de `main` están bloqueados; la regla también aplica a administradores.
+- GitHub permite **Squash and merge**, desactiva merge commits y rebase merge, y elimina la rama del PR al fusionarlo.
+- No hay checks automáticos de CI ni tags/releases publicados. Por ello, no se exige un check de estado inexistente; cada PR registra los comandos ejecutados y sus resultados.
+- No había Pull Requests abiertos cuando se aplicó esta configuración.
 
-Todas las ramas de trabajo de los integrantes del equipo han sido integradas y consolidadas exitosamente en la base:
+## Ramas remotas conservadas
 
-```
-[origin/main] == [origin/desarrollo] == [origin/edmil-saire]
-       │
-       ├─► alex-carpio (HU-004: Publicación, catálogo y vista previa) [Integrada ✔]
-       ├─► ronaldo-ticona (HU-003/HU-006: Editor unificado y visor de slides) [Integrada ✔]
-       ├─► domingo-quispe (HU-002/HU-005: CRUD y Exploración pública) [Integrada ✔]
-       ├─► edmil-saire (HU-001/Auth/Despliegue/Middleware) [Integrada ✔]
-       └─► hector-barazorda (Assets y logos de marca CGB) [Integrada ✔]
-```
+Los SHA son una fotografía de las referencias consultadas en la revisión; antes de limpiar una rama hay que volver a consultar GitHub y buscar PRs asociados.
 
----
+| Referencia remota | SHA observado | Acción |
+|---|---|---|
+| `origin/main` | `7669c32` antes de integrar esta actualización | Mantener como rama única de integración. |
+| `origin/alex-carpio` | `04642c3` | Conservar hasta comprobar commits únicos y consultar a su responsable. |
+| `origin/domingo-quispe` | `0d893df` | Conservar hasta comprobar commits únicos y consultar a su responsable. |
+| `origin/hector-barazorda` | `6719ed8` | Conservar hasta comprobar commits únicos y consultar a su responsable. |
+| `origin/ronaldo-ticona` | `a3c38c1` | Conservar; fue actualizada en GitHub mientras se alineaba el flujo. Revisar su PR/commits antes de archivar. |
 
-## 2. Matriz de Integración de Historias de Usuario
+## Ramas antiguas retiradas
 
-| Historia de Usuario | Responsable | Estado | Cobertura / Pruebas |
-| :--- | :--- | :---: | :--- |
-| **HU-001: Autenticación y Acceso Interno** | Edmil Saire | **Integrada ✔** | 11 tests BDD/TDD (JWT, cookies HTTPS, bcrypt, roles) |
-| **HU-002: Gestión y Creación CRUD** | Domingo Quispe | **Integrada ✔** | 9 tests BDD/TDD (CRUD capacitaciones, validación campos) |
-| **HU-003: Editor Visual de Slides** | Ronaldo Ticona | **Integrada ✔** | 6 tests BDD/TDD (reordenamiento, multimedia, listas) |
-| **HU-004: Publicación y Vista Previa** | Alex Carpio | **Integrada ✔** | 15 tests BDD/TDD (publicación, confirmación, índice Atlas) |
-| **HU-005: Exploración Pública** | Domingo Quispe | **Integrada ✔** | 7 tests BDD/TDD (catálogo público, filtros, búsqueda) |
-| **HU-006: Visor Público Interactivo** | Ronaldo Ticona | **Integrada ✔** | 10 tests BDD/TDD (swipe, navegación teclado, botones acción) |
-| **Recursos y Marca Institucional** | Héctor Barazorda | **Integrada ✔** | Logos CGB, CIIP, GEOMINA, BIOMEDIC |
+Se retiraron las referencias remotas y locales `desarrollo` y `edmil-saire` después de verificar que sus commits eran antecesores de `main` y que no había PRs abiertos. La historia continúa en Git; no se borraron commits de `main`. Las ramas personales restantes no se borran en bloque.
 
----
+## Procedimiento de limpieza para ramas futuras
 
-## 3. Verificación de Calidad y Construcción
+1. Revisar en GitHub el estado del PR y los commits de la rama.
+2. Confirmar que todo el trabajo está en `main` y que no existen commits locales/remotos únicos.
+3. Confirmar con la persona responsable si conserva cambios locales no publicados.
+4. Dejar que GitHub elimine la rama remota al fusionar el PR. Eliminar una rama local de manera normal; si Squash and merge impide comprobar ancestralidad, no forzar el borrado hasta repetir las verificaciones anteriores.
 
-* **Pruebas Automatizadas:** 68 de 68 tests unitarios y de integración ejecutados con éxito (`npm test`).
-* **Compilación de Producción:** `npm run build` (Turbopack + Prisma Client + TypeScript) compilado al 100% sin advertencias ni errores.
-* **Rutas generadas:**
-  * Públicas: `/`, `/capacitaciones`, `/capacitaciones/[id]`, `/login`
-  * Administrativas: `/admin/capacitaciones`, `/admin/capacitaciones/[id]/contenido`, `/admin/capacitaciones/[id]/vista-previa`, `/colaborador`
-  * API Routes: `/api/auth/login`, `/api/auth/logout`, `/api/auth/sesion`, `/api/capacitaciones`, `/api/capacitaciones/[id]`, `/api/capacitaciones/[id]/publicar`, `/api/capacitaciones/[id]/slides`, `/api/public/capacitaciones`, `/api/health`
+Los lockfiles locales `pnpm` vistos durante la revisión no se agregaron ni eliminaron; `package-lock.json` y npm siguen siendo el estándar del proyecto.
