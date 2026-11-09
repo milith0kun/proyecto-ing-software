@@ -94,17 +94,24 @@ Definition of Done: `docs/definition-of-done.md` (criterios verificados, `npm te
 
 ## 4. Inicio del desarrollo (Parte 4)
 
-### Ramas creadas
+### Estrategia de ramificación: Flujo de GitHub
 
-Creadas **localmente** desde `origin/main` (commit `af60a3b`) según `docs/FLUJO_DE_TRABAJO.md`. Aún no se publicaron con `git push` ni tienen commits propios.
+Se eligió **Flujo de GitHub** y se descartó Git Flow: una sola rama permanente (`main`), una rama `feature` corta por historia creada desde `origin/main`, Pull Request revisado por otra persona y *Squash and merge*. No se usan `develop` ni `release`; el equipo es pequeño, los sprints duran dos semanas y hay una sola versión activa. Las versiones aprobadas se etiquetan desde `main`. La regla está en `docs/FLUJO_DE_TRABAJO.md`, en el README y en la sección 10.2 de `informe/informe.md`.
 
-| Rama | Historia | Responsable |
-|---|---|---|
-| `feature/CGB-31-areas-y-puestos` | CGB-31 | Alex Carpio |
-| `feature/CGB-36-ruta-onboarding` | CGB-36 | Domingo Quispe |
-| `feature/CGB-41-registrar-colaboradores` | CGB-41 | Ronaldo Ticona |
+### Ramas por historia
 
-Las ramas de las demás historias, incluida la primera de Héctor, se crean desde `origin/main` actualizado cuando su responsable tome la historia.
+Formato `<tipo>/<clave-jira>-<resumen>`. Las cuatro primeras (una por desarrollador, WIP 4) se crearon **localmente** desde `origin/main` (commit `af60a3b`) y aún **no se publicaron** con `git push` ni tienen commits propios; las demás se crean cuando su responsable libere cupo WIP.
+
+| Rama | Historia | Responsable | Estado |
+|---|---|---|---|
+| `feature/CGB-31-areas-y-puestos` | CGB-31 | Alex Carpio | creada (local) |
+| `feature/CGB-36-ruta-onboarding` | CGB-36 | Domingo Quispe | creada (local) |
+| `feature/CGB-41-registrar-colaboradores` | CGB-41 | Ronaldo Ticona | creada (local) |
+| `feature/CGB-56-completar-capacitacion` | CGB-56 | Héctor Barazorda | creada (local) |
+| `feature/CGB-46-activar-cuenta-token` | CGB-46 | Domingo Quispe | por crear |
+| `feature/CGB-51-mi-onboarding` | CGB-51 | Ronaldo Ticona | por crear |
+| `feature/CGB-61-configurar-microtest` | CGB-61 | Alex Carpio | por crear |
+| `feature/CGB-66-realizar-microtest` | CGB-66 | Héctor Barazorda | por crear |
 
 ### Estado en Jira (leído y actualizado el 09/11/2026)
 

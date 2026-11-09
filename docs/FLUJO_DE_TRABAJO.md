@@ -45,6 +45,8 @@ Si falta una decisión de usuario o producto, se mantiene en el backlog y se reg
 
 ### Estrategia
 
+**Estrategia elegida: Flujo de GitHub (*GitHub Flow*)**, no Git Flow. Una sola rama permanente (`main`), ramas `feature` cortas y Pull Request revisado, sin `develop` ni `release` permanentes. Motivo: equipo pequeño, sprints de dos semanas y una sola versión activa. Las versiones aprobadas se etiquetan desde `main` (ver `docs/configuracion.md`).
+
 `main` contiene la integración revisada. Cada tarea se trabaja en una rama corta creada desde la versión actual de `origin/main`, con una sola historia o cambio acotado. Las ramas personales permanentes y `develop`/`desarrollo` no se usan para trabajo nuevo.
 
 Formato: `<tipo>/<clave-jira>-<resumen-corto>`.

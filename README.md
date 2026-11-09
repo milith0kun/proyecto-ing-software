@@ -41,7 +41,7 @@ De acuerdo a la arquitectura técnica del sistema:
 
 ## 🌿 Flujo de trabajo y ramas
 
-`main` es la única rama permanente de integración. Cada cambio parte de `origin/main` en una rama corta por tarea Jira y llega a `main` mediante Pull Request revisado. No se crean ramas permanentes por integrante ni una rama intermedia `develop`/`desarrollo`. La guía completa incluye comandos seguros, nombres de rama, commits, limpieza, revisión y control de cambios: [`docs/FLUJO_DE_TRABAJO.md`](docs/FLUJO_DE_TRABAJO.md).
+**Estrategia elegida: Flujo de GitHub (*GitHub Flow*)**, no Git Flow: sin `develop` ni `release` permanentes, por ser un equipo pequeño con sprints de dos semanas. `main` es la única rama permanente de integración. Cada cambio parte de `origin/main` en una rama corta por tarea Jira y llega a `main` mediante Pull Request revisado. No se crean ramas permanentes por integrante ni una rama intermedia `develop`/`desarrollo`. La guía completa incluye comandos seguros, nombres de rama, commits, limpieza, revisión y control de cambios: [`docs/FLUJO_DE_TRABAJO.md`](docs/FLUJO_DE_TRABAJO.md).
 
 ## Actividad: validación de necesidades
 

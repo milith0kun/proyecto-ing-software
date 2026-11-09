@@ -250,6 +250,8 @@ El equipo adopta una estructura de **roles rotativos**, donde las funciones de l
 
 ### 10.2 Protocolo de coordinación y ramas Git
 
+**Estrategia elegida: Flujo de GitHub (*GitHub Flow*).** Se descartó *Git Flow* (`develop`, `release`, `hotfix` permanentes) porque el equipo es pequeño, entrega incrementos cortos por sprint y no mantiene varias versiones en producción a la vez; una sola rama permanente reduce conflictos de integración. Reglas: `main` es la única rama permanente y contiene lo aprobado; todo trabajo se hace en ramas cortas `feature/CGB-xx-...` creadas desde `origin/main`; los cambios entran por Pull Request revisado con *Squash and merge*; las versiones aprobadas se etiquetan desde `main`. Esta estrategia se aplica desde el Sprint 2 a cada historia (ver `docs/FLUJO_DE_TRABAJO.md` y el informe del Laboratorio 7).
+
 `main` es la única rama permanente de integración. Cada historia o cambio acotado se desarrolla en una rama corta nombrada `<tipo>/<CGB-ID>-<resumen>`, creada desde `origin/main`; por ejemplo, `feature/CGB-51-mi-onboarding` o `docs/CGB-123-flujo-git`. Las ramas con nombres de integrantes y `desarrollo`/`develop` son referencias históricas y no bases para trabajo nuevo.
 
 Antes de editar, cada colaborador inspecciona `git status` y los diffs. Conserva archivos ajenos, agrega rutas explícitas y nunca usa `git add .` como rutina. No incluye `.env`, tokens, dependencias instaladas ni artefactos generados. Los commits siguen Conventional Commits (`feat(onboarding): guardar el avance (CGB-56)`) y describen una intención por commit.
@@ -396,17 +398,17 @@ $$\text{Desarrollo} = 2/3 \quad | \quad \text{Revisión} = 2/2 \text{ (CAPACIDAD
 
 ---
 
-### 11.8 Dinámica del Flujo en Sprint 2 (HU-007 a HU-012)
-El Sprint 2 modela la estructura organizacional de Áreas, Puestos y Onboarding:
+### 11.8 Dinámica del Flujo en Sprint 2 (HU-007 a HU-014)
+El Sprint 2 (09/11 al 23/11/2026, 32 SP) modela la estructura organizacional, el Onboarding y adelanta el microtest formativo (HU-013 y HU-014):
 - **Arranque:**
-  - `DESARROLLO [3]`: HU-007 (Crear área y puestos), HU-008 (Crear ruta de onboarding), HU-009 (Registrar colaboradores).
-  - `POR HACER [3]`: HU-010 (Activar cuenta con token), HU-011 (Consultar Mi Onboarding), HU-012 (Completar capacitación interna).
-- **Flujo:** Conforme se liberan las historias del primer bloque hacia Revisión y Done, HU-010, HU-011 y HU-012 ingresan ordenadamente a Desarrollo, garantizando que nunca coexistan más de 3 historias simultáneas en codificación.
+  - `DESARROLLO [4]`: una historia por desarrollador: HU-007 (Alex), HU-008 (Domingo), HU-009 (Ronaldo) y HU-012 (Hector).
+  - `POR HACER`: HU-010 (Domingo), HU-011 (Ronaldo), HU-013 (Alex) y HU-014 (Hector).
+- **Flujo:** al liberarse una historia hacia Revisión y Done, ingresa la siguiente de su responsable, sin superar 4 historias simultáneas en codificación. Cada historia usa su rama `feature/CGB-xx-...`.
 
 ---
 
-### 11.9 Dinámica del Flujo en Sprint 3 (HU-013 a HU-015)
-El Sprint 3 aborda los microtests formativos y la supervisión de progreso:
+### 11.9 Dinámica del Flujo en Sprint 3 (HU-015)
+El Sprint 3 conserva la supervisión de progreso (HU-015); HU-013 y HU-014 se adelantaron al Sprint 2 según Jira. La descripción siguiente es el plan original y se actualizará al planificar el Sprint 3:
 - **Arranque:**
   - `DESARROLLO [3]`: HU-013 (Configurar microtest), HU-014 (Realizar microtest), HU-015 (Consultar avance de colaboradores).
   - `POR HACER`: *(vacío)*.
@@ -420,7 +422,7 @@ El equipo adopta como norma de ingeniería de software vinculante la siguiente d
 
 > **POLÍTICA WIP OFICIAL — EQUIPO CGB ACADEMY**
 >
-> 1. **Límite de Desarrollo:** La columna *Desarrollo* tendrá un límite estricto de **3 Historias de Usuario simultáneas**, equivalente a los tres integrantes del rol Development.
+> 1. **Límite de Desarrollo:** La columna *Desarrollo* tendrá un límite estricto de **4 Historias de Usuario simultáneas**, equivalente a los cuatro integrantes del rol Development (eran 3 hasta el Sprint 1).
 > 2. **Dedicación Unitaria:** Cada desarrollador trabajará preferentemente sobre **una única Historia de Usuario activa a la vez**.
 > 3. **Límite de Revisión:** La columna *Revisión* tendrá un límite estricto de **2 Historias de Usuario simultáneas**.
 > 4. **Prioridad de Desatoro:** Cuando la columna *Revisión* alcance su límite (2/2), el equipo priorizará de forma absoluta revisar, probar e integrar las historias existentes antes de iniciar o promover nuevas historias.

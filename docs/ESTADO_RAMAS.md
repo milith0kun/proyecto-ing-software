@@ -41,6 +41,6 @@ Los lockfiles locales `pnpm` vistos durante la revisión no se agregaron ni elim
 ## Actualización del 9 de noviembre de 2026 (Sprint 2)
 
 - `origin/main` está en `af60a3b` (incluye el informe del Laboratorio 6). El PR #7 (flujo de trabajo, configuración y DoD) sigue **abierto y sin revisión**; hasta fusionarse, esos documentos no están en `main`.
-- Ramas locales creadas desde `origin/main` para el inicio del Sprint 2, aún sin publicar: `feature/CGB-31-areas-y-puestos`, `feature/CGB-36-ruta-onboarding` y `feature/CGB-41-registrar-colaboradores`.
+- Ramas locales creadas desde `origin/main` para el inicio del Sprint 2, aún sin publicar: `feature/CGB-31-areas-y-puestos`, `feature/CGB-36-ruta-onboarding`, `feature/CGB-41-registrar-colaboradores` y `feature/CGB-56-completar-capacitacion`.
 - Límite WIP de desarrollo: 4 (cuatro desarrolladores). Revisión: 2.
 - Las ramas personales siguen conservadas por las razones indicadas arriba.
