@@ -41,6 +41,7 @@ Los lockfiles locales `pnpm` vistos durante la revisión no se agregaron ni elim
 ## Actualización del 9 de noviembre de 2026 (Sprint 2)
 
 - `origin/main` está en `af60a3b` (incluye el informe del Laboratorio 6). El PR #7 (flujo de trabajo, configuración y DoD) sigue **abierto y sin revisión**; hasta fusionarse, esos documentos no están en `main`.
-- Ramas locales creadas desde `origin/main` para el inicio del Sprint 2, aún sin publicar: `feature/CGB-31-areas-y-puestos`, `feature/CGB-36-ruta-onboarding`, `feature/CGB-41-registrar-colaboradores` y `feature/CGB-56-completar-capacitacion`.
+- Las 8 ramas del Sprint 2 están publicadas desde `origin/main` (`af60a3b`), sin commits propios: `feature/CGB-31-areas-y-puestos`, `feature/CGB-36-ruta-onboarding`, `feature/CGB-41-registrar-colaboradores`, `feature/CGB-46-activar-cuenta-token`, `feature/CGB-51-mi-onboarding`, `feature/CGB-56-completar-capacitacion`, `feature/CGB-61-configurar-microtest` y `feature/CGB-66-realizar-microtest`.
+- Revisión del 9/11/2026 de ramas personales: `alex-carpio`, `domingo-quispe` y `hector-barazorda` no tienen commits únicos frente a `main`; el contenido de `ronaldo-ticona` está en `main` (archivos iguales o versiones posteriores). Siguen publicadas a la espera de la autorización de borrado; las copias locales de `domingo-quispe` y `ronaldo-ticona` tienen commits sin publicar que deben revisar sus responsables.
 - Límite WIP de desarrollo: 4 (cuatro desarrolladores). Revisión: 2.
 - Las ramas personales siguen conservadas por las razones indicadas arriba.

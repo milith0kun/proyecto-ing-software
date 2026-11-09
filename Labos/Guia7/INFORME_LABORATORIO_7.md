@@ -100,18 +100,18 @@ Se eligió **Flujo de GitHub** y se descartó Git Flow: una sola rama permanente
 
 ### Ramas por historia
 
-Formato `<tipo>/<clave-jira>-<resumen>`. Las cuatro primeras (una por desarrollador, WIP 4) se crearon **localmente** desde `origin/main` (commit `af60a3b`) y aún **no se publicaron** con `git push` ni tienen commits propios; las demás se crean cuando su responsable libere cupo WIP.
+Formato `<tipo>/<clave-jira>-<resumen>`. Las 8 ramas se crearon desde `origin/main` (commit `af60a3b`) y están **publicadas en GitHub** sin commits propios; cada responsable empieza por la subtarea T1 (RED) de su historia. El límite WIP de 4 se respeta en Jira, no por el número de ramas.
 
 | Rama | Historia | Responsable | Estado |
 |---|---|---|---|
-| `feature/CGB-31-areas-y-puestos` | CGB-31 | Alex Carpio | creada (local) |
-| `feature/CGB-36-ruta-onboarding` | CGB-36 | Domingo Quispe | creada (local) |
-| `feature/CGB-41-registrar-colaboradores` | CGB-41 | Ronaldo Ticona | creada (local) |
-| `feature/CGB-56-completar-capacitacion` | CGB-56 | Héctor Barazorda | creada (local) |
-| `feature/CGB-46-activar-cuenta-token` | CGB-46 | Domingo Quispe | por crear |
-| `feature/CGB-51-mi-onboarding` | CGB-51 | Ronaldo Ticona | por crear |
-| `feature/CGB-61-configurar-microtest` | CGB-61 | Alex Carpio | por crear |
-| `feature/CGB-66-realizar-microtest` | CGB-66 | Héctor Barazorda | por crear |
+| `feature/CGB-31-areas-y-puestos` | CGB-31 | Alex Carpio | publicada en GitHub |
+| `feature/CGB-36-ruta-onboarding` | CGB-36 | Domingo Quispe | publicada en GitHub |
+| `feature/CGB-41-registrar-colaboradores` | CGB-41 | Ronaldo Ticona | publicada en GitHub |
+| `feature/CGB-56-completar-capacitacion` | CGB-56 | Héctor Barazorda | publicada en GitHub |
+| `feature/CGB-46-activar-cuenta-token` | CGB-46 | Domingo Quispe | publicada en GitHub |
+| `feature/CGB-51-mi-onboarding` | CGB-51 | Ronaldo Ticona | publicada en GitHub |
+| `feature/CGB-61-configurar-microtest` | CGB-61 | Alex Carpio | publicada en GitHub |
+| `feature/CGB-66-realizar-microtest` | CGB-66 | Héctor Barazorda | publicada en GitHub |
 
 ### Estado en Jira (leído y actualizado el 09/11/2026)
 
