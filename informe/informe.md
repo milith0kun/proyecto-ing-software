@@ -12,10 +12,10 @@
 
 - **Nombre del Proyecto:** Centro de Capacitación e Inducción — CGB Academy
 - **Equipo de Trabajo:**
-  1. **Barazorda Cuellar, Hector** — *Scrum Master / Desarrollador Full-Stack*
+  1. **Barazorda Cuellar, Hector** — *Desarrollador Full-Stack*
   2. **Carpio Hermoza, Alex** — *Desarrollador Full-Stack*
   3. **Quispe Mamani, Domingo de Guzman** — *Desarrollador Full-Stack*
-  4. **Saire Bustamante, Edmil Jampier** — *Product Owner / Desarrollador Full-Stack*
+  4. **Saire Bustamante, Edmil Jampier** — *Product Owner y Scrum Master*
   5. **Ticona Jancco, Ronaldo** — *Desarrollador Full-Stack*
 - **Entidad Beneficiaria:** CGB Academy (Integrando las unidades CIIP LATAM, GEOMINA LATAM y BIOMEDIC)
 - **Repositorio Oficial en GitHub:** `https://github.com/milith0kun/proyecto-ing-software`
@@ -205,8 +205,8 @@ El modelo secuencial en Cascada se descartó porque presupone requerimientos inm
   - *Retrospectiva:* Análisis introspectivo y formulación de acuerdos de mejora para la siguiente iteración.
 
 ### 9.2 Aportes de Kanban
-- **Tablero Visual con Límites de Trabajo en Curso:** Estructura de flujo controlable de 4 columnas: $\text{POR HACER} \rightarrow \text{DESARROLLO [WIP 3]} \rightarrow \text{REVISIÓN [WIP 2]} \rightarrow \text{HECHO en main}$.
-- **Límites WIP acordados:** El equipo mantiene $\text{WIP} = 3$ en Desarrollo (máximo una HU activa por desarrollador) y $\text{WIP} = 2$ en Revisión. Revisará esos límites si cambia la capacidad del equipo.
+- **Tablero Visual con Límites de Trabajo en Curso:** Estructura de flujo controlable de 4 columnas: $\text{POR HACER} \rightarrow \text{DESARROLLO [WIP 4]} \rightarrow \text{REVISIÓN [WIP 2]} \rightarrow \text{HECHO en main}$.
+- **Límites WIP acordados:** El equipo mantiene $\text{WIP} = 4$ en Desarrollo (máximo una HU activa por desarrollador) y $\text{WIP} = 2$ en Revisión. Revisará esos límites si cambia la capacidad del equipo.
 - **Principio Fundamental de Flujo:** Cuando la columna Revisión alcanza su capacidad máxima (2/2), la prioridad del equipo cambia inmediatamente: *dejar de iniciar trabajo nuevo y colaborar en terminar la revisión e integración existente* (*"Stop starting, start finishing"*).
 - **Gestión Visual de Bloqueos:** Identificación mediante etiqueta destacada `🚫 BLOQUEADA` en la columna actual, sin crear columnas artificiales que distorsionen las métricas.
 
@@ -234,16 +234,16 @@ El equipo adopta una estructura de **roles rotativos**, donde las funciones de l
 
 - **Sprint 1 (Sprint Piloto de Evaluación):**  
   Se establece la configuración inicial para medir la cadencia y dinamismo del equipo:
-  - **Product Owner (Sprint 1):** Saire Bustamante, Edmil Jampier.
-  - **Scrum Master (Sprint 1):** Barazorda Cuellar, Hector.
-  - **Desarrolladores Full-Stack:** Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; Ticona Jancco, Ronaldo.
+  - **Product Owner y Scrum Master (desde el Sprint 2):** Saire Bustamante, Edmil Jampier.
+  - **Scrum Master en el Sprint 1:** Barazorda Cuellar, Hector (desde el Sprint 2 es desarrollador).
+  - **Desarrolladores Full-Stack (desde el Sprint 2):** Barazorda Cuellar, Hector; Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; Ticona Jancco, Ronaldo.
 - **Mecanismo de Evaluación y Rotación:**  
   En la **Sprint Retrospective** al término del Sprint 1, se analizan los resultados del flujo, los bloqueos resueltos y la interacción con los requisitos. A partir de esa evaluación, se ejecutan las decisiones de rotación del Scrum Master y Product Owner para el Sprint 2 y Sprint 3, permitiendo la alternancia de roles entre los 5 integrantes.
 
 | Integrante | Rol en Sprint 1 | Acciones y Responsabilidades Principales |
 |---|---|---|
-| **Saire Bustamante, Edmil Jampier** | **Product Owner** (Sprint 1) & Dev Full-Stack | Priorización del backlog, validación de criterios BDD (Dado/Cuando/Entonces), aprobación de entregables en la Review y desarrollo de su HU asignada. |
-| **Barazorda Cuellar, Hector** | **Scrum Master** (Sprint 1) & Dev Full-Stack | Facilitación de las ceremonias diarias (Daily de 15 min), remoción de bloqueos técnicos, vigilancia de límites WIP y desarrollo de su HU asignada. |
+| **Saire Bustamante, Edmil Jampier** | **Product Owner y Scrum Master** (desde el Sprint 2) | Priorización del backlog, validación de criterios BDD (Dado/Cuando/Entonces), aprobación de entregables en la Review, facilitación de las ceremonias, remoción de bloqueos y vigilancia de límites WIP. |
+| **Barazorda Cuellar, Hector** | **Desarrollador Full-Stack** (Scrum Master en el Sprint 1) | Desarrollo de sus HU asignadas desde el Sprint 2 y revisión de código por pares. |
 | **Carpio Hermoza, Alex** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
 | **Quispe Mamani, Domingo de Guzman** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
 | **Ticona Jancco, Ronaldo** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
@@ -265,18 +265,18 @@ Para gestionar el flujo de entrega, el equipo usa un **Tablero Kanban con Límit
 ### 11.1 Arquitectura del Tablero Kanban Oficial
 El tablero visual del equipo se estructura en cuatro columnas de flujo continuo:
 
-$$\text{POR HACER} \longrightarrow \text{DESARROLLO [WIP 3]} \longrightarrow \text{REVISIÓN [WIP 2]} \longrightarrow \text{HECHO en main}$$
+$$\text{POR HACER} \longrightarrow \text{DESARROLLO [WIP 4]} \longrightarrow \text{REVISIÓN [WIP 2]} \longrightarrow \text{HECHO en main}$$
 
 | Columna | Significado Operativo | Límite WIP Recomendado |
 |---|---|:---:|
 | **POR HACER** | Historias preparadas y comprometidas para el Sprint que aún no han sido iniciadas. | Sin límite fijo |
-| **DESARROLLO** | Historias de Usuario que actualmente se encuentran en proceso activo de codificación y pruebas. | **3** |
+| **DESARROLLO** | Historias de Usuario que actualmente se encuentran en proceso activo de codificación y pruebas. | **4** |
 | **REVISIÓN** | Desarrollo e implementación local terminados; pendiente de revisión por pares (*Peer Review*), pruebas automatizadas e integración. | **2** |
 | **HECHO** | Historias que cumplen la Definition of Done, se integraron en `main` y fueron aceptadas según sus criterios. | Sin límite |
 
 ---
 
-### 11.2 Justificación de los Límites WIP para el Equipo de 3 Desarrolladores
+### 11.2 Justificación de los Límites WIP para el Equipo de 4 Desarrolladores
 
 #### Fundamentación Matemática Mediante la Ley de Little
 Desde la teoría matemática de colas (*Queuing Theory*), el comportamiento del flujo de trabajo se rige rigurosamente por la **Ley de Little** (*John D. C. Little, 1961*), adaptada a la ingeniería de software ágil (*David J. Anderson, 2010*):
@@ -288,10 +288,10 @@ Donde:
 - **$\text{Throughput (TH)}$:** Tasa de entrega o velocidad efectiva del equipo (historias terminadas por unidad de tiempo).
 - **$\text{Cycle Time (CT)}$:** Tiempo promedio que tarda una historia desde que inicia su implementación hasta ser desplegada y aceptada.
 
-La Ley de Little relaciona WIP, throughput y tiempo de ciclo cuando el flujo es estable; no demuestra por sí sola que un límite produzca un tiempo mínimo. El límite 3/2 es una política operativa para contener multitarea y colas. El equipo debe medir throughput y tiempo de ciclo en Jira y ajustar los límites según los resultados y la capacidad disponible.
+La Ley de Little relaciona WIP, throughput y tiempo de ciclo cuando el flujo es estable; no demuestra por sí sola que un límite produzca un tiempo mínimo. El límite 4/2 (3/2 hasta el Sprint 1, con tres desarrolladores) es una política operativa para contener multitarea y colas. El equipo debe medir throughput y tiempo de ciclo en Jira y ajustar los límites según los resultados y la capacidad disponible.
 
-#### ¿Por qué Desarrollo = 3?
-El equipo cuenta con **3 integrantes en el rol de Development** dedicados a la construcción técnica de las historias de usuario de cada Sprint (mientras que los roles de Product Owner y Scrum Master facilitan la priorización, refinamiento, gestión de bloqueos y apoyo técnico). La regla operativa fundamental es:
+#### ¿Por qué Desarrollo = 4?
+Desde el Sprint 2 el equipo cuenta con **4 integrantes en el rol de Development** (en el Sprint 1 eran 3) dedicados a la construcción técnica de las historias de usuario de cada Sprint (mientras que Edmil Saire, como Product Owner y Scrum Master, facilita la priorización, refinamiento, gestión de bloqueos y apoyo técnico). La regla operativa fundamental es:
 
 $$\mathbf{1\text{ Desarrollador} = \text{Máximo 1 HU activa en Desarrollo}}$$
 
@@ -335,7 +335,7 @@ Una Historia de Usuario puede ingresar a Desarrollo únicamente cuando:
 - Se encuentra suficientemente refinada y estimada por el equipo.
 - Cuenta con Criterios de Aceptación verificables en formato BDD.
 - El desarrollador comprende plenamente el alcance funcional y arquitectónico.
-- **Existe capacidad disponible dentro del límite WIP de Desarrollo ($\le 3$).**
+- **Existe capacidad disponible dentro del límite WIP de Desarrollo ($\le 4$).**
 
 #### 2. Transición: DESARROLLO $\longrightarrow$ REVISIÓN
 Una Historia de Usuario puede pasar a Revisión únicamente cuando:
@@ -380,7 +380,7 @@ El Sprint 1 comprende las primeras seis historias del MVP. El flujo operativo se
 | HU-005 — Explorar públicas | **HU-002** — Crear una capacitación *(Dev 2)* | | |
 | HU-006 — Consultar pública | **HU-003** — Slides interactivos *(Dev 3)* | | |
 
-Los tres desarrolladores inician en paralelo sus respectivas historias de usuario.
+Los desarrolladores inician en paralelo sus respectivas historias de usuario.
 
 #### Escenario de Saturación de Revisión y Aplicación de WIP:
 Conforme avanza la iteración, puede presentarse el siguiente estado:
@@ -432,7 +432,7 @@ El equipo adopta como norma de ingeniería de software vinculante la siguiente d
 ### 11.11 Flujo Metodológico Integrado Scrum + Kanban + TDD
 Sintetizando la arquitectura del modelo iterativo e incremental, el ciclo operativo global del proyecto se resume en el siguiente esquema:
 
-$$\text{BACKLOG} \longrightarrow \text{SPRINT} \longrightarrow \text{POR HACER} \longrightarrow \mathbf{\text{DESARROLLO [WIP 3]}} \longrightarrow \mathbf{\text{REVISIÓN [WIP 2]}} \longrightarrow \text{HECHO en main}$$
+$$\text{BACKLOG} \longrightarrow \text{SPRINT} \longrightarrow \text{POR HACER} \longrightarrow \mathbf{\text{DESARROLLO [WIP 4]}} \longrightarrow \mathbf{\text{REVISIÓN [WIP 2]}} \longrightarrow \text{HECHO en main}$$
 
 y a nivel interno de cada Historia de Usuario en desarrollo:
 

@@ -6,9 +6,9 @@
 
 ## 👥 Equipo de trabajo
 
-El equipo está conformado por Saire Bustamante, Edmil Jampier; Barazorda Cuellar, Hector; Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; y Ticona Jancco, Ronaldo. Product Owner, Scrum Master y responsabilidades de desarrollo se asignan por sprint en Jira y pueden rotar. Las ramas de Git representan tareas, no integrantes.
+El equipo está conformado por Saire Bustamante, Edmil Jampier; Barazorda Cuellar, Hector; Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; y Ticona Jancco, Ronaldo. Desde el Sprint 2, Edmil Saire es Product Owner y Scrum Master, y Hector Barazorda, Alex Carpio, Domingo Quispe y Ronaldo Ticona son los cuatro desarrolladores; las asignaciones vigentes están en Jira. Las ramas de Git representan tareas, no integrantes.
 
-Las reglas vigentes para trabajar en el repositorio están en [`docs/FLUJO_DE_TRABAJO.md`](docs/FLUJO_DE_TRABAJO.md), la [`Definition of Done`](docs/definition-of-done.md) y la [gestión de configuración](docs/configuracion.md).
+**Punto de entrada de la evidencia:** ver [Evidencia y trazabilidad](#evidencia-y-trazabilidad). Las reglas vigentes para trabajar en el repositorio están en [`docs/FLUJO_DE_TRABAJO.md`](docs/FLUJO_DE_TRABAJO.md), la [`Definition of Done`](docs/definition-of-done.md) y la [gestión de configuración](docs/configuracion.md).
 
 ---
 
@@ -52,14 +52,14 @@ El [informe breve de necesidades y requisitos](informe/actividad-necesidades-lat
 El proyecto combina la cadencia de **Scrum** (sprints de 2 semanas), la fluidez de **Kanban** y el rigor técnico de **TDD**:
 
 ```
-[ BACKLOG ] ──> [ SPRINT ] ──> [ POR HACER ] ──> [ EN DESARROLLO (WIP 3) ] ──> [ EN REVISIÓN (WIP 2) ] ──> [ HECHO en main ]
+[ BACKLOG ] ──> [ SPRINT ] ──> [ POR HACER ] ──> [ EN DESARROLLO (WIP 4) ] ──> [ EN REVISIÓN (WIP 2) ] ──> [ HECHO en main ]
 ```
 
 ### 📋 Tablero Kanban Oficial del Equipo:
 | Columna | Significado | Límite WIP | Justificación Operativa |
 |---|---|:---:|---|
 | **POR HACER** | HUs preparadas y comprometidas para el Sprint, aún no iniciadas | Sin límite | La historia cumple la Definition of Ready. |
-| **DESARROLLO** | HUs en codificación activa y construcción de pruebas | **3** | **1 desarrollador = máx. 1 HU activa** (3 integrantes Development). |
+| **DESARROLLO** | HUs en codificación activa y construcción de pruebas | **4** | **1 desarrollador = máx. 1 HU activa** (4 integrantes Development desde el Sprint 2; eran 3 en el Sprint 1). |
 | **REVISIÓN** | En espera de *Peer Review*, pruebas e integración | **2** | Si llega a **2/2**, el equipo detiene trabajo nuevo y ayuda a desatorar revisión. |
 | **HECHO** | Integradas en `main`, aceptadas por el PO | Sin límite | Cumplen con la [Definition of Done](docs/definition-of-done.md) y enlazan Jira, PR y commit. |
 
@@ -77,12 +77,9 @@ No existe columna "Bloqueado". Las tarjetas impedidas permanecen en su columna c
 
 Esta distribución es una referencia de planificación inicial; Jira determina el sprint y estado vigentes.
 
-- **Sprint 1 (HU-001 a HU-006):** Núcleo de capacitación y acceso público.
-  *Arranque:* Dev 1 $\rightarrow$ HU-001 | Dev 2 $\rightarrow$ HU-002 | Dev 3 $\rightarrow$ HU-003. Luego ingresan HU-004, HU-005, HU-006.
-- **Sprint 2 (HU-007 a HU-012):** Estructura organizacional (Áreas, Puestos) y Onboarding de colaboradores.
-  *Arranque:* Dev 1 $\rightarrow$ HU-007 | Dev 2 $\rightarrow$ HU-008 | Dev 3 $\rightarrow$ HU-009. Luego ingresan HU-010, HU-011, HU-012.
-- **Sprint 3 (HU-013 a HU-015):** Microtests formativos y supervisión de colaboradores.
-  *Arranque:* Dev 1 $\rightarrow$ HU-013 | Dev 2 $\rightarrow$ HU-014 | Dev 3 $\rightarrow$ HU-015 (3 HUs para 3 Devs).
+- **Sprint 1 (HU-001 a HU-006):** Núcleo de capacitación y acceso público (19 SP, 3 desarrolladores).
+- **Sprint 2 (HU-007 a HU-014, 32 SP, 09/11–23/11/2026):** Áreas, puestos, onboarding de colaboradores y microtest formativo (HU-013 y HU-014 se adelantaron desde el Sprint 3). Reparto vigente en Jira: Alex → HU-007 y HU-013; Domingo → HU-008 y HU-010; Ronaldo → HU-009 y HU-011; Hector → HU-012 y HU-014.
+- **Sprint 3:** HU-015 (reportes de avance).
 
 ---
 
@@ -132,3 +129,24 @@ Todo desarrollo de interfaz de usuario debe ceñirse estrictamente a las directr
 5. **Componentes de Inducción:** Utilizar `.boton-primario` (1 por bloque), `.tarjeta-cgb` (alturas al ras con `flex: 1`), `.barra-progreso` y `.chip-estado`.
 6. **Iconos:** Exclusivamente SVG inline vectoriales limpios (estilo Lucide). **Cero emojis en componentes de interfaz.**
 7. **Nomenclatura:** Clases, variables y propiedades 100% redactadas en español.
+
+---
+
+## Evidencia y trazabilidad
+
+Punto de entrada para recorrer la evidencia del proyecto (repositorio, tablero, workflow y Definition of Done):
+
+| Elemento | Dónde |
+|---|---|
+| Repositorio, inventario y regla de aprobación | [`docs/configuracion.md`](docs/configuracion.md) |
+| Workflow: ramas, commits, PR y revisión | [`docs/FLUJO_DE_TRABAJO.md`](docs/FLUJO_DE_TRABAJO.md), [plantilla de PR](.github/PULL_REQUEST_TEMPLATE.md) |
+| Definition of Done | [`docs/definition-of-done.md`](docs/definition-of-done.md) |
+| Tablero y backlog | [Jira CGB](https://cgb-academy.atlassian.net/jira/software/projects/CGB/boards/4) |
+| Estado de ramas y GitHub | [`docs/ESTADO_RAMAS.md`](docs/ESTADO_RAMAS.md) |
+| Laboratorios | [`Labos/`](Labos/), incluido el [Sprint Planning del Laboratorio 7](Labos/Guia7/INFORME_LABORATORIO_7.md) |
+
+Trazabilidad de las historias integradas (Jira → PR → commit en `main`): CGB-1 → PR #1 → `43d3425`; CGB-21 → PR #2 → `6380337`; CGB-11 → PR #3 → `c0016ca`; CGB-6 → PR #4 → `13c65e5`; CGB-16 → PR #5 → `47103c0`. Las claves de Jira enlazan estos PR y commits.
+
+**Línea base:** pendiente de aprobación. No hay tags ni releases; se creará uno cuando el equipo apruebe una entrega según [`docs/configuracion.md`](docs/configuracion.md).
+
+**Uso de IA:** los asistentes proponen y resumen; la decisión sobre cada recomendación se registra en el PR (o "sin uso"). Hasta ahora no hay decisiones de IA registradas en un PR.

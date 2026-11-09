@@ -25,7 +25,7 @@ El equipo planifica el trabajo por sprint y visualiza el flujo en Jira. La histo
 | En revisión | Hay un Pull Request abierto hacia `main`; se revisan diff, pruebas y criterios. |
 | Hecho | El PR se integró en `main`, cumple la Definition of Done y Jira conserva la evidencia. |
 
-Límites WIP actuales: **máximo 3 historias en desarrollo y 2 en revisión**. Si revisión llega a 2/2, se detiene la toma de trabajo nuevo y el equipo ayuda a resolver revisiones. Una persona mantiene como máximo una historia activa. Un bloqueo permanece visible en Jira con causa, responsable de resolverlo y siguiente acción.
+Límites WIP actuales: **máximo 4 historias en desarrollo (una por desarrollador) y 2 en revisión**. Si revisión llega a 2/2, se detiene la toma de trabajo nuevo y el equipo ayuda a resolver revisiones. Una persona mantiene como máximo una historia activa. Un bloqueo permanece visible en Jira con causa, responsable de resolverlo y siguiente acción.
 
 El ciclo Scrum incluye refinamiento, planificación, sincronización diaria, revisión y retrospectiva. En las historias con cambios de comportamiento se aplica TDD cuando sea viable: prueba que falla, implementación mínima, refactorización y verificación de criterios BDD. No se crean subtareas TDD vacías para tareas solo documentales.
 

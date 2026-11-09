@@ -1,6 +1,6 @@
 # Estado de ramas y configuración de GitHub
 
-**Revisión:** 19 de octubre de 2026.
+**Revisión:** 19 de octubre de 2026; actualizado el 9 de noviembre de 2026.
 **Rama permanente:** `main`.
 **Proceso vigente:** [`FLUJO_DE_TRABAJO.md`](FLUJO_DE_TRABAJO.md).
 
@@ -37,3 +37,10 @@ Se retiraron las referencias remotas y locales `desarrollo` y `edmil-saire` desp
 4. Dejar que GitHub elimine la rama remota al fusionar el PR. Eliminar una rama local de manera normal; si Squash and merge impide comprobar ancestralidad, no forzar el borrado hasta repetir las verificaciones anteriores.
 
 Los lockfiles locales `pnpm` vistos durante la revisión no se agregaron ni eliminaron; `package-lock.json` y npm siguen siendo el estándar del proyecto.
+
+## Actualización del 9 de noviembre de 2026 (Sprint 2)
+
+- `origin/main` está en `af60a3b` (incluye el informe del Laboratorio 6). El PR #7 (flujo de trabajo, configuración y DoD) sigue **abierto y sin revisión**; hasta fusionarse, esos documentos no están en `main`.
+- Ramas locales creadas desde `origin/main` para el inicio del Sprint 2, aún sin publicar: `feature/CGB-31-areas-y-puestos`, `feature/CGB-36-ruta-onboarding` y `feature/CGB-41-registrar-colaboradores`.
+- Límite WIP de desarrollo: 4 (cuatro desarrolladores). Revisión: 2.
+- Las ramas personales siguen conservadas por las razones indicadas arriba.
