@@ -134,6 +134,12 @@ Jira → PR → commit en `main`: CGB-1 → PR #1 → `43d3425`; CGB-21 → #2 �
 - [ ] Retrospectiva (CGB-77) y cierre del Sprint 1.
 - [ ] Registrar la decisión sobre IA en un PR (o "sin uso").
 
-## 5. Trabajo extra
+## 5. Trabajo extra: avance de implementación (CGB-31 / HU-007)
 
-Pendiente: avance de implementación. No se registró ninguno al redactar este documento.
+Primer commit de desarrollo en `feature/CGB-31-areas-y-puestos`: commit `42eb4a4` (https://github.com/milith0kun/proyecto-ing-software/commit/42eb4a4). Seguido con TDD:
+
+- **RED:** `tests/organizacion.test.mjs` (7 pruebas de CA-01 a CA-04) falló al inicio porque `src/lib/organizacion.ts` no existía.
+- **GREEN:** `src/lib/organizacion.ts` (validación de área y puesto, duplicados sin distinguir mayúsculas ni tildes, jerarquía con conteo de colaboradores) y los modelos `Area` y `PuestoTrabajo` en `prisma/schema.prisma`.
+- **Comprobaciones ejecutadas:** `npx tsx --test tests/organizacion.test.mjs` → 8 de 8 pruebas pasan; `prisma validate` (Prisma 6.19.3) → esquema válido.
+- **No verificado:** `npm run lint` no se pudo ejecutar porque el equipo local no tiene `node_modules`. En la suite completa fallan 4 archivos de prueba (`autenticacion`, `publicacion-integracion`, `visor-capacitacion`, `vista-previa`) por dependencias no instaladas (`bcryptjs`, `next`, `happy-dom`), no por este cambio; hay que repetirlo tras `npm ci`.
+- **Falta de CGB-31:** endpoints `/api/organizacion/areas` y `/api/organizacion/puestos` (T2 completo), vista en acordeón (T3), pruebas de integración y PR (T4). El DoD de Jira todavía menciona integrar en la rama `desarrollo`; debe decir `main`.
