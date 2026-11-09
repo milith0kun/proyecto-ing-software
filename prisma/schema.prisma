@@ -76,3 +76,26 @@ model Slide {
   @@map("slides")
 }
 
+// Estructura organizacional (HU-007 / CGB-31)
+model Area {
+  id        String          @id @default(auto()) @map("_id") @db.ObjectId
+  nombre    String          @unique
+  activa    Boolean         @default(true)
+  puestos   PuestoTrabajo[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@map("areas")
+}
+
+model PuestoTrabajo {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  nombre    String
+  areaId    String   @db.ObjectId
+  area      Area     @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([areaId, nombre])
+  @@map("puestos_trabajo")
+}
