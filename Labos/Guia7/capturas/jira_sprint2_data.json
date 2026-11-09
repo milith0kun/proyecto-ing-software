@@ -1,0 +1,78 @@
+{
+ "fecha": "2026-11-09",
+ "sprint": "Sprint 2: Onboarding",
+ "issues": [
+  {
+   "key": "CGB-31",
+   "summary": "HU-007: Crear área y puestos de trabajo",
+   "sp": 3,
+   "status": "Tareas por hacer",
+   "assignee": "Alex Carpio",
+   "priority": "Medium",
+   "subtareas": 4
+  },
+  {
+   "key": "CGB-36",
+   "summary": "HU-008: Crear y secuenciar ruta de onboarding",
+   "sp": 5,
+   "status": "Tareas por hacer",
+   "assignee": "Domingo Quispe",
+   "priority": "Medium",
+   "subtareas": 4
+  },
+  {
+   "key": "CGB-41",
+   "summary": "HU-009: Registrar colaboradores y asignar rutas",
+   "sp": 3,
+   "status": "Tareas por hacer",
+   "assignee": "Ronaldo Ticona",
+   "priority": "Medium",
+   "subtareas": 4
+  },
+  {
+   "key": "CGB-46",
+   "summary": "HU-010: Activar cuenta de colaborador mediante token",
+   "sp": 3,
+   "status": "Tareas por hacer",
+   "assignee": "Domingo Quispe",
+   "priority": "Medium",
+   "subtareas": 4
+  },
+  {
+   "key": "CGB-51",
+   "summary": "HU-011: Consultar panel personal Mi Onboarding",
+   "sp": 5,
+   "status": "Tareas por hacer",
+   "assignee": "Ronaldo Ticona",
+   "priority": "Highest",
+   "subtareas": 4
+  },
+  {
+   "key": "CGB-56",
+   "summary": "HU-012: Completar capacitación interna y registrar avance",
+   "sp": 3,
+   "status": "Tareas por hacer",
+   "assignee": "Héctor Barazorda",
+   "priority": "Highest",
+   "subtareas": 4
+  },
+  {
+   "key": "CGB-61",
+   "summary": "HU-013: Configurar microtest formativo",
+   "sp": 5,
+   "status": "Tareas por hacer",
+   "assignee": "Alex Carpio",
+   "priority": "Medium",
+   "subtareas": 4
+  },
+  {
+   "key": "CGB-66",
+   "summary": "HU-014: Realizar microtest formativo interactivo",
+   "sp": 5,
+   "status": "Tareas por hacer",
+   "assignee": "Héctor Barazorda",
+   "priority": "Medium",
+   "subtareas": 4
+  }
+ ]
+}

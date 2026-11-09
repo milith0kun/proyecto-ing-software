@@ -24,6 +24,9 @@ dist/
 *.fls
 *.fdb_latexmk
 
+# Temporary PDF compilation and review artifacts
+tmp/pdfs/
+
 # OS & IDE files
 .DS_Store
 Thumbs.db

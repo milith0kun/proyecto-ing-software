@@ -1,3 +1,3 @@
 @AGENTS.md
 
-Para trabajo sobre stakeholders, elicitation, requisitos, criterios de aceptación, backlog de Jira o la actividad de Ingeniería de Software I, aplica [`skills/cgb-academy-requirements/SKILL.md`](skills/cgb-academy-requirements/SKILL.md). Consulta el diagnóstico en [`docs/ANALISIS_FALTANTES_ACTIVIDAD_INGENIERIA_REQUISITOS.md`](docs/ANALISIS_FALTANTES_ACTIVIDAD_INGENIERIA_REQUISITOS.md) y confirma el estado en Jira antes de usarlo como actual.
+Aplica también [`skills/cgb-academy-development-workflow/SKILL.md`](skills/cgb-academy-development-workflow/SKILL.md) para cambios de código, documentación, configuración, ramas o commits. La guía canónica del equipo está en [`docs/FLUJO_DE_TRABAJO.md`](docs/FLUJO_DE_TRABAJO.md).

@@ -1,23 +1,14 @@
 # Centro de Capacitación e Inducción — CGB Academy
-**Proyecto de Ingeniería de Software — Universidad Nacional de San Antonio Abad del Cusco (UNSAAC)**  
+**Proyecto de Ingeniería de Software — Universidad Nacional de San Antonio Abad del Cusco (UNSAAC)**
 *Facultad de Ingeniería Eléctrica, Electrónica, Informática y Mecánica | Semestre 2026-I*
 
 ---
 
-## 👥 Equipo de Trabajo y Roles (Sprint 1)
+## 👥 Equipo de trabajo
 
-El equipo aplica una política de **roles rotativos por sprint** para alternar responsabilidades de liderazgo y gestión:
+El equipo está conformado por Saire Bustamante, Edmil Jampier; Barazorda Cuellar, Hector; Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; y Ticona Jancco, Ronaldo. Desde el Sprint 2, Edmil Saire es Product Owner y Scrum Master, y Hector Barazorda, Alex Carpio, Domingo Quispe y Ronaldo Ticona son los cuatro desarrolladores; las asignaciones vigentes están en Jira. Las ramas de Git representan tareas, no integrantes.
 
-| N° | Integrante | Rol en Sprint 1 | Rama de Trabajo Personal |
-|---|---|---|---|
-| 1 | **Saire Bustamante, Edmil Jampier** | **Product Owner** (Sprint 1) / Dev Full-Stack | `edmil-saire` (Rama Principal / Main) |
-| 2 | **Barazorda Cuellar, Hector** | **Scrum Master** (Sprint 1) / Dev Full-Stack | `hector-barazorda` |
-| 3 | **Carpio Hermoza, Alex** | **Desarrollador Full-Stack** | `alex-carpio` |
-| 4 | **Quispe Mamani, Domingo de Guzman** | **Desarrollador Full-Stack** | `domingo-quispe` |
-| 5 | **Ticona Jancco, Ronaldo** | **Desarrollador Full-Stack** | `ronaldo-ticona` |
-
-> [!NOTE]
-> Al concluir el Sprint 1 (en la sesión de Retrospectiva), se evalúa el desempeño de la dinámica de trabajo y se acuerda la rotación de los roles de Product Owner y Scrum Master hacia los demás integrantes para los siguientes sprints.
+**Punto de entrada de la evidencia:** ver [Evidencia y trazabilidad](#evidencia-y-trazabilidad). Las reglas vigentes para trabajar en el repositorio están en [`docs/FLUJO_DE_TRABAJO.md`](docs/FLUJO_DE_TRABAJO.md), la [`Definition of Done`](docs/definition-of-done.md) y la [gestión de configuración](docs/configuracion.md).
 
 ---
 
@@ -26,10 +17,10 @@ El equipo aplica una política de **roles rotativos por sprint** para alternar r
 De acuerdo a la arquitectura técnica del sistema:
 
 ```
-[ Base de Datos: MongoDB Atlas ] 
+[ Base de Datos: MongoDB Atlas ]
                ▲
                │  (Conector MongoDB)
-     [ ORM: Prisma ] 
+     [ ORM: Prisma ]
                ▲
                │  (Acceso tipado en TypeScript)
 [ Framework Full-Stack: Next.js (App Router) ]
@@ -48,80 +39,47 @@ De acuerdo a la arquitectura técnica del sistema:
 
 ---
 
-## 🌿 Arquitectura y Flujo de Ramas en Git
+## 🌿 Flujo de trabajo y ramas
 
-El repositorio opera bajo un esquema colaborativo diseñado para testear los avances antes de pasar a la rama principal:
+**Estrategia elegida: Flujo de GitHub (*GitHub Flow*)**, no Git Flow: sin `develop` ni `release` permanentes, por ser un equipo pequeño con sprints de dos semanas. `main` es la única rama permanente de integración. Cada cambio parte de `origin/main` en una rama corta por tarea Jira y llega a `main` mediante Pull Request revisado. No se crean ramas permanentes por integrante ni una rama intermedia `develop`/`desarrollo`. La guía completa incluye comandos seguros, nombres de rama, commits, limpieza, revisión y control de cambios: [`docs/FLUJO_DE_TRABAJO.md`](docs/FLUJO_DE_TRABAJO.md).
 
-```
-[ edmil-saire ] (MAIN / PRODUCCIÓN - Siempre estable y sin errores)
-       ▲
-       │  (Merge tras validación completa del equipo)
-[ desarrollo ]  (DESARROLLO - Testeo conjunto y unión de todos los devs)
-       ▲
-       ├── [ hector-barazorda ]  (Pull Request individual con cuenta de GitHub)
-       ├── [ alex-carpio ]       (Pull Request individual con cuenta de GitHub)
-       ├── [ domingo-quispe ]    (Pull Request individual con cuenta de GitHub)
-       ├── [ edmil-saire ]       (Desarrollo de historias individuales)
-       └── [ ronaldo-ticona ]    (Pull Request individual con cuenta de GitHub)
-```
+## Actividad: validación de necesidades
 
-### 📋 Guía Rápida para cada Desarrollador:
-
-1. **Situarse en su rama y traer lo último de desarrollo:**
-   ```bash
-   git checkout <tu-nombre-de-rama>
-   git pull origin desarrollo
-   ```
-2. **Desarrollar y subir cambios con su cuenta de GitHub:**
-   ```bash
-   git add .
-   git commit -m "feat(modulo): avance de la funcionalidad HU-xxx"
-   git push origin <tu-nombre-de-rama>
-   ```
-3. **Crear Pull Request en GitHub:**
-   - **Base:** `desarrollo` $\leftarrow$ **Compare:** `<tu-nombre-de-rama>`
-4. **Testeo en `desarrollo`:**
-   El equipo prueba conjuntamente que la unión de componentes y endpoints funcione sin fallos.
-5. **Pase a la rama principal (`edmil-saire`):**
-   Una vez probado y libre de errores en `desarrollo`, el Scrum Master / Product Owner realiza la integración final a `edmil-saire`.
-
----
-
----
+El [informe breve de necesidades y requisitos](informe/actividad-necesidades-latex/actividad_necesidades.pdf) y su [proyecto LaTeX](informe/actividad-necesidades-latex/main.tex) enlazan las historias refinadas [CGB-51](https://cgb-academy.atlassian.net/browse/CGB-51) y [CGB-56](https://cgb-academy.atlassian.net/browse/CGB-56). La [fuente Markdown](informe/actividad_necesidades.md), el [registro anonimizado de conversatorios y análisis documental](informe/registro_conversatorios.md), la [plantilla de entrevista y observación](informe/plantilla_entrevista_usuario.md) y la [evaluación de pendientes](docs/ANALISIS_FALTANTES_ACTIVIDAD_INGENIERIA_REQUISITOS.md) explican qué está documentado y qué sigue por validar.
 
 ## 📊 Metodología de Desarrollo: Scrum + Kanban con Límites WIP + TDD
 
 El proyecto combina la cadencia de **Scrum** (sprints de 2 semanas), la fluidez de **Kanban** y el rigor técnico de **TDD**:
 
 ```
-[ BACKLOG ] ──> [ SPRINT ] ──> [ TO DO ] ──> [ DESARROLLO (WIP 3) ] ──> [ REVISIÓN (WIP 2) ] ──> [ DONE ]
+[ BACKLOG ] ──> [ SPRINT ] ──> [ POR HACER ] ──> [ EN DESARROLLO (WIP 4) ] ──> [ EN REVISIÓN (WIP 2) ] ──> [ HECHO en main ]
 ```
 
 ### 📋 Tablero Kanban Oficial del Equipo:
 | Columna | Significado | Límite WIP | Justificación Operativa |
 |---|---|:---:|---|
-| **TO DO** | HUs del Sprint comprometidas aún no iniciadas | Sin límite | Backlog priorizado del Sprint. |
-| **DESARROLLO** | HUs en codificación activa y construcción de pruebas | **3** | **1 desarrollador = máx. 1 HU activa** (3 integrantes Development). |
+| **POR HACER** | HUs preparadas y comprometidas para el Sprint, aún no iniciadas | Sin límite | La historia cumple la Definition of Ready. |
+| **DESARROLLO** | HUs en codificación activa y construcción de pruebas | **4** | **1 desarrollador = máx. 1 HU activa** (4 integrantes Development desde el Sprint 2; eran 3 en el Sprint 1). |
 | **REVISIÓN** | En espera de *Peer Review*, pruebas e integración | **2** | Si llega a **2/2**, el equipo detiene trabajo nuevo y ayuda a desatorar revisión. |
-| **DONE** | Integradas en `desarrollo`, aceptadas por el PO | Sin límite | Cumplen con la *Definition of Done* al 100%. |
+| **HECHO** | Integradas en `main`, aceptadas por el PO | Sin límite | Cumplen con la [Definition of Done](docs/definition-of-done.md) y enlazan Jira, PR y commit. |
 
-### 🧪 Ciclo TDD en 4 Subtareas Técnicas dentro de cada HU:
-Cada Historia de Usuario es la tarjeta principal que viaja por el tablero y contiene en su interior 4 subtareas técnicas:
+### 🧪 TDD en historias con cambios de comportamiento
+La Historia de Usuario es la tarjeta principal del tablero. Para cambios de comportamiento se aplica el ciclo TDD; sus pasos se representan como subtareas Jira cuando ayudan a coordinar el trabajo, no como subtareas vacías obligatorias:
 1. **T1 — Pruebas / RED:** Diseñar pruebas unitarias e integración que inicialmente fallan.
 2. **T2 — Implementación / GREEN:** Programar el código necesario para pasar las pruebas a verde.
 3. **T3 — Refactorización:** Limpiar el código, modularizar y optimizar sin romper la funcionalidad.
-4. **T4 — Validación e integración:** Verificar criterios BDD (*Dado/Cuando/Entonces*) y preparar el PR a `desarrollo`.
+4. **T4 — Validación y PR:** verificar criterios BDD (*Dado/Cuando/Entonces*) y preparar el PR hacia `main`. En tareas documentales se revisan contenido, enlaces y consistencia, sin inventar pruebas de comportamiento.
 
 ### 🚫 Gestión de Bloqueos:
 No existe columna "Bloqueado". Las tarjetas impedidas permanecen en su columna con la etiqueta **`🚫 BLOQUEADA`**, detallando en Jira: *Motivo, Responsable y Acción requerida*. El Scrum Master prioriza su remoción en la Daily Scrum.
 
-### 🎯 Distribución de las 15 HUs del MVP por Sprints:
-- **Sprint 1 (HU-001 a HU-006):** Núcleo de capacitación y acceso público.  
-  *Arranque:* Dev 1 $\rightarrow$ HU-001 | Dev 2 $\rightarrow$ HU-002 | Dev 3 $\rightarrow$ HU-003. Luego ingresan HU-004, HU-005, HU-006.
-- **Sprint 2 (HU-007 a HU-012):** Estructura organizacional (Áreas, Puestos) y Onboarding de colaboradores.  
-  *Arranque:* Dev 1 $\rightarrow$ HU-007 | Dev 2 $\rightarrow$ HU-008 | Dev 3 $\rightarrow$ HU-009. Luego ingresan HU-010, HU-011, HU-012.
-- **Sprint 3 (HU-013 a HU-015):** Microtests formativos y supervisión de colaboradores.  
-  *Arranque:* Dev 1 $\rightarrow$ HU-013 | Dev 2 $\rightarrow$ HU-014 | Dev 3 $\rightarrow$ HU-015 (3 HUs para 3 Devs).
+### 🎯 Plan inicial de las 15 HUs del MVP
+
+Esta distribución es una referencia de planificación inicial; Jira determina el sprint y estado vigentes.
+
+- **Sprint 1 (HU-001 a HU-006):** Núcleo de capacitación y acceso público (19 SP, 3 desarrolladores).
+- **Sprint 2 (HU-007 a HU-014, 32 SP, 09/11–23/11/2026):** Áreas, puestos, onboarding de colaboradores y microtest formativo (HU-013 y HU-014 se adelantaron desde el Sprint 3). Reparto vigente en Jira: Alex → HU-007 y HU-013; Domingo → HU-008 y HU-010; Ronaldo → HU-009 y HU-011; Hector → HU-012 y HU-014.
+- **Sprint 3:** HU-015 (reportes de avance).
 
 ---
 
@@ -170,4 +128,25 @@ Todo desarrollo de interfaz de usuario debe ceñirse estrictamente a las directr
 4. **Tipografía Oficial:** `Montserrat` para títulos y botones; `Inter` para cuerpo de texto; `Georgia` solo para diplomas y certificados.
 5. **Componentes de Inducción:** Utilizar `.boton-primario` (1 por bloque), `.tarjeta-cgb` (alturas al ras con `flex: 1`), `.barra-progreso` y `.chip-estado`.
 6. **Iconos:** Exclusivamente SVG inline vectoriales limpios (estilo Lucide). **Cero emojis en componentes de interfaz.**
-7. **Nomenclatura:** Clases, variables y propiedades 100% redactadas en español.
+7. **Nomenclatura:** Clases, variables y propiedades 100% redactadas en español.
+
+---
+
+## Evidencia y trazabilidad
+
+Punto de entrada para recorrer la evidencia del proyecto (repositorio, tablero, workflow y Definition of Done):
+
+| Elemento | Dónde |
+|---|---|
+| Repositorio, inventario y regla de aprobación | [`docs/configuracion.md`](docs/configuracion.md) |
+| Workflow: ramas, commits, PR y revisión | [`docs/FLUJO_DE_TRABAJO.md`](docs/FLUJO_DE_TRABAJO.md), [plantilla de PR](.github/PULL_REQUEST_TEMPLATE.md) |
+| Definition of Done | [`docs/definition-of-done.md`](docs/definition-of-done.md) |
+| Tablero y backlog | [Jira CGB](https://cgb-academy.atlassian.net/jira/software/projects/CGB/boards/4) |
+| Estado de ramas y GitHub | [`docs/ESTADO_RAMAS.md`](docs/ESTADO_RAMAS.md) |
+| Laboratorios | [`Labos/`](Labos/), incluido el [Sprint Planning del Laboratorio 7](Labos/Guia7/informe_laboratorio_7.pdf) |
+
+Trazabilidad de las historias integradas (Jira → PR → commit en `main`): CGB-1 → PR #1 → `43d3425`; CGB-21 → PR #2 → `6380337`; CGB-11 → PR #3 → `c0016ca`; CGB-6 → PR #4 → `13c65e5`; CGB-16 → PR #5 → `47103c0`. Las claves de Jira enlazan estos PR y commits.
+
+**Línea base:** pendiente de aprobación. No hay tags ni releases; se creará uno cuando el equipo apruebe una entrega según [`docs/configuracion.md`](docs/configuracion.md).
+
+**Uso de IA:** los asistentes proponen y resumen; la decisión sobre cada recomendación se registra en el PR (o "sin uso"). Hasta ahora no hay decisiones de IA registradas en un PR.

@@ -1,0 +1,110 @@
+\documentclass[10pt,a4paper]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[a4paper,margin=1.25cm,headheight=12pt]{geometry}
+\usepackage{tabularx,array,booktabs}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+\setlist{nosep,leftmargin=1.3em}
+\renewcommand{\arraystretch}{1.12}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{CGB Academy · Ingeniería de Software I}
+\fancyhead[R]{Actividad de necesidades y requisitos}
+\fancyfoot[C]{\thepage}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\begin{document}
+\small
+\begin{center}
+{\Large\bfseries Identificación y validación de necesidades}\par
+Proyecto CGB Academy · Informe breve · 21 de octubre de 2026
+\end{center}
+\vspace{-4pt}
+\textbf{Alcance del producto:} CGB Academy tiene dos recorridos: capacitación privada de empleados (inducción por área/puesto, avance y microtests) y orientación pública para estudiantes/docentes (guías para usar plataformas y resolver casos de CIIP LATAM, GEOMINA LATAM y BIOMEDIC, sin cuenta). Administración de contenidos mantiene ambos recorridos; TI apoya la operación segura.
+
+\textbf{Evidencia:} el equipo confirma que la captura y los conversatorios se realizaron con administración de ventas, TI, operaciones académicas y otros participantes. Se incluyen cuatro fotos como evidencia contextual, sin asignarlas a roles.
+
+Base: captura reportada por el equipo, especificación funcional/no funcional de CGB Academy, alcance del MVP, Jira y código vigente. La venta de cursos, pagos y seguimiento comercial no se confunden con la función formativa. Fuentes detalladas: \texttt{../registro\_conversatorios.md}.
+
+\section*{A. Stakeholders y persona}
+\footnotesize
+\begin{tabularx}{\linewidth}{P{2.8cm} Y P{1.5cm} P{1.5cm} P{1.5cm}}
+\toprule
+Stakeholder / relación & Expectativa documentada o por validar & Poder & Interés & Prioridad \\
+\midrule
+Operaciones académicas (entrevistada; gestora de contenido) & Publicar guías y gestionar rutas internas & Alto & Alto & Alta; cerca \\
+\addlinespace[2pt]
+TI (entrevistada) & Separar acceso público/privado y proteger datos e infraestructura & Alto & Alto & Alta; cerca \\
+\addlinespace[2pt]
+Administración de ventas (entrevistada) & Aportar procesos y casos que debe explicar la capacitación & Medio & Alto & Alta para consulta \\
+\addlinespace[2pt]
+Empleado interno & Completar inducción por área/puesto y retomar avance & Medio & Alto & Alta \\
+\addlinespace[2pt]
+Estudiantes/docentes (público) & Usar guías de plataformas y casos sin crear cuenta & Bajo & Alto & Alta; informar \\
+\addlinespace[2pt]
+Product Owner/directorio & Decidir alcance, prioridad y aprobación de contenido & Alto & Alto & Alta; cerca \\
+\bottomrule
+\end{tabularx}
+\par
+\normalsize
+\vspace{8pt}
+\noindent \textbf{Distinción de roles:} ventas, TI y operaciones académicas son las áreas consultadas; los roles del sistema son Administrador, Colaborador y Público. Se gestiona de cerca a TI, operaciones académicas y al PO. Poder/interés son estimaciones según responsabilidades. \textbf{Persona real anonimizada — participante de Operaciones Académicas:} arquetipo relacionado funcionalmente con Administrador/gestor de contenido (asignación sujeta al permiso definido por el PO). Objetivo: organizar rutas internas por área/puesto y publicar guías sobre plataformas y casos de CIIP LATAM, GEOMINA LATAM y BIOMEDIC. Necesita que cada público encuentre su material y que el avance de empleados sea privado. La síntesis se basa en la captura y la especificación; citas y atributos personales se incluyen solo si constan allí. Las fotos son contexto y no permiten atribuir respuestas o roles.
+
+\textbf{Elicitación y técnica adicional:} captura y conversatorios realizados, según el equipo; se revisaron especificación, historias y alcance como análisis documental. Preguntas para operaciones académicas: (1) ¿Qué plataformas/casos necesitan guías públicas? (2) ¿Qué pasos, ejemplos y enlaces requieren? (3) ¿Qué formación corresponde a cada área/puesto? (4) ¿Cómo se revisa y actualiza contenido público e interno? (5) ¿Quién consulta el avance de empleados y qué debe seguir privado? Son el guion de la actividad, no citas de respuestas.
+
+\section*{B. Requisitos revisados}
+\footnotesize
+\begin{tabularx}{\linewidth}{P{2.8cm} P{3.5cm} Y}
+\toprule
+Tipo e inicial & Problema & Reformulación y verificación \\
+\midrule
+\textbf{Funcional público — RF-005/006:} catálogo y visor de capacitaciones públicas. & No explicita cómo reconocer guías de plataformas/casos ni su público. & Solo se lista material PUBLICADO/PÚBLICO; ficha/guía muestran unidad, categoría/audiencia y propósito cuando estén configurados. \textbf{Verificar:} acceso anónimo, clasificación, enlaces y rechazo de contenido interno. \\
+\textbf{Funcional interno — RF-011/012:} ruta y avance ``en tiempo real''. & Estado, base del porcentaje y frontera con lo público sin definir. & Mi Onboarding muestra la ruta del área/puesto y estados; calcula $\mathrm{round}(100\times M/N)$ (0\% si N=0) solo con avance interno guardado. \textbf{Verificar:} ruta vacía/mixta, reanudación y aislamiento por cuenta. \\
+\textbf{No funcional — RNF-004:} contenido ligero y carga $<1{,}5$ s en 4G. & No fija vistas, dispositivo ni medición. & Catálogo y primera guía en producción tendrán LCP p95 $<1{,}5$ s en 20 mediciones con perfil 4G, equipo y datos acordados. \textbf{Verificar:} registrar parámetros; PO confirma umbral. \\
+\textbf{Regla — visibilidad:} material público/interno. & No declara acceso anónimo ni efecto de leer una guía en el progreso laboral. & Visitantes ven solo capacitaciones PUBLICADAS/PÚBLICAS; INTERNO exige sesión. Leer contenido público no crea ni cambia progreso de empleado. \textbf{Verificar:} API/URL anónimas y progreso antes/después. \\
+\textbf{Restricción MVP:} no es tienda ni LMS académico. & Orientación podría confundirse con venta de cursos, pagos o clases. & El producto ofrece guías autoguiadas para plataformas/casos y capacitación laboral; excluye pagos, clases en vivo, video pesado y certificados. \textbf{Verificar:} revisar historias, rutas y APIs. \\
+\bottomrule
+\end{tabularx}
+\normalsize
+
+\newpage
+\section*{C. Backlog refinado y trazabilidad}
+\textbf{Necesidad pública NP — guías para plataformas y casos.} \textbf{\href{https://cgb-academy.atlassian.net/browse/CGB-26}{CGB-26 · HU-006}} (Jira: Revisión, Medium; la especificación indica Alta y el PO debe resolverlo). Como estudiante o docente, quiero seguir una guía pública sobre una plataforma o caso, para resolver una tarea por mi cuenta sin crear una cuenta. Trazabilidad: RF-005/006 y captura reportada por el equipo. Criterios observables: solo material público/publicado; unidad, audiencia y propósito visibles; enlaces funcionales; el acceso anónimo no altera el progreso del empleado. Tareas: CGB-27 pruebas, CGB-28 implementación, CGB-29 refactor, CGB-30 validación/PR. CGB-21/HU-005 cubre el catálogo.
+\begin{itemize}
+\item \textbf{Relación de audiencia:} el estudiante/docente usa el catálogo y visor público; el colaborador usa la ruta privada. Ambos consumen capacitaciones, pero solo la ruta interna registra avance.
+\end{itemize}
+
+\textbf{Necesidad interna NE — guardar y retomar.} \textbf{\href{https://cgb-academy.atlassian.net/browse/CGB-56}{CGB-56 · HU-012}} (prioridad \textbf{Highest}). Como empleado, quiero guardar y retomar el slide confirmado de mi ruta, para continuar la inducción sin perder avance. Trazabilidad: RF-012/captura. Criterios: guardar y reanudar; completar solo al confirmar el último slide; aislar el avance por cuenta; no mezclar actividad pública con onboarding; confirmar repetido no duplica avance. Tareas: CGB-57 pruebas, CGB-58 endpoint/persistencia, CGB-59 idempotencia/UX, CGB-60 BDD/PR. CGB-51/HU-011 presenta la ruta y consume ese avance.
+\begin{itemize}
+\item \textbf{AG-C01:} la ruta y el avance son privados; una cuenta no consulta el progreso de otra. Verificar acceso con dos cuentas y una sesión anónima.
+\end{itemize}
+
+\textbf{Nota Jira (revisado el 21/10):} CGB-26 está en Revisión, prioridad Medium; CGB-56 y su dependencia CGB-51 están en Tareas por hacer, Highest. No se alteran estado, sprint ni prioridad; la diferencia Medium/Alta de CGB-26 requiere decisión del PO. CGB usa el tipo ``Tarea'' para historias.
+
+\section*{Reflexión y pendientes}
+Pasamos por alto el peso del recorrido público: estudiantes/docentes necesitan identificar guías por plataforma y caso, mientras los empleados requieren onboarding privado con avance propio. El siguiente sprint debe hacer visible esa diferencia en el catálogo y mantener aislado el progreso interno. Ventas aporta contexto, pero pagos, venta de cursos y seguimiento de prospectos siguen fuera del MVP. El PO debe resolver la prioridad de CGB-26 y confirmar umbral de rendimiento y visibilidad.
+
+\vspace{3pt}
+\textbf{Evidencia fotográfica de los conversatorios}\par
+\begin{center}
+\begin{minipage}[t]{0.235\linewidth}\centering
+\includegraphics[width=\linewidth,height=3.25cm,keepaspectratio,trim=0 150 0 150,clip]{evidencias/conversatorio-01.jpeg}\\[-2pt]{\scriptsize Registro 1}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.235\linewidth}\centering
+\includegraphics[width=\linewidth,height=3.25cm,keepaspectratio,trim=0 150 0 150,clip]{evidencias/conversatorio-02.jpeg}\\[-2pt]{\scriptsize Registro 2}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.235\linewidth}\centering
+\includegraphics[width=\linewidth,height=3.25cm,keepaspectratio,trim=0 150 0 150,clip]{evidencias/conversatorio-03.jpeg}\\[-2pt]{\scriptsize Registro 3}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.235\linewidth}\centering
+\includegraphics[width=\linewidth,height=3.25cm,keepaspectratio,trim=160 0 160 0,clip]{evidencias/conversatorio-04.jpeg}\\[-2pt]{\scriptsize Registro 4}
+\end{minipage}
+\end{center}
+{\footnotesize Fotografías compartidas por el equipo como evidencia visual. No se asigna una persona ni un rol específico a cada imagen.}
+\end{document}
