@@ -335,9 +335,45 @@ Se inició la implementación de la primera historia de la cadena de dependencia
 
 \textbf{Comprobaciones ejecutadas:} \texttt{npx tsx --test tests/organizacion.test.mjs} $\rightarrow$ 8 de 8 pruebas aprobadas; \texttt{prisma validate} (Prisma 6.19.3) $\rightarrow$ esquema válido.
 
-\begin{infobox}{Limitaciones declaradas}
-\texttt{npm run lint} no se ejecutó porque el equipo local no tiene \texttt{node\_modules}. En la suite completa fallan 4 archivos de prueba (\texttt{autenticacion}, \texttt{publicacion-integracion}, \texttt{visor-capacitacion} y \texttt{vista-previa}) por dependencias no instaladas (\texttt{bcryptjs}, \texttt{next}, \texttt{happy-dom}); se repetirá tras \texttt{npm ci}. Faltan de CGB-31 los endpoints de \texttt{/api/organizacion}, la vista en acordeón, las pruebas de integración y el Pull Request.
+
+% ==============================================================================
+\section{Evidencia del Producto: Sprint 1 y Sprint 2}
+
+Las capturas siguientes se tomaron el 09/11/2026 ejecutando la aplicación en un servidor local (\texttt{next dev}, puerto 3100) conectada a la base de datos del proyecto.
+
+\subsection{Sprint 1: Capacitación y Acceso (historias finalizadas)}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{capturas/captura_app_login.png}
+    \caption{HU-001 (CGB-6): acceso interno con correo corporativo, contraseña y enlace de regreso al catálogo público.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{capturas/captura_app_catalogo.png}
+    \caption{HU-005 (CGB-21): catálogo público de capacitaciones con búsqueda y filtros por unidad y público (8 capacitaciones publicadas).}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{capturas/captura_app_capacitacion.png}
+    \caption{HU-006 (CGB-26): consulta de una capacitación pública con diapositivas y barra de progreso (``Diapositiva 1 de 3'').}
+\end{figure}
+
+\begin{infobox}{Alcance de las capturas}
+Los paneles de administrador y de colaborador (HU-001, HU-002, HU-003 y HU-004) requieren iniciar sesión; las cuentas de prueba del script \texttt{prisma/seed.mjs} no existen en la base conectada, por lo que esas pantallas no se capturaron y no se ejecutó el seed para no escribir en la base compartida. El \textbf{registro de colaboradores} (HU-009, CGB-41) pertenece al Sprint 2 y aún no está implementado, por lo que no hay pantalla que capturar.
 \end{infobox}
+
+\subsection{Sprint 2: Onboarding (avance inicial)}
+
+El Sprint 2 está en sus primeros días: todas las historias están en \textit{To Do} y todavía no hay pantallas nuevas. La evidencia disponible es la ejecución de las pruebas de CGB-31 en verde (sección anterior):
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{capturas/captura_pruebas_cgb31.png}
+    \caption{Salida de las pruebas de HU-007 (CGB-31) y validación del esquema Prisma en la rama \texttt{feature/CGB-31-areas-y-puestos}.}
+\end{figure}
 
 % ==============================================================================
 \section{Conclusiones}
