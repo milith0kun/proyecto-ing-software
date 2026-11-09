@@ -4,7 +4,7 @@
 **Proyecto:** CGB Academy · Jira `CGB` · GitHub `milith0kun/proyecto-ing-software`
 **Sprint planificado:** Sprint 2: Onboarding
 
-> **Estado de la evidencia.** Los datos de Jira se leyeron en vivo (solo lectura) el 09/11/2026 con la API del proyecto `CGB`. Lo marcado como **propuesto** todavía no está en Jira; el reparto de responsables ya se aplicó en Jira (ver sección 4).
+> **Estado de la evidencia.** Los datos de Jira se leyeron en vivo (solo lectura) el 09/11/2026 con la API del proyecto `CGB`. El reparto de responsables, el objetivo del sprint y las subtareas están en Jira (ver sección 4); lo marcado como **propuesto** (desglose técnico de la sección 3) todavía no está volcado en las descripciones de las subtareas.
 
 ## 1. Definición del sprint (Parte 1)
 
@@ -15,7 +15,7 @@
 | Product Owner y Scrum Master | Edmil Jampier Saire Bustamante (ambos roles desde el Sprint 2) |
 | Desarrolladores (4) | Alex Carpio Hermoza, Domingo Quispe Mamani, Ronaldo Ticona Jancco, Héctor Barazorda Cuellar |
 
-**Objetivo del sprint** (el campo «objetivo» está vacío en Jira; se propone cargarlo)
+**Objetivo del sprint** (cargado en Jira el 09/11/2026)
 
 > “Permitir que el administrador defina áreas, puestos y rutas de onboarding y registre colaboradores; que cada colaborador active su cuenta, consulte *Mi Onboarding* y registre su avance; y dejar configurado y disponible el microtest formativo.”
 
@@ -34,11 +34,11 @@ Dos historias se **adelantaron del Sprint 3 al Sprint 2**: CGB-61 (HU-013) y CGB
 - El Sprint 1 cerró sus 19 SP de historias (CGB-16 y CGB-26 ya están Finalizadas), así que no hay arrastre de historias.
 - Límite Kanban corregido en `docs/FLUJO_DE_TRABAJO.md` e `informe/informe.md`: **máximo 4 historias en desarrollo** (una activa por desarrollador, antes 3 con tres desarrolladores) y **2 en revisión** sin cambio. Cada desarrollador puede tener una historia en desarrollo a la vez; el límite de 2 en revisión mantiene la regla de dejar de iniciar trabajo nuevo y ayudar a revisar.
 
-### Sprint Backlog: estado actual en Jira y reparto propuesto
+### Sprint Backlog y reparto aplicado en Jira
 
-Hoy Jira concentra 15 SP en Domingo, 11 en Alex, 6 en Ronaldo y **0 en Héctor**. El reparto propuesto deja a cada integrante con una historia de 3 SP y una de 5 SP (8 SP), conservando las historias de 3 SP y 5 SP que ya tenían donde fue posible.
+Antes del reparto, Jira concentraba 15 SP en Domingo, 11 en Alex, 6 en Ronaldo y **0 en Héctor**. El reparto aplicado deja a cada integrante con una historia de 3 SP y una de 5 SP (8 SP), conservando las que ya tenían donde fue posible.
 
-| Clave | Historia | SP | Responsable actual (Jira) | Responsable **propuesto** | Depende de |
+| Clave | Historia | SP | Responsable antes | Responsable **actual en Jira** | Depende de |
 |---|---|:-:|---|---|---|
 | CGB-31 | HU-007: Crear área y puestos de trabajo | 3 | Alex Carpio | Alex Carpio | — |
 | CGB-36 | HU-008: Crear y secuenciar ruta de onboarding | 5 | Domingo Quispe | Domingo Quispe | CGB-31 |
@@ -50,7 +50,7 @@ Hoy Jira concentra 15 SP en Domingo, 11 en Alex, 6 en Ronaldo y **0 en Héctor**
 | CGB-66 | HU-014: Realizar microtest formativo interactivo | 5 | Domingo Quispe | **Héctor Barazorda** | CGB-61 |
 | | **Total** | **32** | | 8 SP por persona | |
 
-Cuatro historias cambian de responsable (CGB-46, CGB-51, CGB-56, CGB-66). Los costos de ese reparto: CGB-51 y CGB-56 llevan prioridad *Highest* y `evidence-pending`, y se mueven a personas que no las tenían; y CGB-66 depende de CGB-61, que es de otra persona. El equipo puede preferir otro reparto; lo importante es que cada historia (y sus subtareas T1–T4) tenga responsable y que Héctor tenga carga.
+Cuatro historias cambiaron de responsable (CGB-46, CGB-51, CGB-56, CGB-66). Costos de ese reparto: CGB-51 y CGB-56 llevan prioridad *Highest* y `evidence-pending`, y se mueven a personas que no las tenían; y CGB-66 depende de CGB-61, que es de otra persona. El equipo puede preferir otro reparto; lo importante es que cada historia (y sus subtareas T1–T4) tenga responsable y que Héctor tenga carga.
 
 ### Riesgos
 
