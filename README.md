@@ -143,7 +143,7 @@ Punto de entrada para recorrer la evidencia del proyecto (repositorio, tablero, 
 | Definition of Done | [`docs/definition-of-done.md`](docs/definition-of-done.md) |
 | Tablero y backlog | [Jira CGB](https://cgb-academy.atlassian.net/jira/software/projects/CGB/boards/4) |
 | Estado de ramas y GitHub | [`docs/ESTADO_RAMAS.md`](docs/ESTADO_RAMAS.md) |
-| Laboratorios | [`Labos/`](Labos/), incluido el [Sprint Planning del Laboratorio 7](Labos/Guia7/INFORME_LABORATORIO_7.md) |
+| Laboratorios | [`Labos/`](Labos/), incluido el [Sprint Planning del Laboratorio 7](Labos/Guia7/informe_laboratorio_7.pdf) |
 
 Trazabilidad de las historias integradas (Jira → PR → commit en `main`): CGB-1 → PR #1 → `43d3425`; CGB-21 → PR #2 → `6380337`; CGB-11 → PR #3 → `c0016ca`; CGB-6 → PR #4 → `13c65e5`; CGB-16 → PR #5 → `47103c0`. Las claves de Jira enlazan estos PR y commits.
 
