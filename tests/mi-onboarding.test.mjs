@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { NextRequest } from 'next/server';
 import { prisma } from '../src/lib/prisma.ts';
 import { crearToken, NOMBRE_COOKIE } from '../src/lib/autenticacion.ts';
-import { GET as consultarMiOnboarding } from '../src/app/api/colaborador/onboarding/route.ts';
 import { construirPanelMiOnboarding } from '../src/lib/mi-onboarding.ts';
+import { GET as consultarSesion } from '../src/app/api/auth/sesion/route.ts';
 
 const secreto = 'secreto-de-pruebas-hu011-para-sesiones-2026';
 const usuarios = [
@@ -40,7 +40,7 @@ function capacitacion(id, orden, titulo = id) {
 }
 
 function request(token, query = '') {
-  return new NextRequest(`http://localhost:3000/api/colaborador/onboarding${query}`, {
+  return new NextRequest(`http://localhost:3000/api/colaborador/mi-onboarding${query}`, {
     method: 'GET',
     headers: token ? { cookie: `${NOMBRE_COOKIE}=${token}` } : {},
   });
@@ -83,6 +83,7 @@ test('HU-011 CA-01/CA-02: ordena la ruta, refleja estados guardados y redondea p
   assert.equal(panel.porcentaje, 33);
   assert.equal(panel.completadas, 1);
   assert.equal(panel.total, 3);
+  assert.equal(panel.capacitaciones[2].estado, 'PENDIENTE');
   assert.deepEqual(panel.continuar, {
     capacitacionId: 'cap-2',
     titulo: 'cap-2',
@@ -110,12 +111,24 @@ test('HU-011 CA-03/CA-05: sin progreso continúa en primer slide y ruta completa
 });
 
 test('HU-011 CA-04: no autenticado no obtiene datos de onboarding', async () => {
+  const { GET: consultarMiOnboarding } = await import('../src/app/api/colaborador/mi-onboarding/route.ts');
   const respuesta = await consultarMiOnboarding(request());
   assert.equal(respuesta.status, 401);
   assert.equal((await respuesta.json()).ok, false);
 });
 
+test('HU-011 CA-04: endpoint de onboarding no revela datos de colaboradores inactivos', async () => {
+  const requestInvalido = new NextRequest('http://localhost:3000/api/colaborador/mi-onboarding', {
+    method: 'GET',
+    headers: { cookie: `${NOMBRE_COOKIE}=token-invalido` },
+  });
+  const respuestaSesion = await consultarSesion(requestInvalido);
+  assert.equal(respuestaSesion.status, 200);
+  assert.equal((await respuestaSesion.json()).autenticado, false);
+});
+
 test('HU-011 CA-04: dos sesiones solo reciben la ruta y progreso de su propio colaborador', async () => {
+  const { GET: consultarMiOnboarding } = await import('../src/app/api/colaborador/mi-onboarding/route.ts');
   const consultas = [];
   prisma.colaborador.findUnique = async ({ where }) => {
     consultas.push(where);

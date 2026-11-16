@@ -13,8 +13,9 @@ import {
 } from '@/lib/visor-capacitacion';
 
 /* eslint-disable @next/next/no-img-element */
-export default function SlideViewer({ slides }: { slides: SlideVisor[] }) {
-  const [slideActual, setSlideActual] = useState(1);
+export default function SlideViewer({ slides, slideInicial = 1 }: { slides: SlideVisor[]; slideInicial?: number }) {
+  const inicialSeguro = Math.max(1, Math.min(Math.floor(slideInicial), Math.max(slides.length, 1)));
+  const [slideActual, setSlideActual] = useState(inicialSeguro);
   const inicioToqueX = useRef<number | null>(null);
   const totalSlides = slides.length;
   const progreso = calcularProgresoLectura(slideActual, totalSlides);

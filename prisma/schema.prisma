@@ -53,6 +53,8 @@ model Capacitacion {
 
   // Relación con Slides (para HU-003 / HU-006)
   slides      Slide[]
+  rutasOnboarding RutaCapacitacion[]
+  progresosColaboradores ProgresoCapacitacion[]
 
   @@index([ambito, estado, createdAt(sort: Desc)], map: "capacitaciones_catalogo_publico")
   @@map("capacitaciones")
@@ -83,11 +85,27 @@ model RutaOnboarding {
   descripcion String?
   activa      Boolean      @default(true)
   puestos     Puesto[]
+  capacitaciones RutaCapacitacion[]
   colaboradores Colaborador[] @relation("RutaAsignada")
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
   @@map("rutas_onboarding")
+}
+
+model RutaCapacitacion {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  rutaId         String       @db.ObjectId
+  ruta           RutaOnboarding @relation(fields: [rutaId], references: [id], onDelete: Cascade)
+  capacitacionId String       @db.ObjectId
+  capacitacion   Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Cascade)
+  orden          Int          @default(1)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([rutaId, capacitacionId])
+  @@index([rutaId, orden])
+  @@map("rutas_capacitaciones")
 }
 
 model Puesto {
@@ -114,6 +132,7 @@ model Colaborador {
   progreso          Int             @default(0)
   rutaOnboardingId  String?         @db.ObjectId
   rutaOnboarding    RutaOnboarding? @relation("RutaAsignada", fields: [rutaOnboardingId], references: [id], onDelete: SetNull)
+  progresos         ProgresoCapacitacion[]
   userId            String?         @unique @db.ObjectId
   user              User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
   tokenActivacion   String?
@@ -123,5 +142,21 @@ model Colaborador {
   updatedAt         DateTime        @updatedAt
 
   @@map("colaboradores")
+}
+
+model ProgresoCapacitacion {
+  id                 String       @id @default(auto()) @map("_id") @db.ObjectId
+  colaboradorId      String       @db.ObjectId
+  colaborador        Colaborador  @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+  capacitacionId     String       @db.ObjectId
+  capacitacion       Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Cascade)
+  ultimoSlideOrden   Int          @default(0)
+  completada         Boolean      @default(false)
+  completadaEn       DateTime?
+  updatedAt          DateTime     @updatedAt
+
+  @@unique([colaboradorId, capacitacionId])
+  @@index([colaboradorId])
+  @@map("progresos_capacitaciones")
 }
 

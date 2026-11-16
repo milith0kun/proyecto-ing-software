@@ -5,6 +5,7 @@ import { CerrarSesion } from '@/components/cerrar-sesion';
 import { MarcaCgb } from '@/components/institucional/MarcaCgb';
 import { PieCgb } from '@/components/institucional/PieCgb';
 import { UnidadesCgb } from '@/components/institucional/UnidadesCgb';
+import MiOnboardingPanel from './MiOnboardingPanel';
 
 export default async function PaginaColaborador() {
   const usuario = await sesionActual();
@@ -42,12 +43,9 @@ export default async function PaginaColaborador() {
             <p>Explora las capacitaciones abiertas de CIIP, GEOMINA y BIOMEDIC.</p>
             <Link href="/capacitaciones" className="boton-primario">Explorar capacitaciones</Link>
           </article>
-          <article className="tarjeta-cgb">
-            <h2>Mi inducción</h2>
-            <p>Las rutas de onboarding y capacitaciones internas se incorporarán en el siguiente incremento.</p>
-            <span className="colaborador-proximamente">Próximamente</span>
-          </article>
         </section>
+
+        <MiOnboardingPanel />
 
         <section className="colaborador-unidades" aria-label="Unidades institucionales">
           <p className="kicker-cgb">Unidades institucionales</p>
