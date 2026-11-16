@@ -158,3 +158,57 @@ test('HU-011 CA-04: dos sesiones solo reciben la ruta y progreso de su propio co
   assert.equal(panelLuis.capacitaciones[0].id, 'cap-luis');
   assert.deepEqual(consultas, [{ userId: usuarios[0].id }, { userId: usuarios[1].id }]);
 });
+
+test('HU-011 CA-03/CA-04: guarda slide actual solo para la capacitación de la ruta propia', async () => {
+  const { PUT: guardarProgreso } = await import('../src/app/api/colaborador/progreso/route.ts');
+  const cambios = [];
+  const capacitacionAnaId = '507f1f77bcf86cd799439021';
+  const capacitacionLuisId = '507f1f77bcf86cd799439022';
+  prisma.colaborador.findUnique = async ({ where, select }) => {
+    const capacitacionDelUsuario = where.userId === usuarios[0].id ? capacitacionAnaId : capacitacionLuisId;
+    const capacitacionSolicitada = select.rutaOnboarding.select.capacitaciones.where.capacitacionId;
+    return {
+      id: where.userId === usuarios[0].id ? 'colab-ana' : 'colab-luis',
+      rutaOnboarding: {
+        capacitaciones: capacitacionSolicitada === capacitacionDelUsuario ? [{ capacitacion: {
+          id: capacitacionDelUsuario,
+          slides: [{ orden: 1 }, { orden: 2 }, { orden: 3 }],
+        } }] : [],
+      },
+    };
+  };
+  prisma.progresoCapacitacion.upsert = async opciones => {
+    cambios.push(opciones);
+    return opciones.create;
+  };
+
+  const requestGuardar = (token, body) => new NextRequest('http://localhost:3000/api/colaborador/progreso', {
+    method: 'PUT',
+    headers: { cookie: `${NOMBRE_COOKIE}=${token}`, origin: 'http://localhost:3000', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  const respuestaAna = await guardarProgreso(requestGuardar(sesiones[0].token, {
+    capacitacionId: capacitacionAnaId, slideOrden: 3,
+  }));
+  const respuestaAjena = await guardarProgreso(requestGuardar(sesiones[0].token, {
+    capacitacionId: capacitacionLuisId, slideOrden: 2,
+  }));
+
+  assert.equal(respuestaAna.status, 200);
+  assert.equal(cambios[0].create.colaboradorId, 'colab-ana');
+  assert.equal(cambios[0].create.ultimoSlideOrden, 3);
+  assert.equal(cambios[0].create.completada, true);
+  assert.equal(respuestaAjena.status, 404);
+  assert.equal(cambios.length, 1);
+
+  const respuestaSlideInvalido = await guardarProgreso(requestGuardar(sesiones[0].token, {
+    capacitacionId: capacitacionAnaId, slideOrden: 4,
+  }));
+  assert.equal(respuestaSlideInvalido.status, 400);
+  const respuestaAnonima = await guardarProgreso(requestGuardar(undefined, {
+    capacitacionId: capacitacionAnaId, slideOrden: 1,
+  }));
+  assert.equal(respuestaAnonima.status, 401);
+  assert.equal(cambios.length, 1);
+});

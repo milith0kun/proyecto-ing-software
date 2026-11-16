@@ -9,13 +9,23 @@ export interface ContenidoCapacitacion {
 }
 
 // La vista previa y el recorrido público utilizan exactamente la misma presentación.
-export function ExperienciaCapacitacion({ capacitacion, slideInicial }: { capacitacion: ContenidoCapacitacion; slideInicial?: number }) {
+export function ExperienciaCapacitacion({
+  capacitacion,
+  slideInicial,
+  onSlideChange,
+  alTerminarHref,
+}: {
+  capacitacion: ContenidoCapacitacion;
+  slideInicial?: number;
+  onSlideChange?: (slideOrden: number) => Promise<void>;
+  alTerminarHref?: string;
+}) {
   return <section className="experiencia-capacitacion">
     <header className="experiencia-capacitacion__cabecera">
       <p className="kicker-cgb">{capacitacion.unidad}</p>
       <h1>{capacitacion.titulo}</h1>
       <p className="experiencia-capacitacion__descripcion">{capacitacion.descripcion}</p>
     </header>
-    <SlideViewer slides={capacitacion.slides} slideInicial={slideInicial} />
+    <SlideViewer slides={capacitacion.slides} slideInicial={slideInicial} onSlideChange={onSlideChange} alTerminarHref={alTerminarHref} />
   </section>;
 }

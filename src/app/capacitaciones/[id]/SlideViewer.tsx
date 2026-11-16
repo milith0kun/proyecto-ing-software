@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   calcularProgresoLectura,
@@ -13,13 +13,33 @@ import {
 } from '@/lib/visor-capacitacion';
 
 /* eslint-disable @next/next/no-img-element */
-export default function SlideViewer({ slides, slideInicial = 1 }: { slides: SlideVisor[]; slideInicial?: number }) {
+export default function SlideViewer({
+  slides,
+  slideInicial = 1,
+  onSlideChange,
+  alTerminarHref = '/capacitaciones',
+}: {
+  slides: SlideVisor[];
+  slideInicial?: number;
+  onSlideChange?: (slideOrden: number) => Promise<void>;
+  alTerminarHref?: string;
+}) {
   const inicialSeguro = Math.max(1, Math.min(Math.floor(slideInicial), Math.max(slides.length, 1)));
   const [slideActual, setSlideActual] = useState(inicialSeguro);
+  const [errorProgreso, setErrorProgreso] = useState('');
   const inicioToqueX = useRef<number | null>(null);
   const totalSlides = slides.length;
   const progreso = calcularProgresoLectura(slideActual, totalSlides);
   const slide = slides[slideActual - 1];
+
+  const cambiarSlide = useCallback((nuevoSlide: number) => {
+    if (nuevoSlide === slideActual) return;
+    setSlideActual(nuevoSlide);
+    setErrorProgreso('');
+    if (onSlideChange) {
+      void onSlideChange(nuevoSlide).catch(() => setErrorProgreso('No se pudo guardar tu avance. Revisa tu conexión y vuelve a intentarlo.'));
+    }
+  }, [onSlideChange, slideActual]);
 
   useEffect(() => {
     function manejarTeclado(evento: KeyboardEvent) {
@@ -30,13 +50,13 @@ export default function SlideViewer({ slides, slideInicial = 1 }: { slides: Slid
       const siguiente = navegarPorTeclado(evento.key, slideActual, totalSlides);
       if (siguiente !== slideActual) {
         evento.preventDefault();
-        setSlideActual(siguiente);
+        cambiarSlide(siguiente);
       }
     }
 
     window.addEventListener('keydown', manejarTeclado);
     return () => window.removeEventListener('keydown', manejarTeclado);
-  }, [slideActual, totalSlides]);
+  }, [cambiarSlide, slideActual, totalSlides]);
 
   if (!slide) {
     return (
@@ -87,9 +107,9 @@ export default function SlideViewer({ slides, slideInicial = 1 }: { slides: Slid
 
           const direccion = obtenerDireccionDeslizamiento(inicioX, finX);
           if (direccion === 'siguiente') {
-            setSlideActual((actual) => obtenerSiguienteSlide(actual, totalSlides));
+            cambiarSlide(obtenerSiguienteSlide(slideActual, totalSlides));
           } else if (direccion === 'anterior') {
-            setSlideActual((actual) => obtenerSlideAnterior(actual, totalSlides));
+            cambiarSlide(obtenerSlideAnterior(slideActual, totalSlides));
           }
         }}
         onTouchCancel={() => {
@@ -139,7 +159,7 @@ export default function SlideViewer({ slides, slideInicial = 1 }: { slides: Slid
           type="button"
           className="visor-control"
           aria-label="Ir a la diapositiva anterior"
-          onClick={() => setSlideActual((actual) => obtenerSlideAnterior(actual, totalSlides))}
+          onClick={() => cambiarSlide(obtenerSlideAnterior(slideActual, totalSlides))}
           disabled={slideActual === 1}
           style={{ border: '1px solid var(--borde-sutil)', borderRadius: '999px', backgroundColor: '#FFFFFF', color: 'var(--brand-navy)', fontWeight: 700, cursor: slideActual === 1 ? 'not-allowed' : 'pointer', opacity: slideActual === 1 ? 0.55 : 1 }}
         >
@@ -147,7 +167,7 @@ export default function SlideViewer({ slides, slideInicial = 1 }: { slides: Slid
         </button>
         {slideActual === totalSlides ? (
           <Link
-            href="/capacitaciones"
+            href={alTerminarHref}
             className="visor-control"
             style={{ border: 0, borderRadius: '999px', backgroundColor: 'var(--brand-navy)', color: '#FFFFFF', fontWeight: 700, textDecoration: 'none' }}
           >
@@ -158,13 +178,14 @@ export default function SlideViewer({ slides, slideInicial = 1 }: { slides: Slid
             type="button"
             className="visor-control"
             aria-label="Ir a la diapositiva siguiente"
-            onClick={() => setSlideActual((actual) => obtenerSiguienteSlide(actual, totalSlides))}
+            onClick={() => cambiarSlide(obtenerSiguienteSlide(slideActual, totalSlides))}
             style={{ border: 0, borderRadius: '999px', backgroundColor: 'var(--brand-navy)', color: '#FFFFFF', fontWeight: 700, cursor: 'pointer' }}
           >
             Siguiente
           </button>
         )}
       </nav>
+      {errorProgreso && <p className="visor-progreso-error" role="alert">{errorProgreso}</p>}
     </section>
   );
 }

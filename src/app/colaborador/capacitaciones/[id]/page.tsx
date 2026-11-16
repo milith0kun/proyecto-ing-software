@@ -1,8 +1,8 @@
 import { notFound, redirect } from 'next/navigation';
-import { ExperienciaCapacitacion } from '@/components/capacitaciones/ExperienciaCapacitacion';
 import { MarcoCapacitacion } from '@/components/capacitaciones/MarcoCapacitacion';
 import { prisma } from '@/lib/prisma';
 import { sesionActual } from '@/lib/sesion';
+import VisorOnboarding from './VisorOnboarding';
 
 export const dynamic = 'force-dynamic';
 
@@ -64,7 +64,7 @@ export default async function PaginaCapacitacionOnboarding({
 
   return (
     <MarcoCapacitacion>
-      <ExperienciaCapacitacion capacitacion={capacitacion} slideInicial={slideInicial} />
+      <VisorOnboarding capacitacion={capacitacion} slideInicial={slideInicial} />
     </MarcoCapacitacion>
   );
 }
