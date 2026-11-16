@@ -76,3 +76,48 @@ model Slide {
   @@map("slides")
 }
 
+model RutaOnboarding {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  nombre      String
+  descripcion String?
+  activa      Boolean      @default(true)
+  puestos     Puesto[]
+  colaboradores Colaborador[] @relation("RutaAsignada")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@map("rutas_onboarding")
+}
+
+model Puesto {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  nombre            String
+  departamento      String?
+  rutaOnboardingId  String?         @db.ObjectId
+  rutaOnboarding    RutaOnboarding? @relation(fields: [rutaOnboardingId], references: [id], onDelete: SetNull)
+  colaboradores     Colaborador[]
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@map("puestos")
+}
+
+model Colaborador {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  nombre            String
+  email             String          @unique
+  dni               String?
+  puestoId          String?         @db.ObjectId
+  puesto            Puesto?         @relation(fields: [puestoId], references: [id], onDelete: SetNull)
+  estado            String          @default("PENDIENTE_ACTIVACION")
+  progreso          Int             @default(0)
+  rutaOnboardingId  String?         @db.ObjectId
+  rutaOnboarding    RutaOnboarding? @relation("RutaAsignada", fields: [rutaOnboardingId], references: [id], onDelete: SetNull)
+  tokenActivacion   String?
+  enlaceActivacion  String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@map("colaboradores")
+}
+
