@@ -141,104 +141,118 @@ export default function PaginaColaboradores() {
       </CabeceraAdminCgb>
 
       <main className="panel-admin panel-admin--compact" aria-label="Gestión de colaboradores">
-        <section className="tarjeta-cgb" style={{ gap: '18px' }}>
-          <div className="panel-admin__header" style={{ alignItems: 'center' }}>
+        <section className="tarjeta-cgb">
+          <div className="panel-admin__header">
             <div>
               <p className="eyebrow">Registro</p>
-              <h1 style={{ margin: 0 }}>Nuevo colaborador</h1>
+              <h1>Nuevo colaborador</h1>
             </div>
           </div>
 
-          <form onSubmit={enviarFormulario} className="formulario-admin" style={{ display: 'grid', gap: '16px' }}>
-            <div className="formulario-admin__grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
-              <label className="campo">
+          <form onSubmit={enviarFormulario} className="admin-formulario">
+            <div className="admin-campo">
+              <label>
                 <span>Nombre completo</span>
-                <input
-                  required
-                  value={formulario.nombre}
-                  onChange={(e) => setFormulario((anterior) => ({ ...anterior, nombre: e.target.value }))}
-                  placeholder="Ej. Ana Torres"
-                />
               </label>
-
-              <label className="campo">
-                <span>Correo institucional</span>
-                <input
-                  required
-                  type="email"
-                  value={formulario.email}
-                  onChange={(e) => setFormulario((anterior) => ({ ...anterior, email: e.target.value }))}
-                  placeholder="ana@cgb.latam"
-                />
-              </label>
-
-              <label className="campo">
-                <span>DNI</span>
-                <input
-                  required
-                  value={formulario.dni}
-                  onChange={(e) => setFormulario((anterior) => ({ ...anterior, dni: e.target.value }))}
-                  placeholder="12345678"
-                />
-              </label>
-
-              <label className="campo">
-                <span>Puesto</span>
-                <select
-                  value={formulario.puestoId}
-                  onChange={(e) => setFormulario((anterior) => ({ ...anterior, puestoId: e.target.value }))}
-                >
-                  {OPCIONES_PUESTOS.map((puesto) => (
-                    <option key={puesto.id} value={puesto.id}>{puesto.nombre}</option>
-                  ))}
-                </select>
-              </label>
+              <input
+                className="campo-formulario"
+                required
+                value={formulario.nombre}
+                onChange={(e) => setFormulario((anterior) => ({ ...anterior, nombre: e.target.value }))}
+                placeholder="Ej. Ana Torres"
+              />
             </div>
 
-            <div className="acciones" style={{ justifyContent: 'flex-end' }}>
+            <div className="admin-campo">
+              <label>
+                <span>Correo institucional</span>
+              </label>
+              <input
+                className="campo-formulario"
+                required
+                type="email"
+                value={formulario.email}
+                onChange={(e) => setFormulario((anterior) => ({ ...anterior, email: e.target.value }))}
+                placeholder="ana@cgb.latam"
+              />
+            </div>
+
+            <div className="admin-campo">
+              <label>
+                <span>DNI</span>
+              </label>
+              <input
+                className="campo-formulario"
+                required
+                value={formulario.dni}
+                onChange={(e) => setFormulario((anterior) => ({ ...anterior, dni: e.target.value }))}
+                placeholder="12345678"
+              />
+            </div>
+
+            <div className="admin-campo">
+              <label>
+                <span>Puesto</span>
+              </label>
+              <select
+                className="campo-formulario"
+                value={formulario.puestoId}
+                onChange={(e) => setFormulario((anterior) => ({ ...anterior, puestoId: e.target.value }))}
+              >
+                {OPCIONES_PUESTOS.map((puesto) => (
+                  <option key={puesto.id} value={puesto.id}>{puesto.nombre}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="admin-formulario__acciones admin-formulario__acciones--final">
               <button type="submit" className="boton-primario" disabled={guardando}>
                 {guardando ? 'Registrando...' : 'Registrar colaborador'}
               </button>
             </div>
           </form>
 
-          {error ? <div className="alerta alerta--error">{error}</div> : null}
-          {exito ? <div className="alerta alerta--ok">{exito}</div> : null}
+          {error ? <div className="admin-alerta admin-alerta--error">{error}</div> : null}
+          {exito ? <div className="admin-alerta admin-alerta--exito">{exito}</div> : null}
         </section>
 
-        <section className="tarjeta-cgb" style={{ gap: '18px' }}>
-          <div className="panel-admin__header" style={{ alignItems: 'center', justifyContent: 'space-between' }}>
+        <section className="tarjeta-cgb">
+          <div className="panel-admin__header panel-admin__header--between">
             <div>
               <p className="eyebrow">Monitoreo</p>
-              <h2 style={{ margin: 0 }}>Colaboradores incorporados</h2>
+              <h2>Colaboradores incorporados</h2>
             </div>
           </div>
 
-          <div className="filtros" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <label className="campo campo--inline">
-              <span>Estado</span>
-              <select value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
+          <div className="admin-filtros">
+            <div className="admin-campo">
+              <label>
+                <span>Estado</span>
+              </label>
+              <select className="campo-formulario" value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
                 {ESTADOS.map((estado) => (
                   <option key={estado} value={estado}>{estado === 'TODOS' ? 'Todos' : etiquetaEstado(estado)}</option>
                 ))}
               </select>
-            </label>
+            </div>
 
-            <label className="campo campo--inline">
-              <span>Ruta</span>
-              <select value={filtroRuta} onChange={(e) => setFiltroRuta(e.target.value)}>
+            <div className="admin-campo">
+              <label>
+                <span>Ruta</span>
+              </label>
+              <select className="campo-formulario" value={filtroRuta} onChange={(e) => setFiltroRuta(e.target.value)}>
                 <option value="TODAS">Todas</option>
                 {rutasDisponibles.map((ruta) => (
                   <option key={ruta} value={ruta}>{ruta}</option>
                 ))}
               </select>
-            </label>
+            </div>
           </div>
 
           {cargando ? (
             <p>Cargando colaboradores...</p>
           ) : (
-            <div className="tabla-admin" style={{ overflowX: 'auto' }}>
+            <div className="tabla-admin tabla-admin--compact">
               <table>
                 <thead>
                   <tr>
