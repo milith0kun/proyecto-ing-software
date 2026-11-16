@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
 
 export const ESTADOS_COLABORADOR = ['PENDIENTE_ACTIVACION', 'ACTIVO', 'EN_PROGRESO'] as const;
 export type EstadoColaborador = (typeof ESTADOS_COLABORADOR)[number];
@@ -94,17 +94,22 @@ export function crearInvitacionColaborador(
   colaborador: Pick<ColaboradorRegistro, 'id' | 'email' | 'nombre'>,
   baseUrl = 'https://app.cgb.latam',
 ) {
-  const token = randomUUID();
+  const token = randomBytes(32).toString('base64url');
   const origen = String(baseUrl || 'https://app.cgb.latam').replace(/\/+$/, '');
-  const enlaceActivacion = `${origen}/login/activar?token=${encodeURIComponent(token)}&email=${encodeURIComponent(colaborador.email)}`;
+  const enlaceActivacion = `${origen}/login/activar?token=${encodeURIComponent(token)}`;
 
   return {
     ...colaborador,
-    token: token,
+    token,
     tokenActivacion: token,
+    tokenActivacionHash: hashTokenActivacion(token),
     enlaceActivacion,
     expiraEn: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
   };
+}
+
+export function hashTokenActivacion(token: string): string {
+  return createHash('sha256').update(token).digest('hex');
 }
 
 export function filtrarColaboradoresPorEstado(
@@ -140,6 +145,7 @@ export function registrarColaboradorConRuta({
 }): ColaboradorRegistro & {
   token?: string;
   tokenActivacion: string;
+  tokenActivacionHash: string;
   enlaceActivacion: string;
   expiraEn: Date;
 } {
@@ -151,6 +157,7 @@ export function registrarColaboradorConRuta({
     ...conRuta,
     token: conInvitacion.token,
     tokenActivacion: conInvitacion.tokenActivacion,
+    tokenActivacionHash: conInvitacion.tokenActivacionHash,
     enlaceActivacion: conInvitacion.enlaceActivacion,
     expiraEn: conInvitacion.expiraEn,
   };

@@ -13,6 +13,7 @@
     "lint": "eslint",
     "test": "tsx --test tests/*.test.mjs",
     "seed": "node prisma/seed.mjs",
+    "seed:onboarding": "node prisma/seed-onboarding.mjs",
     "postinstall": "prisma generate"
   },
   "dependencies": {

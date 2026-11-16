@@ -4,7 +4,8 @@ import { z } from 'zod';
 
 export const NOMBRE_COOKIE = 'cgb_sesion';
 export const DURACION_SESION = 60 * 60 * 8;
-export type RolInterno = 'ADMINISTRADOR' | 'COLABORADOR';
+export type RolInterno = 'ADMINISTRADOR' | 'ESPECIALISTA_RRHH' | 'COLABORADOR';
+const ROLES_INTERNOS: RolInterno[] = ['ADMINISTRADOR', 'ESPECIALISTA_RRHH', 'COLABORADOR'];
 export interface CuentaInterna {
   id: string; email: string; name: string | null; role: string;
   activo: boolean; passwordHash: string | null;
@@ -21,7 +22,7 @@ export async function autenticar(datos: unknown, buscarCuenta: (correo: string) 
   if (!entrada.success) throw new Error('Credenciales inválidas');
   const cuenta = await buscarCuenta(entrada.data.correo);
   const coincide = await compare(entrada.data.contrasena, cuenta?.passwordHash || await hashInexistente);
-  if (!cuenta || !coincide || !cuenta.activo || !['ADMINISTRADOR', 'COLABORADOR'].includes(cuenta.role)) {
+  if (!cuenta || !coincide || !cuenta.activo || !ROLES_INTERNOS.includes(cuenta.role as RolInterno)) {
     throw new Error('Credenciales inválidas');
   }
   return { id: cuenta.id, email: cuenta.email, name: cuenta.name, role: cuenta.role as RolInterno };
@@ -54,13 +55,20 @@ export async function verificarToken(token: string | undefined, secreto: string)
     const { payload } = await jwtVerify(token, claveFirma(secreto), {
       algorithms: ['HS256'], issuer: 'cgb-academy', audience: 'cgb-interno',
     });
-    if (!payload.sub || typeof payload.sid !== 'string' || !['ADMINISTRADOR', 'COLABORADOR'].includes(String(payload.rol))) return null;
+    if (!payload.sub || typeof payload.sid !== 'string' || !ROLES_INTERNOS.includes(String(payload.rol) as RolInterno)) return null;
     return payload as typeof payload & { sub: string; sid: string; rol: RolInterno };
   } catch { return null; }
 }
 
 export function destinoPorRol(rol: string) {
-  return rol === 'ADMINISTRADOR' ? '/admin/capacitaciones' : '/colaborador';
+  if (rol === 'ADMINISTRADOR') return '/admin/capacitaciones';
+  if (rol === 'ESPECIALISTA_RRHH') return '/admin/colaboradores';
+  return '/colaborador';
+}
+
+export function puedeAccederRutaAdmin(rol: string, pathname: string) {
+  const ruta = pathname.replace(/\/+$/, '') || '/';
+  return rol === 'ADMINISTRADOR' || (rol === 'ESPECIALISTA_RRHH' && ruta === '/admin/colaboradores');
 }
 
 export interface SesionPersistida {
@@ -79,7 +87,7 @@ export async function resolverSesion(
   const sesion = await buscarSesion(contenido.sid);
   if (!sesion || sesion.expiraEn <= new Date() || sesion.usuarioId !== contenido.sub) return null;
   const usuario = sesion.usuario;
-  if (!usuario.activo || !['ADMINISTRADOR', 'COLABORADOR'].includes(usuario.role)) return null;
+  if (!usuario.activo || !ROLES_INTERNOS.includes(usuario.role as RolInterno) || usuario.role !== contenido.rol) return null;
   return { id: usuario.id, email: usuario.email, name: usuario.name, role: usuario.role as RolInterno };
 }
 

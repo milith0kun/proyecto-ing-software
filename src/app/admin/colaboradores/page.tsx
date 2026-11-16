@@ -14,6 +14,10 @@ interface PuestoResumen {
   nombre: string;
 }
 
+interface OpcionPuesto extends PuestoResumen {
+  rutaActiva: boolean;
+}
+
 interface Colaborador {
   id: string;
   nombre: string;
@@ -37,15 +41,8 @@ const FORMULARIO_INICIAL: FormularioColaborador = {
   nombre: '',
   email: '',
   dni: '',
-  puestoId: 'puesto-rh-001',
+  puestoId: '',
 };
-
-const OPCIONES_PUESTOS = [
-  { id: 'puesto-rh-001', nombre: 'Analista de RR. HH.' },
-  { id: 'puesto-op-002', nombre: 'Operador de Seguridad' },
-  { id: 'puesto-fin-003', nombre: 'Analista Financiero' },
-  { id: 'puesto-it-004', nombre: 'Especialista de TI' },
-];
 
 const ESTADOS = ['TODOS', 'PENDIENTE_ACTIVACION', 'ACTIVO', 'EN_PROGRESO'];
 
@@ -64,13 +61,14 @@ function etiquetaEstado(estado: string) {
 
 export default function PaginaColaboradores() {
   const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);
+  const [puestos, setPuestos] = useState<OpcionPuesto[]>([]);
   const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState('');
   const [exito, setExito] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('TODOS');
   const [filtroRuta, setFiltroRuta] = useState('TODAS');
-  const [formulario, setFormulario] = useState<FormularioColaborador>(FORMULARIO_INICIAL);
+  const [formularios, setFormularios] = useState<FormularioColaborador[]>([FORMULARIO_INICIAL]);
 
   const cargarColaboradores = async () => {
     try {
@@ -78,6 +76,7 @@ export default function PaginaColaboradores() {
       const resultado = await respuesta.json();
       if (!respuesta.ok || !resultado.ok) throw new Error(resultado.error || 'No se pudo cargar la lista de colaboradores.');
       setColaboradores(resultado.datos || []);
+      setPuestos(resultado.puestos || []);
       setError('');
     } catch (errorCarga) {
       setError(errorCarga instanceof Error ? errorCarga.message : 'No se pudo conectar con el servidor.');
@@ -87,7 +86,8 @@ export default function PaginaColaboradores() {
   };
 
   useEffect(() => {
-    void cargarColaboradores();
+    const carga = window.setTimeout(() => { void cargarColaboradores(); }, 0);
+    return () => window.clearTimeout(carga);
   }, []);
 
   const rutasDisponibles = useMemo(
@@ -113,17 +113,24 @@ export default function PaginaColaboradores() {
       const respuesta = await fetch('/api/colaboradores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formulario),
+        body: JSON.stringify({ colaboradores: formularios }),
       });
       const resultado = await respuesta.json();
 
-      if (!respuesta.ok || !resultado.ok) {
+      if (!Array.isArray(resultado.resultados)) {
         throw new Error(resultado.error || 'No se pudo registrar al colaborador.');
       }
-
-      setFormulario(FORMULARIO_INICIAL);
-      setExito('Colaborador registrado y ruta de onboarding asignada correctamente.');
+      const fallidos = resultado.resultados
+        .map((registro: { ok: boolean; error?: string }, indice: number) => ({ registro, formulario: formularios[indice] }))
+        .filter((resultado: { registro: { ok: boolean }; formulario: FormularioColaborador }) => !resultado.registro.ok);
+      const exitosos = resultado.resultados.length - fallidos.length;
+      setExito(exitosos ? `${exitosos} colaborador(es) registrado(s) e invitado(s).` : '');
+      setError(fallidos.map((resultado: { registro: { error?: string }; formulario: FormularioColaborador }) => `${resultado.formulario.email}: ${resultado.registro.error}`).join(' '));
+      setFormularios(fallidos.length ? fallidos.map((resultado: { formulario: FormularioColaborador }) => resultado.formulario) : [FORMULARIO_INICIAL]);
       await cargarColaboradores();
+      if (fallidos.length) {
+        setError(fallidos.map((resultado: { registro: { error?: string }; formulario: FormularioColaborador }) => `${resultado.formulario.email}: ${resultado.registro.error}`).join(' '));
+      }
     } catch (errorEnvio) {
       setError(errorEnvio instanceof Error ? errorEnvio.message : 'No se pudo registrar el colaborador.');
     } finally {
@@ -149,65 +156,36 @@ export default function PaginaColaboradores() {
             </div>
           </div>
 
-          <form onSubmit={enviarFormulario} className="admin-formulario">
-            <div className="admin-campo">
-              <label>
-                <span>Nombre completo</span>
-              </label>
-              <input
-                className="campo-formulario"
-                required
-                value={formulario.nombre}
-                onChange={(e) => setFormulario((anterior) => ({ ...anterior, nombre: e.target.value }))}
-                placeholder="Ej. Ana Torres"
-              />
-            </div>
-
-            <div className="admin-campo">
-              <label>
-                <span>Correo institucional</span>
-              </label>
-              <input
-                className="campo-formulario"
-                required
-                type="email"
-                value={formulario.email}
-                onChange={(e) => setFormulario((anterior) => ({ ...anterior, email: e.target.value }))}
-                placeholder="ana@cgb.latam"
-              />
-            </div>
-
-            <div className="admin-campo">
-              <label>
-                <span>DNI</span>
-              </label>
-              <input
-                className="campo-formulario"
-                required
-                value={formulario.dni}
-                onChange={(e) => setFormulario((anterior) => ({ ...anterior, dni: e.target.value }))}
-                placeholder="12345678"
-              />
-            </div>
-
-            <div className="admin-campo">
-              <label>
-                <span>Puesto</span>
-              </label>
-              <select
-                className="campo-formulario"
-                value={formulario.puestoId}
-                onChange={(e) => setFormulario((anterior) => ({ ...anterior, puestoId: e.target.value }))}
-              >
-                {OPCIONES_PUESTOS.map((puesto) => (
-                  <option key={puesto.id} value={puesto.id}>{puesto.nombre}</option>
-                ))}
-              </select>
-            </div>
+          <form onSubmit={enviarFormulario} className="admin-formulario admin-formulario--colaboradores">
+            {formularios.map((formulario, indice) => (
+              <div className="admin-formulario__fila" key={indice}>
+                <div className="admin-campo">
+                  <label htmlFor={`colaborador-nombre-${indice}`}><span>Nombre completo</span></label>
+                  <input id={`colaborador-nombre-${indice}`} className="campo-formulario" required value={formulario.nombre} onChange={evento => setFormularios(actuales => actuales.map((fila, posicion) => posicion === indice ? { ...fila, nombre: evento.target.value } : fila))} placeholder="Ej. Ana Torres" />
+                </div>
+                <div className="admin-campo">
+                  <label htmlFor={`colaborador-email-${indice}`}><span>Correo institucional</span></label>
+                  <input id={`colaborador-email-${indice}`} className="campo-formulario" required type="email" value={formulario.email} onChange={evento => setFormularios(actuales => actuales.map((fila, posicion) => posicion === indice ? { ...fila, email: evento.target.value } : fila))} placeholder="ana@cgb.latam" />
+                </div>
+                <div className="admin-campo">
+                  <label htmlFor={`colaborador-dni-${indice}`}><span>DNI</span></label>
+                  <input id={`colaborador-dni-${indice}`} className="campo-formulario" required value={formulario.dni} onChange={evento => setFormularios(actuales => actuales.map((fila, posicion) => posicion === indice ? { ...fila, dni: evento.target.value } : fila))} placeholder="12345678" />
+                </div>
+                <div className="admin-campo">
+                  <label htmlFor={`colaborador-puesto-${indice}`}><span>Puesto</span></label>
+                  <select id={`colaborador-puesto-${indice}`} className="campo-formulario" required value={formulario.puestoId} onChange={evento => setFormularios(actuales => actuales.map((fila, posicion) => posicion === indice ? { ...fila, puestoId: evento.target.value } : fila))}>
+                    <option value="">Selecciona un puesto</option>
+                    {puestos.map(puesto => <option key={puesto.id} value={puesto.id}>{puesto.nombre}{puesto.rutaActiva ? '' : ' (sin ruta activa)'}</option>)}
+                  </select>
+                </div>
+                {formularios.length > 1 && <button type="button" className="boton-secundario admin-formulario__quitar" onClick={() => setFormularios(actuales => actuales.filter((_, posicion) => posicion !== indice))} aria-label={`Quitar registro ${indice + 1}`}>Quitar</button>}
+              </div>
+            ))}
 
             <div className="admin-formulario__acciones admin-formulario__acciones--final">
+              <button type="button" className="boton-secundario" onClick={() => setFormularios(actuales => [...actuales, FORMULARIO_INICIAL])} disabled={formularios.length >= 100}>Agregar otro</button>
               <button type="submit" className="boton-primario" disabled={guardando}>
-                {guardando ? 'Registrando...' : 'Registrar colaborador'}
+                {guardando ? 'Registrando...' : formularios.length > 1 ? `Registrar ${formularios.length} colaboradores` : 'Registrar colaborador'}
               </button>
             </div>
           </form>
@@ -226,10 +204,10 @@ export default function PaginaColaboradores() {
 
           <div className="admin-filtros">
             <div className="admin-campo">
-              <label>
+              <label htmlFor="filtro-estado">
                 <span>Estado</span>
               </label>
-              <select className="campo-formulario" value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
+              <select id="filtro-estado" className="campo-formulario" value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
                 {ESTADOS.map((estado) => (
                   <option key={estado} value={estado}>{estado === 'TODOS' ? 'Todos' : etiquetaEstado(estado)}</option>
                 ))}
@@ -237,10 +215,10 @@ export default function PaginaColaboradores() {
             </div>
 
             <div className="admin-campo">
-              <label>
+              <label htmlFor="filtro-ruta">
                 <span>Ruta</span>
               </label>
-              <select className="campo-formulario" value={filtroRuta} onChange={(e) => setFiltroRuta(e.target.value)}>
+              <select id="filtro-ruta" className="campo-formulario" value={filtroRuta} onChange={(e) => setFiltroRuta(e.target.value)}>
                 <option value="TODAS">Todas</option>
                 {rutasDisponibles.map((ruta) => (
                   <option key={ruta} value={ruta}>{ruta}</option>
