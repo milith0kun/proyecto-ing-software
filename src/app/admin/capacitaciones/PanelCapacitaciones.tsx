@@ -270,10 +270,13 @@ export default function PanelCapacitaciones() {
               Organiza la información de tus programas y continúa con la creación de sus contenidos.
             </p>
           </div>
-          <button type="button" className="boton-primario" onClick={abrirCrear}>
-            <Icono nombre="plus" />
-            <span>Nueva capacitación</span>
-          </button>
+          <div className="admin-hero__acciones">
+            <Link href="/admin/rutas" className="boton-secundario">Asignar a rutas</Link>
+            <button type="button" className="boton-primario" onClick={abrirCrear}>
+              <Icono nombre="plus" />
+              <span>Nueva capacitación</span>
+            </button>
+          </div>
         </section>
 
         {mensajeExito && (
