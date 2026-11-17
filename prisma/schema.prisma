@@ -14,8 +14,9 @@ model User {
   name      String?
   role      String   @default("COLABORADOR")
   passwordHash String?
-  activo    Boolean  @default(false)
-  sesiones  Sesion[]
+  activo       Boolean      @default(false)
+  colaborador  Colaborador?
+  sesiones     Sesion[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -74,5 +75,64 @@ model Slide {
   updatedAt       DateTime     @updatedAt
 
   @@map("slides")
+}
+
+// Modelos de Estructura Organizacional, Rutas y Colaboradores (compatibles con CGB-31, CGB-36, CGB-41)
+model Area {
+  id        String          @id @default(auto()) @map("_id") @db.ObjectId
+  nombre    String          @unique
+  activa    Boolean         @default(true)
+  puestos   PuestoTrabajo[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@map("areas")
+}
+
+model PuestoTrabajo {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  nombre        String
+  areaId        String        @db.ObjectId
+  area          Area          @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  colaboradores Colaborador[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([areaId, nombre])
+  @@map("puestos_trabajo")
+}
+
+model RutaOnboarding {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  titulo        String
+  objetivo      String
+  estado        String        @default("BORRADOR")
+  colaboradores Colaborador[] @relation("RutaAsignada")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("rutas_onboarding")
+}
+
+model Colaborador {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  nombre            String
+  email             String          @unique
+  dni               String
+  puestoId          String          @db.ObjectId
+  puesto            PuestoTrabajo   @relation(fields: [puestoId], references: [id], onDelete: Restrict)
+  estado            String          @default("PENDIENTE_ACTIVACION")
+  progreso          Int             @default(0)
+  rutaOnboardingId  String?         @db.ObjectId
+  rutaOnboarding    RutaOnboarding? @relation("RutaAsignada", fields: [rutaOnboardingId], references: [id], onDelete: SetNull)
+  userId            String?         @unique @db.ObjectId
+  user              User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  tokenActivacion   String?
+  enlaceActivacion  String?
+  tokenExpiraEn     DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@map("colaboradores")
 }
 
