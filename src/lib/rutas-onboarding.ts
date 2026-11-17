@@ -273,3 +273,22 @@ export function crearServicioRutasOnboarding(repositorio: RepositorioRutasOnboar
     },
   };
 }
+
+/**
+ * Reordena de forma inmutable un arreglo de pasos para el constructor visual (drag & drop / botones).
+ */
+export function moverPasoSecuencia<T>(lista: readonly T[], indiceOrigen: number, indiceDestino: number): T[] {
+  if (
+    indiceOrigen < 0 ||
+    indiceDestino < 0 ||
+    indiceOrigen >= lista.length ||
+    indiceDestino >= lista.length ||
+    indiceOrigen === indiceDestino
+  ) {
+    return [...lista];
+  }
+  const copia = [...lista];
+  const [movido] = copia.splice(indiceOrigen, 1);
+  copia.splice(indiceDestino, 0, movido);
+  return copia;
+}

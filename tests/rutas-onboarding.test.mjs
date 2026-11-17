@@ -6,6 +6,7 @@ import {
   validarDatosRuta,
   construirPasosSecuenciales,
   puedeIniciarPaso,
+  moverPasoSecuencia,
 } from '../src/lib/rutas-onboarding.ts';
 
 function crearRepositorioEnMemoria({
@@ -198,4 +199,13 @@ test('HU-008 CA-04: activa una ruta solo si tiene al menos una capacitación aso
 
   assert.equal(rutaActiva.estado, 'ACTIVA');
   assert.deepEqual(rutaActiva.activadaEn, ahora);
+});
+
+test('HU-008 T3 REFACTOR: reordena pasos de forma inmutable sin mutar la secuencia original', () => {
+  const original = ['cap-1', 'cap-2', 'cap-3'];
+  const reordenada = moverPasoSecuencia(original, 2, 0);
+
+  assert.deepEqual(reordenada, ['cap-3', 'cap-1', 'cap-2']);
+  assert.deepEqual(original, ['cap-1', 'cap-2', 'cap-3']);
+  assert.deepEqual(moverPasoSecuencia(original, -1, 1), ['cap-1', 'cap-2', 'cap-3']);
 });
