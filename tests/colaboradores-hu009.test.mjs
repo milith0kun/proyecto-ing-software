@@ -4,10 +4,9 @@ import assert from 'node:assert/strict';
 import {
   construirRegistroColaborador,
   asignarRutaOnboarding,
-  crearInvitacionColaborador,
-  registrarColaboradorConRuta,
   ESTADOS_COLABORADOR,
 } from '../src/lib/colaboradores.ts';
+import { crearIdentificadorColaborador, crearInvitacionColaborador } from '../src/lib/invitacion-colaborador.ts';
 
 const puestoAnalista = {
   id: 'puesto-analista-rh',
@@ -67,18 +66,18 @@ test('HU-009: CA-03 Generación de token seguro de invitación', () => {
 });
 
 test('HU-009: TDD BDD - Registro completo con ruta e invitación', () => {
-  const registro = registrarColaboradorConRuta({
+  const base = construirRegistroColaborador({
+    id: crearIdentificadorColaborador(),
     nombre: 'Esteban Ruiz',
     email: 'esteban.ruiz@cgb.latam',
     puestoId: puestoAnalista.id,
-    puesto: puestoAnalista,
-    ruta: rutaOnboarding,
-    baseUrl: 'https://app.cgb.latam',
   });
+  const registro = asignarRutaOnboarding(base, puestoAnalista, rutaOnboarding);
+  const invitacion = crearInvitacionColaborador(registro, 'https://app.cgb.latam');
 
   assert.equal(registro.estado, 'PENDIENTE_ACTIVACION');
   assert.equal(registro.rutaAsignada?.id, 'ruta-rh-001');
   assert.equal(registro.progreso, 0);
-  assert.ok(registro.tokenActivacion.length > 20);
-  assert.match(registro.enlaceActivacion, /^https:\/\/app\.cgb\.latam\/login\/activar\?/);
+  assert.ok(invitacion.tokenActivacion.length > 20);
+  assert.match(invitacion.enlaceActivacion, /^https:\/\/app\.cgb\.latam\/login\/activar\?/);
 });

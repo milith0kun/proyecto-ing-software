@@ -1,5 +1,3 @@
-import { createHash, randomBytes, randomUUID } from 'node:crypto';
-
 export const ESTADOS_COLABORADOR = ['PENDIENTE_ACTIVACION', 'ACTIVO', 'EN_PROGRESO'] as const;
 export type EstadoColaborador = (typeof ESTADOS_COLABORADOR)[number];
 
@@ -17,6 +15,7 @@ export interface PuestoResumen {
 }
 
 export interface RegistraColaboradorInput {
+  id?: string;
   nombre: string;
   email: string;
   puestoId: string;
@@ -52,7 +51,7 @@ export function construirRegistroColaborador(input: RegistraColaboradorInput): C
   if (!puestoId) throw new Error('Debe indicarse un puesto para asignar la ruta de onboarding.');
 
   return {
-    id: randomUUID(),
+    id: String(input.id || ''),
     nombre,
     email,
     puestoId,
@@ -84,28 +83,6 @@ export function asignarRutaOnboarding(
   } as ColaboradorRegistro;
 }
 
-export function crearInvitacionColaborador(
-  colaborador: Pick<ColaboradorRegistro, 'id' | 'email' | 'nombre'>,
-  baseUrl = 'https://app.cgb.latam',
-) {
-  const token = randomBytes(32).toString('base64url');
-  const origen = String(baseUrl || 'https://app.cgb.latam').replace(/\/+$/, '');
-  const enlaceActivacion = `${origen}/login/activar?token=${encodeURIComponent(token)}`;
-
-  return {
-    ...colaborador,
-    token,
-    tokenActivacion: token,
-    tokenActivacionHash: hashTokenActivacion(token),
-    enlaceActivacion,
-    expiraEn: new Date(Date.now() + 1000 * 60 * 60 * 48),
-  };
-}
-
-export function hashTokenActivacion(token: string): string {
-  return createHash('sha256').update(token).digest('hex');
-}
-
 export function filtrarColaboradoresPorEstado(
   colaboradores: Array<{
     id: string;
@@ -130,28 +107,10 @@ export function registrarColaboradorConRuta({
   puestoId,
   puesto,
   ruta,
-  baseUrl = 'https://app.cgb.latam',
 }: RegistraColaboradorInput & {
   puesto?: PuestoResumen | null;
   ruta?: RutaOnboardingResumen | null;
-  baseUrl?: string;
-}): ColaboradorRegistro & {
-  token?: string;
-  tokenActivacion: string;
-  tokenActivacionHash: string;
-  enlaceActivacion: string;
-  expiraEn: Date;
-} {
+}) {
   const registro = construirRegistroColaborador({ nombre, email, puestoId });
-  const conRuta = asignarRutaOnboarding(registro, puesto ?? null, ruta ?? null);
-  const conInvitacion = crearInvitacionColaborador(conRuta, baseUrl);
-
-  return {
-    ...conRuta,
-    token: conInvitacion.token,
-    tokenActivacion: conInvitacion.tokenActivacion,
-    tokenActivacionHash: conInvitacion.tokenActivacionHash,
-    enlaceActivacion: conInvitacion.enlaceActivacion,
-    expiraEn: conInvitacion.expiraEn,
-  };
+  return asignarRutaOnboarding(registro, puesto ?? null, ruta ?? null);
 }

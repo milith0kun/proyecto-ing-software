@@ -9,7 +9,8 @@ import {
   revertirRegistroColaborador,
 } from '@/lib/repositorio-colaboradores';
 import { enviarCorreoInvitacion } from '@/lib/correo-invitacion';
-import { registrarColaboradorConRuta } from '@/lib/colaboradores';
+import { construirRegistroColaborador, asignarRutaOnboarding } from '@/lib/colaboradores';
+import { crearIdentificadorColaborador, crearInvitacionColaborador } from '@/lib/invitacion-colaborador';
 
 export const ESTADOS_COLABORADOR_VALIDOS = ['PENDIENTE_ACTIVACION', 'ACTIVO', 'EN_PROGRESO'] as const;
 
@@ -50,19 +51,23 @@ export async function registrarColaborador(cuerpo: Record<string, unknown>) {
   const puesto = await buscarPuestoTrabajo(puestoId);
   if (!puesto) throw new Error('El puesto indicado no existe.');
   const rutaActiva = puesto.rutas.find(ruta => ruta.estado === 'ACTIVA') ?? null;
-  const registro = registrarColaboradorConRuta({
+  const registroBase = construirRegistroColaborador({
+    id: crearIdentificadorColaborador(),
     nombre,
     email,
     puestoId: puesto.id,
-    puesto: { id: puesto.id, nombre: puesto.nombre, rutaOnboardingId: rutaActiva?.id ?? null },
-    ruta: rutaActiva ? {
+  });
+  const registro = asignarRutaOnboarding(
+    registroBase,
+    { id: puesto.id, nombre: puesto.nombre, rutaOnboardingId: rutaActiva?.id ?? null },
+    rutaActiva ? {
       id: rutaActiva.id,
       nombre: rutaActiva.nombre ?? rutaActiva.titulo ?? 'Ruta de onboarding',
       descripcion: rutaActiva.descripcion ?? rutaActiva.objetivo ?? undefined,
       activa: true,
     } : null,
-    baseUrl: process.env.APP_URL || 'https://app.cgb.latam',
-  });
+  );
+  const invitacion = crearInvitacionColaborador(registro, process.env.APP_URL || 'https://app.cgb.latam');
 
   const usuario = await crearUsuarioColaborador({ email, name: nombre, role: 'COLABORADOR', activo: false });
   try {
@@ -74,10 +79,10 @@ export async function registrarColaborador(cuerpo: Record<string, unknown>) {
       progreso: registro.progreso,
       rutaOnboardingId: registro.rutaAsignada?.id ?? null,
       userId: usuario.id,
-      tokenActivacion: registro.tokenActivacionHash,
-      tokenExpiraEn: registro.expiraEn,
+      tokenActivacion: invitacion.tokenActivacionHash,
+      tokenExpiraEn: invitacion.expiraEn,
     });
-    await enviarCorreoInvitacion({ nombre, email, enlaceActivacion: registro.enlaceActivacion });
+    await enviarCorreoInvitacion({ nombre, email, enlaceActivacion: invitacion.enlaceActivacion });
     return {
       id: colaborador.id,
       nombre: colaborador.nombre,
