@@ -167,6 +167,58 @@ Conforme a las directrices de las Áreas de Conocimiento de **Arquitectura de So
 
 ---
 
+### 6.1 Conceptos de la asignatura aplicados al proyecto
+
+Los cuatro documentos de la asignatura (requisitos, gestión de configuración, diseño de software y arquitectura) se aplican al proyecto y se usan como lista de revisión en cada Pull Request (docs/GUIA_DE_REVISION.md). Las tablas siguientes dicen qué enseña cada documento, cómo se aplica y en qué estado está al 18/11/2026.
+
+**Requisitos** (fuente del curso: 4. Requisitos.pdf; en el repositorio: `docs/REQUISITOS_APLICADOS.md y los criterios de cada historia en Jira`)
+
+| Qué enseña el curso | Cómo lo aplicamos | Estado |
+|---|---|---|
+| **Historia = tarjeta + conversación + confirmación** | Cada historia en Jira dice «Como… quiero… para…»; las decisiones del Product Owner quedan en la tarjeta y los criterios se escriben en formato BDD, cada uno con su prueba. | Aplicado |
+| **INVEST y dependencias** | Historias pequeñas y estimables en Planning Poker; las dependencias se marcan con vínculos «Blocks» en Jira (por ejemplo, HU-009 antes de HU-010). | Aplicado |
+| **Requisitos no funcionales en la DoD** | RNF-001 a RNF-010 (ISO 25010); cada Pull Request declara cuáles aplica. La matriz RNF por historia está propuesta en docs/REQUISITOS_APLICADOS.md. | En parte |
+| **Conflictos entre requisitos** | Se elevan al Product Owner en lugar de inventarlos: DNI del colaborador, caducidad del token (48 h), política de contraseña y quién puede incorporar personas. | En parte |
+| **MVP y alcance mínimo (regla 80/20)** | Quedan fuera pagos, aulas en vivo, diplomas, video pesado y multi-idioma; el revisor rechaza funciones que ningún criterio pide. | Aplicado |
+| **Casos de uso con flujos alternativos** | Caso «Incorporar colaborador» (HU-009 y HU-010) con flujo normal y extensiones de error; está propuesto, falta validarlo con el PO. | En parte |
+| **Cobertura de pruebas** | 134 pruebas automáticas pasan, pero todavía no se mide el porcentaje de cobertura ni hay un umbral acordado. | Pendiente |
+
+**Gestión de configuración** (fuente del curso: 3. Gestión de configuración; en el repositorio: `docs/FLUJO_DE_TRABAJO.md, docs/definition-of-done.md, docs/configuracion.md y .github/workflows/ci.yml`)
+
+| Qué enseña el curso | Cómo lo aplicamos | Estado |
+|---|---|---|
+| **Ramas cortas y control de versiones** | GitHub Flow: main protegido, una rama por historia con el nombre «tipo/CGB-ID-resumen», squash al fusionar y rama eliminada después. | Aplicado |
+| **Commits con intención** | Conventional Commits con la clave de Jira; los commits de CGB-36 muestran el ciclo TDD (prueba, implementación, refactor, validación). | Aplicado |
+| **Pull Request y revisión por pares** | Plantilla obligatoria con necesidad, verificación real, RNF y uso de IA; aprobación de otra persona después del último push. | Aplicado |
+| **Integración continua** | GitHub Actions con tres trabajos: Build, Lint y pruebas, y Seguridad (npm audit). Corre en cada PR desde el 18/11/2026. | Aplicado |
+| **Tablero, WIP y Definition of Done** | Jira con cuatro columnas, límites de WIP, bloqueos visibles y una DoD de seis puntos que se comprueba antes de pasar a Hecho. | Aplicado |
+| **Trazabilidad y reconstrucción** | Necesidad, tarjeta, rama, PR, commit y prueba enlazados; otra persona puede reproducir todo con «npm ci» (docs/configuracion.md). | Aplicado |
+| **Línea base y versiones etiquetadas** | Aún no se declara una línea base ni se crean tags de entrega. | Pendiente |
+
+**Diseño de software** (fuente del curso: 5. Diseño de software (cohesión, acoplamiento, SOLID); en el repositorio: `src/lib, prisma/schema.prisma y docs/HU0nn-DISENO-Y-TRAZABILIDAD.md`)
+
+| Qué enseña el curso | Cómo lo aplicamos | Estado |
+|---|---|---|
+| **Separación de responsabilidades y SRP** | Reglas, casos de uso, persistencia y HTTP viven en archivos distintos; en src/lib ningún servicio ni repositorio importa NextResponse. | Aplicado |
+| **Alta cohesión y modularidad** | Un módulo por tema: organizacion.ts, progreso-capacitacion.ts, rutas-onboarding.ts, configuracion-microtest.ts. | Aplicado |
+| **Inversión de dependencias (DIP)** | El dominio no importa el framework ni Prisma; el acceso a datos queda en los repositorios. | Aplicado |
+| **Encapsulación** | La identidad y los permisos salen de la sesión (permisos.ts), nunca del cuerpo de la petición. | Aplicado |
+| **Bajo acoplamiento y testabilidad** | Las reglas se prueban sin conectarse a Atlas; 134 pruebas con el ejecutor de Node (tsx --test). | Aplicado |
+| **Integridad de los datos** | Borrado con Restrict para no perder el historial de avance; siete índices únicos en Atlas para áreas y puestos. | Aplicado |
+| **Refactor seguro y sin sobreingeniería** | Refactor solo con pruebas verdes (CGB-36); no hay patrones sin variación real. | Aplicado |
+| **Documento de diseño por historia** | Solo HU-007, HU-012 y HU-013 tienen su DISENO-Y-TRAZABILIDAD.md; faltan las demás historias integradas. | En parte |
+
+**Arquitectura** (fuente del curso: 6. Arquitectura; en el repositorio: `docs/ARQUITECTURA.md`)
+
+| Qué enseña el curso | Cómo lo aplicamos | Estado |
+|---|---|---|
+| **Capas: la capa n solo usa la capa n-1** | Vista (src/app páginas y src/components) → Controlador (src/app/api route.ts, delgado) → Servicio (src/lib servicio-*.ts, sin HTTP) → Dominio (reglas puras) → Repositorio (único lugar con Prisma) → Datos (MongoDB Atlas). | Aplicado |
+| **Monolito en lugar de microservicios** | Un equipo de 5 personas y un VPS de 2 vCPU y 8 GB. El curso aconseja empezar con un monolito y dividir solo si hay problemas reales; los microservicios quedan descartados por ahora. | Aplicado |
+| **MVC adaptado a la web** | Vista (páginas), controlador (rutas de API) y modelo (servicios, dominio y repositorios), como en el esquema de MVC web de la clase. | Aplicado |
+| **Dueño de cada colección** | CGB-31 áreas y puestos, CGB-36 rutas, CGB-56 progreso, CGB-61 evaluaciones; nadie escribe en la colección de otro. | Aplicado |
+| **Dependencia de proveedor** | MongoDB Atlas es punto único de fallo y costo variable; el riesgo está anotado en docs/ARQUITECTURA.md. | Aplicado |
+| **Deuda conocida** | 12 archivos anteriores a la convención (login, capacitaciones, health) todavía importan Prisma desde src/app. | En parte |
+
 ## 7. Stakeholders (Matriz de Interesados)
 
 | Stakeholder / Actor | Rol en el Ecosistema | Tipo | Influencia | Interés Principal / Expectativa |

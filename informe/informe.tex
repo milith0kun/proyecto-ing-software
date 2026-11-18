@@ -243,6 +243,121 @@ La aplicación opera en la nube con acceso multiplataforma responsive para colab
 \caption{Pila Tecnológica Seleccionada y Fundamentación Arquitectónica.}
 \end{table}
 
+\subsection{Conceptos de la asignatura aplicados al proyecto}
+Los cuatro documentos de la asignatura (requisitos, gestión de configuración, diseño de software y arquitectura) se aplican al proyecto y se usan como lista de revisión en cada Pull Request (docs/GUIA\_DE\_REVISION.md). Las tablas siguientes dicen qué enseña cada documento, cómo se aplica y en qué estado está al 18/11/2026.
+
+\subsubsection*{Requisitos}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{1.6cm}|}
+\hline
+\rowcolor{gray!15}
+\textbf{Qué enseña el curso} & \textbf{Cómo lo aplicamos} & \textbf{Estado} \\
+\hline
+\textbf{Historia = tarjeta + conversación + confirmación} & Cada historia en Jira dice «Como… quiero… para…»; las decisiones del Product Owner quedan en la tarjeta y los criterios se escriben en formato BDD, cada uno con su prueba. & Aplicado \\
+\hline
+\textbf{INVEST y dependencias} & Historias pequeñas y estimables en Planning Poker; las dependencias se marcan con vínculos «Blocks» en Jira (por ejemplo, HU-009 antes de HU-010). & Aplicado \\
+\hline
+\textbf{Requisitos no funcionales en la DoD} & RNF-001 a RNF-010 (ISO 25010); cada Pull Request declara cuáles aplica. La matriz RNF por historia está propuesta en docs/REQUISITOS\_APLICADOS.md. & En parte \\
+\hline
+\textbf{Conflictos entre requisitos} & Se elevan al Product Owner en lugar de inventarlos: DNI del colaborador, caducidad del token (48 h), política de contraseña y quién puede incorporar personas. & En parte \\
+\hline
+\textbf{MVP y alcance mínimo (regla 80/20)} & Quedan fuera pagos, aulas en vivo, diplomas, video pesado y multi-idioma; el revisor rechaza funciones que ningún criterio pide. & Aplicado \\
+\hline
+\textbf{Casos de uso con flujos alternativos} & Caso «Incorporar colaborador» (HU-009 y HU-010) con flujo normal y extensiones de error; está propuesto, falta validarlo con el PO. & En parte \\
+\hline
+\textbf{Cobertura de pruebas} & 134 pruebas automáticas pasan, pero todavía no se mide el porcentaje de cobertura ni hay un umbral acordado. & Pendiente \\
+\hline
+\end{tabularx}
+\caption{Requisitos. Fuente del curso: 4. Requisitos.pdf. En el repositorio: docs/REQUISITOS\_APLICADOS.md y los criterios de cada historia en Jira.}
+\end{table}
+
+\subsubsection*{Gestión de configuración}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{1.6cm}|}
+\hline
+\rowcolor{gray!15}
+\textbf{Qué enseña el curso} & \textbf{Cómo lo aplicamos} & \textbf{Estado} \\
+\hline
+\textbf{Ramas cortas y control de versiones} & GitHub Flow: main protegido, una rama por historia con el nombre «tipo/CGB-ID-resumen», squash al fusionar y rama eliminada después. & Aplicado \\
+\hline
+\textbf{Commits con intención} & Conventional Commits con la clave de Jira; los commits de CGB-36 muestran el ciclo TDD (prueba, implementación, refactor, validación). & Aplicado \\
+\hline
+\textbf{Pull Request y revisión por pares} & Plantilla obligatoria con necesidad, verificación real, RNF y uso de IA; aprobación de otra persona después del último push. & Aplicado \\
+\hline
+\textbf{Integración continua} & GitHub Actions con tres trabajos: Build, Lint y pruebas, y Seguridad (npm audit). Corre en cada PR desde el 18/11/2026. & Aplicado \\
+\hline
+\textbf{Tablero, WIP y Definition of Done} & Jira con cuatro columnas, límites de WIP, bloqueos visibles y una DoD de seis puntos que se comprueba antes de pasar a Hecho. & Aplicado \\
+\hline
+\textbf{Trazabilidad y reconstrucción} & Necesidad, tarjeta, rama, PR, commit y prueba enlazados; otra persona puede reproducir todo con «npm ci» (docs/configuracion.md). & Aplicado \\
+\hline
+\textbf{Línea base y versiones etiquetadas} & Aún no se declara una línea base ni se crean tags de entrega. & Pendiente \\
+\hline
+\end{tabularx}
+\caption{Gestión de configuración. Fuente del curso: 3. Gestión de configuración. En el repositorio: docs/FLUJO\_DE\_TRABAJO.md, docs/definition-of-done.md, docs/configuracion.md y .github/workflows/ci.yml.}
+\end{table}
+
+\subsubsection*{Diseño de software}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{1.6cm}|}
+\hline
+\rowcolor{gray!15}
+\textbf{Qué enseña el curso} & \textbf{Cómo lo aplicamos} & \textbf{Estado} \\
+\hline
+\textbf{Separación de responsabilidades y SRP} & Reglas, casos de uso, persistencia y HTTP viven en archivos distintos; en src/lib ningún servicio ni repositorio importa NextResponse. & Aplicado \\
+\hline
+\textbf{Alta cohesión y modularidad} & Un módulo por tema: organizacion.ts, progreso-capacitacion.ts, rutas-onboarding.ts, configuracion-microtest.ts. & Aplicado \\
+\hline
+\textbf{Inversión de dependencias (DIP)} & El dominio no importa el framework ni Prisma; el acceso a datos queda en los repositorios. & Aplicado \\
+\hline
+\textbf{Encapsulación} & La identidad y los permisos salen de la sesión (permisos.ts), nunca del cuerpo de la petición. & Aplicado \\
+\hline
+\textbf{Bajo acoplamiento y testabilidad} & Las reglas se prueban sin conectarse a Atlas; 134 pruebas con el ejecutor de Node (tsx --test). & Aplicado \\
+\hline
+\textbf{Integridad de los datos} & Borrado con Restrict para no perder el historial de avance; siete índices únicos en Atlas para áreas y puestos. & Aplicado \\
+\hline
+\textbf{Refactor seguro y sin sobreingeniería} & Refactor solo con pruebas verdes (CGB-36); no hay patrones sin variación real. & Aplicado \\
+\hline
+\textbf{Documento de diseño por historia} & Solo HU-007, HU-012 y HU-013 tienen su DISENO-Y-TRAZABILIDAD.md; faltan las demás historias integradas. & En parte \\
+\hline
+\end{tabularx}
+\caption{Diseño de software. Fuente del curso: 5. Diseño de software (cohesión, acoplamiento, SOLID). En el repositorio: src/lib, prisma/schema.prisma y docs/HU0nn-DISENO-Y-TRAZABILIDAD.md.}
+\end{table}
+
+\subsubsection*{Arquitectura}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{1.6cm}|}
+\hline
+\rowcolor{gray!15}
+\textbf{Qué enseña el curso} & \textbf{Cómo lo aplicamos} & \textbf{Estado} \\
+\hline
+\textbf{Capas: la capa n solo usa la capa n-1} & Vista (src/app páginas y src/components) $\rightarrow$ Controlador (src/app/api route.ts, delgado) $\rightarrow$ Servicio (src/lib servicio-*.ts, sin HTTP) $\rightarrow$ Dominio (reglas puras) $\rightarrow$ Repositorio (único lugar con Prisma) $\rightarrow$ Datos (MongoDB Atlas). & Aplicado \\
+\hline
+\textbf{Monolito en lugar de microservicios} & Un equipo de 5 personas y un VPS de 2 vCPU y 8 GB. El curso aconseja empezar con un monolito y dividir solo si hay problemas reales; los microservicios quedan descartados por ahora. & Aplicado \\
+\hline
+\textbf{MVC adaptado a la web} & Vista (páginas), controlador (rutas de API) y modelo (servicios, dominio y repositorios), como en el esquema de MVC web de la clase. & Aplicado \\
+\hline
+\textbf{Dueño de cada colección} & CGB-31 áreas y puestos, CGB-36 rutas, CGB-56 progreso, CGB-61 evaluaciones; nadie escribe en la colección de otro. & Aplicado \\
+\hline
+\textbf{Dependencia de proveedor} & MongoDB Atlas es punto único de fallo y costo variable; el riesgo está anotado en docs/ARQUITECTURA.md. & Aplicado \\
+\hline
+\textbf{Deuda conocida} & 12 archivos anteriores a la convención (login, capacitaciones, health) todavía importan Prisma desde src/app. & En parte \\
+\hline
+\end{tabularx}
+\caption{Arquitectura. Fuente del curso: 6. Arquitectura. En el repositorio: docs/ARQUITECTURA.md.}
+\end{table}
+
 \section{Stakeholders (Matriz de Interesados)}
 \begin{table}[H]
 \centering
