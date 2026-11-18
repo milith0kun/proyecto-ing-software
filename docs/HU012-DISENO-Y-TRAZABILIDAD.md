@@ -17,14 +17,16 @@ Cada capa solo usa a la inmediatamente inferior:
 | Capa | Módulo | Responsabilidad |
 |---|---|---|
 | Presentación | `src/app/colaborador/capacitaciones/[id]/page.tsx`, `VisorCapacitacionInterna.tsx`, `src/app/capacitaciones/[id]/SlideViewer.tsx` | Mostrar slides, estado de guardado y reintento; la página consume `obtenerVisor` del servicio y no el repositorio |
-| Controlador (API) | `src/app/api/colaborador/capacitaciones/[id]/progreso/**/route.ts` | Reexportar `consultarProgreso`, `guardarProgreso` y `finalizarProgreso` |
-| Lógica de negocio | `src/lib/servicio-progreso.ts`, `src/lib/progreso-capacitacion.ts` | Orquestar la solicitud (servicio) y reglas puras: avance, reanudación, no saltar slides, finalización |
+| Controlador (API) | `src/lib/controlador-progreso.ts`; rutas `src/app/api/colaborador/capacitaciones/[id]/progreso/**/route.ts` | Autenticar, leer la solicitud HTTP, llamar al servicio y convertir `ErrorProgreso` en respuestas. Las rutas solo reexportan |
+| Lógica de negocio | `src/lib/servicio-progreso.ts`, `src/lib/progreso-capacitacion.ts` | Casos de uso sin HTTP: devuelven datos o lanzan `ErrorProgreso` (servicio) y reglas puras: avance, reanudación, no saltar slides, finalización |
 | Acceso a datos | `src/lib/repositorio-progreso.ts`, `prisma/schema.prisma` | Único módulo del flujo que conoce Prisma/MongoDB |
 
 ## Principios de diseño (diapositiva 5)
 
 - **Responsabilidad única y cohesión:** las reglas puras no dependen de HTTP ni de la base de datos y se prueban sin ellas.
-- **Inversión de dependencias:** el servicio llama al repositorio y no a Prisma. Cambiar la persistencia afecta a un solo archivo.
+- **Inversión de dependencias:** el servicio llama al repositorio y no importa `@prisma/client`; los tipos de escritura salen del repositorio. Cambiar la persistencia afecta a un solo archivo.
+- **Capas sin HTTP:** el servicio no importa `NextRequest` ni `NextResponse`; solo el controlador conoce HTTP.
+- **Integridad al borrar:** `ProgresoCapacitacion` usa `onDelete: Restrict` hacia usuario y capacitación, para no eliminar el historial de avance en silencio.
 - **Bajo acoplamiento:** las rutas no contienen lógica, solo delegan.
 
 ## Trazabilidad y configuración (diapositiva 3)

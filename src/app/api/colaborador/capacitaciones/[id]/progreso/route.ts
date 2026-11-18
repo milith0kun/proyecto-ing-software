@@ -1,4 +1,4 @@
-import { consultarProgreso, guardarProgreso } from '@/lib/servicio-progreso';
+import { consultarProgreso, guardarProgreso } from '@/lib/controlador-progreso';
 
 export const GET = consultarProgreso;
 export const PUT = guardarProgreso;

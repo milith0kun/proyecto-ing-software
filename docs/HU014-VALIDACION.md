@@ -66,7 +66,7 @@ Los commits siguen `tipo(CGB-66): descripción`. Jira no se pudo consultar desde
 
 ## Verificación (17 de noviembre de 2026)
 
-- `npm test`: 112 pruebas pasan, 0 fallan (20 nuevas de HU-014).
+- `npm test`: 112 pruebas pasan (20 nuevas de HU-014); tras traer `main` el 18 de noviembre de 2026, 133 pasan y 0 fallan.
 - `npx tsc --noEmit`, `npx eslint src tests` y `next build`: sin errores.
 
 ## Pendiente
