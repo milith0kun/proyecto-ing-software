@@ -29,6 +29,7 @@ Jira project `CGB` is the work-item record; GitHub `main` is the single integrat
 5. Write one-purpose Conventional Commits with an accurate description and the Jira key. Do not claim a test, review, user validation, or approval that did not happen.
 6. For code behavior, follow the project's TDD/BDD practice where applicable. Record actual verification commands and outcomes in the PR; apply the five shared DoD gates before Jira is moved to Done.
 7. Preserve user instructions about whether to commit or publish. A request to change files alone does not imply permission to push or merge; when publishing is requested, target `main` through the documented review flow.
+8. Authorship and approvals: an assistant working through a person's Git/GitHub account publishes in that person's name, so that person becomes the PR author and last pusher and can no longer approve it (`main` requires one approval after the last push, administrators included). Do not open or push to another person's story PR; open only maintenance PRs (CI, dependencies, process docs), request a teammate's review at creation with `gh pr edit <n> --add-reviewer <user>`, and check `gh pr view <n> --json author` plus the last commit author before trying to approve. Never change branch protection to avoid this rule. See `docs/FLUJO_DE_TRABAJO.md`, "Autoría, último push y aprobación".
 
 ## Closeout
 

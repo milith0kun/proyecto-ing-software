@@ -147,6 +147,22 @@ Hacer push solo de la rama de la tarea y abrir el PR hacia `main`. El PR debe vi
 
 La configuración de GitHub usa `main` como rama predeterminada, requiere un PR y una aprobación, impide force-push y eliminación de `main`, permite **Squash and merge** y elimina automáticamente la rama de una tarea después de fusionar. El workflow `.github/workflows/ci.yml` ejecuta en cada PR hacia `main` y en cada push a `main` tres jobs: **Lint y pruebas** (`npm ci`, `npm run lint`, `npm test`), **Build** (`npm run build`) y **Seguridad** (`npm audit`, informativo hasta actualizar las dependencias con vulnerabilidades conocidas). Los checks `Lint y pruebas` y `Build` deben estar en verde antes de aprobar; el aviso de `Seguridad` se revisa y se registra en Jira. Los comandos que la CI no cubre (por ejemplo `npm run build` o pruebas manuales de aceptación) se siguen registrando en el PR.
 
+### Autoría, último push y aprobación
+
+GitHub no permite que el autor de un PR lo apruebe ni que lo apruebe quien hizo el último push, y `main` exige una aprobación **posterior al último push** que **también aplica a administradores**. Un asistente de IA que trabaja con la cuenta de una persona publica **a nombre de esa persona**: esa persona queda como autora y como último push, y ya no puede aprobar ese PR.
+
+| Quién | Qué publica | Quién aprueba |
+|---|---|---|
+| Responsable de la historia (Jira) | Su historia, desde su cuenta y su rama | Una persona distinta: el revisor |
+| Revisor o integrador | Solo PR de mantenimiento (CI, dependencias, documentación de proceso) | Un compañero; nunca el mismo revisor |
+
+Reglas:
+
+1. **Cada historia la publica su responsable.** El revisor y su asistente no abren el PR de una historia ajena ni suben commits a la rama de otra persona: si lo hacen, el revisor pasa a ser último push y pierde la posibilidad de aprobar. Lo que se corrige se pide al autor en el PR.
+2. **Un PR de mantenimiento publicado con la cuenta del revisor no lo aprueba el revisor.** Al abrirlo se pide revisión a un compañero (`gh pr edit <n> --add-reviewer <usuario>`) y se agrupa el trabajo de mantenimiento en pocos PR para pedir la aprobación una sola vez.
+3. **Tras la aprobación ajena**, el revisor o integrador hace Squash and merge. Si el cambio es de una historia con responsable en Jira, el PR se abre con la cuenta de esa persona.
+4. **Antes de aprobar o fusionar**, se comprueba el autor y el último push: `gh pr view <n> --json author` y `git log -1 --format=%an origin/<rama>`. Si coinciden con quien revisa, se pide la revisión a otra persona en lugar de intentar aprobar.
+5. **No se modifica la protección de `main` para evitar esta regla.** Una excepción para administradores es una decisión del equipo registrada en Jira.
 ## 7. Cambios, trazabilidad y versiones aprobadas
 
 Todo cambio sigue esta cadena:

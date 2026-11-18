@@ -14,7 +14,7 @@ Antes de cambiar código, documentación o configuración, lee [`docs/FLUJO_DE_T
 
 Antes de editar archivos, inspecciona `git status` y los diffs. Conserva cambios locales y archivos sin seguimiento que no pertenecen a la tarea. Agrega rutas explícitas; no ejecutes comandos de limpieza, borrado o sobrescritura para despejar el árbol sin autorización explícita. `npm` y `package-lock.json` son los gestores versionados del repo; no adoptes o borres archivos de otro gestor sin decisión del equipo.
 
-Cuando se pida revisar una historia, rama o PR, aplica [`docs/GUIA_DE_REVISION.md`](docs/GUIA_DE_REVISION.md): las listas de los cuatro documentos de clase (GC, REQ, DIS, ARQ), la separación autor/revisor y el formato de informe. No apruebes, fusiones ni muevas estados de Jira sin instrucción explícita.
+Cuando se pida revisar una historia, rama o PR, aplica [`docs/GUIA_DE_REVISION.md`](docs/GUIA_DE_REVISION.md): las listas de los cuatro documentos de clase (GC, REQ, DIS, ARQ), la separación autor/revisor y el formato de informe. No apruebes, fusiones ni muevas estados de Jira sin instrucción explícita. Un asistente publica con la cuenta de la persona que lo usa: esa persona queda como autora y último push y no puede aprobar ese PR; no abras PR de historias ajenas, pide revisión a un compañero en los de mantenimiento y comprueba autor y último push antes de aprobar (ver `docs/FLUJO_DE_TRABAJO.md`, «Autoría, último push y aprobación»).
 
 Para cerrar una historia, aplica [`docs/definition-of-done.md`](docs/definition-of-done.md); para cambios de dependencias, configuración, entregas o alcance, consulta [`docs/configuracion.md`](docs/configuracion.md). No informes pruebas, aceptación, entrevistas o revisiones que no ocurrieron.
 
