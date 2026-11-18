@@ -42,7 +42,7 @@ Las respuestas correctas no se envían al navegador antes de calificar (`pregunt
 
 ## Pendiente
 
-- No se ejecutó `prisma db push` ni se probó contra MongoDB Atlas: requiere autorización sobre la base compartida.
+- `prisma db push` aplicado en MongoDB Atlas (`cgb_academy`) el 17 de noviembre de 2026 por el autor de la rama: colecciones `evaluaciones` e `intentos_evaluacion` e índices únicos. No se tocaron colecciones existentes. Todavía no se probó el flujo completo contra Atlas.
 - Sin prueba en navegador ni E2E real (T4 de Jira); tampoco hay datos de evaluación sembrados.
 - Revisión por pares, enlace con CGB-66 en Jira y Pull Request.
 - DoD: la del equipo (PR #12).
