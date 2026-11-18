@@ -113,11 +113,12 @@ type PreguntaEvaluacion {
   retroalimentacion String?
 }
 
-// Microtest formativo de una capacitación (HU-014). La configuración la gestiona HU-013.
+// Microtest formativo de una capacitación (HU-013 / HU-014).
+// Restrict: borrar una capacitación no elimina en silencio su evaluación ni sus intentos registrados (RNF-010).
 model Evaluacion {
   id              String       @id @default(auto()) @map("_id") @db.ObjectId
   capacitacionId  String       @unique @db.ObjectId
-  capacitacion    Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Cascade)
+  capacitacion    Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Restrict)
   titulo          String       @default("Microtest")
   preguntas       PreguntaEvaluacion[]
   notaMinima      Int          @default(70) // porcentaje 0-100 para aprobar
@@ -131,12 +132,13 @@ model Evaluacion {
 }
 
 // Intento calificado de un colaborador. (usuario, evaluación, número) único evita pasar el límite de intentos en solicitudes simultáneas.
+// Restrict: borrar un usuario o una evaluación no elimina en silencio sus calificaciones históricas (RNF-010).
 model IntentoEvaluacion {
   id           String     @id @default(auto()) @map("_id") @db.ObjectId
   evaluacionId String     @db.ObjectId
-  evaluacion   Evaluacion @relation(fields: [evaluacionId], references: [id], onDelete: Cascade)
+  evaluacion   Evaluacion @relation(fields: [evaluacionId], references: [id], onDelete: Restrict)
   usuarioId    String     @db.ObjectId
-  usuario      User       @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  usuario      User       @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
   numero       Int
   respuestas   Int[]      // -1 = sin responder
   aciertos     Int
