@@ -28,6 +28,21 @@ Pruebas adicionales: sesión obligatoria, origen válido y usuario solo de la se
 
 Las respuestas correctas no se envían al navegador antes de calificar (`preguntasParaResolver`).
 
+## Trazabilidad
+
+| Tarea Jira | Commit | Ítems de configuración |
+|---|---|---|
+| T1 RED | `75f06b8` | `tests/microtest.test.mjs`, modelos en `prisma/schema.prisma` |
+| T2 GREEN (API) | `0e1b778` | `src/lib/microtest.ts`, `servicio-evaluacion.ts`, `repositorio-evaluacion.ts`, ruta `/api/evaluaciones/evaluar`, guardia en `servicio-progreso.ts` |
+| T2/T3 (interfaz) | `c994491` | `MicrotestInterno.tsx`, `SlideViewer.tsx`, `VisorCapacitacionInterna.tsx`, página del colaborador, `globals.css`, `tests/microtest-ui.test.mjs` |
+| T4 VALIDACIÓN | `2768733`, `f986f00` | este documento |
+
+Los commits siguen `tipo(CGB-66): descripción`. Jira no se pudo consultar desde esta sesión: falta enlazar CGB-66 y sus subtareas con el PR.
+
+## Conflictos previstos (probados con `git merge-tree`)
+
+`prisma/schema.prisma` choca con CGB-31, -36, -41, -46 y -51; CGB-51 además toca `SlideViewer.tsx` y la página del colaborador. Con CGB-61 no hay conflicto (rama vacía). Quien integre después trae `main` y resuelve a mano.
+
 ## Decisiones y límites
 
 - El endpoint sigue lo indicado en Jira: `POST /api/evaluaciones/evaluar`.
