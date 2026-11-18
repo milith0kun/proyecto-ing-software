@@ -1,17 +1,17 @@
 // Servicio de aplicación para la estructura organizacional (HU-007 / CGB-31).
-// Orquesta autenticación, reglas puras (`organizacion.ts`) y acceso a datos (`repositorio-organizacion.ts`).
-import { NextRequest, NextResponse } from 'next/server';
-import { exigirAdministrador } from '@/lib/permisos';
+// Orquesta reglas puras (`organizacion.ts`) y acceso a datos (`repositorio-organizacion.ts`) sin acoplamiento a HTTP.
 import {
   MENSAJE_AREA_CON_PUESTOS,
   MENSAJE_AREA_INACTIVA,
   MENSAJE_DUPLICADO,
+  armarEstructura,
   esObjectIdOrganizacionValido,
   existeNombreDuplicado,
   puedeAgregarPuestoAArea,
   puedeEliminarArea,
   validarArea,
   validarPuesto,
+  type AreaEstructura,
 } from '@/lib/organizacion';
 import {
   borrarAreaPorId,
@@ -25,287 +25,173 @@ import {
   listarPuestosBasicos,
   listarPuestosRepositorio,
   modificarArea,
-  obtenerEstructuraOrganizacional,
 } from '@/lib/repositorio-organizacion';
 
-const SIN_CACHE = { 'Cache-Control': 'no-store' };
+export type { AreaEstructura };
 
-type ContextoId = { params: Promise<{ id: string }> };
-
-function responderJsonInvalido() {
-  return NextResponse.json(
-    { ok: false, error: 'El cuerpo de la solicitud debe ser un objeto JSON válido.' },
-    { status: 400 }
-  );
-}
-
-function responderDatosInvalidos(detalles: Record<string, string>) {
-  return NextResponse.json(
-    { ok: false, error: 'Datos inválidos.', detalles },
-    { status: 400 }
-  );
-}
-
-function responderDuplicado() {
-  return NextResponse.json(
-    { ok: false, error: MENSAJE_DUPLICADO, detalles: { nombre: MENSAJE_DUPLICADO } },
-    { status: 409 }
-  );
-}
-
-function responderErrorServidor(error: unknown, mensaje: string) {
-  if (esErrorUnicidadPrisma(error)) return responderDuplicado();
-  return NextResponse.json({ ok: false, error: mensaje }, { status: 503 });
-}
-
-async function leerObjetoJson(request: NextRequest): Promise<Record<string, unknown> | null> {
-  const cuerpo = await request.json().catch(() => null);
-  if (!cuerpo || typeof cuerpo !== 'object' || Array.isArray(cuerpo)) return null;
-  return cuerpo as Record<string, unknown>;
-}
-
-export async function listarAreasOrganizacion(request: NextRequest) {
-  const rechazo = await exigirAdministrador(request);
-  if (rechazo) return rechazo;
-
-  try {
-    const soloActivas = request.nextUrl.searchParams.get('soloActivas') === 'true';
-    const datos = await obtenerEstructuraOrganizacional({ soloActivas });
-
-    return NextResponse.json(
-      { ok: true, total: datos.length, datos },
-      { headers: SIN_CACHE }
-    );
-  } catch (error) {
-    return responderErrorServidor(error, 'No pudimos obtener las áreas organizacionales.');
+export class ErrorOrganizacion extends Error {
+  constructor(
+    message: string,
+    readonly status: 400 | 404 | 409,
+    readonly detalles?: Record<string, string>
+  ) {
+    super(message);
   }
 }
 
-export async function crearAreaOrganizacion(request: NextRequest) {
-  const rechazo = await exigirAdministrador(request);
-  if (rechazo) return rechazo;
+function lanzarDuplicado(): never {
+  throw new ErrorOrganizacion(MENSAJE_DUPLICADO, 409, { nombre: MENSAJE_DUPLICADO });
+}
+
+/**
+ * Obtiene la jerarquía completa de áreas y puestos para administración.
+ * El conteo de colaboradores por puesto queda en 0 hasta integrar CGB-41.
+ */
+export async function obtenerEstructuraOrganizacional(options?: {
+  soloActivas?: boolean;
+}): Promise<AreaEstructura[]> {
+  const [areas, puestos] = await Promise.all([
+    listarAreasRepositorio(options),
+    listarPuestosBasicos(),
+  ]);
+
+  return armarEstructura(areas, puestos, {});
+}
+
+export async function registrarAreaOrganizacion(cuerpo: Record<string, unknown>) {
+  const validacion = validarArea(cuerpo);
+  if (!validacion.valido || !validacion.datos) {
+    throw new ErrorOrganizacion('Datos inválidos.', 400, validacion.errores);
+  }
+
+  const existentes = await listarAreasRepositorio();
+  if (existeNombreDuplicado(existentes, validacion.datos.nombre)) {
+    lanzarDuplicado();
+  }
 
   try {
-    const cuerpo = await leerObjetoJson(request);
-    if (!cuerpo) return responderJsonInvalido();
-
-    const validacion = validarArea(cuerpo);
-    if (!validacion.valido || !validacion.datos) {
-      return responderDatosInvalidos(validacion.errores);
-    }
-
-    const existentes = await listarAreasRepositorio();
-    if (existeNombreDuplicado(existentes, validacion.datos.nombre)) {
-      return responderDuplicado();
-    }
-
-    const creada = await guardarArea({
+    return await guardarArea({
       nombre: validacion.datos.nombre,
       nombreClave: validacion.datos.nombreClave,
       activa: true,
     });
-
-    return NextResponse.json(
-      { ok: true, mensaje: 'Área organizacional creada correctamente.', datos: creada },
-      { status: 201 }
-    );
   } catch (error) {
-    return responderErrorServidor(error, 'No pudimos crear el área organizacional.');
+    if (esErrorUnicidadPrisma(error)) lanzarDuplicado();
+    throw error;
   }
 }
 
-export async function actualizarAreaOrganizacion(
-  request: NextRequest,
-  { params }: ContextoId
+export async function actualizarAreaEnServicio(
+  id: string,
+  cuerpo: Record<string, unknown>
 ) {
-  const rechazo = await exigirAdministrador(request);
-  if (rechazo) return rechazo;
-
-  try {
-    const { id } = await params;
-    if (!esObjectIdOrganizacionValido(id)) {
-      return NextResponse.json(
-        { ok: false, error: 'El identificador del área no es válido.' },
-        { status: 400 }
-      );
-    }
-
-    const cuerpo = await leerObjetoJson(request);
-    if (!cuerpo) return responderJsonInvalido();
-
-    const existente = await buscarAreaPorId(id);
-    if (!existente) {
-      return NextResponse.json(
-        { ok: false, error: 'Área organizacional no encontrada.' },
-        { status: 404 }
-      );
-    }
-
-    const cambios: { nombre?: string; nombreClave?: string; activa?: boolean } = {};
-
-    if (cuerpo.nombre !== undefined) {
-      const validacion = validarArea({ nombre: cuerpo.nombre });
-      if (!validacion.valido || !validacion.datos) {
-        return responderDatosInvalidos(validacion.errores);
-      }
-      const otras = await listarAreasExceptoId(id);
-      if (existeNombreDuplicado(otras, validacion.datos.nombre)) {
-        return responderDuplicado();
-      }
-      cambios.nombre = validacion.datos.nombre;
-      cambios.nombreClave = validacion.datos.nombreClave;
-    }
-
-    if (cuerpo.activa !== undefined) {
-      if (typeof cuerpo.activa !== 'boolean') {
-        return NextResponse.json(
-          { ok: false, error: 'El estado del área debe ser booleano.' },
-          { status: 400 }
-        );
-      }
-      cambios.activa = cuerpo.activa;
-    }
-
-    if (Object.keys(cambios).length === 0) {
-      return NextResponse.json(
-        { ok: false, error: 'Indica al menos un cambio válido para actualizar el área.' },
-        { status: 400 }
-      );
-    }
-
-    const actualizada = await modificarArea(id, cambios);
-
-    return NextResponse.json({
-      ok: true,
-      mensaje:
-        cambios.activa === false
-          ? 'Área desactivada correctamente. Sus puestos e historial se conservan.'
-          : 'Área organizacional actualizada correctamente.',
-      datos: actualizada,
-    });
-  } catch (error) {
-    return responderErrorServidor(error, 'No pudimos actualizar el área organizacional.');
+  if (!esObjectIdOrganizacionValido(id)) {
+    throw new ErrorOrganizacion('El identificador del área no es válido.', 400);
   }
-}
 
-export async function eliminarAreaOrganizacion(
-  request: NextRequest,
-  { params }: ContextoId
-) {
-  const rechazo = await exigirAdministrador(request);
-  if (rechazo) return rechazo;
-
-  try {
-    const { id } = await params;
-    if (!esObjectIdOrganizacionValido(id)) {
-      return NextResponse.json(
-        { ok: false, error: 'El identificador del área no es válido.' },
-        { status: 400 }
-      );
-    }
-
-    const existente = await buscarAreaConConteoPuestos(id);
-    if (!existente) {
-      return NextResponse.json(
-        { ok: false, error: 'Área organizacional no encontrada.' },
-        { status: 404 }
-      );
-    }
-
-    if (!puedeEliminarArea(existente._count.puestos)) {
-      return NextResponse.json(
-        { ok: false, error: MENSAJE_AREA_CON_PUESTOS },
-        { status: 409 }
-      );
-    }
-
-    await borrarAreaPorId(id);
-
-    return NextResponse.json({
-      ok: true,
-      mensaje: 'Área eliminada correctamente.',
-    });
-  } catch (error) {
-    return responderErrorServidor(error, 'No pudimos eliminar el área organizacional.');
+  const existente = await buscarAreaPorId(id);
+  if (!existente) {
+    throw new ErrorOrganizacion('Área organizacional no encontrada.', 404);
   }
-}
 
-export async function listarPuestosOrganizacion(request: NextRequest) {
-  const rechazo = await exigirAdministrador(request);
-  if (rechazo) return rechazo;
+  const cambios: { nombre?: string; nombreClave?: string; activa?: boolean } = {};
 
-  try {
-    const areaId = request.nextUrl.searchParams.get('areaId')?.trim();
-    if (areaId && !esObjectIdOrganizacionValido(areaId)) {
-      return NextResponse.json(
-        { ok: false, error: 'El identificador del área no es válido.' },
-        { status: 400 }
-      );
-    }
-
-    const puestos = await listarPuestosRepositorio(areaId);
-
-    return NextResponse.json(
-      { ok: true, total: puestos.length, datos: puestos },
-      { headers: SIN_CACHE }
-    );
-  } catch (error) {
-    return responderErrorServidor(error, 'No pudimos obtener los puestos de trabajo.');
-  }
-}
-
-export async function crearPuestoOrganizacion(request: NextRequest) {
-  const rechazo = await exigirAdministrador(request);
-  if (rechazo) return rechazo;
-
-  try {
-    const cuerpo = await leerObjetoJson(request);
-    if (!cuerpo) return responderJsonInvalido();
-
-    const validacion = validarPuesto(cuerpo);
+  if (cuerpo.nombre !== undefined) {
+    const validacion = validarArea({ nombre: cuerpo.nombre });
     if (!validacion.valido || !validacion.datos) {
-      return responderDatosInvalidos(validacion.errores);
+      throw new ErrorOrganizacion('Datos inválidos.', 400, validacion.errores);
     }
-
-    const { nombre, nombreClave, areaId } = validacion.datos;
-    if (!esObjectIdOrganizacionValido(areaId)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: 'El identificador del área no es válido.',
-          detalles: { areaId: 'Selecciona un área válida' },
-        },
-        { status: 400 }
-      );
+    const otras = await listarAreasExceptoId(id);
+    if (existeNombreDuplicado(otras, validacion.datos.nombre)) {
+      lanzarDuplicado();
     }
+    cambios.nombre = validacion.datos.nombre;
+    cambios.nombreClave = validacion.datos.nombreClave;
+  }
 
-    const area = await buscarAreaPorId(areaId);
-    if (!area) {
-      return NextResponse.json(
-        { ok: false, error: 'El área seleccionada no existe.' },
-        { status: 404 }
-      );
+  if (cuerpo.activa !== undefined) {
+    if (typeof cuerpo.activa !== 'boolean') {
+      throw new ErrorOrganizacion('El estado del área debe ser booleano.', 400);
     }
+    cambios.activa = cuerpo.activa;
+  }
 
-    if (!puedeAgregarPuestoAArea(area)) {
-      return NextResponse.json(
-        { ok: false, error: MENSAJE_AREA_INACTIVA },
-        { status: 409 }
-      );
-    }
-
-    const puestosDelArea = await listarPuestosBasicos(areaId);
-    if (existeNombreDuplicado(puestosDelArea, nombre, areaId)) {
-      return responderDuplicado();
-    }
-
-    const creado = await guardarPuesto({ nombre, nombreClave, areaId });
-
-    return NextResponse.json(
-      { ok: true, mensaje: 'Puesto de trabajo creado correctamente.', datos: creado },
-      { status: 201 }
+  if (Object.keys(cambios).length === 0) {
+    throw new ErrorOrganizacion(
+      'Indica al menos un cambio válido para actualizar el área.',
+      400
     );
+  }
+
+  try {
+    const actualizada = await modificarArea(id, cambios);
+    const mensaje =
+      cambios.activa === false
+        ? 'Área desactivada correctamente. Sus puestos e historial se conservan.'
+        : 'Área organizacional actualizada correctamente.';
+    return { datos: actualizada, mensaje };
   } catch (error) {
-    return responderErrorServidor(error, 'No pudimos crear el puesto de trabajo.');
+    if (esErrorUnicidadPrisma(error)) lanzarDuplicado();
+    throw error;
+  }
+}
+
+export async function eliminarAreaEnServicio(id: string) {
+  if (!esObjectIdOrganizacionValido(id)) {
+    throw new ErrorOrganizacion('El identificador del área no es válido.', 400);
+  }
+
+  const existente = await buscarAreaConConteoPuestos(id);
+  if (!existente) {
+    throw new ErrorOrganizacion('Área organizacional no encontrada.', 404);
+  }
+
+  if (!puedeEliminarArea(existente._count.puestos)) {
+    throw new ErrorOrganizacion(MENSAJE_AREA_CON_PUESTOS, 409);
+  }
+
+  await borrarAreaPorId(id);
+  return { mensaje: 'Área eliminada correctamente.' };
+}
+
+export async function listarPuestosEnServicio(areaId?: string) {
+  if (areaId && !esObjectIdOrganizacionValido(areaId)) {
+    throw new ErrorOrganizacion('El identificador del área no es válido.', 400);
+  }
+  return listarPuestosRepositorio(areaId);
+}
+
+export async function registrarPuestoOrganizacion(cuerpo: Record<string, unknown>) {
+  const validacion = validarPuesto(cuerpo);
+  if (!validacion.valido || !validacion.datos) {
+    throw new ErrorOrganizacion('Datos inválidos.', 400, validacion.errores);
+  }
+
+  const { nombre, nombreClave, areaId } = validacion.datos;
+  if (!esObjectIdOrganizacionValido(areaId)) {
+    throw new ErrorOrganizacion('El identificador del área no es válido.', 400, {
+      areaId: 'Selecciona un área válida',
+    });
+  }
+
+  const area = await buscarAreaPorId(areaId);
+  if (!area) {
+    throw new ErrorOrganizacion('El área seleccionada no existe.', 404);
+  }
+
+  if (!puedeAgregarPuestoAArea(area)) {
+    throw new ErrorOrganizacion(MENSAJE_AREA_INACTIVA, 409);
+  }
+
+  const puestosDelArea = await listarPuestosBasicos(areaId);
+  if (existeNombreDuplicado(puestosDelArea, nombre, areaId)) {
+    lanzarDuplicado();
+  }
+
+  try {
+    return await guardarPuesto({ nombre, nombreClave, areaId });
+  } catch (error) {
+    if (esErrorUnicidadPrisma(error)) lanzarDuplicado();
+    throw error;
   }
 }

@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { CabeceraAdminCgb } from '@/components/institucional/CabeceraAdminCgb';
 import { PieCgb } from '@/components/institucional/PieCgb';
-import { obtenerEstructuraOrganizacional } from '@/lib/repositorio-organizacion';
-import type { AreaEstructura } from '@/lib/organizacion';
+import {
+  obtenerEstructuraOrganizacional,
+  type AreaEstructura,
+} from '@/lib/servicio-organizacion';
 import PanelOrganizacion from './PanelOrganizacion';
 
 export const dynamic = 'force-dynamic';
@@ -14,14 +16,18 @@ export default async function PaginaOrganizacion() {
   try {
     areasIniciales = await obtenerEstructuraOrganizacional();
   } catch {
-    errorInicial = 'No pudimos conectar con la base de datos para consultar la estructura organizacional.';
+    errorInicial =
+      'No pudimos conectar con la base de datos para consultar la estructura organizacional.';
   }
 
   return (
     <div className="admin-shell">
       <CabeceraAdminCgb>
         <div className="org-header-acciones">
-          <Link href="/admin/capacitaciones" className="boton-secundario boton-secundario--compacto">
+          <Link
+            href="/admin/capacitaciones"
+            className="boton-secundario boton-secundario--compacto"
+          >
             Capacitaciones
           </Link>
           <div className="admin-header__context">
@@ -30,7 +36,10 @@ export default async function PaginaOrganizacion() {
           </div>
         </div>
       </CabeceraAdminCgb>
-      <PanelOrganizacion areasIniciales={areasIniciales} errorInicial={errorInicial} />
+      <PanelOrganizacion
+        areasIniciales={areasIniciales}
+        errorInicial={errorInicial}
+      />
       <PieCgb />
     </div>
   );

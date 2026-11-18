@@ -7,15 +7,19 @@ const puestosIniciales = [
 
 export async function sembrarPuestosRutas(prisma) {
   for (const inicial of puestosIniciales) {
-    const rutaExistente = await prisma.rutaOnboarding.findFirst({ where: { nombre: inicial.ruta } });
+    const puesto = await prisma.puestoTrabajo.findFirst({ where: { nombre: inicial.puesto } });
+    const rutaExistente = await prisma.rutaOnboarding.findFirst({
+      where: puesto ? { puestoId: puesto.id } : { nombre: inicial.ruta },
+    });
+
     if (rutaExistente) {
       await prisma.rutaOnboarding.update({
         where: { id: rutaExistente.id },
-        data: { descripcion: inicial.descripcion, activa: true },
+        data: { nombre: inicial.ruta, descripcion: inicial.descripcion, estado: 'BORRADOR', puestoId: puesto?.id ?? null },
       });
-    } else {
+    } else if (puesto) {
       await prisma.rutaOnboarding.create({
-        data: { nombre: inicial.ruta, descripcion: inicial.descripcion, activa: true },
+        data: { nombre: inicial.ruta, descripcion: inicial.descripcion, estado: 'BORRADOR', puestoId: puesto.id },
       });
     }
   }

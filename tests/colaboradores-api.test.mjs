@@ -11,8 +11,8 @@ const especialistaRrhh = { id: '507f1f77bcf86cd799439016', email: 'rrhh@example.
 const sesionId = 'sesion-hu009-api';
 const tokenAdmin = await crearToken(admin, sesionId, secreto);
 const tokenRrhh = await crearToken(especialistaRrhh, sesionId, secreto);
-const ruta = { id: '507f1f77bcf86cd799439012', nombre: 'Inducción RH', activa: true, descripcion: 'Ruta de RR. HH.' };
-const puesto = { id: '507f1f77bcf86cd799439013', nombre: 'Analista de RR. HH.', rutaOnboardingId: ruta.id, rutaOnboarding: ruta };
+const ruta = { id: '507f1f77bcf86cd799439012', nombre: 'Inducción RH', titulo: 'Inducción RH', estado: 'ACTIVA', activa: true, descripcion: 'Ruta de RR. HH.' };
+const puesto = { id: '507f1f77bcf86cd799439013', nombre: 'Analista de RR. HH.', rutas: [ruta] };
 let cuentas;
 let colaboradores;
 let enviados;
