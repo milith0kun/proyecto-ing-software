@@ -38,6 +38,7 @@ Antes de mover una historia a **Por hacer**, Jira debe incluir:
 3. Criterios de aceptación observables, con condiciones y resultado esperado.
 4. Prioridad acordada, responsable o equipo, dependencias y alcance del sprint.
 5. Riesgos de privacidad, seguridad, accesibilidad e impacto AG-C01 cuando correspondan.
+6. La conversación con el PO registrada (qué se decidió sobre cada criterio dudoso), las dependencias con otras historias declaradas con un vínculo *Blocks* y los RNF aplicables listados (ver [`REQUISITOS_APLICADOS.md`](REQUISITOS_APLICADOS.md)).
 
 Si falta una decisión de usuario o producto, se mantiene en el backlog y se registra la pregunta pendiente; no se inventa una respuesta para iniciar desarrollo.
 

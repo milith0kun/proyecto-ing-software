@@ -10,7 +10,7 @@
 | Código y rutas de la aplicación | `src/`, `prisma/` | Commit de Git en `main` | Persona responsable de la historia; revisor técnico valida el diff |
 | Dependencias JavaScript | `package.json`, `package-lock.json` | Versión del manifiesto y lockfile; instalación con `npm ci` | Persona responsable de cambios de dependencias; aprobación técnica en PR |
 | Variables de entorno | `.env.example`, `.gitignore` y almacén seguro de cada entorno | Nombres/documentación versionados; valores reales fuera de Git | Responsable técnico del entorno |
-| Requisitos y alcance | `informe/informe.md`, `CGB_Academy_Requerimientos_Funcionales_y_No_Funcionales.pdf`, Jira CGB | Revisión del documento, clave de Jira y commit | Product Owner valida alcance; autor mantiene enlaces |
+| Requisitos y alcance | `informe/informe.md`, `docs/REQUISITOS_APLICADOS.md`, `CGB_Academy_Requerimientos_Funcionales_y_No_Funcionales.pdf`, Jira CGB | Revisión del documento, clave de Jira y commit | Product Owner valida alcance; autor mantiene enlaces |
 | Pruebas | `tests/`, scripts de `package.json` | Commit; comando y resultado en PR | Autor de la historia y persona revisora |
 | Proceso e instrucciones para agentes | `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `skills/`, `docs/` | Commit de Git | Equipo de desarrollo; cambios de política revisados por el equipo |
 | Entrega aprobada | Tag/release de GitHub, cuando exista una entrega | Tag ligado a un SHA, notas, checks y aprobación | Responsable de release y Product Owner |
