@@ -1,6 +1,6 @@
 # HU-014 — Realizar microtest formativo interactivo (CGB-66)
 
-Rama: `feature/CGB-66-realizar-microtest`, creada sobre `feature/CGB-56-completar-capacitacion` (PR #9) porque el microtest completa el avance que define HU-012. Integrar después de ese PR.
+Rama: `feature/CGB-66-realizar-microtest`, al día con `main` (18 de noviembre de 2026), que ya incluye HU-012 (CGB-56) y HU-013 (CGB-61). Esta HU no modifica `prisma/schema.prisma`: usa los modelos `Evaluacion` e `IntentoEvaluacion` de CGB-61, que ya tienen `onDelete: Restrict` e índice único `(usuario, evaluación, número)`.
 
 ## Historia
 
@@ -36,42 +36,43 @@ Capacitación temporal `[DEMO] Microtest HU-014` en MongoDB Atlas, con la cuenta
 | Capa | Módulo |
 |---|---|
 | Presentación | `MicrotestInterno.tsx`, `VisorCapacitacionInterna.tsx`, `SlideViewer.tsx`, página `colaborador/capacitaciones/[id]` |
-| Controlador | `src/app/api/evaluaciones/evaluar/route.ts` |
-| Lógica | `src/lib/servicio-evaluacion.ts` (orquestación; `obtenerMicrotest` alimenta la página sin exponer respuestas) y `src/lib/microtest.ts` (reglas puras) |
-| Datos | `src/lib/repositorio-evaluacion.ts`, modelos `Evaluacion` e `IntentoEvaluacion` en `prisma/schema.prisma` |
+| Controlador | `src/lib/controlador-evaluacion.ts` (sesión, cuerpo, errores → HTTP); la ruta `src/app/api/evaluaciones/evaluar/route.ts` solo lo exporta |
+| Lógica | `src/lib/servicio-evaluacion.ts` (sin HTTP: devuelve datos o lanza `ErrorMicrotest`/`ErrorProgreso`; `obtenerMicrotest` alimenta la página sin exponer respuestas) y `src/lib/microtest.ts` (reglas puras) |
+| Datos | `src/lib/repositorio-evaluacion.ts` (solo `Evaluacion` e `IntentoEvaluacion`) |
+
+**Dueño de los datos.** El avance (`ProgresoCapacitacion`) es de CGB-56. El microtest no lo escribe: `servicio-evaluacion` llama a `exigirListoParaMicrotest` y `completarPorMicrotest` de `servicio-progreso`, que usan su misma escritura optimista. En sentido contrario, `servicio-progreso` no conoce las evaluaciones: el controlador del avance pregunta `tieneMicrotest` y se lo indica con `exigeMicrotest`. Dos pruebas de `tests/microtest.test.mjs` vigilan estas fronteras.
+
+**Consistencia entre colecciones.** Crear el intento y completar el avance no van en una transacción (MongoDB sin conjunto de réplicas garantizado). Si el cierre se interrumpe, el siguiente envío ve el intento aprobado, completa el avance y responde 409 «Ya aprobaste»; el intento aprobado no se pierde.
 
 Las respuestas correctas no se envían al navegador antes de calificar (`preguntasParaResolver`).
 
 ## Trazabilidad
 
-| Tarea Jira | Commit | Ítems de configuración |
-|---|---|---|
-| T1 RED | `75f06b8` | `tests/microtest.test.mjs`, modelos en `prisma/schema.prisma` |
-| T2 GREEN (API) | `0e1b778` | `src/lib/microtest.ts`, `servicio-evaluacion.ts`, `repositorio-evaluacion.ts`, ruta `/api/evaluaciones/evaluar`, guardia en `servicio-progreso.ts` |
-| T2/T3 (interfaz) | `c994491` | `MicrotestInterno.tsx`, `SlideViewer.tsx`, `VisorCapacitacionInterna.tsx`, página del colaborador, `globals.css`, `tests/microtest-ui.test.mjs` |
-| T4 VALIDACIÓN | `2768733`, `f986f00` | este documento |
+La historia de la rama se compactará al integrar (Squash). El código y las pruebas de la HU están en:
 
-Los commits siguen `tipo(CGB-66): descripción`. Jira no se pudo consultar desde esta sesión: falta enlazar CGB-66 y sus subtareas con el PR.
+| Tarea Jira | Ítems de configuración |
+|---|---|
+| T1 RED | `tests/microtest.test.mjs` |
+| T2 GREEN (API) | `src/lib/microtest.ts`, `servicio-evaluacion.ts`, `controlador-evaluacion.ts`, `repositorio-evaluacion.ts`, ruta `/api/evaluaciones/evaluar`, `completarPorMicrotest` y `exigeMicrotest` en `servicio-progreso.ts` |
+| T2/T3 (interfaz) | `MicrotestInterno.tsx`, `SlideViewer.tsx`, `VisorCapacitacionInterna.tsx`, página del colaborador, `globals.css`, `tests/microtest-ui.test.mjs` |
+| T4 VALIDACIÓN | este documento y `docs/evidencias-hu014/` |
 
-## Conflictos previstos (probados con `git merge-tree`)
-
-`prisma/schema.prisma` choca con CGB-31, -36, -41, -46 y -51; CGB-51 además toca `SlideViewer.tsx` y la página del colaborador. Con CGB-61 no hay conflicto (rama vacía). Quien integre después trae `main` y resuelve a mano.
+Los commits siguen `tipo(CGB-66): descripción`. Jira: CGB-66 con vínculos *Blocks* con CGB-56 y CGB-61.
 
 ## Decisiones y límites
 
 - El endpoint sigue lo indicado en Jira: `POST /api/evaluaciones/evaluar`.
 - El temporizador es de la interfaz: al llegar a cero envía lo respondido. El servidor no valida la duración.
-- Quién crea las evaluaciones es HU-013 (CGB-61). Aquí solo se define el modelo; puede chocar en `prisma/schema.prisma` con esa rama y con las demás, igual que HU-012.
+- Quién crea las evaluaciones y define sus modelos es HU-013 (CGB-61, ya en `main`). Aquí solo se resuelven.
+- Pendiente de decisión del Product Owner: hoy el resultado muestra la respuesta correcta aun con intentos disponibles. Propuesta: mostrarla solo al aprobar o al agotar los intentos, y mientras tanto solo la retroalimentación. También decidir si el temporizador solo de interfaz es suficiente o si se registra el inicio del intento.
 - La interfaz de revisión «revisar el material» vuelve al primer slide.
 
-## Verificación (17 de noviembre de 2026)
+## Verificación (18 de noviembre de 2026)
 
-- `npm test`: 112 pruebas pasan (20 nuevas de HU-014); tras traer `main` el 18 de noviembre de 2026, 142 pasan y 0 fallan (con `main` hasta `a5918ea`).
-- `npx tsc --noEmit`, `npx eslint src tests` y `next build`: sin errores.
+- Con `main` hasta `3c6200c`: `npm test` 156 pasan y 0 fallan (incluye 22 de HU-014 y 2 de arquitectura), `npx tsc --noEmit`, `npx eslint src tests` y `next build` sin errores.
 
 ## Pendiente
 
-- `prisma db push` aplicado en MongoDB Atlas (`cgb_academy`) el 17 de noviembre de 2026 por el autor de la rama: colecciones `evaluaciones` e `intentos_evaluacion` e índices únicos. No se tocaron colecciones existentes. Todavía no se probó el flujo completo contra Atlas.
-- Prueba manual en navegador hecha (ver evidencia); no hay E2E automatizado (T4 de Jira). La evaluación de la demo se creó con `prisma/demo-microtest.mjs` y se borra al terminar.
-- Revisión por pares, enlace con CGB-66 en Jira y Pull Request.
-- DoD: la del equipo (PR #12).
+- Los modelos de la HU los creó CGB-61; su `prisma db push` queda registrado en el PR #17. Esta HU no cambia el esquema. Todavía no se probó el flujo completo contra Atlas tras el refactor; la prueba manual en navegador anterior está en `docs/evidencias-hu014/`.
+- No hay E2E automatizado (T4 de Jira).
+- Revisión por pares y aprobación del PR #13; DoD del equipo (PR #12, ya en `main`).

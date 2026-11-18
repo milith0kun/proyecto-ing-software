@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { exigirSesionInterna } from '@/lib/permisos';
 import { ErrorProgreso } from '@/lib/progreso-capacitacion';
 import * as servicio from '@/lib/servicio-progreso';
+import { tieneMicrotest } from '@/lib/servicio-evaluacion';
 
 const SIN_CACHE = { 'Cache-Control': 'no-store' };
 type Contexto = { params: Promise<{ id: string }> };
@@ -34,5 +35,7 @@ export const guardarProgreso = (solicitud: NextRequest, contexto: Contexto) =>
     return servicio.guardarProgreso(usuarioId, id, cuerpo?.slide);
   });
 
+// Con microtest (HU-014) la capacitación se completa al aprobarlo, no con «Finalizar».
 export const finalizarProgreso = (solicitud: NextRequest, contexto: Contexto) =>
-  ejecutar(solicitud, contexto, servicio.finalizarProgreso);
+  ejecutar(solicitud, contexto, async (usuarioId, id) =>
+    servicio.finalizarProgreso(usuarioId, id, { exigeMicrotest: await tieneMicrotest(id) }));

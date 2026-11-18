@@ -11,6 +11,8 @@ Use this skill when work for CGB Academy involves users, stakeholders, requireme
 
 Start with the repository's current instructions and relevant evidence:
 
+- Follow `docs/FLUJO_DE_TRABAJO.md` for any repository changes, Git work, PR review, and completion; use `docs/definition-of-done.md` to close work.
+- Follow `skills/cgb-academy-development-workflow/SKILL.md` when editing code, documentation, configuration, or publishing changes.
 - `docs/ANALISIS_FALTANTES_ACTIVIDAD_INGENIERIA_REQUISITOS.md` is a dated assessment. Verify live Jira and current files before treating its status as current.
 - `informe/informe.md` and `CGB_Academy_Requerimientos_Funcionales_y_No_Funcionales.pdf` describe the product scope, stories, and quality requirements.
 - `Diapos/3.Gestion_de_configuracion.md` describes traceability, baselines, review, and Definition of Done.

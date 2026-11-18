@@ -51,6 +51,15 @@ Capacitación temporal `[DEMO] Avance HU-012` (3 slides, sin microtest) en Mongo
 | CA3 Finalización | ![Capacitación completada](evidencias-hu012/06-capacitacion-completada.png) |
 | CA4 Transparencia | Todas las capturas muestran «Tu posición se guarda para que puedas reanudar esta capacitación más tarde.» |
 
+## RNF medidos (18 de noviembre de 2026)
+
+Build de producción (`next start`) en localhost, datos temporales en Atlas (ya eliminados), Playwright con Chromium, 5 cargas por tamaño con sesión iniciada.
+
+| RNF | Resultado |
+|---|---|
+| RNF-001 Responsive | Sin desplazamiento horizontal en 375, 768 y 1280 px (`scrollWidth` = `innerWidth`). El visor se ve bien en móvil ([captura](evidencias-hu012/07-movil-375px.png)). **Defecto fuera de esta HU:** en 375 px la cabecera compartida superpone «CGB Academy» con el botón «Catálogo». Hay 6 o 7 enlaces y botones de menos de 44 px de alto por pantalla. |
+| RNF-004 Contenido ligero (< 1,5 s) | Respuesta del HTML entre 0,87 y 1,31 s y evento `load` entre 0,87 y 1,33 s en las 15 cargas. **Límite:** se midió desde localhost contra Atlas, no en el VPS de producción ni con una red móvil. |
+
 ## Cambio en base compartida (`prisma db push`)
 
 - **Entorno:** MongoDB Atlas, base `cgb_academy` (la misma de `DATABASE_URL`).

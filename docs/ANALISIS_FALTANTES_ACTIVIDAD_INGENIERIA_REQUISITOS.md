@@ -6,9 +6,19 @@
 
 **Proceso reutilizable para asistentes:** [`skills/cgb-academy-requirements/SKILL.md`](../skills/cgb-academy-requirements/SKILL.md).
 
-## Estado general
+## Actualización de evidencia — 21 de octubre de 2026
 
-El proyecto ya tiene una especificación amplia, historias de usuario con criterios BDD y un backlog en Jira. La actividad aún no está completa porque no encontramos evidencia de entrevistas u otra elicitación realizada, persona validada, matriz poder–interés, tabla de cuatro requisitos revisados ni un informe final que enlace las dos historias refinadas. Las historias existentes tienen criterios y tareas técnicas, pero no indican qué necesidad real de stakeholder sustenta el cambio.
+El equipo aclara que la captura de requerimientos y los conversatorios ya se realizaron con administración de ventas, TI y operaciones académicas; también se conversó con otros participantes. Las cuatro fotos compartidas se incorporaron al proyecto LaTeX como evidencia visual contextual, sin asignar cada imagen a un rol individual. Se revisaron la especificación funcional/no funcional y un manual comercial local de seguimiento por WhatsApp. El análisis por rol, sus fuentes y sus límites están en [`informe/registro_conversatorios.md`](../informe/registro_conversatorios.md). El manual comercial no se incorporó al repositorio.
+
+El informe breve ahora distingue los dos recorridos del producto: formación privada de empleados y orientación pública para estudiantes/docentes sobre plataformas y casos de uso. Incluye las cuatro fotos de sesiones sin atribuirles roles. Ventas figura como área entrevistada y stakeholder, no como una función de seguimiento comercial del producto.
+
+Jira se reconsultó el 21/10. Se actualizaron las descripciones de CGB-26 (guías públicas), CGB-56 (avance interno) y su dependencia CGB-51 para separar las audiencias y enlazar RF-005/RF-006 y RF-011/RF-012. CGB-51 y CGB-56 siguen en Sprint 2, Tareas por hacer, Highest; CGB-26 está en Revisión, Medium, aunque HU-006 indica prioridad Alta en la especificación. No se cambiaron estados, sprints, responsables ni prioridades; el PO debe resolver esa discrepancia. Se retiró `evidence-pending` de CGB-51/CGB-56 porque el equipo confirmó la captura y los conversatorios.
+
+## Estado histórico al corte del 19/10/2026 (antes de la actualización del 21/10)
+
+La comparación y las notas históricas que siguen reflejan el estado del repositorio antes de que el equipo confirmara la captura y los conversatorios. Para el estado vigente, prevalece la actualización del 21/10/2026 al inicio de este documento. No debe interpretarse la mención histórica de entrevistas pendientes como una tarea actual.
+
+El repositorio ya contiene un informe provisional de dos páginas, matriz preliminar, persona hipotética, cinco preguntas, observación propuesta y cuatro requisitos revisados. CGB-51 y CGB-56 fueron refinadas en Jira y enlazadas textualmente a necesidades N1/N2, con criterios verificables, prioridad, tareas técnicas y criterios AG-C01. La actividad sigue pendiente de validación con usuarios: no se han realizado entrevistas ni observaciones, por lo que el informe identifica los hallazgos como hipótesis pendientes.
 
 El repositorio incluye estas bases:
 
@@ -21,14 +31,14 @@ El repositorio incluye estas bases:
 
 | Entregable | Estado encontrado | Qué falta |
 |---|---|---|
-| Al menos cuatro stakeholders | **Parcial.** El informe enumera seis: colaborador, administrador, público, directorio, desarrollo y docente. | Separar poder e interés en la matriz, asignar prioridad y justificarla. Validar las estimaciones con stakeholders; hoy son información documental. |
-| Persona arquetipo | **No encontrada** en el informe ni en la documentación revisada. | Entrevistar a un usuario prioritario y completar la plantilla con metas, contexto, frustraciones y una cita real anonimizada. Hasta entonces, cualquier persona será hipótesis. |
-| Cinco preguntas y técnica adicional | **No documentadas como elicitación realizada.** El equipo indicó que puede entrevistar usuarios, pero todavía no hay respuestas registradas. | Ejecutar una entrevista y una observación, encuesta, taller o análisis documental; registrar fecha, rol, hallazgos y evidencia sin datos personales innecesarios. |
-| Cuatro requisitos revisados | **Parcial.** Existen RF y RNF, pero no la matriz de requisito inicial, problema, reformulación y verificación; no se encontraron los cuatro tipos revisados como pide la actividad. | Revisar al menos uno funcional, uno no funcional, una regla de negocio y una restricción. Comprobar ambigüedad, consistencia, factibilidad y prueba. |
-| Validación de dos historias | **Parcial.** Jira ya tiene historias con criterios BDD y tareas técnicas. | Revisar criterios por claridad, consistencia y verificabilidad; enlazar cada cambio con una necesidad evidenciada o marcarla como hipótesis. |
-| Dos historias refinadas en Jira | **Parcial.** CGB-51 y CGB-56 tienen prioridad Medium, cuatro criterios, subtareas TDD y DoD; ambas pertenecen al Sprint 2 futuro. | Actualizar tras elicitar: justificar prioridad, ajustar criterios, incluir la necesidad del stakeholder y evidencia/hipótesis, y comprobar el impacto AG-C01 cuando aplique. No se modificó Jira durante esta revisión. |
-| Impacto y compromisos AG-C01 | **Parcial o ausente en las historias examinadas.** El informe menciona beneficios organizacionales, pero no están trazados a las historias ni expresados como criterios verificables. | Vincular un impacto social/económico real a la historia pertinente y acordar criterios comprobables de privacidad, acceso, equidad u otro compromiso aplicable. |
-| Informe final de máximo dos páginas | **No encontrado** para esta actividad. | Preparar el informe breve con enlace al backlog actualizado y la reflexión final, después de reunir evidencia. Este análisis es más extenso y no reemplaza ese producto. |
+| Al menos cuatro stakeholders | **Preparada de forma preliminar.** La matriz incluye cuatro grupos y separa poder, interés y prioridad a partir de fuentes documentales. | Confirmar expectativas y priorización con el equipo/usuarios. |
+| Persona arquetipo | **Hipótesis documentada**, sin nombre ni cita inventada. | Completar metas, frustraciones y contexto con evidencia de entrevista. |
+| Cinco preguntas y técnica adicional | **Preparadas.** El informe incluye cinco preguntas y observación guiada. | Realizar la entrevista y observación; guardar notas anonimizadas y fecha. |
+| Cuatro requisitos revisados | **Incluidos** en el informe: funcional, no funcional, regla de negocio propuesta y restricción de alcance. | Validar la regla con el PO y confirmar el umbral de rendimiento. |
+| Validación de dos historias | **Criterios verificables propuestos** y vinculados a N1/N2; evidencia de necesidad aún hipotética. | Contrastar criterios con el colaborador entrevistado y el PO. |
+| Dos historias refinadas en Jira | **Actualizadas el 19/10/2026:** CGB-51 y CGB-56 tienen prioridad Highest (Crítica en la especificación), criterios, subtareas técnicas y etiqueta `evidence-pending`. Se conservaron estados, sprint y responsables. | Confirmar prioridad con el PO tras la entrevista y actualizar el estado de evidencia cuando se realice la elicitación. |
+| Impacto y compromisos AG-C01 | **Añadidos** como impacto social/económico esperado y criterios de privacidad/transparencia; los beneficios son hipótesis. | Validar el impacto con usuarios; no afirmar reducción de costos sin medición. |
+| Informe de máximo dos páginas | **Preparado** en Markdown, LaTeX y PDF de dos páginas con enlaces a CGB-51 y CGB-56. | Completar la validación con usuarios antes de presentarlo como evidencia confirmada. |
 
 ## Stakeholders que ya figuran en el informe
 
@@ -73,9 +83,9 @@ Los siguientes ejemplos parten de requisitos ya documentados. Deben confirmarse 
 Se revisó el proyecto **CGB — Cgb Academy**, con 77 issues, y su `CGB board` (id 4). También existe otro proyecto llamado **KAN — cgb-academy**, con dos issues; conviene confirmar con el equipo si es una prueba antigua o un segundo backlog.
 
 - El Sprint 1 figura `active`, aunque sus fechas registradas fueron del 1 al 15 de octubre de 2026. Al 19 de octubre, Jira muestra 8 issues: 4 finalizadas, 2 en revisión y 2 tareas sin asignar. CGB-16 (HU-004) y CGB-26 (HU-006) aparecen vencidas y en revisión; CGB-76 y CGB-77 están sin responsable.
-- CGB-51 (HU-011) y CGB-56 (HU-012) están en el Sprint 2 futuro, ambas con prioridad Medium. Sus descripciones ya tienen criterios BDD, tareas TDD y DoD. **CGB-51 CA-04 propone una insignia y descarga de constancia**, mientras el documento de requisitos excluye los certificados del alcance inicial. Este conflicto debe resolverse con el Product Owner antes de tratarlo como requisito aceptado.
-- En las historias examinadas, Jira usa prioridad Medium aunque la especificación del proyecto asigna prioridades diferenciadas a varias historias. Revisar que la prioridad de Jira coincida con la priorización acordada.
-- Hay inconsistencia en las referencias de ramas: README e informe mencionan `main`, `edmil-saire`, `desarrollo`/`develop` de formas distintas. En el remoto, el HEAD apunta a `edmil-saire`; `main` y `desarrollo` están actualmente en el mismo commit. El equipo debe confirmar su política de integración. Para esta publicación el usuario pidió `main`.
+- CGB-51 (HU-011) y CGB-56 (HU-012) siguen en Sprint 2 y en estado Por hacer. Se actualizaron con prioridad Highest, necesidades N1/N2, criterios de aceptación, tareas técnicas existentes y compromisos AG-C01. Se retiró de CGB-51 la constancia/insignia, fuera del MVP, y se reemplazó la referencia de integración `desarrollo` por `main`. Las dos historias llevan `evidence-pending` hasta realizar entrevistas/observación.
+- En la revisión inicial, CGB-51 y CGB-56 tenían prioridad Medium pese a que la especificación asigna Crítica a HU-011 y HU-012. Se actualizaron a Highest; la prioridad se debe reconfirmar con el PO después de entrevistar al usuario.
+- En la revisión del 19 de octubre se encontró que el README usaba `edmil-saire` y `desarrollo` como ramas permanentes, mientras el usuario pidió publicar en `main`; GitHub tenía entonces `edmil-saire` como rama predeterminada. El proceso actualizado y el estado de ramas se registran en [`docs/FLUJO_DE_TRABAJO.md`](FLUJO_DE_TRABAJO.md) y [`docs/ESTADO_RAMAS.md`](ESTADO_RAMAS.md). Esta observación es histórica; consultar las referencias actuales antes de afirmar el estado remoto.
 
 Enlaces de Jira revisados:
 
@@ -84,14 +94,12 @@ Enlaces de Jira revisados:
 - [CGB-16 — HU-004: previsualizar y publicar](https://cgb-academy.atlassian.net/browse/CGB-16)
 - [CGB-26 — HU-006: consultar capacitación pública](https://cgb-academy.atlassian.net/browse/CGB-26)
 
-## Orden recomendado para completar la actividad
+## Pendientes al corte del 19/10/2026
 
-1. Realizar la entrevista al colaborador y la observación; guardar notas anonimizadas y distinguir hechos de hipótesis.
-2. Validar la matriz poder–interés y completar el arquetipo persona con evidencia real.
-3. Acordar y probar la tabla de cuatro requisitos; resolver la contradicción del alcance de certificados en CGB-51.
-4. Elegir dos historias —CGB-51 y CGB-56 son candidatas— y refinar prioridad, criterios, tareas técnicas y traza de necesidad después de la entrevista.
-5. Verificar el impacto AG-C01 aplicable y formular compromisos como criterios observables.
-6. Actualizar las historias de Jira con autorización de edición y leerlas de nuevo para verificar los cambios.
-7. Redactar el informe final de máximo dos páginas con enlace a Jira y responder: qué necesidad se pasó por alto y cómo cambia el próximo sprint.
+1. Realizar la entrevista al colaborador y la observación; guardar fecha y notas anonimizadas.
+2. Reemplazar hipótesis por hallazgos confirmados; ajustar persona, matriz, prioridades y criterios si hace falta.
+3. Confirmar con el PO la regla de visibilidad y el umbral RNF-004.
+4. Actualizar CGB-51/CGB-56 con resultados reales y quitar `evidence-pending` solo cuando exista evidencia.
+5. Adjuntar evidencia de las entrevistas y pruebas futuras; mantener la reflexión sobre el siguiente sprint.
 
-**Estado de esta revisión:** Jira se consultó en modo lectura; no se editaron historias ni sprints. No se realizaron entrevistas ni pruebas de aceptación nuevas. La actividad y el informe final siguen pendientes de evidencia de usuarios y aprobación del equipo.
+**Estado al corte del 19/10/2026:** CGB-51/CGB-56 ya fueron editadas y verificadas de vuelta en Jira; no se cambiaron estado, sprint ni responsables. El informe PDF tenía dos páginas. A esa fecha no se habían realizado entrevistas ni pruebas de aceptación; la actualización del 21/10 se registra al inicio de este documento.

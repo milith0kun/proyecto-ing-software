@@ -9,7 +9,6 @@ import {
   type CambioProgresoDatos, type CapacitacionInterna as Capacitacion, type ClaveProgreso, type NuevoProgreso,
   type RegistroProgreso as Progreso,
 } from '@/lib/repositorio-progreso';
-import { buscarEvaluacionPorCapacitacion } from '@/lib/repositorio-evaluacion';
 
 const ID_VALIDO = /^[a-f\d]{24}$/i;
 
@@ -98,17 +97,44 @@ export async function guardarProgreso(usuarioId: string, id: string, slideConfir
   return presentar(guardado, total);
 }
 
-export async function finalizarProgreso(usuarioId: string, id: string) {
+// `exigeMicrotest` lo decide el controlador (HU-014): este servicio no conoce las evaluaciones.
+export async function finalizarProgreso(usuarioId: string, id: string, opciones: { exigeMicrotest?: boolean } = {}) {
   const preparado = await preparar(usuarioId, id);
   const { capacitacion, total } = preparado;
   await exigirHabilitada(usuarioId, capacitacion.prerrequisitos);
-  // Con microtest (HU-014), la capacitación se completa solo al aprobarlo.
-  if (preparado.progreso?.estado !== 'COMPLETADA' && await buscarEvaluacionPorCapacitacion(id)) {
+  // Con microtest, la capacitación se completa solo al aprobarlo (ver completarPorMicrotest).
+  if (opciones.exigeMicrotest && preparado.progreso?.estado !== 'COMPLETADA') {
     throw new ErrorProgreso('Aprueba el microtest para completar esta capacitación.', 409);
   }
   const guardado = await escribirProgreso(preparado, actual => {
     if (actual?.estado === 'COMPLETADA') return null;
     if (!puedeFinalizar(actual, total)) throw new ErrorProgreso('Confirma todos los slides y finaliza desde el último.', 409);
+    const completadaEn = new Date();
+    return {
+      create: { usuarioId, capacitacionId: id, ultimoSlide: total, slidesConfirmados: actual?.slidesConfirmados ?? [], estado: 'COMPLETADA', completadaEn },
+      update: { estado: 'COMPLETADA', completadaEn },
+    };
+  });
+  return presentar(guardado, total);
+}
+
+// Para el microtest (HU-014): comprueba que el colaborador puede resolverlo (capacitación interna publicada,
+// prerrequisitos cumplidos y todos los slides confirmados). Devuelve si el avance ya está completado.
+export async function exigirListoParaMicrotest(usuarioId: string, id: string) {
+  const { capacitacion, progreso, total } = await preparar(usuarioId, id);
+  await exigirHabilitada(usuarioId, capacitacion.prerrequisitos);
+  if (progreso?.estado === 'COMPLETADA') return { completada: true };
+  if (!puedeFinalizar(progreso, total)) throw new ErrorProgreso('Concluye todas las diapositivas antes de resolver el microtest.', 409);
+  return { completada: false };
+}
+
+// Para el microtest (HU-014): cierra el avance al aprobar. Idempotente; usa la misma escritura optimista que Finalizar.
+export async function completarPorMicrotest(usuarioId: string, id: string) {
+  const preparado = await preparar(usuarioId, id);
+  const { total } = preparado;
+  const guardado = await escribirProgreso(preparado, actual => {
+    if (actual?.estado === 'COMPLETADA') return null;
+    if (!puedeFinalizar(actual, total)) throw new ErrorProgreso('Concluye todas las diapositivas antes de resolver el microtest.', 409);
     const completadaEn = new Date();
     return {
       create: { usuarioId, capacitacionId: id, ultimoSlide: total, slidesConfirmados: actual?.slidesConfirmados ?? [], estado: 'COMPLETADA', completadaEn },

@@ -1,3 +1,3 @@
-import { evaluarMicrotest } from '@/lib/servicio-evaluacion';
+import { evaluarMicrotest } from '@/lib/controlador-evaluacion';
 
 export const POST = evaluarMicrotest;

@@ -40,7 +40,7 @@ test.beforeEach(() => {
   };
   prisma.evaluacion.findUnique = async ({ where }) => where.capacitacionId === capacitacionId ? structuredClone(evaluacion) : null;
   prisma.capacitacion.findFirst = async ({ where }) =>
-    where.id === capacitacionId && where.estado === 'PUBLICADA' && where.ambito === 'INTERNO' ? { id: capacitacionId, slides: [{ id: 's1' }, { id: 's2' }, { id: 's3' }] } : null;
+    where.id === capacitacionId && where.estado === 'PUBLICADA' && where.ambito === 'INTERNO' ? { id: capacitacionId, prerrequisitos: [], slides: [{ id: 's1' }, { id: 's2' }, { id: 's3' }] } : null;
   prisma.progresoCapacitacion.findUnique = async ({ where }) => {
     const { usuarioId, capacitacionId: cap } = where.usuarioId_capacitacionId;
     return structuredClone(progresos.get(`${usuarioId}:${cap}`) ?? null);
@@ -169,4 +169,18 @@ test('HU-014 Privacidad: un fallo del repositorio devuelve un error genérico', 
   const respuesta = await enviar(correctas);
   assert.equal(respuesta.status, 503);
   assert.ok(!(await respuesta.text()).includes('secreto'));
+});
+
+// Arquitectura (DIS / ARQ): cada capa solo conoce a la inferior y cada módulo escribe en sus propios datos.
+import { readFileSync } from 'node:fs';
+const fuente = ruta => readFileSync(new URL(`../src/lib/${ruta}`, import.meta.url), 'utf8');
+
+test('HU-014 Arquitectura: el servicio de evaluación no importa HTTP ni Prisma', () => {
+  const servicio = fuente('servicio-evaluacion.ts');
+  assert.doesNotMatch(servicio, /next\/server|NextRequest|NextResponse|@\/lib\/prisma|repositorio-progreso/);
+});
+
+test('HU-014 Arquitectura: el repositorio de evaluación no escribe en el avance de CGB-56', () => {
+  assert.doesNotMatch(fuente('repositorio-evaluacion.ts'), /progresoCapacitacion/);
+  assert.doesNotMatch(fuente('servicio-progreso.ts'), /repositorio-evaluacion|servicio-evaluacion/);
 });
