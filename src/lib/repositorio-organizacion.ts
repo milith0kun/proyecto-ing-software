@@ -1,7 +1,6 @@
 // Capa de acceso a datos de la estructura organizacional (HU-007 / CGB-31).
 // Único módulo del flujo de áreas y puestos que conoce Prisma/MongoDB.
 import { prisma } from '@/lib/prisma';
-import { armarEstructura, type AreaEstructura } from '@/lib/organizacion';
 
 export interface AreaRegistro {
   id: string;
@@ -87,7 +86,9 @@ export function listarPuestosRepositorio(areaId?: string): Promise<PuestoRegistr
   });
 }
 
-export function listarPuestosBasicos(areaId?: string): Promise<Array<{ id: string; nombre: string; areaId: string }>> {
+export function listarPuestosBasicos(
+  areaId?: string
+): Promise<Array<{ id: string; nombre: string; areaId: string }>> {
   return prisma.puestoTrabajo.findMany({
     where: areaId ? { areaId } : {},
     orderBy: { nombre: 'asc' },
@@ -101,20 +102,4 @@ export function guardarPuesto(datos: {
   areaId: string;
 }): Promise<PuestoRegistro> {
   return prisma.puestoTrabajo.create({ data: datos });
-}
-
-/**
- * Obtiene la jerarquía completa de áreas y puestos para administración.
- * El conteo de colaboradores por puesto queda en 0 hasta integrar CGB-41
- * (relación Colaborador -> PuestoTrabajo.id).
- */
-export async function obtenerEstructuraOrganizacional(options?: {
-  soloActivas?: boolean;
-}): Promise<AreaEstructura[]> {
-  const [areas, puestos] = await Promise.all([
-    listarAreasRepositorio(options),
-    listarPuestosBasicos(),
-  ]);
-
-  return armarEstructura(areas, puestos, {});
 }
