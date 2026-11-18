@@ -75,12 +75,14 @@
 
   \textbf{Equipo del Proyecto:}\\[0.2cm]
   \begin{tabular}{ll}
-    \textbf{Saire Bustamante, Edmil Jampier} & \textit{Product Owner} \\
-    \textbf{Barazorda Cuellar, Hector} & \textit{Scrum Master} \\
+    \textbf{Saire Bustamante, Edmil Jampier} & \textit{Product Owner y Scrum Master} \\
+    \textbf{Barazorda Cuellar, Hector} & \textit{Desarrollador Full-Stack} \\
     \textbf{Carpio Hermoza, Alex} & \textit{Desarrollador Full-Stack} \\
     \textbf{Quispe Mamani, Domingo de Guzman} & \textit{Desarrollador Full-Stack} \\
     \textbf{Ticona Jancco, Ronaldo} & \textit{Desarrollador Full-Stack} \\
-  \end{tabular}
+  \end{tabular}\\[0.4cm]
+  \textbf{Repositorio de código:}\\[0.1cm]
+  \url{https://github.com/milith0kun/proyecto-ing-software}
   \vfill
   {\large Cusco, Perú\par}
   {\large 2026\par}
@@ -117,8 +119,8 @@ Diseñar, implementar y validar el \textbf{Centro de Capacitación e Inducción 
 \subsection{Funcionalidades Incluidas (In-Scope -- MVP)}
 \begin{itemize}[leftmargin=*]
     \item \textbf{Sprint 1 (Motor y Acceso Público):} Autenticación basada en roles (Admin/Colaborador), creador de capacitaciones, editor interactivo de slides (texto enriquecido, imágenes locales/VPS, listas de pasos y botones de acción), previsualización en tiempo real, gestión de estados (Borrador/Publicada) y catálogo público libre sin registro.
-    \item \textbf{Sprint 2 (Onboarding Interno):} Mantenimiento de áreas y puestos con integridad referencial, construcción de rutas de onboarding, registro de colaboradores, activación mediante token seguro de uso único y módulo privado ``Mi Onboarding''.
-    \item \textbf{Sprint 3 (Microtests y Supervisión):} Creación de evaluaciones de opción múltiple con feedback pedagógico, resolución interactiva y panel administrativo para supervisar el avance individual y por área.
+    \item \textbf{Sprint 2 (Onboarding Interno):} Mantenimiento de áreas y puestos con integridad referencial, construcción de rutas de onboarding, registro de colaboradores, activación mediante token seguro de uso único, módulo privado ``Mi Onboarding'', persistencia del avance de la capacitación y, adelantados desde el Sprint 3 según Jira, el constructor y la resolución de microtests formativos (HU-013 y HU-014).
+    \item \textbf{Sprint 3 (Microtests y Supervisión):} Panel administrativo para supervisar el avance individual y por área (HU-015). La creación y la resolución de microtests (HU-013 y HU-014) se adelantaron al Sprint 2 según Jira.
 \end{itemize}
 
 \subsection{Exclusiones Expresas del Alcance (Out-of-Scope)}
@@ -169,9 +171,9 @@ La aplicación opera en la nube con acceso multiplataforma responsive para colab
 \hline
 \textbf{RF-012} & Persistencia de Avance y Completitud & HU-012 & 2 & Registro automático de diapositivas visualizadas y actualización del estado de completitud de la ruta formativa del usuario. \\
 \hline
-\textbf{RF-013} & Constructor de Microtests Formativos & HU-013 & 3 & Creación y edición de cuestionarios de opción múltiple vinculados a capacitaciones con retroalimentación explicativa por opción. \\
+\textbf{RF-013} & Constructor de Microtests Formativos & HU-013 & 2 & Creación y edición de cuestionarios de opción múltiple vinculados a capacitaciones con retroalimentación explicativa por opción. \\
 \hline
-\textbf{RF-014} & Ejecución de Microtest con Feedback & HU-014 & 3 & Resolución interactiva del cuestionario por parte del colaborador con retroalimentación instantánea orientada al aprendizaje formativo. \\
+\textbf{RF-014} & Ejecución de Microtest con Feedback & HU-014 & 2 & Resolución interactiva del cuestionario por parte del colaborador con retroalimentación instantánea orientada al aprendizaje formativo. \\
 \hline
 \textbf{RF-015} & Supervisión de Avance Administrativo & HU-015 & 3 & Panel de monitoreo para supervisores con métricas de avance global por área, porcentaje de rutas concluidas y reportes de personal. \\
 \hline
@@ -241,6 +243,121 @@ La aplicación opera en la nube con acceso multiplataforma responsive para colab
 \caption{Pila Tecnológica Seleccionada y Fundamentación Arquitectónica.}
 \end{table}
 
+\subsection{Conceptos de la asignatura aplicados al proyecto}
+Los cuatro documentos de la asignatura (requisitos, gestión de configuración, diseño de software y arquitectura) se aplican al proyecto y se usan como lista de revisión en cada Pull Request (docs/GUIA\_DE\_REVISION.md). Las tablas siguientes dicen qué enseña cada documento, cómo se aplica y en qué estado está al 18/11/2026.
+
+\subsubsection*{Requisitos}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{1.6cm}|}
+\hline
+\rowcolor{gray!15}
+\textbf{Qué enseña el curso} & \textbf{Cómo lo aplicamos} & \textbf{Estado} \\
+\hline
+\textbf{Historia = tarjeta + conversación + confirmación} & Cada historia en Jira dice «Como… quiero… para…»; las decisiones del Product Owner quedan en la tarjeta y los criterios se escriben en formato BDD, cada uno con su prueba. & Aplicado \\
+\hline
+\textbf{INVEST y dependencias} & Historias pequeñas y estimables en Planning Poker; las dependencias se marcan con vínculos «Blocks» en Jira (por ejemplo, HU-009 antes de HU-010). & Aplicado \\
+\hline
+\textbf{Requisitos no funcionales en la DoD} & RNF-001 a RNF-010 (ISO 25010); cada Pull Request declara cuáles aplica. La matriz RNF por historia está propuesta en docs/REQUISITOS\_APLICADOS.md. & En parte \\
+\hline
+\textbf{Conflictos entre requisitos} & Se elevan al Product Owner en lugar de inventarlos: DNI del colaborador, caducidad del token (48 h), política de contraseña y quién puede incorporar personas. & En parte \\
+\hline
+\textbf{MVP y alcance mínimo (regla 80/20)} & Quedan fuera pagos, aulas en vivo, diplomas, video pesado y multi-idioma; el revisor rechaza funciones que ningún criterio pide. & Aplicado \\
+\hline
+\textbf{Casos de uso con flujos alternativos} & Caso «Incorporar colaborador» (HU-009 y HU-010) con flujo normal y extensiones de error; está propuesto, falta validarlo con el PO. & En parte \\
+\hline
+\textbf{Cobertura de pruebas} & 134 pruebas automáticas pasan, pero todavía no se mide el porcentaje de cobertura ni hay un umbral acordado. & Pendiente \\
+\hline
+\end{tabularx}
+\caption{Requisitos. Fuente del curso: 4. Requisitos.pdf. En el repositorio: docs/REQUISITOS\_APLICADOS.md y los criterios de cada historia en Jira.}
+\end{table}
+
+\subsubsection*{Gestión de configuración}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{1.6cm}|}
+\hline
+\rowcolor{gray!15}
+\textbf{Qué enseña el curso} & \textbf{Cómo lo aplicamos} & \textbf{Estado} \\
+\hline
+\textbf{Ramas cortas y control de versiones} & GitHub Flow: main protegido, una rama por historia con el nombre «tipo/CGB-ID-resumen», squash al fusionar y rama eliminada después. & Aplicado \\
+\hline
+\textbf{Commits con intención} & Conventional Commits con la clave de Jira; los commits de CGB-36 muestran el ciclo TDD (prueba, implementación, refactor, validación). & Aplicado \\
+\hline
+\textbf{Pull Request y revisión por pares} & Plantilla obligatoria con necesidad, verificación real, RNF y uso de IA; aprobación de otra persona después del último push. & Aplicado \\
+\hline
+\textbf{Integración continua} & GitHub Actions con tres trabajos: Build, Lint y pruebas, y Seguridad (npm audit). Corre en cada PR desde el 18/11/2026. & Aplicado \\
+\hline
+\textbf{Tablero, WIP y Definition of Done} & Jira con cuatro columnas, límites de WIP, bloqueos visibles y una DoD de seis puntos que se comprueba antes de pasar a Hecho. & Aplicado \\
+\hline
+\textbf{Trazabilidad y reconstrucción} & Necesidad, tarjeta, rama, PR, commit y prueba enlazados; otra persona puede reproducir todo con «npm ci» (docs/configuracion.md). & Aplicado \\
+\hline
+\textbf{Línea base y versiones etiquetadas} & Aún no se declara una línea base ni se crean tags de entrega. & Pendiente \\
+\hline
+\end{tabularx}
+\caption{Gestión de configuración. Fuente del curso: 3. Gestión de configuración. En el repositorio: docs/FLUJO\_DE\_TRABAJO.md, docs/definition-of-done.md, docs/configuracion.md y .github/workflows/ci.yml.}
+\end{table}
+
+\subsubsection*{Diseño de software}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{1.6cm}|}
+\hline
+\rowcolor{gray!15}
+\textbf{Qué enseña el curso} & \textbf{Cómo lo aplicamos} & \textbf{Estado} \\
+\hline
+\textbf{Separación de responsabilidades y SRP} & Reglas, casos de uso, persistencia y HTTP viven en archivos distintos; en src/lib ningún servicio ni repositorio importa NextResponse. & Aplicado \\
+\hline
+\textbf{Alta cohesión y modularidad} & Un módulo por tema: organizacion.ts, progreso-capacitacion.ts, rutas-onboarding.ts, configuracion-microtest.ts. & Aplicado \\
+\hline
+\textbf{Inversión de dependencias (DIP)} & El dominio no importa el framework ni Prisma; el acceso a datos queda en los repositorios. & Aplicado \\
+\hline
+\textbf{Encapsulación} & La identidad y los permisos salen de la sesión (permisos.ts), nunca del cuerpo de la petición. & Aplicado \\
+\hline
+\textbf{Bajo acoplamiento y testabilidad} & Las reglas se prueban sin conectarse a Atlas; 134 pruebas con el ejecutor de Node (tsx --test). & Aplicado \\
+\hline
+\textbf{Integridad de los datos} & Borrado con Restrict para no perder el historial de avance; siete índices únicos en Atlas para áreas y puestos. & Aplicado \\
+\hline
+\textbf{Refactor seguro y sin sobreingeniería} & Refactor solo con pruebas verdes (CGB-36); no hay patrones sin variación real. & Aplicado \\
+\hline
+\textbf{Documento de diseño por historia} & Solo HU-007, HU-012 y HU-013 tienen su DISENO-Y-TRAZABILIDAD.md; faltan las demás historias integradas. & En parte \\
+\hline
+\end{tabularx}
+\caption{Diseño de software. Fuente del curso: 5. Diseño de software (cohesión, acoplamiento, SOLID). En el repositorio: src/lib, prisma/schema.prisma y docs/HU0nn-DISENO-Y-TRAZABILIDAD.md.}
+\end{table}
+
+\subsubsection*{Arquitectura}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{1.6cm}|}
+\hline
+\rowcolor{gray!15}
+\textbf{Qué enseña el curso} & \textbf{Cómo lo aplicamos} & \textbf{Estado} \\
+\hline
+\textbf{Capas: la capa n solo usa la capa n-1} & Vista (src/app páginas y src/components) $\rightarrow$ Controlador (src/app/api route.ts, delgado) $\rightarrow$ Servicio (src/lib servicio-*.ts, sin HTTP) $\rightarrow$ Dominio (reglas puras) $\rightarrow$ Repositorio (único lugar con Prisma) $\rightarrow$ Datos (MongoDB Atlas). & Aplicado \\
+\hline
+\textbf{Monolito en lugar de microservicios} & Un equipo de 5 personas y un VPS de 2 vCPU y 8 GB. El curso aconseja empezar con un monolito y dividir solo si hay problemas reales; los microservicios quedan descartados por ahora. & Aplicado \\
+\hline
+\textbf{MVC adaptado a la web} & Vista (páginas), controlador (rutas de API) y modelo (servicios, dominio y repositorios), como en el esquema de MVC web de la clase. & Aplicado \\
+\hline
+\textbf{Dueño de cada colección} & CGB-31 áreas y puestos, CGB-36 rutas, CGB-56 progreso, CGB-61 evaluaciones; nadie escribe en la colección de otro. & Aplicado \\
+\hline
+\textbf{Dependencia de proveedor} & MongoDB Atlas es punto único de fallo y costo variable; el riesgo está anotado en docs/ARQUITECTURA.md. & Aplicado \\
+\hline
+\textbf{Deuda conocida} & 12 archivos anteriores a la convención (login, capacitaciones, health) todavía importan Prisma desde src/app. & En parte \\
+\hline
+\end{tabularx}
+\caption{Arquitectura. Fuente del curso: 6. Arquitectura. En el repositorio: docs/ARQUITECTURA.md.}
+\end{table}
+
 \section{Stakeholders (Matriz de Interesados)}
 \begin{table}[H]
 \centering
@@ -276,7 +393,7 @@ Se seleccionó un modelo de desarrollo iterativo e incremental integrando:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Scrum:} Cadencia fija en Sprints de 2 semanas, ceremonias regulares y entregables por historias de usuario.
     \item \textbf{Kanban:} Transparencia visual mediante tablero de 4 columnas y límites WIP justificados con la Ley de Little.
-    \item \textbf{XP (Extreme Programming):} Desarrollo guiado por pruebas (TDD) y revisión de código por pares. La integración continua automatizada queda como mejora pendiente: el repositorio revisado no contiene workflows de GitHub Actions.
+    \item \textbf{XP (Extreme Programming):} Desarrollo guiado por pruebas (TDD) y revisión de código por pares. La integración continua se automatizó el 18/11/2026 con un workflow de GitHub Actions que ejecuta Lint y pruebas, compilación (\textit{Build}) y análisis de seguridad (\texttt{npm audit}) en cada Pull Request y en cada \textit{push} a \texttt{main}.
 \end{itemize}
 
 \section{Prácticas Adoptadas del Proceso}
@@ -289,7 +406,8 @@ Se seleccionó un modelo de desarrollo iterativo e incremental integrando:
 \subsection{Aportes de Kanban}
 \begin{itemize}[leftmargin=*]
     \item \textbf{Tablero Visual de 4 Columnas:}\par
-    \noindent\resizebox{\linewidth}{!}{$\text{POR HACER} \rightarrow \mathbf{\text{DESARROLLO [WIP 3]}} \rightarrow \mathbf{\text{REVISIÓN [WIP 2]}} \rightarrow \text{HECHO en main}$}.
+    \noindent\resizebox{\linewidth}{!}{$\text{POR HACER} \rightarrow \mathbf{\text{DESARROLLO [WIP 4]}} \rightarrow \mathbf{\text{REVISIÓN [WIP 2]}} \rightarrow \text{HECHO en main}$}.
+    \item \textbf{Límite de Desarrollo:} una historia activa por desarrollador; WIP 3 en el Sprint 1 y WIP 4 desde el Sprint 2.
     \item \textbf{Principio Lean:} Priorización absoluta de culminar revisiones antes de abrir nuevas tareas (\textit{``Stop starting, start finishing''}).
 \end{itemize}
 
@@ -305,12 +423,12 @@ Para cambios de comportamiento, el equipo aplica el ciclo TDD. Los pasos pueden 
 \subsection{Uso de Inteligencia Artificial en el Proceso}
 \begin{itemize}[leftmargin=*]
     \item Asistencia agéntica en estructuración de especificaciones funcionales y criterios BDD.
-    \item Generación de fixtures de datos, esqueletos de endpoints y suites de prueba unitaria en Jest.
+    \item Generación de fixtures de datos, esqueletos de endpoints y suites de prueba unitaria con el ejecutor de pruebas de Node (\texttt{tsx --test}).
     \item Validación humana obligatoria: todo código asistido por IA es compilado, probado y auditado por el equipo.
 \end{itemize}
 
 \section{Roles, Responsabilidades y Forma de Coordinación}
-\subsection{Política de Roles Rotativos por Sprint}
+\subsection{Política de Roles por Sprint}
 \begin{table}[H]
 \centering
 \scriptsize
@@ -320,9 +438,9 @@ Para cambios de comportamiento, el equipo aplica el ciclo TDD. Los pasos pueden 
 \rowcolor{gray!15}
 \textbf{Integrante} & \textbf{Rol en Sprint 1} & \textbf{Acciones y Responsabilidades Principales} \\
 \hline
-\textbf{Saire Bustamante, Edmil Jampier} & \textbf{Product Owner} & Priorización del backlog, validación de criterios BDD y aceptación de entregables. \\
+\textbf{Saire Bustamante, Edmil Jampier} & \textbf{Product Owner y Scrum Master} & Priorización del backlog, validación de criterios BDD y aceptación de entregables; facilitación de ceremonias, remoción de bloqueos y control de límites WIP. \\
 \hline
-\textbf{Barazorda Cuellar, Hector} & \textbf{Scrum Master} & Facilitación de ceremonias diarias, remoción de bloqueos y control de límites WIP. \\
+\textbf{Barazorda Cuellar, Hector} & \textbf{Desarrollador Full-Stack} & Desarrollo de sus historias y revisión de código por pares. \\
 \hline
 \textbf{Carpio Hermoza, Alex} & \textbf{Desarrollador Full-Stack} & Implementación autónoma de HU-001 y HU-004 bajo ciclo TDD y revisión por pares. \\
 \hline
@@ -334,12 +452,14 @@ Para cambios de comportamiento, el equipo aplica el ciclo TDD. Los pasos pueden 
 \caption{Matriz de Roles y Responsabilidades del Equipo (Sprint 1).}
 \end{table}
 
+\textbf{Roles en el Sprint 2.} Saire Bustamante, Edmil Jampier actúa como Product Owner y Scrum Master; Carpio Hermoza, Alex (HU-007 y HU-013), Quispe Mamani, Domingo de Guzman (HU-008 y HU-010), Ticona Jancco, Ronaldo (HU-009 y HU-011) y Barazorda Cuellar, Hector (HU-012 y HU-014) son desarrolladores Full-Stack.
+
 \subsection{Protocolo de Coordinación y Ramas Git}
 \texttt{main} es la única rama permanente de integración. Cada historia o cambio acotado se desarrolla en una rama corta nombrada \texttt{<tipo>/<CGB-ID>-<resumen>}, creada desde \texttt{origin/main}; por ejemplo, \texttt{feature/CGB-51-mi-onboarding} o \texttt{docs/CGB-123-flujo-git}. Las ramas con nombres de integrantes y \texttt{desarrollo}/\texttt{develop} son referencias históricas y no bases para trabajo nuevo.
 
 Antes de editar, cada colaborador inspecciona \texttt{git status} y los diffs, conserva archivos ajenos y agrega rutas explícitas. No usa \texttt{git add .} como rutina ni incluye \texttt{.env}, tokens, dependencias instaladas o artefactos generados. Los commits siguen Conventional Commits y contienen una intención, su ámbito y la clave Jira.
 
-El autor sincroniza su rama propia con \texttt{origin/main}, registra las verificaciones realmente ejecutadas y abre un Pull Request hacia \texttt{main} con issue Jira, cambio, evidencia y riesgos. Otra persona revisa y aprueba; los comentarios se resuelven antes de integrar mediante \textit{Squash and merge}. Jira pasa a Hecho cuando se cumple la Definition of Done. GitHub Actions no está configurado todavía; por eso no se afirma que los checks corran automáticamente. La guía operativa está en \url{https://github.com/milith0kun/proyecto-ing-software/blob/main/docs/FLUJO_DE_TRABAJO.md}.
+El autor sincroniza su rama propia con \texttt{origin/main}, registra las verificaciones realmente ejecutadas y abre un Pull Request hacia \texttt{main} con issue Jira, cambio, evidencia y riesgos. Otra persona revisa y aprueba; los comentarios se resuelven antes de integrar mediante \textit{Squash and merge}. Jira pasa a Hecho cuando se cumple la Definition of Done. La integración continua de GitHub Actions ejecuta Lint y pruebas, compilación y análisis de seguridad en cada Pull Request y su resultado se registra en el PR. Los Pull Requests de mantenimiento (documentación de proceso, CI y dependencias) publicados con la cuenta del integrador se revisan y se fusionan como administrador; los de historias requieren la aprobación de una persona distinta del autor. La guía operativa está en \url{https://github.com/milith0kun/proyecto-ing-software/blob/main/docs/FLUJO_DE_TRABAJO.md}.
 
 \section{Flujo de Trabajo del Equipo}
 \subsection{Estados del Tablero Visual}
@@ -348,7 +468,7 @@ El flujo se organiza en 4 estados continuos: $\text{POR HACER} \longrightarrow \
 \subsection{Límites WIP y Fundamentación Matemática (Ley de Little)}
 Conforme a la Ley de Little ($\text{WIP} = \lambda \times W$) \cite{little1961}, se fijan los siguientes límites estrictos:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Desarrollo [WIP = 3]:} 1 Historia de Usuario activa por cada desarrollador asignado para evitar multitarea.
+    \item \textbf{Desarrollo [WIP = 4]:} 1 Historia de Usuario activa por cada desarrollador asignado para evitar multitarea (3 en el Sprint 1 y 4 desde el Sprint 2, cuando Héctor Barazorda empezó a asumir historias).
     \item \textbf{Revisión [WIP = 2]:} Amortiguador óptimo para asegurar que el equipo desbloquee revisiones pendientes antes de abrir nuevas tareas.
 \end{itemize}
 
@@ -359,10 +479,11 @@ Las tarjetas impedidas permanecen en su columna física con la etiqueta $\mathbf
 Para que una Historia de Usuario sea declarada formalmente \textbf{Hecho}, debe satisfacer las siguientes condiciones comunes; los criterios de aceptación específicos siguen siendo propios de cada historia:
 \begin{itemize}[leftmargin=*]
     \item[\checkmark] Criterios de aceptación verificados con evidencia reproducible.
-    \item[\checkmark] Pruebas y comprobaciones pertinentes ejecutadas; comandos y resultados reales registrados. GitHub Actions aún no está configurado.
+    \item[\checkmark] Pruebas y comprobaciones pertinentes ejecutadas; comandos y resultados reales registrados. Los checks de la CI (Lint y pruebas, compilación y seguridad) están en verde.
     \item[\checkmark] Pull Request aprobado por otra persona y comentarios resueltos.
     \item[\checkmark] Documentación/configuración actualizadas cuando aplica; sin secretos ni artefactos ajenos.
     \item[\checkmark] PR integrado en \texttt{main}, con Jira, PR y commit enlazados y aceptación del Product Owner según la historia.
+    \item[\checkmark] Requisitos no funcionales que la historia declara comprobados con su métrica o por inspección; los que no se pudieron comprobar se declaran pendientes y no cumplidos.
 \end{itemize}
 
 \section{Incrementos Presentados del Proyecto}
@@ -397,16 +518,58 @@ Para que una Historia de Usuario sea declarada formalmente \textbf{Hecho}, debe 
 Interfaces responsivas en producción local y servidas en VPS con base de datos MongoDB Atlas sembrada con cursos reales de las unidades CIIP LATAM, GEOMINA LATAM y BIOMEDIC.
 
 \subsubsection{Pruebas o Validaciones Realizadas}
-La bitácora del Sprint 1 registra 68 de 68 pruebas superadas (\texttt{npm test}) y una compilación de Turbopack (\texttt{npm run build}) menor a 600 ms. Es un resultado registrado de esa ejecución, no un check automático ni evidencia de que todas las historias estén en Hecho. GitHub Actions aún no está configurado.
+La bitácora del Sprint 1 registra 68 de 68 pruebas superadas (\texttt{npm test}) y una compilación de Turbopack (\texttt{npm run build}) menor a 600 ms. Es un resultado registrado de esa ejecución, no un check automático. La integración continua de GitHub Actions se incorporó el 18/11/2026.
 
-En la consulta de Jira del 19 de octubre de 2026, cuatro de las seis historias del Sprint 1 figuraban en Hecho y HU-004/HU-006 seguían en Revisión. El Sprint 1 aparecía activo aunque sus fechas habían terminado el 15 de octubre; el equipo debe reconciliar ese estado antes de declarar el incremento completo.
+En la consulta de Jira del 19 de octubre de 2026, cuatro de las seis historias del Sprint 1 figuraban en Hecho y HU-004/HU-006 seguían en Revisión. Ambas se finalizaron el 9 de noviembre de 2026: en la consulta del 18 de noviembre de 2026 las seis historias del Sprint 1 figuran en Hecho.
 
 \subsubsection{Cambios Realizados Respecto al Avance Anterior}
 Consolidación del alcance MVP eliminando pasarelas de pago y módulos pesados de video para garantizar una entrega vertical 100\% funcional.
 
+\subsection{Incremento 2 (Sprint 2 -- Onboarding Interno)}
+\subsubsection{Funcionalidad Desarrollada}
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|c|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}p{2.5cm}|>{\raggedright\arraybackslash}p{1.6cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{gray!15}
+\textbf{Código HU} & \textbf{Título de la Historia} & \textbf{Responsable} & \textbf{Estado en Jira} & \textbf{Entregable y Pull Request} \\
+\hline
+\textbf{HU-007} & Crear área y puestos de trabajo & Carpio Hermoza, Alex & Hecho & Estructura Área--Puesto con nombre único sin distinguir tildes ni mayúsculas, borrado bloqueado si hay puestos asociados y vista en acordeón (PR \#15, \#16 y \#21). \\
+\hline
+\textbf{HU-008} & Crear y secuenciar ruta de onboarding & Quispe Mamani, Domingo & Hecho & Rutas por área y puesto con pasos correlativos, estados Borrador y Activa, y bloqueo de edición de rutas activas (PR \#10). \\
+\hline
+\textbf{HU-009} & Registrar colaboradores y asignar rutas & Ticona Jancco, Ronaldo & Desarrollo & Registro individual y masivo con asignación de ruta e invitación con token; en desarrollo (PR \#18). \\
+\hline
+\textbf{HU-010} & Activar cuenta mediante token & Quispe Mamani, Domingo & Revisión & Activación con enlace de un solo uso, vigencia de 48 horas y contraseña segura; en revisión (PR \#11). \\
+\hline
+\textbf{HU-011} & Panel personal Mi Onboarding & Ticona Jancco, Ronaldo & Desarrollo & Panel del colaborador con ruta, estados y porcentaje de avance; en desarrollo, aún sin Pull Request. \\
+\hline
+\textbf{HU-012} & Completar capacitación y registrar avance & Barazorda Cuellar, Hector & Hecho & Persistencia de avance idempotente y concurrente, reanudación en la última diapositiva confirmada y finalización con prerrequisitos (PR \#9). \\
+\hline
+\textbf{HU-013} & Configurar microtest formativo & Carpio Hermoza, Alex & Hecho & Constructor visual de microtests con nota mínima, intentos y temporizador opcional; edición bloqueada si ya existen intentos (PR \#17). \\
+\hline
+\textbf{HU-014} & Realizar microtest formativo & Barazorda Cuellar, Hector & Revisión & Resolución con calificación en el servidor, intentos y reintento; en revisión (PR \#13). \\
+\hline
+\end{tabularx}
+\caption{Resumen de Entregables del Sprint 2 (Incremento 2), con el estado de Jira del 18/11/2026.}
+\end{table}
+
+\subsubsection{Evidencia de Funcionamiento}
+Cada historia del Sprint 2 documenta su validación en \texttt{docs/HU0nn-VALIDACION.md}, con capturas en navegador contra MongoDB Atlas (HU-007, HU-008, HU-010, HU-012, HU-013 y HU-014) y los datos temporales eliminados al terminar.
+
+\subsubsection{Pruebas o Validaciones Realizadas}
+Las pruebas automáticas pasaron de 68 al cierre del Sprint 1 a 89 en el Pull Request de HU-007, 98 con HU-008, 122 con HU-012 y 134 con HU-013, con \texttt{tsc}, \texttt{eslint} y \texttt{npm run build} sin errores en cada integración. La CI de GitHub Actions (Lint y pruebas, compilación y seguridad) está en verde sobre \texttt{main}. La auditoría de dependencias detectó vulnerabilidades en producción (\texttt{next} y \texttt{zod}); se corrigieron en la tarea CGB-79 y la auditoría de producción quedó en cero.
+
+\subsubsection{Cambios Realizados Respecto al Avance Anterior}
+HU-013 y HU-014 se adelantaron del Sprint 3 al Sprint 2. Se incorporaron la integración continua, una guía de revisión con cuatro listas de comprobación (gestión de configuración, requisitos, diseño y arquitectura), la convención de capas del código y la regla de autoría y aprobación de Pull Requests. La coordinación de esquemas Prisma, acordada como mejora, se resolvió asignando un dueño por modelo y un orden de integración; aun así cada Pull Request tuvo un conflicto en \texttt{prisma/schema.prisma}.
+
 \section{Métricas y Seguimiento del Proceso}
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Estado del Sprint 1 en Jira (consulta del 19/10/2026):} 4 de 6 historias en Hecho; HU-004 y HU-006 en Revisión. Dos tareas de gestión seguían pendientes y el sprint aún figuraba activo después de su fecha de fin (15/10/2026).
+    \item \textbf{Estado del Sprint 1 en Jira (consulta del 18/11/2026):} 6 de 6 historias en Hecho; HU-004 y HU-006, que el 19/10/2026 figuraban en Revisión, se finalizaron el 09/11/2026.
+    \item \textbf{Estado del Sprint 2 en Jira (consulta del 18/11/2026):} 4 de 8 historias en Hecho (HU-007, HU-008, HU-012 y HU-013), 2 en Revisión (HU-010 y HU-014) y 2 en Desarrollo (HU-009 y HU-011).
+    \item \textbf{Pruebas automatizadas:} 134 pruebas pasan en \texttt{main} al 18/11/2026.
     \item \textbf{Tiempo de Ciclo (Cycle Time):} Meta de planificación de 3 a 4 días hábiles por Historia de Usuario desde \textit{Por hacer} hasta \textit{Hecho}; debe contrastarse con datos registrados en Jira.
     \item \textbf{Tasa de Aceptación:} calcular el porcentaje desde los criterios verificados por historia en Jira; no se reporta un 100\% agregado mientras existan historias en Revisión.
 \end{itemize}
@@ -417,6 +580,8 @@ Consolidación del alcance MVP eliminando pasarelas de pago y módulos pesados d
     \item \textbf{Automatización de Pruebas de Endpoints:} Extender las pruebas de integración en backend para cubrir casos límite de tokens expirados y esquemas inválidos.
     \item \textbf{Refinamiento de Dependencias:} Coordinar esquemas Prisma en sesión conjunta de Sprint Planning para el Sprint 2 (Áreas y Onboarding).
 \end{enumerate}
+
+\textbf{Seguimiento al 18/11/2026.} (1) Cada historia del Sprint 2 documenta capturas en navegador contra MongoDB Atlas. (2) HU-010 incluye pruebas de token vencido y de reenvío del enlace. (3) Los esquemas Prisma siguieron generando conflictos en cada Pull Request; se adoptó un dueño por colección y un orden de integración, documentados en \texttt{docs/ARQUITECTURA.md}.
 
 \section{Política de Uso de IA y Registro de Uso}
 \begin{table}[H]
@@ -434,15 +599,19 @@ Consolidación del alcance MVP eliminando pasarelas de pago y módulos pesados d
 \hline
 07/10/2026 & Antigravity Assistant / MCP Jira & Sincronización de ramas Git, sembrado de MongoDB Atlas y cierre de tareas del Sprint 1 en Jira. & Verificación empírica de 32 tareas finalizadas en Jira Cloud y pruebas en base de datos. \\
 \hline
+16/11/2026 -- 18/11/2026 & Antigravity / Gemini & Estructuración de capas, pruebas y documentación de HU-007, HU-008, HU-010 y HU-013. & Reproducción de \texttt{npm test}, \texttt{tsc}, lint y build en clon limpio por la persona que revisa. \\
+\hline
+17/11/2026 -- 18/11/2026 & Claude Code & Refactor por capas y documentación de HU-012; revisión técnica asistida de los Pull Requests; CI, guía de revisión y actualización de dependencias. & Verificación humana de cada afirmación contra el código y los resultados; la aprobación la da una persona. \\
+\hline
 \end{tabularx}
 \caption{Bitácora de Uso Real de Inteligencia Artificial en el Proyecto.}
 \end{table}
 
 \section{Conclusiones}
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Eficacia del Modelo Iterativo e Incremental:} Scrum, Kanban y TDD establecen una cadencia, límites de trabajo y prácticas de verificación. La consulta de Jira del 19/10/2026 muestra 4 de 6 historias del Sprint 1 en Hecho y dos en Revisión; antes de declarar el incremento completo se deben resolver esas revisiones y actualizar el sprint.
+    \item \textbf{Eficacia del Modelo Iterativo e Incremental:} Scrum, Kanban y TDD establecen una cadencia, límites de trabajo y prácticas de verificación. La consulta de Jira del 18/11/2026 muestra las 6 historias del Sprint 1 en Hecho y, en el Sprint 2, 4 de 8 en Hecho, 2 en Revisión y 2 en Desarrollo; el incremento 2 no se declara completo hasta cerrarlas.
     \item \textbf{Rigor en Requerimientos:} La formalización de 15 Requerimientos Funcionales bajo ISO/IEC/IEEE 29148 y 10 Requerimientos No Funcionales bajo ISO/IEC 25010 asegura la trazabilidad técnica total desde la fase de diseño hasta la validación de aceptación.
-    \item \textbf{Calidad Verificable y Mantenibilidad:} Los criterios BDD, las pruebas pertinentes y la revisión por pares aportan evidencia de calidad. El equipo debe registrar los resultados por historia; la automatización de CI queda pendiente de configurar.
+    \item \textbf{Calidad Verificable y Mantenibilidad:} Los criterios BDD, las pruebas pertinentes y la revisión por pares aportan evidencia de calidad. El equipo registra los resultados por historia y, desde el 18/11/2026, la integración continua ejecuta Lint y pruebas, compilación y análisis de seguridad en cada Pull Request.
 \end{enumerate}
 
 \bibliographystyle{plain}

@@ -17,6 +17,7 @@
   3. **Quispe Mamani, Domingo de Guzman** — *Desarrollador Full-Stack*
   4. **Saire Bustamante, Edmil Jampier** — *Product Owner y Scrum Master*
   5. **Ticona Jancco, Ronaldo** — *Desarrollador Full-Stack*
+- **Repositorio de código:** https://github.com/milith0kun/proyecto-ing-software
 - **Entidad Beneficiaria:** CGB Academy (Integrando las unidades CIIP LATAM, GEOMINA LATAM y BIOMEDIC)
 - **Repositorio Oficial en GitHub:** `https://github.com/milith0kun/proyecto-ing-software`
 - **Estrategia de ramas:** `main` como única rama permanente de integración; ramas cortas por issue y Pull Request revisado.
@@ -166,6 +167,58 @@ Conforme a las directrices de las Áreas de Conocimiento de **Arquitectura de So
 
 ---
 
+### 6.1 Conceptos de la asignatura aplicados al proyecto
+
+Los cuatro documentos de la asignatura (requisitos, gestión de configuración, diseño de software y arquitectura) se aplican al proyecto y se usan como lista de revisión en cada Pull Request (docs/GUIA_DE_REVISION.md). Las tablas siguientes dicen qué enseña cada documento, cómo se aplica y en qué estado está al 18/11/2026.
+
+**Requisitos** (fuente del curso: 4. Requisitos.pdf; en el repositorio: `docs/REQUISITOS_APLICADOS.md y los criterios de cada historia en Jira`)
+
+| Qué enseña el curso | Cómo lo aplicamos | Estado |
+|---|---|---|
+| **Historia = tarjeta + conversación + confirmación** | Cada historia en Jira dice «Como… quiero… para…»; las decisiones del Product Owner quedan en la tarjeta y los criterios se escriben en formato BDD, cada uno con su prueba. | Aplicado |
+| **INVEST y dependencias** | Historias pequeñas y estimables en Planning Poker; las dependencias se marcan con vínculos «Blocks» en Jira (por ejemplo, HU-009 antes de HU-010). | Aplicado |
+| **Requisitos no funcionales en la DoD** | RNF-001 a RNF-010 (ISO 25010); cada Pull Request declara cuáles aplica. La matriz RNF por historia está propuesta en docs/REQUISITOS_APLICADOS.md. | En parte |
+| **Conflictos entre requisitos** | Se elevan al Product Owner en lugar de inventarlos: DNI del colaborador, caducidad del token (48 h), política de contraseña y quién puede incorporar personas. | En parte |
+| **MVP y alcance mínimo (regla 80/20)** | Quedan fuera pagos, aulas en vivo, diplomas, video pesado y multi-idioma; el revisor rechaza funciones que ningún criterio pide. | Aplicado |
+| **Casos de uso con flujos alternativos** | Caso «Incorporar colaborador» (HU-009 y HU-010) con flujo normal y extensiones de error; está propuesto, falta validarlo con el PO. | En parte |
+| **Cobertura de pruebas** | 134 pruebas automáticas pasan, pero todavía no se mide el porcentaje de cobertura ni hay un umbral acordado. | Pendiente |
+
+**Gestión de configuración** (fuente del curso: 3. Gestión de configuración; en el repositorio: `docs/FLUJO_DE_TRABAJO.md, docs/definition-of-done.md, docs/configuracion.md y .github/workflows/ci.yml`)
+
+| Qué enseña el curso | Cómo lo aplicamos | Estado |
+|---|---|---|
+| **Ramas cortas y control de versiones** | GitHub Flow: main protegido, una rama por historia con el nombre «tipo/CGB-ID-resumen», squash al fusionar y rama eliminada después. | Aplicado |
+| **Commits con intención** | Conventional Commits con la clave de Jira; los commits de CGB-36 muestran el ciclo TDD (prueba, implementación, refactor, validación). | Aplicado |
+| **Pull Request y revisión por pares** | Plantilla obligatoria con necesidad, verificación real, RNF y uso de IA; aprobación de otra persona después del último push. | Aplicado |
+| **Integración continua** | GitHub Actions con tres trabajos: Build, Lint y pruebas, y Seguridad (npm audit). Corre en cada PR desde el 18/11/2026. | Aplicado |
+| **Tablero, WIP y Definition of Done** | Jira con cuatro columnas, límites de WIP, bloqueos visibles y una DoD de seis puntos que se comprueba antes de pasar a Hecho. | Aplicado |
+| **Trazabilidad y reconstrucción** | Necesidad, tarjeta, rama, PR, commit y prueba enlazados; otra persona puede reproducir todo con «npm ci» (docs/configuracion.md). | Aplicado |
+| **Línea base y versiones etiquetadas** | Aún no se declara una línea base ni se crean tags de entrega. | Pendiente |
+
+**Diseño de software** (fuente del curso: 5. Diseño de software (cohesión, acoplamiento, SOLID); en el repositorio: `src/lib, prisma/schema.prisma y docs/HU0nn-DISENO-Y-TRAZABILIDAD.md`)
+
+| Qué enseña el curso | Cómo lo aplicamos | Estado |
+|---|---|---|
+| **Separación de responsabilidades y SRP** | Reglas, casos de uso, persistencia y HTTP viven en archivos distintos; en src/lib ningún servicio ni repositorio importa NextResponse. | Aplicado |
+| **Alta cohesión y modularidad** | Un módulo por tema: organizacion.ts, progreso-capacitacion.ts, rutas-onboarding.ts, configuracion-microtest.ts. | Aplicado |
+| **Inversión de dependencias (DIP)** | El dominio no importa el framework ni Prisma; el acceso a datos queda en los repositorios. | Aplicado |
+| **Encapsulación** | La identidad y los permisos salen de la sesión (permisos.ts), nunca del cuerpo de la petición. | Aplicado |
+| **Bajo acoplamiento y testabilidad** | Las reglas se prueban sin conectarse a Atlas; 134 pruebas con el ejecutor de Node (tsx --test). | Aplicado |
+| **Integridad de los datos** | Borrado con Restrict para no perder el historial de avance; siete índices únicos en Atlas para áreas y puestos. | Aplicado |
+| **Refactor seguro y sin sobreingeniería** | Refactor solo con pruebas verdes (CGB-36); no hay patrones sin variación real. | Aplicado |
+| **Documento de diseño por historia** | Solo HU-007, HU-012 y HU-013 tienen su DISENO-Y-TRAZABILIDAD.md; faltan las demás historias integradas. | En parte |
+
+**Arquitectura** (fuente del curso: 6. Arquitectura; en el repositorio: `docs/ARQUITECTURA.md`)
+
+| Qué enseña el curso | Cómo lo aplicamos | Estado |
+|---|---|---|
+| **Capas: la capa n solo usa la capa n-1** | Vista (src/app páginas y src/components) → Controlador (src/app/api route.ts, delgado) → Servicio (src/lib servicio-*.ts, sin HTTP) → Dominio (reglas puras) → Repositorio (único lugar con Prisma) → Datos (MongoDB Atlas). | Aplicado |
+| **Monolito en lugar de microservicios** | Un equipo de 5 personas y un VPS de 2 vCPU y 8 GB. El curso aconseja empezar con un monolito y dividir solo si hay problemas reales; los microservicios quedan descartados por ahora. | Aplicado |
+| **MVC adaptado a la web** | Vista (páginas), controlador (rutas de API) y modelo (servicios, dominio y repositorios), como en el esquema de MVC web de la clase. | Aplicado |
+| **Dueño de cada colección** | CGB-31 áreas y puestos, CGB-36 rutas, CGB-56 progreso, CGB-61 evaluaciones; nadie escribe en la colección de otro. | Aplicado |
+| **Dependencia de proveedor** | MongoDB Atlas es punto único de fallo y costo variable; el riesgo está anotado en docs/ARQUITECTURA.md. | Aplicado |
+| **Deuda conocida** | 12 archivos anteriores a la convención (login, capacitaciones, health) todavía importan Prisma desde src/app. | En parte |
+
 ## 7. Stakeholders (Matriz de Interesados)
 
 | Stakeholder / Actor | Rol en el Ecosistema | Tipo | Influencia | Interés Principal / Expectativa |
@@ -189,7 +242,7 @@ El modelo secuencial en Cascada se descartó porque presupone requerimientos inm
 ### 8.2 Justificación del Modelo Iterativo e Incremental
 - **De Scrum se toma:** La cadencia fija en sprints cortos (2 semanas), las ceremonias de planificación, sincronización diaria, revisión y retrospectiva, y la unidad de trabajo en historias de usuario priorizadas.
 - **De Kanban se toma:** La transparencia visual mediante el tablero Kanban por fases, la limitación explícita del trabajo en curso (*WIP limits*) y la política de bloqueo para visibilizar impedimentos.
-- **De XP se toma:** Desarrollo guiado por pruebas (*TDD* en lógica crítica), propiedad colectiva del código, diseño simple y revisión por pares (*Peer Review*). La integración continua automatizada queda como mejora pendiente: el repositorio revisado no contiene workflows de GitHub Actions.
+- **De XP se toma:** Desarrollo guiado por pruebas (*TDD* en lógica crítica), propiedad colectiva del código, diseño simple y revisión por pares (*Peer Review*). La integración continua se automatizó el 18/11/2026: un workflow de GitHub Actions ejecuta Lint y pruebas, compilación (*Build*) y análisis de seguridad (`npm audit`) en cada Pull Request y en cada *push* a `main`.
 
 ---
 
@@ -216,7 +269,7 @@ El modelo secuencial en Cascada se descartó porque presupone requerimientos inm
   2. **T2 — Implementación / GREEN:** Programación mínima necesaria para hacer pasar las pruebas con éxito.
   3. **T3 — Refactorización:** Optimización de estructura, legibilidad y rendimiento sin modificar el comportamiento funcional.
   4. **T4 — Validación y PR:** Verificación de criterios de aceptación y preparación del pull request hacia `main`.
-- **Verificación previa al PR:** el autor ejecuta y registra las pruebas y comprobaciones disponibles; GitHub Actions aún no está configurado, por lo que no se afirma que estas comprobaciones corran automáticamente.
+- **Verificación previa al PR:** el autor ejecuta y registra las pruebas y comprobaciones disponibles; la CI de GitHub Actions (Lint y pruebas, compilación y seguridad, desde el 18/11/2026) ejecuta estas comprobaciones en cada Pull Request y su resultado se registra en el PR.
 - **Revisión de Código por Pares (*Peer Review*):** Ningún código se integra a la rama común sin al menos una aprobación formal de otro integrante.
 - **Diseño Simple y Propiedad Colectiva del Código:** Código semántico, componentes modulares en Next.js y tipado estricto con Prisma y TypeScript.
 
@@ -229,21 +282,20 @@ El modelo secuencial en Cascada se descartó porque presupone requerimientos inm
 
 ## 10. Roles, Responsabilidades y Forma de Coordinación
 
-### 10.1 Política de Roles Rotativos por Sprint
-El equipo adopta una estructura de **roles rotativos**, donde las funciones de liderazgo ágil no son estáticas, sino que se alternan en cada iteración para que todos los integrantes adquieran experiencia en gestión de producto, facilitación técnica y desarrollo full-stack:
+### 10.1 Política de Roles por Sprint
+Edmil Saire concentra los roles de Product Owner y Scrum Master durante todo el proyecto; los otros cuatro integrantes son desarrolladores Full-Stack. Los roles se revisan en cada Retrospectiva:
 
 - **Sprint 1 (Sprint Piloto de Evaluación):**  
   Se establece la configuración inicial para medir la cadencia y dinamismo del equipo:
-  - **Product Owner y Scrum Master (desde el Sprint 2):** Saire Bustamante, Edmil Jampier.
-  - **Scrum Master en el Sprint 1:** Barazorda Cuellar, Hector (desde el Sprint 2 es desarrollador).
-  - **Desarrolladores Full-Stack (desde el Sprint 2):** Barazorda Cuellar, Hector; Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; Ticona Jancco, Ronaldo.
+  - **Product Owner y Scrum Master:** Saire Bustamante, Edmil Jampier.
+  - **Desarrolladores Full-Stack:** Barazorda Cuellar, Hector; Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; Ticona Jancco, Ronaldo.
 - **Mecanismo de Evaluación y Rotación:**  
-  En la **Sprint Retrospective** al término del Sprint 1, se analizan los resultados del flujo, los bloqueos resueltos y la interacción con los requisitos. A partir de esa evaluación, se ejecutan las decisiones de rotación del Scrum Master y Product Owner para el Sprint 2 y Sprint 3, permitiendo la alternancia de roles entre los 5 integrantes.
+  En la **Sprint Retrospective** al término del Sprint 1, se analizan los resultados del flujo, los bloqueos resueltos y la interacción con los requisitos. A partir de esa evaluación, se revisan los roles para el Sprint 2 y el Sprint 3; Edmil Saire mantiene los de Product Owner y Scrum Master y los demás integrantes son desarrolladores.
 
 | Integrante | Rol en Sprint 1 | Acciones y Responsabilidades Principales |
 |---|---|---|
-| **Saire Bustamante, Edmil Jampier** | **Product Owner y Scrum Master** (desde el Sprint 2) | Priorización del backlog, validación de criterios BDD (Dado/Cuando/Entonces), aprobación de entregables en la Review, facilitación de las ceremonias, remoción de bloqueos y vigilancia de límites WIP. |
-| **Barazorda Cuellar, Hector** | **Desarrollador Full-Stack** (Scrum Master en el Sprint 1) | Desarrollo de sus HU asignadas desde el Sprint 2 y revisión de código por pares. |
+| **Saire Bustamante, Edmil Jampier** | **Product Owner y Scrum Master** | Priorización del backlog, validación de criterios BDD (Dado/Cuando/Entonces), aprobación de entregables en la Review, facilitación de las ceremonias, remoción de bloqueos y vigilancia de límites WIP. |
+| **Barazorda Cuellar, Hector** | **Desarrollador Full-Stack** | Desarrollo de sus HU asignadas y revisión de código por pares. |
 | **Carpio Hermoza, Alex** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
 | **Quispe Mamani, Domingo de Guzman** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
 | **Ticona Jancco, Ronaldo** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
@@ -351,7 +403,7 @@ Una Historia de Usuario puede pasar a Revisión únicamente cuando:
 #### 3. Transición: REVISIÓN $\longrightarrow$ HECHO
 Una Historia de Usuario alcanza el estado final de Done únicamente cuando:
 - El código ha sido revisado y aprobado formalmente por al menos otro desarrollador (*Peer Review* en GitHub).
-- Las pruebas pertinentes registradas en el PR pasan sin regresiones; el repositorio todavía no configura ejecución automática en GitHub Actions.
+- Las pruebas pertinentes registradas en el PR pasan sin regresiones; la CI de GitHub Actions ejecuta Lint y pruebas, compilación y seguridad en cada Pull Request (desde el 18/11/2026).
 - No existen errores bloqueantes de compilación en Next.js ni TypeScript.
 - Se validaron satisfactoriamente todos los criterios de aceptación junto al Product Owner.
 - El Pull Request ha sido fusionado limpiamente en `main`.
