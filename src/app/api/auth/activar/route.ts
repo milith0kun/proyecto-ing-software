@@ -1,7 +1,5 @@
-import { randomUUID } from 'node:crypto';
 import { hash } from 'bcryptjs';
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { esSolicitudMismoOrigen } from '@/lib/origen';
 import {
   crearToken,
@@ -52,18 +50,13 @@ export async function POST(solicitud: NextRequest) {
   const contrasena = typeof cuerpo?.contrasena === 'string' ? cuerpo.contrasena : '';
 
   try {
-    const resultado = await servicioActivacion().activarCuenta({ token, contrasena });
+    const servicio = servicioActivacion();
+    const resultado = await servicio.activarCuenta({ token, contrasena });
 
     // CA-04: Iniciar sesión automáticamente con JWT + cookie segura y redirigir a /colaborador
-    const sesionId = randomUUID();
+    const expiraEn = new Date(Date.now() + DURACION_SESION * 1000);
+    const sesionId = await servicio.registrarSesion(resultado.usuario.id, expiraEn);
     const jwt = await crearToken(resultado.usuario, sesionId, obtenerSecretoAuth());
-    await prisma.sesion.create({
-      data: {
-        id: sesionId,
-        usuarioId: resultado.usuario.id,
-        expiraEn: new Date(Date.now() + DURACION_SESION * 1000),
-      },
-    });
 
     const respuesta = NextResponse.json({
       ok: true,

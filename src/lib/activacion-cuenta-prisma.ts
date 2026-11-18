@@ -13,7 +13,7 @@ function mapearRegistro(colaborador: {
   tokenActivacion: string | null;
   tokenExpiraEn: Date | null;
   puesto?: { nombre: string } | null;
-  rutaOnboarding?: { titulo: string } | null;
+  rutaOnboarding?: { titulo: string | null; nombre?: string | null } | null;
   user?: { activo: boolean; passwordHash: string | null } | null;
 }): RegistroActivacionColaborador {
   return {
@@ -23,7 +23,7 @@ function mapearRegistro(colaborador: {
     email: colaborador.email,
     estadoColaborador: colaborador.estado,
     puestoNombre: colaborador.puesto?.nombre ?? null,
-    rutaNombre: colaborador.rutaOnboarding?.titulo ?? null,
+    rutaNombre: colaborador.rutaOnboarding?.titulo ?? colaborador.rutaOnboarding?.nombre ?? null,
     userActivo: Boolean(colaborador.user?.activo),
     passwordHash: colaborador.user?.passwordHash ?? null,
     tokenActivacionHash: colaborador.tokenActivacion,
@@ -41,7 +41,7 @@ export function crearRepositorioActivacionPrisma(): RepositorioActivacionCuenta 
         where: { tokenActivacion: tokenHash },
         include: {
           puesto: { select: { nombre: true } },
-          rutaOnboarding: { select: { titulo: true } },
+          rutaOnboarding: { select: { titulo: true, nombre: true } },
           user: { select: { activo: true, passwordHash: true } },
         },
       });
@@ -53,7 +53,7 @@ export function crearRepositorioActivacionPrisma(): RepositorioActivacionCuenta 
         where: { email },
         include: {
           puesto: { select: { nombre: true } },
-          rutaOnboarding: { select: { titulo: true } },
+          rutaOnboarding: { select: { titulo: true, nombre: true } },
           user: { select: { activo: true, passwordHash: true } },
         },
       });
@@ -72,7 +72,6 @@ export function crearRepositorioActivacionPrisma(): RepositorioActivacionCuenta 
           data: {
             estado: 'ACTIVO',
             tokenActivacion: null,
-            enlaceActivacion: null,
             tokenExpiraEn: null,
           },
         });
@@ -86,16 +85,21 @@ export function crearRepositorioActivacionPrisma(): RepositorioActivacionCuenta 
       });
     },
 
-    async actualizarTokenReenvio({ colaboradorId, tokenHash, enlaceActivacion, expiraEn }): Promise<boolean> {
+    async actualizarTokenReenvio({ colaboradorId, tokenHash, expiraEn }): Promise<boolean> {
       const res = await prisma.colaborador.updateMany({
         where: { id: colaboradorId, estado: 'PENDIENTE_ACTIVACION' },
         data: {
           tokenActivacion: tokenHash,
-          enlaceActivacion,
           tokenExpiraEn: expiraEn,
         },
       });
       return res.count === 1;
+    },
+
+    async crearSesion({ id, usuarioId, expiraEn }): Promise<void> {
+      await prisma.sesion.create({
+        data: { id, usuarioId, expiraEn },
+      });
     },
   };
 }

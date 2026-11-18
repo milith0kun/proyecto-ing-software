@@ -70,12 +70,18 @@ function crearRepositorioActivacionEnMemoria({
       reg.tokenExpiraEn = null;
       return true;
     },
-    async actualizarTokenReenvio({ colaboradorId, tokenHash, expiraEn }) {
+    async actualizarTokenReenvio(datos) {
+      const { colaboradorId, tokenHash, expiraEn } = datos;
+      assert.equal('enlaceActivacion' in datos, false);
       const reg = registros.find(r => r.colaboradorId === colaboradorId);
       if (!reg) return false;
       reg.tokenActivacionHash = tokenHash;
       reg.tokenExpiraEn = expiraEn;
       return true;
+    },
+    sesiones: [],
+    async crearSesion(sesion) {
+      this.sesiones.push(sesion);
     },
   };
 }
@@ -166,4 +172,20 @@ test('HU-010 T3 REFACTOR: evalúa fortaleza visual de contraseña (débil, media
   const fuerte = evaluarFortalezaContrasena('ClaveSegura1!');
   assert.equal(fuerte.nivel, 'FUERTE');
   assert.equal(fuerte.porcentaje, 100);
+});
+
+test('HU-010: registra sesión persistida vía repositorio sin exponer token plano en BD', async () => {
+  const ahora = new Date('2026-11-17T16:00:00Z');
+  const repo = crearRepositorioActivacionEnMemoria({ ahora });
+  const servicio = crearServicioActivacionCuenta(repo, hashearClaveFalso);
+
+  const reenvio = await servicio.solicitarNuevoEnlace('luis.vega@cgb.latam', ahora);
+  assert.notEqual(repo.registros[1].tokenActivacionHash, reenvio.tokenNuevo);
+  assert.equal('enlaceActivacion' in repo.registros[1], false);
+
+  const expiraEn = new Date('2026-11-18T00:00:00Z');
+  const sesionId = await servicio.registrarSesion('usr-1', expiraEn);
+  assert.ok(sesionId);
+  assert.equal(repo.sesiones.length, 1);
+  assert.equal(repo.sesiones[0].usuarioId, 'usr-1');
 });

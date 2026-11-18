@@ -1,4 +1,4 @@
-import { createHash, randomBytes } from 'node:crypto';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import {
   evaluarFortalezaContrasena,
   validarPoliticaContrasena,
@@ -68,9 +68,9 @@ export interface RepositorioActivacionCuenta {
   actualizarTokenReenvio(datos: {
     colaboradorId: string;
     tokenHash: string;
-    enlaceActivacion: string;
     expiraEn: Date;
   }): Promise<boolean>;
+  crearSesion?(datos: { id: string; usuarioId: string; expiraEn: Date }): Promise<void>;
 }
 
 export type HashearClaveFn = (clave: string) => Promise<string>;
@@ -201,11 +201,18 @@ export function crearServicioActivacionCuenta(
       await repositorio.actualizarTokenReenvio({
         colaboradorId: registro.colaboradorId,
         tokenHash,
-        enlaceActivacion,
         expiraEn,
       });
 
       return { enviado: true, tokenNuevo, enlaceActivacion };
+    },
+
+    async registrarSesion(usuarioId: string, expiraEn: Date): Promise<string> {
+      const id = randomUUID();
+      if (repositorio.crearSesion) {
+        await repositorio.crearSesion({ id, usuarioId, expiraEn });
+      }
+      return id;
     },
   };
 }

@@ -9,6 +9,11 @@ import {
   evaluarFortalezaContrasena,
   type DatosPerfilActivacion,
 } from '@/lib/politica-contrasena';
+import {
+  activarCuentaApi,
+  solicitarNuevoEnlaceApi,
+  validarTokenActivacionApi,
+} from '@/lib/activacion-cliente';
 
 function IconoCheck({ cumplido }: { cumplido: boolean }) {
   return (
@@ -51,21 +56,15 @@ export default function FormularioActivarCuenta({ token }: { token: string }) {
   useEffect(() => {
     if (!token) return;
     let activo = true;
-    fetch(`/api/auth/activar?token=${encodeURIComponent(token)}`, { cache: 'no-store' })
-      .then(async resp => {
-        const json = await resp.json();
+    validarTokenActivacionApi(token)
+      .then(datos => {
         if (!activo) return;
-        if (resp.ok && json.ok) {
-          setPerfil(json.datos);
-          setEstadoVista('valido');
-        } else {
-          setErrorToken(json.error || 'El enlace de activación ha vencido o no es válido.');
-          setEstadoVista('invalido');
-        }
+        setPerfil(datos);
+        setEstadoVista('valido');
       })
-      .catch(() => {
+      .catch(err => {
         if (!activo) return;
-        setErrorToken('No pudimos verificar el enlace de activación.');
+        setErrorToken(err instanceof Error ? err.message : 'No pudimos verificar el enlace de activación.');
         setEstadoVista('invalido');
       });
     return () => {
@@ -83,23 +82,14 @@ export default function FormularioActivarCuenta({ token }: { token: string }) {
 
     setEnviando(true);
     try {
-      const resp = await fetch('/api/auth/activar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, contrasena }),
-      });
-      const json = await resp.json();
-      if (!resp.ok || !json.ok) {
-        setErrorForm(json.error || 'No se pudo activar la cuenta.');
-        return;
-      }
+      const { redireccion } = await activarCuentaApi(token, contrasena);
       setEstadoVista('bienvenida');
       setTimeout(() => {
-        router.push(json.redireccion || '/colaborador');
+        router.push(redireccion);
         router.refresh();
       }, 900);
-    } catch {
-      setErrorForm('Error de conexión al activar tu cuenta.');
+    } catch (err) {
+      setErrorForm(err instanceof Error ? err.message : 'Error de conexión al activar tu cuenta.');
     } finally {
       setEnviando(false);
     }
@@ -111,19 +101,10 @@ export default function FormularioActivarCuenta({ token }: { token: string }) {
     setErrorReenvio('');
     setEnviando(true);
     try {
-      const resp = await fetch('/api/auth/activar', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: correoReenvio }),
-      });
-      const json = await resp.json();
-      if (!resp.ok || !json.ok) {
-        setErrorReenvio(json.error || 'No pudimos generar un nuevo enlace.');
-        return;
-      }
-      setMensajeReenvio(json.mensaje);
-    } catch {
-      setErrorReenvio('Error de conexión al solicitar un nuevo enlace.');
+      const mensaje = await solicitarNuevoEnlaceApi(correoReenvio);
+      setMensajeReenvio(mensaje);
+    } catch (err) {
+      setErrorReenvio(err instanceof Error ? err.message : 'Error de conexión al solicitar un nuevo enlace.');
     } finally {
       setEnviando(false);
     }
@@ -150,11 +131,17 @@ export default function FormularioActivarCuenta({ token }: { token: string }) {
           </div>
 
           {estadoVista === 'cargando' && (
-            <p className="text-sm text-[#146287]">Verificando enlace de activación...</p>
+            <p role="status" aria-live="polite" className="text-sm text-[#146287]">
+              Verificando enlace de activación...
+            </p>
           )}
 
           {estadoVista === 'bienvenida' && (
-            <div className="rounded-xl bg-[#ECFEFF] border border-[#4DC4D3] p-5 space-y-2 text-center">
+            <div
+              role="status"
+              aria-live="polite"
+              className="rounded-xl bg-[#ECFEFF] border border-[#4DC4D3] p-5 space-y-2 text-center"
+            >
               <p className="text-base font-bold text-[#092A60]">
                 ¡Bienvenido a CGB Academy{perfil?.nombre ? `, ${perfil.nombre}` : ''}!
               </p>
@@ -166,15 +153,22 @@ export default function FormularioActivarCuenta({ token }: { token: string }) {
 
           {estadoVista === 'invalido' && (
             <div className="space-y-4">
-              <div className="rounded-xl border border-[#FECACA] bg-[#FEF2F2] px-4 py-3 text-sm text-[#991B1B]">
+              <div
+                role="alert"
+                className="rounded-xl border border-[#FECACA] bg-[#FEF2F2] px-4 py-3 text-sm text-[#991B1B]"
+              >
                 {errorToken}
               </div>
 
               <form onSubmit={manejarSolicitarNuevoEnlace} className="space-y-3 pt-2 border-t border-[#D8E2EE]">
-                <label className="block text-xs font-semibold uppercase tracking-wide text-[#146287]">
+                <label
+                  htmlFor="activar-correo-reenvio"
+                  className="block text-xs font-semibold uppercase tracking-wide text-[#146287]"
+                >
                   Correo corporativo
                 </label>
                 <input
+                  id="activar-correo-reenvio"
                   type="email"
                   required
                   value={correoReenvio}
@@ -182,9 +176,17 @@ export default function FormularioActivarCuenta({ token }: { token: string }) {
                   placeholder="colaborador@cgb.latam"
                   className="w-full rounded-lg border border-[#D8E2EE] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4DC4D3]"
                 />
-                {errorReenvio && <p className="text-xs text-[#991B1B]">{errorReenvio}</p>}
+                {errorReenvio && (
+                  <p role="alert" className="text-xs text-[#991B1B]">
+                    {errorReenvio}
+                  </p>
+                )}
                 {mensajeReenvio && (
-                  <p className="text-xs text-[#092A60] bg-[#ECFEFF] border border-[#4DC4D3] rounded-lg p-2.5">
+                  <p
+                    role="status"
+                    aria-live="polite"
+                    className="text-xs text-[#092A60] bg-[#ECFEFF] border border-[#4DC4D3] rounded-lg p-2.5"
+                  >
                     {mensajeReenvio}
                   </p>
                 )}
@@ -214,11 +216,15 @@ export default function FormularioActivarCuenta({ token }: { token: string }) {
 
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-semibold uppercase tracking-wide text-[#146287]">
+                  <label
+                    htmlFor="activar-nueva-contrasena"
+                    className="block text-xs font-semibold uppercase tracking-wide text-[#146287]"
+                  >
                     Nueva contraseña
                   </label>
                   <button
                     type="button"
+                    aria-pressed={mostrarClave}
                     onClick={() => setMostrarClave(prev => !prev)}
                     className="text-xs font-semibold text-[#146287] hover:text-[#092A60]"
                   >
@@ -226,6 +232,7 @@ export default function FormularioActivarCuenta({ token }: { token: string }) {
                   </button>
                 </div>
                 <input
+                  id="activar-nueva-contrasena"
                   type={mostrarClave ? 'text' : 'password'}
                   required
                   value={contrasena}
@@ -235,12 +242,19 @@ export default function FormularioActivarCuenta({ token }: { token: string }) {
                 />
 
                 {contrasena.length > 0 && (
-                  <div className="mt-2.5 space-y-2">
+                  <div className="mt-2.5 space-y-2" aria-live="polite">
                     <div className="flex items-center justify-between text-xs font-semibold">
                       <span className="text-[#146287]">Seguridad de contraseña</span>
                       <span className="text-[#092A60]">{fortaleza.nivel}</span>
                     </div>
-                    <div className="h-2 w-full rounded-full bg-[#F3F6FA] overflow-hidden">
+                    <div
+                      role="progressbar"
+                      aria-valuenow={fortaleza.porcentaje}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-label="Nivel de seguridad de la contraseña"
+                      className="h-2 w-full rounded-full bg-[#F3F6FA] overflow-hidden"
+                    >
                       <div
                         className="h-full transition-all duration-300"
                         style={{ width: `${fortaleza.porcentaje}%`, backgroundColor: colorBarra }}
@@ -269,10 +283,14 @@ export default function FormularioActivarCuenta({ token }: { token: string }) {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wide text-[#146287] mb-1">
+                <label
+                  htmlFor="activar-confirmar-contrasena"
+                  className="block text-xs font-semibold uppercase tracking-wide text-[#146287] mb-1"
+                >
                   Confirmar contraseña
                 </label>
                 <input
+                  id="activar-confirmar-contrasena"
                   type={mostrarClave ? 'text' : 'password'}
                   required
                   value={confirmacion}
@@ -283,7 +301,10 @@ export default function FormularioActivarCuenta({ token }: { token: string }) {
               </div>
 
               {errorForm && (
-                <div className="rounded-xl border border-[#FECACA] bg-[#FEF2F2] px-3 py-2 text-xs text-[#991B1B]">
+                <div
+                  role="alert"
+                  className="rounded-xl border border-[#FECACA] bg-[#FEF2F2] px-3 py-2 text-xs text-[#991B1B]"
+                >
                   {errorForm}
                 </div>
               )}
