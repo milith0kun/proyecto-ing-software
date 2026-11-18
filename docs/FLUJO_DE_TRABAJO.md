@@ -154,15 +154,15 @@ GitHub no permite que el autor de un PR lo apruebe ni que lo apruebe quien hizo 
 | Quién | Qué publica | Quién aprueba |
 |---|---|---|
 | Responsable de la historia (Jira) | Su historia, desde su cuenta y su rama | Una persona distinta: el revisor |
-| Revisor o integrador | Solo PR de mantenimiento (CI, dependencias, documentación de proceso) | Un compañero; nunca el mismo revisor |
+| Revisor o integrador | Solo PR de mantenimiento (CI, dependencias, documentación de proceso) | Nadie más: el integrador revisa, deja la verificación en el PR y fusiona como administrador (excepción de abajo) |
 
 Reglas:
 
 1. **Cada historia la publica su responsable.** El revisor y su asistente no abren el PR de una historia ajena ni suben commits a la rama de otra persona: si lo hacen, el revisor pasa a ser último push y pierde la posibilidad de aprobar. Lo que se corrige se pide al autor en el PR.
-2. **Un PR de mantenimiento publicado con la cuenta del revisor no lo aprueba el revisor.** Al abrirlo se pide revisión a un compañero (`gh pr edit <n> --add-reviewer <usuario>`) y se agrupa el trabajo de mantenimiento en pocos PR para pedir la aprobación una sola vez.
-3. **Tras la aprobación ajena**, el revisor o integrador hace Squash and merge. Si el cambio es de una historia con responsable en Jira, el PR se abre con la cuenta de esa persona.
+2. **Un PR de mantenimiento publicado con la cuenta del integrador no puede aprobarlo esa misma cuenta.** Se revisa, se deja la verificación real (comandos, resultados y CI) en un comentario del PR y se fusiona como administrador con `gh pr merge <n> --admin --squash`. La excepción vale solo para documentación de proceso, CI y dependencias, nunca para el PR de una historia.
+3. **Todo PR de una historia** sigue necesitando la aprobación de una persona distinta del autor, y el integrador lo fusiona con Squash and merge con un cuerpo propio. Si el cambio es de una historia con responsable en Jira, el PR se abre con la cuenta de esa persona.
 4. **Antes de aprobar o fusionar**, se comprueba el autor y el último push: `gh pr view <n> --json author` y `git log -1 --format=%an origin/<rama>`. Si coinciden con quien revisa, se pide la revisión a otra persona en lugar de intentar aprobar.
-5. **No se modifica la protección de `main` para evitar esta regla.** Una excepción para administradores es una decisión del equipo registrada en Jira.
+5. **Excepción registrada el 18/11/2026 por el PO:** en `main` el administrador puede saltarse la aprobación (`enforce_admins` desactivado) para los PR de mantenimiento. No se usa en PR de historias. Cualquier otro cambio de la protección es una decisión del equipo registrada en Jira.
 ## 7. Cambios, trazabilidad y versiones aprobadas
 
 Todo cambio sigue esta cadena:

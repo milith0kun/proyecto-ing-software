@@ -30,9 +30,9 @@ Un asistente de IA puede preparar el informe, pero **no aprueba, fusiona, public
 Quien revisa no puede aprobar un PR del que es autor ni uno en el que hizo el último push, y la regla se aplica también a administradores. Por eso, en cada revisión:
 
 1. Comprobar `gh pr view <n> --json author` y `git log -1 --format=%an origin/<rama>`.
-2. Si el autor o el último push es la cuenta de quien revisa, **no intentar aprobar**: pedir la revisión a un compañero (`gh pr edit <n> --add-reviewer <usuario>`) y dejarlo dicho en el informe como paso pendiente de otra persona.
+2. Si el autor o el último push es la cuenta de quien revisa y el PR es **de mantenimiento** (CI, dependencias, documentación de proceso), se revisa, se deja la verificación en el PR y se fusiona como administrador (`gh pr merge <n> --admin --squash`). Si es **de una historia**, no se aprueba ni se fusiona: la aprueba otra persona.
 3. No subir commits a la rama de otra persona. Las correcciones se piden al autor en el PR.
-4. Un asistente que usa la cuenta del revisor **no abre el PR de una historia ajena**; solo PR de mantenimiento, con revisión pedida a un compañero desde el primer momento. Detalle en [`FLUJO_DE_TRABAJO.md`](FLUJO_DE_TRABAJO.md), «Autoría, último push y aprobación».
+4. Un asistente que usa la cuenta del revisor **no abre el PR de una historia ajena**; solo PR de mantenimiento. Detalle en [`FLUJO_DE_TRABAJO.md`](FLUJO_DE_TRABAJO.md), «Autoría, último push y aprobación».
 ## 2. Esquema del flujo: quién hace qué
 
 ```text
