@@ -29,8 +29,7 @@ Capacitación temporal `[DEMO] Microtest HU-014` en MongoDB Atlas, con la cuenta
 | CA-04 | ![Intentos agotados](evidencias-hu014/04-intentos-agotados.png) |
 | CA-02, CA-03 | ![Aprobado](evidencias-hu014/05-resultado-aprobado.png) |
 | CA-03 | ![Capacitación completada](evidencias-hu014/06-capacitacion-completada.png) |
-
-Falta una captura del formulario limpio tras «Reintentar ahora».
+| CA-04 | ![Formulario limpio tras «Reintentar ahora»](evidencias-hu014/07-formulario-limpio-tras-reintentar.png) |
 
 ## Diseño por capas
 
