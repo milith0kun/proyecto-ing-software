@@ -226,6 +226,11 @@ export function crearServicioRutasOnboarding(repositorio: RepositorioRutasOnboar
       if (!ruta) {
         throw new ErrorRutaOnboarding('La ruta de onboarding no existe.');
       }
+      if (ruta.estado === 'ACTIVA') {
+        throw new ErrorRutaOnboarding(
+          'No se puede modificar ni reordenar la secuencia de una ruta que ya está ACTIVA.',
+        );
+      }
 
       const pasos = construirPasosSecuenciales(capacitacionIds);
       if (pasos.length > 0) {

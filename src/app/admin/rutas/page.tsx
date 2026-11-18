@@ -28,10 +28,10 @@ export default async function PaginaRutasOnboarding() {
 
   const rutasIniciales = rutas.map(r => ({
     id: r.id,
-    titulo: r.titulo,
-    objetivo: r.objetivo,
-    estado: r.estado,
-    areaId: r.areaId,
+    titulo: r.titulo ?? r.nombre ?? 'Ruta sin título',
+    objetivo: r.objetivo ?? r.descripcion ?? '',
+    estado: r.estado ?? (r.activa ? 'ACTIVA' : 'BORRADOR'),
+    areaId: r.areaId ?? '',
     puestoId: r.puestoId,
     activadaEn: r.activadaEn ? r.activadaEn.toISOString() : null,
     pasos: r.pasos.map(p => ({

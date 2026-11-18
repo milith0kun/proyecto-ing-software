@@ -209,3 +209,28 @@ test('HU-008 T3 REFACTOR: reordena pasos de forma inmutable sin mutar la secuenc
   assert.deepEqual(original, ['cap-1', 'cap-2', 'cap-3']);
   assert.deepEqual(moverPasoSecuencia(original, -1, 1), ['cap-1', 'cap-2', 'cap-3']);
 });
+
+test('HU-008: bloquea la modificación o reordenamiento de pasos cuando la ruta ya está ACTIVA', async () => {
+  const repo = crearRepositorioEnMemoria();
+  const servicio = crearServicioRutasOnboarding(repo);
+
+  const ruta = await servicio.crearRuta({
+    titulo: 'Onboarding Backend Node.js',
+    objetivo: 'Proteger la secuencia una vez activada para colaboradores.',
+    areaId: 'area-ti',
+    puestoId: 'puesto-backend',
+  });
+  await servicio.secuenciarCapacitaciones(ruta.id, ['cap-1', 'cap-2']);
+  await servicio.activarRuta(ruta.id, new Date('2026-11-17T22:00:00Z'));
+
+  await assert.rejects(
+    () => servicio.secuenciarCapacitaciones(ruta.id, ['cap-2', 'cap-1', 'cap-3']),
+    error => error instanceof ErrorRutaOnboarding && /ACTIVA/i.test(error.message),
+  );
+
+  const sinCambios = await servicio.obtenerRuta(ruta.id);
+  assert.deepEqual(
+    sinCambios.pasos.map(p => p.capacitacionId),
+    ['cap-1', 'cap-2'],
+  );
+});

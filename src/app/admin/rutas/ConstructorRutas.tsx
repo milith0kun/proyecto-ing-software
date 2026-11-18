@@ -84,6 +84,7 @@ export default function ConstructorRutas({
     () => capacitaciones.filter(c => !secuenciaIds.includes(c.id)),
     [capacitaciones, secuenciaIds],
   );
+  const estaActiva = rutaActiva?.estado === 'ACTIVA';
 
   function seleccionarRuta(ruta: RutaItem) {
     setRutaSeleccionadaId(ruta.id);
@@ -123,16 +124,18 @@ export default function ConstructorRutas({
   }
 
   function agregarPaso() {
-    if (!capacitacionAgregarId || secuenciaIds.includes(capacitacionAgregarId)) return;
+    if (estaActiva || !capacitacionAgregarId || secuenciaIds.includes(capacitacionAgregarId)) return;
     setSecuenciaIds(prev => [...prev, capacitacionAgregarId]);
     setCapacitacionAgregarId('');
   }
 
   function quitarPaso(capId: string) {
+    if (estaActiva) return;
     setSecuenciaIds(prev => prev.filter(id => id !== capId));
   }
 
   function moverPaso(origen: number, destino: number) {
+    if (estaActiva) return;
     setSecuenciaIds(prev => moverPasoSecuencia(prev, origen, destino));
   }
 
@@ -374,11 +377,18 @@ export default function ConstructorRutas({
                   </button>
                 </div>
 
+                {estaActiva && (
+                  <div className="rounded-xl border border-[#4DC4D3] bg-[#ECFEFF] px-4 py-3 text-xs font-medium text-[#092A60]">
+                    Esta ruta ya está ACTIVA. Su secuencia queda en modo solo lectura para proteger el avance de los colaboradores asignados.
+                  </div>
+                )}
+
                 <div className="flex flex-wrap gap-2">
                   <select
                     value={capacitacionAgregarId}
+                    disabled={estaActiva}
                     onChange={e => setCapacitacionAgregarId(e.target.value)}
-                    className="flex-1 min-w-[220px] rounded-lg border border-[#D8E2EE] px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#4DC4D3]"
+                    className="flex-1 min-w-[220px] rounded-lg border border-[#D8E2EE] px-3 py-2 text-sm bg-white disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-[#4DC4D3]"
                   >
                     <option value="">Selecciona una capacitación publicada...</option>
                     {disponibles.map(cap => (
@@ -390,7 +400,7 @@ export default function ConstructorRutas({
                   <button
                     type="button"
                     onClick={agregarPaso}
-                    disabled={!capacitacionAgregarId}
+                    disabled={estaActiva || !capacitacionAgregarId}
                     className="rounded-xl border border-[#092A60] text-[#092A60] px-4 py-2 text-sm font-semibold hover:bg-[#F3F6FA] disabled:opacity-40"
                   >
                     Añadir Paso
@@ -413,16 +423,18 @@ export default function ConstructorRutas({
                         return (
                           <li
                             key={capId}
-                            draggable
-                            onDragStart={() => setIndiceArrastrado(indice)}
+                            draggable={!estaActiva}
+                            onDragStart={() => !estaActiva && setIndiceArrastrado(indice)}
                             onDragOver={e => e.preventDefault()}
                             onDrop={() => {
-                              if (indiceArrastrado !== null) {
+                              if (!estaActiva && indiceArrastrado !== null) {
                                 moverPaso(indiceArrastrado, indice);
                                 setIndiceArrastrado(null);
                               }
                             }}
-                            className="flex items-center justify-between gap-3 rounded-xl border border-[#D8E2EE] bg-[#F3F6FA] px-4 py-3 cursor-grab active:cursor-grabbing"
+                            className={`flex items-center justify-between gap-3 rounded-xl border border-[#D8E2EE] bg-[#F3F6FA] px-4 py-3 ${
+                              estaActiva ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'
+                            }`}
                           >
                             <div className="flex items-center gap-3 min-w-0">
                               <svg
@@ -453,7 +465,7 @@ export default function ConstructorRutas({
                               <button
                                 type="button"
                                 onClick={() => moverPaso(indice, indice - 1)}
-                                disabled={indice === 0}
+                                disabled={estaActiva || indice === 0}
                                 aria-label="Subir paso"
                                 className="rounded-lg border border-[#D8E2EE] bg-white px-2.5 py-1 text-xs font-semibold text-[#092A60] hover:bg-[#F9FAFB] disabled:opacity-40"
                               >
@@ -462,7 +474,7 @@ export default function ConstructorRutas({
                               <button
                                 type="button"
                                 onClick={() => moverPaso(indice, indice + 1)}
-                                disabled={indice === secuenciaIds.length - 1}
+                                disabled={estaActiva || indice === secuenciaIds.length - 1}
                                 aria-label="Bajar paso"
                                 className="rounded-lg border border-[#D8E2EE] bg-white px-2.5 py-1 text-xs font-semibold text-[#092A60] hover:bg-[#F9FAFB] disabled:opacity-40"
                               >
@@ -471,7 +483,8 @@ export default function ConstructorRutas({
                               <button
                                 type="button"
                                 onClick={() => quitarPaso(capId)}
-                                className="rounded-lg border border-[#FECACA] bg-white px-2.5 py-1 text-xs font-semibold text-[#991B1B] hover:bg-[#FEF2F2]"
+                                disabled={estaActiva}
+                                className="rounded-lg border border-[#FECACA] bg-white px-2.5 py-1 text-xs font-semibold text-[#991B1B] hover:bg-[#FEF2F2] disabled:opacity-40"
                               >
                                 Quitar
                               </button>
@@ -487,7 +500,7 @@ export default function ConstructorRutas({
                   <button
                     type="button"
                     onClick={guardarSecuencia}
-                    disabled={cargando}
+                    disabled={cargando || estaActiva}
                     className="rounded-xl bg-[#092A60] text-white px-5 py-2.5 text-sm font-semibold hover:bg-[#146287] disabled:opacity-50 transition-colors"
                   >
                     Guardar Secuencia

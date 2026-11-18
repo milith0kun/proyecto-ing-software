@@ -105,18 +105,21 @@ model PuestoTrabajo {
 
 // Rutas de Onboarding y secuencia de pasos (HU-008 / CGB-36)
 model RutaOnboarding {
-  id         String         @id @default(auto()) @map("_id") @db.ObjectId
-  titulo     String
-  objetivo   String
-  estado     String         @default("BORRADOR") // "BORRADOR" | "ACTIVA"
-  areaId     String         @db.ObjectId
-  area       Area           @relation(fields: [areaId], references: [id], onDelete: Restrict)
-  puestoId   String?        @db.ObjectId
-  puesto     PuestoTrabajo? @relation(fields: [puestoId], references: [id], onDelete: SetNull)
-  activadaEn DateTime?
-  pasos      PasoRuta[]
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  id          String         @id @default(auto()) @map("_id") @db.ObjectId
+  titulo      String?
+  objetivo    String?
+  nombre      String?
+  descripcion String?
+  activa      Boolean?
+  estado      String?        @default("BORRADOR") // "BORRADOR" | "ACTIVA"
+  areaId      String?        @db.ObjectId
+  area        Area?          @relation(fields: [areaId], references: [id], onDelete: Restrict)
+  puestoId    String?        @db.ObjectId
+  puesto      PuestoTrabajo? @relation(fields: [puestoId], references: [id], onDelete: SetNull)
+  activadaEn  DateTime?
+  pasos       PasoRuta[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 
   @@index([areaId, puestoId, estado])
   @@map("rutas_onboarding")

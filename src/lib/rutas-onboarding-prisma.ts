@@ -11,10 +11,13 @@ import type {
 
 function mapearRutaPrisma(ruta: {
   id: string;
-  titulo: string;
-  objetivo: string;
-  estado: string;
-  areaId: string;
+  titulo: string | null;
+  objetivo: string | null;
+  nombre?: string | null;
+  descripcion?: string | null;
+  activa?: boolean | null;
+  estado: string | null;
+  areaId: string | null;
   puestoId: string | null;
   activadaEn: Date | null;
   pasos: Array<{
@@ -28,10 +31,10 @@ function mapearRutaPrisma(ruta: {
 }): RutaOnboardingRegistro {
   return {
     id: ruta.id,
-    titulo: ruta.titulo,
-    objetivo: ruta.objetivo,
-    estado: ruta.estado,
-    areaId: ruta.areaId,
+    titulo: ruta.titulo ?? ruta.nombre ?? 'Ruta sin título',
+    objetivo: ruta.objetivo ?? ruta.descripcion ?? '',
+    estado: ruta.estado ?? (ruta.activa ? 'ACTIVA' : 'BORRADOR'),
+    areaId: ruta.areaId ?? '',
     puestoId: ruta.puestoId,
     activadaEn: ruta.activadaEn,
     pasos: [...ruta.pasos]
@@ -79,6 +82,9 @@ export function crearRepositorioRutasPrisma(): RepositorioRutasOnboarding {
         data: {
           titulo: datos.titulo,
           objetivo: datos.objetivo,
+          nombre: datos.titulo,
+          descripcion: datos.objetivo,
+          activa: datos.estado === 'ACTIVA',
           estado: datos.estado,
           areaId: datos.areaId,
           puestoId: datos.puestoId,
@@ -140,7 +146,7 @@ export function crearRepositorioRutasPrisma(): RepositorioRutasOnboarding {
     ): Promise<RutaOnboardingRegistro | null> {
       const actualizada = await prisma.rutaOnboarding.update({
         where: { id: rutaId },
-        data: { estado, activadaEn },
+        data: { estado, activa: estado === 'ACTIVA', activadaEn },
         include: {
           pasos: {
             orderBy: { orden: 'asc' },
