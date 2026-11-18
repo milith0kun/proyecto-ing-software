@@ -17,6 +17,7 @@
   3. **Quispe Mamani, Domingo de Guzman** — *Desarrollador Full-Stack*
   4. **Saire Bustamante, Edmil Jampier** — *Product Owner y Scrum Master*
   5. **Ticona Jancco, Ronaldo** — *Desarrollador Full-Stack*
+- **Repositorio de código:** https://github.com/milith0kun/proyecto-ing-software
 - **Entidad Beneficiaria:** CGB Academy (Integrando las unidades CIIP LATAM, GEOMINA LATAM y BIOMEDIC)
 - **Repositorio Oficial en GitHub:** `https://github.com/milith0kun/proyecto-ing-software`
 - **Estrategia de ramas:** `main` como única rama permanente de integración; ramas cortas por issue y Pull Request revisado.
