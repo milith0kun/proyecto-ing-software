@@ -42,5 +42,5 @@ Guardar y finalizar usan control optimista (`escribirProgreso`): se actualiza so
 
 - No se verificó desde el navegador; la interfaz solo se probó con pruebas de componente.
 - Faltan la revisión por pares, la aprobación independiente y la integración mediante Pull Request (CGB-60).
-- `docs/definition-of-done.md` es una propuesta pendiente de validar con el equipo y con la DoD de Jira. Diseño por capas y trazabilidad: `docs/HU012-DISENO-Y-TRAZABILIDAD.md`.
+- La DoD es la del equipo (PR #12); esta rama no la define. Validar la asignación de capacitaciones a la ruta del colaborador queda para cuando CGB-36 y CGB-51 estén en `main`. Diseño por capas y trazabilidad: `docs/HU012-DISENO-Y-TRAZABILIDAD.md`.
 - CGB-51 consumirá este avance.

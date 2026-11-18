@@ -7,7 +7,7 @@ Complementa `HU012-VALIDACION.md` con lo que piden las diapositivas 3 a 6.
 Como colaborador, quiero completar una capacitación interna y que se registre mi avance, para retomarla donde la dejé y acreditar que la terminé.
 
 - Los criterios de aceptación CA1–CA5 son propios de la historia y están en `HU012-VALIDACION.md`.
-- La DoD es común a todas las historias: `docs/definition-of-done.md`.
+- La DoD es común a todas las historias y es la del equipo (`docs/definition-of-done.md`, PR #12). Esta rama no la define.
 - Los requisitos no funcionales (privacidad, integridad ante concurrencia, estados accesibles) se comprueban con pruebas y se incluyen en la DoD.
 
 ## Arquitectura en capas (diapositiva 6)
@@ -19,7 +19,7 @@ Cada capa solo usa a la inmediatamente inferior:
 | Presentación | `src/app/colaborador/capacitaciones/[id]/page.tsx`, `VisorCapacitacionInterna.tsx`, `src/app/capacitaciones/[id]/SlideViewer.tsx` | Mostrar slides, estado de guardado y reintento |
 | Controlador (API) | `src/app/api/colaborador/capacitaciones/[id]/progreso/**/route.ts` | Reexportar `consultarProgreso`, `guardarProgreso` y `finalizarProgreso` |
 | Lógica de negocio | `src/lib/servicio-progreso.ts`, `src/lib/progreso-capacitacion.ts` | Orquestar la solicitud (servicio) y reglas puras: avance, reanudación, no saltar slides, finalización |
-| Acceso a datos | `src/lib/repositorio-progreso.ts`, `prisma/schema.prisma` | Único módulo del flujo que conoce Prisma/MongoDB |
+| Acceso a datos | `src/lib/repositorio-progreso.ts` (también lo usa la página del visor), `prisma/schema.prisma` | Único módulo del flujo que conoce Prisma/MongoDB |
 
 ## Principios de diseño (diapositiva 5)
 

@@ -174,7 +174,7 @@ test('HU-012 CA-05 Integridad: el porcentaje nunca supera 100 %', () => {
   assert.equal(calcularPorcentajeAvance([], 0), 0);
 });
 
-test('HU-012: entradas inválidas y capacitaciones no asignadas se rechazan sin escribir', async () => {
+test('HU-012: entradas inválidas y capacitaciones inexistentes se rechazan sin escribir', async () => {
   for (const slide of [0, 5, -1, 1.5, 'uno', null]) {
     assert.equal((await confirmar(slide)).status, 400, `slide ${slide}`);
   }

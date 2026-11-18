@@ -41,3 +41,14 @@ export function actualizarProgresoSiNoCambio(
 ): Promise<{ count: number }> {
   return prisma.progresoCapacitacion.updateMany({ where: { usuarioId, capacitacionId, updatedAt }, data });
 }
+
+// Datos que necesita la página del visor: la capacitación interna publicada con sus slides ordenados.
+export function buscarCapacitacionParaVisor(id: string) {
+  return prisma.capacitacion.findFirst({
+    where: { id, estado: 'PUBLICADA', ambito: 'INTERNO' },
+    select: {
+      id: true, titulo: true, descripcion: true, unidad: true, prerrequisitos: true,
+      slides: { orderBy: { orden: 'asc' }, select: { id: true, orden: true, titulo: true, contenido: true, tipo: true, imagenUrl: true, botonTexto: true, botonUrl: true, lista: true } },
+    },
+  });
+}

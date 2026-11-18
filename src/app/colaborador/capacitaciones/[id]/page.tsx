@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { prisma } from '@/lib/prisma';
+import { buscarCapacitacionParaVisor, buscarProgreso, claveDeProgreso, idsCompletadas } from '@/lib/repositorio-progreso';
 import { sesionActual } from '@/lib/sesion';
 import { prerrequisitosCumplidos, slideDeReanudacion } from '@/lib/progreso-capacitacion';
 import { MarcoCapacitacion } from '@/components/capacitaciones/MarcoCapacitacion';
@@ -14,19 +14,10 @@ export default async function PaginaCapacitacionInterna({ params }: { params: Pr
   const { id } = await params;
   if (!/^[a-f\d]{24}$/i.test(id)) notFound();
 
-  const capacitacion = await prisma.capacitacion.findFirst({
-    where: { id, estado: 'PUBLICADA', ambito: 'INTERNO' },
-    select: {
-      id: true, titulo: true, descripcion: true, unidad: true, prerrequisitos: true,
-      slides: { orderBy: { orden: 'asc' }, select: { id: true, orden: true, titulo: true, contenido: true, tipo: true, imagenUrl: true, botonTexto: true, botonUrl: true, lista: true } },
-    },
-  });
+  const capacitacion = await buscarCapacitacionParaVisor(id);
   if (!capacitacion) notFound();
 
-  const completadas = await prisma.progresoCapacitacion.findMany({
-    where: { usuarioId: usuario.id, estado: 'COMPLETADA' }, select: { capacitacionId: true },
-  });
-  if (!prerrequisitosCumplidos(capacitacion.prerrequisitos, completadas.map(p => p.capacitacionId))) {
+  if (!prerrequisitosCumplidos(capacitacion.prerrequisitos, await idsCompletadas(usuario.id))) {
     return <MarcoCapacitacion>
       <section role="status" className="visor-sin-contenido">
         Completa primero las capacitaciones previas para habilitar esta. <Link href="/colaborador">Volver a mi espacio</Link>
@@ -34,9 +25,7 @@ export default async function PaginaCapacitacionInterna({ params }: { params: Pr
     </MarcoCapacitacion>;
   }
 
-  const progreso = await prisma.progresoCapacitacion.findUnique({
-    where: { usuarioId_capacitacionId: { usuarioId: usuario.id, capacitacionId: id } },
-  });
+  const progreso = await buscarProgreso(claveDeProgreso(usuario.id, id));
 
   return (
     <MarcoCapacitacion>
