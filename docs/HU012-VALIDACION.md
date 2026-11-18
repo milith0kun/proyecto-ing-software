@@ -32,7 +32,7 @@ Guardar y finalizar usan control optimista (`escribirProgreso`): se actualiza so
 
 ## Verificación (17 de noviembre de 2026)
 
-- Tras traer `main` (18 de noviembre de 2026): `npm test` **113 pasan, 0 fallan**, `tsc`, `eslint` y `npm run build` sin errores.
+- Tras traer `main` hasta `a5918ea` (18 de noviembre de 2026): `npm test` **122 pasan, 0 fallan**, `tsc`, `eslint` y `npm run build` sin errores.
 - `npm test` antes del merge: **92 pruebas pasan, 0 fallan** (24 de HU-012 en `tests/progreso-capacitacion.test.mjs` y `tests/visor-progreso.test.mjs`, incluidas 4 de concurrencia).
 - `npx tsc --noEmit` y `npx eslint src tests`: sin errores.
 - **MongoDB Atlas real** (`prisma db push` aplicado; colección `progreso_capacitaciones` con índice único usuario + capacitación). Con datos temporales, ya eliminados (0 restos):
