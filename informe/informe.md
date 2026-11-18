@@ -229,21 +229,20 @@ El modelo secuencial en Cascada se descartó porque presupone requerimientos inm
 
 ## 10. Roles, Responsabilidades y Forma de Coordinación
 
-### 10.1 Política de Roles Rotativos por Sprint
-El equipo adopta una estructura de **roles rotativos**, donde las funciones de liderazgo ágil no son estáticas, sino que se alternan en cada iteración para que todos los integrantes adquieran experiencia en gestión de producto, facilitación técnica y desarrollo full-stack:
+### 10.1 Política de Roles por Sprint
+Edmil Saire concentra los roles de Product Owner y Scrum Master durante todo el proyecto; los otros cuatro integrantes son desarrolladores Full-Stack. Los roles se revisan en cada Retrospectiva:
 
 - **Sprint 1 (Sprint Piloto de Evaluación):**  
   Se establece la configuración inicial para medir la cadencia y dinamismo del equipo:
-  - **Product Owner y Scrum Master (desde el Sprint 2):** Saire Bustamante, Edmil Jampier.
-  - **Scrum Master en el Sprint 1:** Barazorda Cuellar, Hector (desde el Sprint 2 es desarrollador).
-  - **Desarrolladores Full-Stack (desde el Sprint 2):** Barazorda Cuellar, Hector; Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; Ticona Jancco, Ronaldo.
+  - **Product Owner y Scrum Master:** Saire Bustamante, Edmil Jampier.
+  - **Desarrolladores Full-Stack:** Barazorda Cuellar, Hector; Carpio Hermoza, Alex; Quispe Mamani, Domingo de Guzman; Ticona Jancco, Ronaldo.
 - **Mecanismo de Evaluación y Rotación:**  
-  En la **Sprint Retrospective** al término del Sprint 1, se analizan los resultados del flujo, los bloqueos resueltos y la interacción con los requisitos. A partir de esa evaluación, se ejecutan las decisiones de rotación del Scrum Master y Product Owner para el Sprint 2 y Sprint 3, permitiendo la alternancia de roles entre los 5 integrantes.
+  En la **Sprint Retrospective** al término del Sprint 1, se analizan los resultados del flujo, los bloqueos resueltos y la interacción con los requisitos. A partir de esa evaluación, se revisan los roles para el Sprint 2 y el Sprint 3; Edmil Saire mantiene los de Product Owner y Scrum Master y los demás integrantes son desarrolladores.
 
 | Integrante | Rol en Sprint 1 | Acciones y Responsabilidades Principales |
 |---|---|---|
-| **Saire Bustamante, Edmil Jampier** | **Product Owner y Scrum Master** (desde el Sprint 2) | Priorización del backlog, validación de criterios BDD (Dado/Cuando/Entonces), aprobación de entregables en la Review, facilitación de las ceremonias, remoción de bloqueos y vigilancia de límites WIP. |
-| **Barazorda Cuellar, Hector** | **Desarrollador Full-Stack** (Scrum Master en el Sprint 1) | Desarrollo de sus HU asignadas desde el Sprint 2 y revisión de código por pares. |
+| **Saire Bustamante, Edmil Jampier** | **Product Owner y Scrum Master** | Priorización del backlog, validación de criterios BDD (Dado/Cuando/Entonces), aprobación de entregables en la Review, facilitación de las ceremonias, remoción de bloqueos y vigilancia de límites WIP. |
+| **Barazorda Cuellar, Hector** | **Desarrollador Full-Stack** | Desarrollo de sus HU asignadas y revisión de código por pares. |
 | **Carpio Hermoza, Alex** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
 | **Quispe Mamani, Domingo de Guzman** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
 | **Ticona Jancco, Ronaldo** | **Desarrollador Full-Stack** | Ejecución autónoma de las 5 fases de sus HU (Plan, Diseño, Frontend, Backend, Test), revisión de código por pares y elegible para rol en Sprint 2. |
