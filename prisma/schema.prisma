@@ -9,17 +9,20 @@ generator client {
 
 // Modelo de prueba / entidad base inicial para CGB Academy
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String   @unique
-  name      String?
-  role      String   @default("COLABORADOR")
-  passwordHash String?
-  activo    Boolean  @default(false)
-  sesiones  Sesion[]
-  progresos ProgresoCapacitacion[]
+  id                 String                 @id @default(auto()) @map("_id") @db.ObjectId
+  email              String                 @unique
+  name               String?
+  role               String                 @default("COLABORADOR")
+  passwordHash       String?
+  activo             Boolean                @default(false)
+  rutaOnboardingId   String?                @db.ObjectId
+  rutaOnboarding     RutaOnboarding?        @relation(fields: [rutaOnboardingId], references: [id], onDelete: SetNull)
+  colaborador        Colaborador?
+  sesiones           Sesion[]
+  progresos          ProgresoCapacitacion[]
   intentosEvaluacion IntentoEvaluacion[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
 
   @@map("users")
 }
@@ -38,27 +41,27 @@ model Sesion {
 
 // Modelo principal para la gestión de capacitaciones (HU-002 / HU-004 / HU-005)
 model Capacitacion {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  titulo      String
-  descripcion String
-  unidad      String   @default("CIIP") // "CIIP" | "GEOMINA" | "BIOMEDIC" | "GENERAL"
-  ambito      String   @default("PUBLICO") // "PUBLICO" | "INTERNO"
-  estado      String   @default("BORRADOR") // "BORRADOR" | "PUBLICADA"
-  publicadaEn DateTime?
-  categoria   String?  @default("Inducción")
-  duracionMin Int?     @default(30)
-  icono       String?  @default("book-open")
-  creadoPor   String?
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  titulo         String
+  descripcion    String
+  unidad         String    @default("CIIP") // "CIIP" | "GEOMINA" | "BIOMEDIC" | "GENERAL"
+  ambito         String    @default("PUBLICO") // "PUBLICO" | "INTERNO"
+  estado         String    @default("BORRADOR") // "BORRADOR" | "PUBLICADA"
+  publicadaEn    DateTime?
+  categoria      String?   @default("Inducción")
+  duracionMin    Int?      @default(30)
+  icono          String?   @default("book-open")
+  creadoPor      String?
   // IDs de capacitaciones que deben estar COMPLETADAS antes de iniciar esta (HU-012)
-  prerrequisitos String[] @default([]) @db.ObjectId
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  prerrequisitos String[]  @default([]) @db.ObjectId
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   // Relación con Slides (para HU-003 / HU-006)
-  slides      Slide[]
-  progresos   ProgresoCapacitacion[]
-  evaluacion  Evaluacion?
-  pasosRuta   PasoRuta[]
+  slides     Slide[]
+  progresos  ProgresoCapacitacion[]
+  evaluacion Evaluacion?
+  pasosRuta  PasoRuta[]
 
   @@index([ambito, estado, createdAt(sort: Desc)], map: "capacitaciones_catalogo_publico")
   @@map("capacitaciones")
@@ -66,39 +69,38 @@ model Capacitacion {
 
 // Modelo de diapositivas interactivas por capacitación (HU-003 / HU-006)
 model Slide {
-  id              String       @id @default(auto()) @map("_id") @db.ObjectId
-  capacitacionId  String       @db.ObjectId
-  capacitacion    Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Cascade)
-  orden           Int          @default(1)
-  titulo          String
-  contenido       String       // Contenido textual principal
-  tipo            String       @default("INFO") // TEXT | IMAGE | INTERACTIVE | INFO | EVALUACION
-  imagenUrl       String?
-  botonTexto      String?
-  botonUrl        String?
-  lista           String[]     @default([])
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  capacitacionId String       @db.ObjectId
+  capacitacion   Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Cascade)
+  orden          Int          @default(1)
+  titulo         String
+  contenido      String // Contenido textual principal
+  tipo           String       @default("INFO") // TEXT | IMAGE | INTERACTIVE | INFO | EVALUACION
+  imagenUrl      String?
+  botonTexto     String?
+  botonUrl       String?
+  lista          String[]     @default([])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
   @@map("slides")
 }
-
 
 // Avance privado de un colaborador en una capacitación interna (HU-012).
 // La clave única (usuario, capacitación) garantiza un solo registro por persona.
 // Restrict: borrar un usuario o una capacitación no elimina en silencio el historial de avance.
 model ProgresoCapacitacion {
-  id               String       @id @default(auto()) @map("_id") @db.ObjectId
-  usuarioId        String       @db.ObjectId
-  usuario          User         @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
-  capacitacionId   String       @db.ObjectId
-  capacitacion     Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Restrict)
-  ultimoSlide      Int          @default(1) // último slide confirmado: punto de reanudación
-  slidesConfirmados Int[]       @default([]) // conjunto sin duplicados, base del porcentaje
-  estado           String       @default("EN_CURSO") // "EN_CURSO" | "COMPLETADA"
-  completadaEn     DateTime?
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
+  id                String       @id @default(auto()) @map("_id") @db.ObjectId
+  usuarioId         String       @db.ObjectId
+  usuario           User         @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+  capacitacionId    String       @db.ObjectId
+  capacitacion      Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Restrict)
+  ultimoSlide       Int          @default(1) // último slide confirmado: punto de reanudación
+  slidesConfirmados Int[]        @default([]) // conjunto sin duplicados, base del porcentaje
+  estado            String       @default("EN_CURSO") // "EN_CURSO" | "COMPLETADA"
+  completadaEn      DateTime?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   @@unique([usuarioId, capacitacionId])
   @@map("progreso_capacitaciones")
@@ -106,27 +108,27 @@ model ProgresoCapacitacion {
 
 // Pregunta de opción múltiple embebida en la evaluación. `correcta` nunca se envía al navegador antes de calificar.
 type PreguntaEvaluacion {
-  id               String
-  enunciado        String
-  opciones         String[]
-  correcta         Int      // índice base 0 dentro de `opciones`
+  id                String
+  enunciado         String
+  opciones          String[]
+  correcta          Int // índice base 0 dentro de `opciones`
   retroalimentacion String?
 }
 
 // Microtest formativo de una capacitación (HU-013 / HU-014).
 // Restrict: borrar una capacitación no elimina en silencio su evaluación ni sus intentos registrados (RNF-010).
 model Evaluacion {
-  id              String       @id @default(auto()) @map("_id") @db.ObjectId
-  capacitacionId  String       @unique @db.ObjectId
-  capacitacion    Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Restrict)
-  titulo          String       @default("Microtest")
+  id              String               @id @default(auto()) @map("_id") @db.ObjectId
+  capacitacionId  String               @unique @db.ObjectId
+  capacitacion    Capacitacion         @relation(fields: [capacitacionId], references: [id], onDelete: Restrict)
+  titulo          String               @default("Microtest")
   preguntas       PreguntaEvaluacion[]
-  notaMinima      Int          @default(70) // porcentaje 0-100 para aprobar
-  maxIntentos     Int          @default(3)
-  tiempoLimiteSeg Int?         // temporizador opcional
+  notaMinima      Int                  @default(70) // porcentaje 0-100 para aprobar
+  maxIntentos     Int                  @default(3)
+  tiempoLimiteSeg Int? // temporizador opcional
   intentos        IntentoEvaluacion[]
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
 
   @@map("evaluaciones")
 }
@@ -140,9 +142,9 @@ model IntentoEvaluacion {
   usuarioId    String     @db.ObjectId
   usuario      User       @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
   numero       Int
-  respuestas   Int[]      // -1 = sin responder
+  respuestas   Int[] // -1 = sin responder
   aciertos     Int
-  puntaje      Int        // porcentaje 0-100
+  puntaje      Int // porcentaje 0-100
   aprobado     Boolean
   enviadoEn    DateTime   @default(now())
 
@@ -165,14 +167,15 @@ model Area {
 }
 
 model PuestoTrabajo {
-  id          String           @id @default(auto()) @map("_id") @db.ObjectId
-  nombre      String
-  nombreClave String
-  areaId      String           @db.ObjectId
-  area        Area             @relation(fields: [areaId], references: [id], onDelete: Restrict)
-  rutas       RutaOnboarding[]
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  id            String           @id @default(auto()) @map("_id") @db.ObjectId
+  nombre        String
+  nombreClave   String
+  areaId        String           @db.ObjectId
+  area          Area             @relation(fields: [areaId], references: [id], onDelete: Restrict)
+  rutas         RutaOnboarding[]
+  colaboradores Colaborador[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 
   @@unique([areaId, nombre])
   @@unique([areaId, nombreClave])
@@ -181,21 +184,23 @@ model PuestoTrabajo {
 
 // Rutas de Onboarding y secuencia de pasos (HU-008 / CGB-36)
 model RutaOnboarding {
-  id          String         @id @default(auto()) @map("_id") @db.ObjectId
-  titulo      String?
-  objetivo    String?
-  nombre      String?
-  descripcion String?
-  activa      Boolean?
-  estado      String?        @default("BORRADOR") // "BORRADOR" | "ACTIVA"
-  areaId      String?        @db.ObjectId
-  area        Area?          @relation(fields: [areaId], references: [id], onDelete: Restrict)
-  puestoId    String?        @db.ObjectId
-  puesto      PuestoTrabajo? @relation(fields: [puestoId], references: [id], onDelete: SetNull)
-  activadaEn  DateTime?
-  pasos       PasoRuta[]
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  titulo        String?
+  objetivo      String?
+  nombre        String?
+  descripcion   String?
+  activa        Boolean?
+  estado        String?        @default("BORRADOR") // "BORRADOR" | "ACTIVA"
+  areaId        String?        @db.ObjectId
+  area          Area?          @relation(fields: [areaId], references: [id], onDelete: Restrict)
+  puestoId      String?        @db.ObjectId
+  puesto        PuestoTrabajo? @relation(fields: [puestoId], references: [id], onDelete: SetNull)
+  activadaEn    DateTime?
+  pasos         PasoRuta[]
+  usuarios      User[]
+  colaboradores Colaborador[]  @relation("RutaAsignada")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@index([areaId, puestoId, estado])
   @@map("rutas_onboarding")
@@ -215,4 +220,24 @@ model PasoRuta {
   @@unique([rutaId, orden])
   @@unique([rutaId, capacitacionId])
   @@map("pasos_ruta")
+}
+
+model Colaborador {
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  nombre           String
+  email            String          @unique
+  puestoId         String?         @db.ObjectId
+  puesto           PuestoTrabajo?  @relation(fields: [puestoId], references: [id], onDelete: SetNull)
+  estado           String          @default("PENDIENTE_ACTIVACION")
+  progreso         Int             @default(0)
+  rutaOnboardingId String?         @db.ObjectId
+  rutaOnboarding   RutaOnboarding? @relation("RutaAsignada", fields: [rutaOnboardingId], references: [id], onDelete: SetNull)
+  userId           String?         @unique @db.ObjectId
+  user             User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  tokenActivacion  String?
+  tokenExpiraEn    DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@map("colaboradores")
 }

@@ -12,7 +12,7 @@ import {
   usarCookieSegura,
 } from '../src/lib/autenticacion.ts';
 
-const secreto = 'cgb_secret_65a8df241bc489e27304b5618fce1862d7c0e819b5c219f8541e24bc109f635a';
+const secreto = 'secreto-exclusivo-de-pruebas-hu001-2026-32-bytes-minimo';
 const claveAdmin = 'Admin2026!*';
 const claveColaborador = 'Colab2026!*';
 const hashAdmin = await hash(claveAdmin, 10);

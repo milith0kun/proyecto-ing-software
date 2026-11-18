@@ -1,10 +1,14 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
+import { sesionActual } from '@/lib/sesion';
 import EditorContenido from './EditorContenido';
 
 export const dynamic = 'force-dynamic';
 
 export default async function PaginaContenido({ params }: { params: Promise<{ id: string }> }) {
+  const usuario = await sesionActual();
+  if (!usuario) redirect('/login');
+  if (usuario.role !== 'ADMINISTRADOR') redirect('/admin/colaboradores');
   const { id } = await params;
   if (!/^[a-f\d]{24}$/i.test(id)) notFound();
 
