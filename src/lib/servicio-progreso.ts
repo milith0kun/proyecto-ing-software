@@ -6,7 +6,7 @@ import {
   puedeFinalizar, registrarConfirmacion, slideDeReanudacion,
 } from '@/lib/progreso-capacitacion';
 import {
-  actualizarProgresoSiNoCambio, buscarCapacitacionInternaPublicada, buscarProgreso, claveDeProgreso,
+  actualizarProgresoSiNoCambio, buscarCapacitacionInternaPublicada, buscarCapacitacionParaVisor, buscarProgreso, claveDeProgreso,
   crearProgreso, idsCompletadas,
   type CapacitacionInterna as Capacitacion, type ClaveProgreso, type RegistroProgreso as Progreso,
 } from '@/lib/repositorio-progreso';
@@ -50,9 +50,9 @@ async function prepararSolicitud(solicitud: NextRequest, { params }: Contexto): 
   return { usuarioId, id, clave, capacitacion, progreso, total: capacitacion.slides.length };
 }
 
-async function exigirPrerrequisitos(usuarioId: string, capacitacion: Capacitacion) {
-  if (capacitacion.prerrequisitos.length === 0) return true;
-  return prerrequisitosCumplidos(capacitacion.prerrequisitos, await idsCompletadas(usuarioId));
+async function exigirPrerrequisitos(usuarioId: string, prerrequisitos: string[]) {
+  if (prerrequisitos.length === 0) return true;
+  return prerrequisitosCumplidos(prerrequisitos, await idsCompletadas(usuarioId));
 }
 
 async function ejecutar(solicitud: NextRequest, contexto: Contexto, accion: (p: Preparado) => Promise<NextResponse>) {
@@ -100,7 +100,7 @@ export function guardarProgreso(solicitud: NextRequest, contexto: Contexto) {
   return ejecutar(solicitud, contexto, async preparado => {
     const { usuarioId, id, capacitacion, total } = preparado;
     const cuerpo = await solicitud.json().catch(() => null);
-    if (!(await exigirPrerrequisitos(usuarioId, capacitacion))) return falla('Completa primero las capacitaciones previas.', 403);
+    if (!(await exigirPrerrequisitos(usuarioId, capacitacion.prerrequisitos))) return falla('Completa primero las capacitaciones previas.', 403);
     const guardado = await escribirProgreso(preparado, actual => {
       const previos = actual?.slidesConfirmados ?? [];
       const confirmados = registrarConfirmacion(previos, cuerpo?.slide, total);
@@ -119,7 +119,7 @@ export function guardarProgreso(solicitud: NextRequest, contexto: Contexto) {
 export function finalizarProgreso(solicitud: NextRequest, contexto: Contexto) {
   return ejecutar(solicitud, contexto, async preparado => {
     const { usuarioId, id, capacitacion, total } = preparado;
-    if (!(await exigirPrerrequisitos(usuarioId, capacitacion))) return falla('Completa primero las capacitaciones previas.', 403);
+    if (!(await exigirPrerrequisitos(usuarioId, capacitacion.prerrequisitos))) return falla('Completa primero las capacitaciones previas.', 403);
     const guardado = await escribirProgreso(preparado, actual => {
       if (actual?.estado === 'COMPLETADA') return null;
       if (!puedeFinalizar(actual, total)) throw new ErrorProgreso('Confirma todos los slides y finaliza desde el último.', 409);
@@ -131,4 +131,23 @@ export function finalizarProgreso(solicitud: NextRequest, contexto: Contexto) {
     });
     return NextResponse.json({ ok: true, datos: presentar(guardado, total) }, { headers: SIN_CACHE });
   });
+}
+
+// Caso de uso de la página del visor: la presentación consume el servicio y no el repositorio.
+export type VisorCapacitacion =
+  | { estado: 'no-encontrada' }
+  | { estado: 'bloqueada' }
+  | { estado: 'disponible'; capacitacion: NonNullable<Awaited<ReturnType<typeof buscarCapacitacionParaVisor>>>; slideInicial: number; completada: boolean };
+
+export async function obtenerVisor(usuarioId: string, id: string): Promise<VisorCapacitacion> {
+  if (!ID_VALIDO.test(id)) return { estado: 'no-encontrada' };
+  const capacitacion = await buscarCapacitacionParaVisor(id);
+  if (!capacitacion) return { estado: 'no-encontrada' };
+  if (!(await exigirPrerrequisitos(usuarioId, capacitacion.prerrequisitos))) return { estado: 'bloqueada' };
+  const progreso = await buscarProgreso(claveDeProgreso(usuarioId, id));
+  return {
+    estado: 'disponible', capacitacion,
+    slideInicial: slideDeReanudacion(progreso, capacitacion.slides.length),
+    completada: progreso?.estado === 'COMPLETADA',
+  };
 }
