@@ -17,6 +17,21 @@ Como colaborador, quiero resolver el microtest al finalizar las diapositivas, pa
 
 Pruebas adicionales: sesión obligatoria, origen válido y usuario solo de la sesión; validación de respuestas; error genérico ante fallos; envíos simultáneos sin superar el límite (`@@unique([usuarioId, evaluacionId, numero])`); `Finalizar` de HU-012 no completa una capacitación que tiene microtest.
 
+## Evidencia en navegador (17 de noviembre de 2026)
+
+Capacitación temporal `[DEMO] Microtest HU-014` en MongoDB Atlas, con la cuenta de colaborador de pruebas y `npm run dev`.
+
+| CA | Captura |
+|---|---|
+| CA-01 | ![Último slide con «Iniciar microtest»](evidencias-hu014/01-ultimo-slide-iniciar-microtest.png) |
+| CA-01 | ![Formulario con temporizador y envío bloqueado](evidencias-hu014/02-formulario-microtest.png) |
+| CA-02, CA-04 | ![Reprobado con respuesta correcta y retroalimentación](evidencias-hu014/03-resultado-reprobado.png) |
+| CA-04 | ![Intentos agotados](evidencias-hu014/04-intentos-agotados.png) |
+| CA-02, CA-03 | ![Aprobado](evidencias-hu014/05-resultado-aprobado.png) |
+| CA-03 | ![Capacitación completada](evidencias-hu014/06-capacitacion-completada.png) |
+
+Falta una captura del formulario limpio tras «Reintentar ahora».
+
 ## Diseño por capas
 
 | Capa | Módulo |
@@ -58,6 +73,6 @@ Los commits siguen `tipo(CGB-66): descripción`. Jira no se pudo consultar desde
 ## Pendiente
 
 - `prisma db push` aplicado en MongoDB Atlas (`cgb_academy`) el 17 de noviembre de 2026 por el autor de la rama: colecciones `evaluaciones` e `intentos_evaluacion` e índices únicos. No se tocaron colecciones existentes. Todavía no se probó el flujo completo contra Atlas.
-- Sin prueba en navegador ni E2E real (T4 de Jira); tampoco hay datos de evaluación sembrados.
+- Prueba manual en navegador hecha (ver evidencia); no hay E2E automatizado (T4 de Jira). La evaluación de la demo se creó con `prisma/demo-microtest.mjs` y se borra al terminar.
 - Revisión por pares, enlace con CGB-66 en Jira y Pull Request.
 - DoD: la del equipo (PR #12).
