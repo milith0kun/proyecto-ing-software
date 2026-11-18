@@ -38,6 +38,13 @@ Guardar y finalizar usan control optimista (`escribirProgreso`): se actualiza so
   - Flujo: sin sesión 401; sin avance inicia en el slide 1; repetir confirmación deja un registro; reanuda en el slide 2 (67 %); otra cuenta no ve ese avance; finalizar antes de tiempo da 409; tras confirmar todos se completa con 100 %.
   - Concurrencia: 3×slide 1, 4×slide 2, 2×slide 3 y 2×Finalizar simultáneos dieron todas 200, un solo registro, `[1,2,3]` y `COMPLETADA`.
 
+## Cambio en base compartida (`prisma db push`)
+
+- **Entorno:** MongoDB Atlas, base `cgb_academy` (la misma de `DATABASE_URL`).
+- **Qué se aplicó:** colección `progreso_capacitaciones` con índice único usuario + capacitación, y el campo `prerrequisitos` de `Capacitacion`. No se modificaron ni borraron colecciones existentes.
+- **Quién lo autorizó:** el administrador del proyecto (Product Owner y Scrum Master), antes de ejecutar el comando. Lo ejecutó el autor de la rama.
+- **Datos temporales:** se declara 0 restos tras la limpieza; el método de comprobación no quedó registrado en su momento.
+
 ## Alcance y pendientes
 
 - No se verificó desde el navegador; la interfaz solo se probó con pruebas de componente.
