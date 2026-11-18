@@ -36,8 +36,16 @@ Siguiendo la arquitectura monolítica modular en capas (donde la capa `n` solo i
 ## Seguridad, Base de Datos y Coordinación Pendiente
 
 - **Seguridad del token (corrección de revisión):** la base de datos almacena **únicamente** el hash `SHA-256` en `Colaborador.tokenActivacion` y su fecha de expiración `tokenExpiraEn` (`48h`). El enlace con token plano **nunca** se persiste en MongoDB (se eliminó `enlaceActivacion` tanto del esquema como de `actualizarTokenReenvio`).
-- **Base de datos compartida (Atlas):** no se ejecutó `prisma db push` ni se alteraron datos existentes en Atlas; solo se corrió `npx prisma generate` tras integrar `origin/main` (`CGB-31` y `CGB-36`).
+- **Base de datos compartida (Atlas):** no se ejecutó `prisma db push` (solo `npx prisma generate` local tras integrar `origin/main`). Para las capturas en navegador se crearon registros temporales de demostración y se eliminaron inmediatamente después dejando las colecciones limpias.
 - **Coordinación pendiente con PO y `CGB-41` (`HU-009`):** `CGB-41` también define `Colaborador` y una versión inicial de `src/app/api/auth/activar/route.ts`. Queda registrada al PO la decisión de consolidar en `CGB-46` la activación oficial (`/api/auth/activar` + `/activar-cuenta`) conservando de `CGB-41` el registro de colaboradores (`POST /api/colaboradores`).
+
+## Evidencia en el navegador (`/activar-cuenta` y `/colaborador`)
+
+Verificación visual ejecutada contra el servidor local conectado a MongoDB Atlas (y limpieza posterior de todos los registros temporales de prueba):
+
+1. **Token vencido y solicitud de nuevo enlace (CA-03):** [01-token-vencido-reenvio.png](evidencias-hu010/01-token-vencido-reenvio.png) — rechazo del token expirado y confirmación neutra de generación por 48 horas.
+2. **Formulario válido, datos pre-cargados y fortaleza (CA-01, CA-02, T3):** [02-formulario-activacion-valido.png](evidencias-hu010/02-formulario-activacion-valido.png) — muestra nombre, correo, puesto (`Analista de Sistemas`), ruta (`Inducción de Recursos Humanos`) y medidor en nivel `FUERTE`.
+3. **Activación exitosa e ingreso automático al portal (CA-04):** [03-portal-colaborador-activado.png](evidencias-hu010/03-portal-colaborador-activado.png) — redirección autenticada a `/colaborador` con sesión activa.
 
 ## Evidencia TDD, Validaciones y Uso de IA
 
