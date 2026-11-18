@@ -130,18 +130,38 @@ test('HU-011 CA-04: endpoint de onboarding no revela datos de colaboradores inac
 test('HU-011 CA-04: dos sesiones solo reciben la ruta y progreso de su propio colaborador', async () => {
   const { GET: consultarMiOnboarding } = await import('../src/app/api/colaborador/mi-onboarding/route.ts');
   const consultas = [];
-  prisma.colaborador.findUnique = async ({ where }) => {
+  prisma.user.findUnique = async ({ where }) => {
     consultas.push(where);
-    const usuario = usuarios.find(item => item.id === where.userId);
+    const usuario = usuarios.find(item => item.id === where.id);
     if (usuario.id === usuarios[0].id) {
       return {
-        rutaOnboarding: { id: 'ruta-ana', nombre: 'Ruta privada Ana', capacitaciones: [capacitacion('cap-ana', 1)] },
+        id: usuario.id,
+        rutaOnboarding: {
+          id: 'ruta-ana',
+          nombre: 'Ruta privada Ana',
+          titulo: 'Ruta privada Ana',
+          descripcion: null,
+          objetivo: null,
+          pasos: [
+            { orden: 1, capacitacion: { id: 'cap-ana', titulo: 'Capacitación Ana', descripcion: 'Descripción Ana', slides } },
+          ],
+        },
         progresos: [],
       };
     }
     return {
-      rutaOnboarding: { id: 'ruta-luis', nombre: 'Ruta privada Luis', capacitaciones: [capacitacion('cap-luis', 1)] },
-      progresos: [{ capacitacionId: 'cap-luis', ultimoSlideOrden: 2, completada: false }],
+      id: usuario.id,
+      rutaOnboarding: {
+        id: 'ruta-luis',
+        nombre: 'Ruta privada Luis',
+        titulo: 'Ruta privada Luis',
+        descripcion: null,
+        objetivo: null,
+        pasos: [
+          { orden: 1, capacitacion: { id: 'cap-luis', titulo: 'Capacitación Luis', descripcion: 'Descripción Luis', slides } },
+        ],
+      },
+      progresos: [{ capacitacionId: 'cap-luis', ultimoSlide: 2, estado: 'EN_CURSO' }],
     };
   };
 
@@ -156,30 +176,34 @@ test('HU-011 CA-04: dos sesiones solo reciben la ruta y progreso de su propio co
   assert.equal(panelAna.capacitaciones[0].id, 'cap-ana');
   assert.equal(panelLuis.ruta.nombre, 'Ruta privada Luis');
   assert.equal(panelLuis.capacitaciones[0].id, 'cap-luis');
-  assert.deepEqual(consultas, [{ userId: usuarios[0].id }, { userId: usuarios[1].id }]);
+  assert.deepEqual(consultas, [{ id: usuarios[0].id }, { id: usuarios[1].id }]);
 });
 
-test('HU-011 CA-03/CA-04: guarda slide actual solo para la capacitación de la ruta propia', async () => {
+test('HU-011 CA-03/CA-04: guarda slide actual solo para la capacitación permitida', async () => {
   const { PUT: guardarProgreso } = await import('../src/app/api/colaborador/progreso/route.ts');
   const cambios = [];
   const capacitacionAnaId = '507f1f77bcf86cd799439021';
   const capacitacionLuisId = '507f1f77bcf86cd799439022';
-  prisma.colaborador.findUnique = async ({ where, select }) => {
-    const capacitacionDelUsuario = where.userId === usuarios[0].id ? capacitacionAnaId : capacitacionLuisId;
-    const capacitacionSolicitada = select.rutaOnboarding.select.capacitaciones.where.capacitacionId;
+
+  prisma.capacitacion.findFirst = async ({ where }) => {
+    if (where.id !== capacitacionAnaId) return null;
     return {
-      id: where.userId === usuarios[0].id ? 'colab-ana' : 'colab-luis',
-      rutaOnboarding: {
-        capacitaciones: capacitacionSolicitada === capacitacionDelUsuario ? [{ capacitacion: {
-          id: capacitacionDelUsuario,
-          slides: [{ orden: 1 }, { orden: 2 }, { orden: 3 }],
-        } }] : [],
-      },
+      id: capacitacionAnaId,
+      prerrequisitos: [],
+      slides: [{ id: 's1' }, { id: 's2' }, { id: 's3' }],
     };
   };
-  prisma.progresoCapacitacion.upsert = async opciones => {
-    cambios.push(opciones);
-    return opciones.create;
+  let progresoPersistido = null;
+  prisma.progresoCapacitacion.findUnique = async () => progresoPersistido;
+  prisma.progresoCapacitacion.create = async ({ data }) => {
+    cambios.push(data);
+    progresoPersistido = { ...data, id: 'progreso-1', createdAt: new Date(), updatedAt: new Date(), completadaEn: null };
+    return progresoPersistido;
+  };
+  prisma.progresoCapacitacion.updateMany = async ({ data }) => {
+    progresoPersistido = { ...progresoPersistido, ...data, updatedAt: new Date() };
+    cambios.push(data);
+    return { count: 1 };
   };
 
   const requestGuardar = (token, body) => new NextRequest('http://localhost:3000/api/colaborador/progreso', {
@@ -189,6 +213,12 @@ test('HU-011 CA-03/CA-04: guarda slide actual solo para la capacitación de la r
   });
 
   const respuestaAna = await guardarProgreso(requestGuardar(sesiones[0].token, {
+    capacitacionId: capacitacionAnaId, slideOrden: 1,
+  }));
+  const respuestaAnaDos = await guardarProgreso(requestGuardar(sesiones[0].token, {
+    capacitacionId: capacitacionAnaId, slideOrden: 2,
+  }));
+  const respuestaAnaTres = await guardarProgreso(requestGuardar(sesiones[0].token, {
     capacitacionId: capacitacionAnaId, slideOrden: 3,
   }));
   const respuestaAjena = await guardarProgreso(requestGuardar(sesiones[0].token, {
@@ -196,11 +226,13 @@ test('HU-011 CA-03/CA-04: guarda slide actual solo para la capacitación de la r
   }));
 
   assert.equal(respuestaAna.status, 200);
-  assert.equal(cambios[0].create.colaboradorId, 'colab-ana');
-  assert.equal(cambios[0].create.ultimoSlideOrden, 3);
-  assert.equal(cambios[0].create.completada, true);
+  assert.equal(respuestaAnaDos.status, 200);
+  assert.equal(respuestaAnaTres.status, 200);
+  assert.equal(progresoPersistido.usuarioId, usuarios[0].id);
+  assert.equal(progresoPersistido.ultimoSlide, 3);
+  assert.equal(progresoPersistido.estado, 'EN_CURSO');
   assert.equal(respuestaAjena.status, 404);
-  assert.equal(cambios.length, 1);
+  assert.equal(cambios.length, 3);
 
   const respuestaSlideInvalido = await guardarProgreso(requestGuardar(sesiones[0].token, {
     capacitacionId: capacitacionAnaId, slideOrden: 4,
@@ -210,5 +242,5 @@ test('HU-011 CA-03/CA-04: guarda slide actual solo para la capacitación de la r
     capacitacionId: capacitacionAnaId, slideOrden: 1,
   }));
   assert.equal(respuestaAnonima.status, 401);
-  assert.equal(cambios.length, 1);
+  assert.equal(cambios.length, 3);
 });

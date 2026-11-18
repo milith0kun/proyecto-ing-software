@@ -16,15 +16,17 @@ export async function GET(solicitud: NextRequest) {
       });
     }
 
-    const colaborador = await prisma.colaborador.findUnique({
-      where: { userId: usuario.id },
+    const usuarioConRuta = await prisma.user.findUnique({
+      where: { id: usuario.id },
       select: {
         rutaOnboarding: {
           select: {
             id: true,
+            titulo: true,
             nombre: true,
             descripcion: true,
-            capacitaciones: {
+            objetivo: true,
+            pasos: {
               orderBy: { orden: 'asc' },
               select: {
                 orden: true,
@@ -44,12 +46,12 @@ export async function GET(solicitud: NextRequest) {
           },
         },
         progresos: {
-          select: { capacitacionId: true, ultimoSlideOrden: true, completada: true },
+          select: { capacitacionId: true, ultimoSlide: true, estado: true },
         },
       },
     });
 
-    const panel = construirPanelMiOnboarding(colaborador?.rutaOnboarding, colaborador?.progresos ?? []);
+    const panel = construirPanelMiOnboarding(usuarioConRuta?.rutaOnboarding, usuarioConRuta?.progresos ?? []);
     return NextResponse.json({ ok: true, ...panel }, { headers: { 'Cache-Control': 'no-store' } });
   } catch {
     return NextResponse.json({ ok: false, error: 'No pudimos consultar tu ruta de onboarding.' }, {

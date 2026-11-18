@@ -1,85 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NOMBRE_COOKIE } from '@/lib/autenticacion';
-import { prisma } from '@/lib/prisma';
 import { obtenerSesion } from '@/lib/sesion';
+import { consultarProgreso, guardarProgreso } from '@/lib/servicio-progreso';
 
 export const dynamic = 'force-dynamic';
 
-export async function PUT(solicitud: NextRequest) {
+async function usuarioColaborador(solicitud: NextRequest) {
+  const usuario = await obtenerSesion(solicitud.cookies.get(NOMBRE_COOKIE)?.value);
+  if (!usuario || usuario.role !== 'COLABORADOR') return null;
+  return usuario;
+}
+
+export async function GET(solicitud: NextRequest) {
+  const usuario = await usuarioColaborador(solicitud);
+  if (!usuario) {
+    return NextResponse.json({ ok: false, error: 'Debes iniciar sesión como colaborador.' }, {
+      status: 401,
+      headers: { 'Cache-Control': 'no-store' },
+    });
+  }
+
+  const capacitacionId = solicitud.nextUrl.searchParams.get('capacitacionId') ?? '';
   try {
-    const usuario = await obtenerSesion(solicitud.cookies.get(NOMBRE_COOKIE)?.value);
-    if (!usuario || usuario.role !== 'COLABORADOR') {
-      return NextResponse.json({ ok: false, error: 'Debes iniciar sesión como colaborador.' }, {
-        status: 401,
-        headers: { 'Cache-Control': 'no-store' },
-      });
-    }
-
-    const body = await solicitud.json().catch(() => null);
-    const capacitacionId = typeof body?.capacitacionId === 'string' ? body.capacitacionId : '';
-    const slideOrden = Number(body?.slideOrden);
-    if (!/^[a-f\d]{24}$/i.test(capacitacionId) || !Number.isInteger(slideOrden) || slideOrden < 1) {
-      return NextResponse.json({ ok: false, error: 'El punto de avance no es válido.' }, {
-        status: 400,
-        headers: { 'Cache-Control': 'no-store' },
-      });
-    }
-
-    const colaborador = await prisma.colaborador.findUnique({
-      where: { userId: usuario.id },
-      select: {
-        id: true,
-        rutaOnboarding: {
-          select: {
-            capacitaciones: {
-              where: { capacitacionId },
-              select: {
-                capacitacion: {
-                  select: { id: true, slides: { select: { orden: true } } },
-                },
-              },
-            },
-          },
-        },
-      },
+    const datos = await consultarProgreso(usuario.id, capacitacionId);
+    return NextResponse.json({ ok: true, datos }, { headers: { 'Cache-Control': 'no-store' } });
+  } catch (error) {
+    const status = (error as { status?: number }).status ?? 503;
+    return NextResponse.json({ ok: false, error: 'No pudimos consultar tu avance.' }, {
+      status,
+      headers: { 'Cache-Control': 'no-store' },
     });
-    const asignacion = colaborador?.rutaOnboarding?.capacitaciones[0];
-    if (!colaborador || !asignacion) {
-      return NextResponse.json({ ok: false, error: 'Esta capacitación no pertenece a tu ruta.' }, {
-        status: 404,
-        headers: { 'Cache-Control': 'no-store' },
-      });
-    }
+  }
+}
 
-    const totalSlides = asignacion.capacitacion.slides.length;
-    if (slideOrden > totalSlides) {
-      return NextResponse.json({ ok: false, error: 'La diapositiva indicada no existe.' }, {
-        status: 400,
-        headers: { 'Cache-Control': 'no-store' },
-      });
-    }
-
-    const completada = slideOrden === totalSlides;
-    await prisma.progresoCapacitacion.upsert({
-      where: { colaboradorId_capacitacionId: { colaboradorId: colaborador.id, capacitacionId } },
-      create: {
-        colaboradorId: colaborador.id,
-        capacitacionId,
-        ultimoSlideOrden: slideOrden,
-        completada,
-        completadaEn: completada ? new Date() : null,
-      },
-      update: {
-        ultimoSlideOrden: slideOrden,
-        completada,
-        completadaEn: completada ? new Date() : null,
-      },
+export async function PUT(solicitud: NextRequest) {
+  const usuario = await usuarioColaborador(solicitud);
+  if (!usuario) {
+    return NextResponse.json({ ok: false, error: 'Debes iniciar sesión como colaborador.' }, {
+      status: 401,
+      headers: { 'Cache-Control': 'no-store' },
     });
+  }
 
-    return NextResponse.json({ ok: true, slideOrden, completada }, { headers: { 'Cache-Control': 'no-store' } });
-  } catch {
-    return NextResponse.json({ ok: false, error: 'No pudimos guardar tu avance.' }, {
-      status: 503,
+  const cuerpo = await solicitud.json().catch(() => null);
+  const capacitacionId = typeof cuerpo?.capacitacionId === 'string' ? cuerpo.capacitacionId : '';
+  const slideOrden = cuerpo?.slideOrden ?? cuerpo?.slide;
+
+  try {
+    const datos = await guardarProgreso(usuario.id, capacitacionId, slideOrden);
+    return NextResponse.json({ ok: true, datos }, { headers: { 'Cache-Control': 'no-store' } });
+  } catch (error) {
+    const estado = error as { status?: number; message?: string };
+    return NextResponse.json({ ok: false, error: estado.message ?? 'No pudimos guardar tu avance.' }, {
+      status: estado.status ?? 503,
       headers: { 'Cache-Control': 'no-store' },
     });
   }

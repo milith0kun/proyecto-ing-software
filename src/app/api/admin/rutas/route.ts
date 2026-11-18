@@ -15,8 +15,10 @@ export async function GET(request: NextRequest) {
         id: true,
         nombre: true,
         descripcion: true,
+        objetivo: true,
         activa: true,
-        _count: { select: { capacitaciones: true } },
+        estado: true,
+        _count: { select: { pasos: true, usuarios: true } },
       },
     });
 
@@ -24,10 +26,11 @@ export async function GET(request: NextRequest) {
       ok: true,
       datos: rutas.map(ruta => ({
         id: ruta.id,
-        nombre: ruta.nombre,
-        descripcion: ruta.descripcion,
-        activa: ruta.activa,
-        totalCapacitaciones: ruta._count.capacitaciones,
+        nombre: ruta.nombre ?? 'Ruta sin nombre',
+        descripcion: ruta.descripcion ?? ruta.objetivo,
+        activa: ruta.activa ?? ruta.estado === 'ACTIVA',
+        totalCapacitaciones: ruta._count.pasos,
+        totalColaboradores: ruta._count.usuarios,
       })),
     }, { headers: { 'Cache-Control': 'no-store' } });
   } catch {

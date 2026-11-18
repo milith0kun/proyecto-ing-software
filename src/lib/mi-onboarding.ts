@@ -1,7 +1,9 @@
 export interface ProgresoCapacitacionResumen {
   capacitacionId: string;
-  ultimoSlideOrden: number;
-  completada: boolean;
+  ultimoSlideOrden?: number;
+  ultimoSlide?: number;
+  completada?: boolean;
+  estado?: string;
 }
 
 interface CapacitacionRutaResumen {
@@ -11,16 +13,19 @@ interface CapacitacionRutaResumen {
   slides: Array<{ id: string; orden: number }>;
 }
 
-interface AsignacionCapacitacionResumen {
+interface PasoRutaResumen {
   orden: number;
   capacitacion: CapacitacionRutaResumen;
 }
 
 interface RutaOnboardingResumen {
   id: string;
-  nombre: string;
+  nombre?: string | null;
+  titulo?: string | null;
   descripcion?: string | null;
-  capacitaciones: AsignacionCapacitacionResumen[];
+  objetivo?: string | null;
+  pasos?: PasoRutaResumen[];
+  capacitaciones?: Array<PasoRutaResumen & { pasoId?: string }>;
 }
 
 export function construirPanelMiOnboarding(
@@ -28,16 +33,19 @@ export function construirPanelMiOnboarding(
   progresos: ProgresoCapacitacionResumen[],
 ) {
   const progresoPorCapacitacion = new Map(progresos.map(progreso => [progreso.capacitacionId, progreso]));
-  const capacitaciones = [...(ruta?.capacitaciones ?? [])]
+  const asignaciones = ruta?.pasos ?? ruta?.capacitaciones ?? [];
+  const capacitaciones = [...asignaciones]
     .sort((primera, segunda) => primera.orden - segunda.orden)
-    .map(({ capacitacion }) => {
+    .map(({ capacitacion, orden }) => {
       const progreso = progresoPorCapacitacion.get(capacitacion.id);
       const totalSlides = capacitacion.slides.length;
-      const completada = Boolean(progreso?.completada);
-      const ultimoSlideOrden = Math.max(0, Math.min(progreso?.ultimoSlideOrden ?? 0, totalSlides));
+      const completada = progreso?.completada === true || progreso?.estado === 'COMPLETADA';
+      const ultimoGuardado = progreso?.ultimoSlideOrden ?? progreso?.ultimoSlide ?? 0;
+      const ultimoSlideOrden = Math.max(0, Math.min(ultimoGuardado, totalSlides));
 
       return {
         id: capacitacion.id,
+        orden,
         titulo: capacitacion.titulo,
         descripcion: capacitacion.descripcion,
         totalSlides,
@@ -45,13 +53,16 @@ export function construirPanelMiOnboarding(
         estado: completada ? 'COMPLETADA' as const : ultimoSlideOrden > 0 ? 'EN_PROGRESO' as const : 'PENDIENTE' as const,
       };
     });
+
   const total = capacitaciones.length;
   const completadas = capacitaciones.filter(capacitacion => capacitacion.estado === 'COMPLETADA').length;
   const siguiente = capacitaciones.find(capacitacion => capacitacion.estado !== 'COMPLETADA');
   const slide = siguiente ? Math.max(1, siguiente.ultimoSlideOrden || 1) : null;
+  const nombre = ruta?.nombre ?? ruta?.titulo ?? null;
+  const descripcion = ruta?.descripcion ?? ruta?.objetivo ?? null;
 
   return {
-    ruta: ruta ? { id: ruta.id, nombre: ruta.nombre, descripcion: ruta.descripcion ?? null } : null,
+    ruta: ruta ? { id: ruta.id, nombre: nombre ?? 'Mi Onboarding', descripcion } : null,
     capacitaciones,
     total,
     completadas,

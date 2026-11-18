@@ -29,7 +29,6 @@ export default function VisorOnboarding({
         capacitacion={capacitacion}
         slideInicial={slideInicial}
         onSlideChange={guardarProgreso}
-        alTerminarHref="/colaborador"
       />
     </>
   );

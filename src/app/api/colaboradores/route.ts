@@ -149,8 +149,9 @@ async function registrarUno(cuerpo: Record<string, unknown>) {
     baseUrl: process.env.APP_URL || 'https://app.cgb.latam',
   });
 
+  const rutaAsignadaId = registro.rutaAsignada?.id ?? null;
   const usuario = await prisma.user.create({
-    data: { email, name: nombre, role: 'COLABORADOR', activo: false },
+    data: { email, name: nombre, role: 'COLABORADOR', activo: false, rutaOnboardingId: rutaAsignadaId },
   });
   try {
     const colaborador = await prisma.colaborador.create({

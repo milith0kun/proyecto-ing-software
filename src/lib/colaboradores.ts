@@ -5,9 +5,9 @@ export type EstadoColaborador = (typeof ESTADOS_COLABORADOR)[number];
 
 export interface RutaOnboardingResumen {
   id: string;
-  nombre: string;
+  nombre: string | null;
   descripcion?: string;
-  activa?: boolean;
+  activa?: boolean | null;
 }
 
 export interface PuestoResumen {
