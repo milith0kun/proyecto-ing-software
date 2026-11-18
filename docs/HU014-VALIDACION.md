@@ -73,6 +73,6 @@ Los commits siguen `tipo(CGB-66): descripción`. Jira: CGB-66 con vínculos *Blo
 
 ## Pendiente
 
-- Los modelos de la HU los creó CGB-61; su `prisma db push` queda registrado en el PR #17. Esta HU no cambia el esquema. Todavía no se probó el flujo completo contra Atlas tras el refactor; la prueba manual en navegador anterior está en `docs/evidencias-hu014/`.
+- Los modelos de la HU los creó CGB-61; su `prisma db push` queda registrado en el PR #17. Esta HU no cambia el esquema. El flujo completo (reprobar, reintentar, agotar intentos, aprobar y reanudar) se probó en navegador contra Atlas el 18 de noviembre de 2026 con el código ya refactorizado; las capturas están en `docs/evidencias-hu014/`. Los datos `[DEMO]` creados para la prueba se borraron al terminar.
 - No hay E2E automatizado (T4 de Jira).
 - Revisión por pares y aprobación del PR #13; DoD del equipo (PR #12, ya en `main`).
