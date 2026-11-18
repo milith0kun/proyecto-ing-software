@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { obtenerVisor } from '@/lib/servicio-progreso';
 import { sesionActual } from '@/lib/sesion';
+import { obtenerMicrotest } from '@/lib/servicio-evaluacion';
 import { MarcoCapacitacion } from '@/components/capacitaciones/MarcoCapacitacion';
 import { VisorCapacitacionInterna } from '@/components/capacitaciones/VisorCapacitacionInterna';
 
@@ -22,6 +23,8 @@ export default async function PaginaCapacitacionInterna({ params }: { params: Pr
   }
   const { capacitacion } = visor;
 
+  const microtest = visor.completada ? null : await obtenerMicrotest(usuario.id, id);
+
   return (
     <MarcoCapacitacion>
       <section className="experiencia-capacitacion">
@@ -35,6 +38,7 @@ export default async function PaginaCapacitacionInterna({ params }: { params: Pr
           slides={capacitacion.slides}
           slideInicial={visor.slideInicial}
           completada={visor.completada}
+          microtest={microtest}
         />
       </section>
     </MarcoCapacitacion>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import {
   calcularProgresoLectura,
@@ -17,6 +17,8 @@ export interface SeguimientoVisor {
   guardar: (slide: number) => Promise<boolean>;
   finalizar: () => Promise<boolean>;
   completada: boolean;
+  // Microtest opcional (HU-014): si existe, la capacitación se completa al aprobarlo y no con «Finalizar».
+  microtest?: (acciones: { alAprobar: () => void; alRevisarMaterial: () => void }) => ReactNode;
 }
 type EstadoGuardado = 'guardando' | 'guardado' | 'error';
 const TEXTO_GUARDADO: Record<EstadoGuardado, string> = {
@@ -35,6 +37,7 @@ export default function SlideViewer({ slides, slideInicial = 1, seguimiento }: {
   const [finalizando, setFinalizando] = useState(false);
   const [completada, setCompletada] = useState(seguimiento?.completada ?? false);
   const [errorFinalizar, setErrorFinalizar] = useState(false);
+  const [microtestAbierto, setMicrotestAbierto] = useState(false);
   const inicioToqueX = useRef<number | null>(null);
   const totalSlides = slides.length;
   const progreso = calcularProgresoLectura(slideActual, totalSlides);
@@ -131,6 +134,10 @@ export default function SlideViewer({ slides, slideInicial = 1, seguimiento }: {
         <div className="barra-progreso-avance" style={{ width: `${progreso}%` }} />
       </div>
 
+      {microtestAbierto && seguimiento?.microtest ? seguimiento.microtest({
+        alAprobar: () => setCompletada(true),
+        alRevisarMaterial: () => { setMicrotestAbierto(false); setSlideActual(1); },
+      }) : (<>
       <article
         key={slide.id}
         className="visor-slide-entrada"
@@ -214,6 +221,16 @@ export default function SlideViewer({ slides, slideInicial = 1, seguimiento }: {
             >
               Capacitación completada · Volver a mi espacio
             </Link>
+          ) : seguimiento.microtest ? (
+            <button
+              type="button"
+              className="visor-control"
+              onClick={() => setMicrotestAbierto(true)}
+              disabled={estadoGuardado !== 'guardado'}
+              style={{ border: 0, borderRadius: '999px', backgroundColor: 'var(--brand-navy)', color: '#FFFFFF', fontWeight: 700, cursor: estadoGuardado !== 'guardado' ? 'not-allowed' : 'pointer', opacity: estadoGuardado !== 'guardado' ? 0.55 : 1 }}
+            >
+              Iniciar microtest
+            </button>
           ) : (
             <button
               type="button"
@@ -245,6 +262,7 @@ export default function SlideViewer({ slides, slideInicial = 1, seguimiento }: {
           </button>
         )}
       </nav>
+      </>)}
       {errorFinalizar && <p role="alert" style={{ color: '#B42318', fontWeight: 600 }}>No pudimos finalizar. Revisa tu avance e inténtalo nuevamente.</p>}
     </section>
   );

@@ -29,15 +29,17 @@ const capacitacion = {
 let progresos;
 let escrituras;
 let antesDeActualizar;
+let conMicrotest;
 
 test.beforeEach(() => {
-  progresos = new Map(); escrituras = 0; antesDeActualizar = null;
+  progresos = new Map(); escrituras = 0; antesDeActualizar = null; conMicrotest = false;
   prisma.sesion.findUnique = async ({ where }) => {
     const usuario = sesiones[where.id];
     return usuario ? { usuarioId: usuario.id, expiraEn: new Date(Date.now() + 60000), usuario } : null;
   };
   prisma.capacitacion.findFirst = async ({ where }) =>
     where.id === capacitacionId && where.estado === 'PUBLICADA' && where.ambito === 'INTERNO' ? structuredClone(capacitacion) : null;
+  prisma.evaluacion.findUnique = async () => (conMicrotest ? { id: 'e1' } : null);
   prisma.progresoCapacitacion.findUnique = async ({ where }) => {
     const { usuarioId, capacitacionId: cap } = where.usuarioId_capacitacionId;
     return structuredClone(progresos.get(`${usuarioId}:${cap}`) ?? null);
@@ -233,4 +235,12 @@ test('HU-012 CA-03 Finalización concurrente: completar dos veces deja una sola 
   assert.deepEqual([a.status, b.status], [200, 200]);
   assert.equal(progresos.size, 1);
   assert.equal(progresos.get(`${ana.id}:${capacitacionId}`).estado, 'COMPLETADA');
+});
+
+test('HU-014 Integración: con microtest, Finalizar no completa la capacitación', async () => {
+  conMicrotest = true;
+  await confirmar(1); await confirmar(2); await confirmar(3); await confirmar(4);
+  const respuesta = await terminar();
+  assert.equal(respuesta.status, 409);
+  assert.notEqual(progresos.get(`${ana.id}:${capacitacionId}`).estado, 'COMPLETADA');
 });
