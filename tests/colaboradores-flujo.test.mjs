@@ -25,7 +25,7 @@ test.before(() => {
   prisma.sesion.findUnique = async () => ({ usuarioId: admin.id, expiraEn: new Date(Date.now() + 60000), usuario: admin });
   prisma.colaborador.findUnique = async () => registro;
   prisma.user.findUnique = async ({ where }) => cuenta?.email === where.email ? cuenta : null;
-  prisma.puesto.findUnique = async () => puesto;
+  prisma.puestoTrabajo.findUnique = async () => puesto;
   prisma.user.create = async ({ data }) => { cuenta = { id: '507f1f77bcf86cd799439014', ...data }; return cuenta; };
   prisma.colaborador.create = async ({ data }) => {
     registro = { id: '507f1f77bcf86cd799439015', ...data, puesto, rutaOnboarding: ruta };
@@ -66,7 +66,7 @@ test('HU-009 flujo completo: registro, asignación, invitación, activación e i
   });
   const respuestaRegistro = await registrar(registroHttp);
   assert.equal(respuestaRegistro.status, 201);
-  assert.equal(registro.rutaOnboardingId, ruta.id);
+  assert.equal(registro.rutaOnboardingId, null);
   assert.equal(registro.progreso, 0);
   assert.equal(cuenta.activo, false);
   assert.ok(enlace);

@@ -36,7 +36,7 @@ test.beforeEach(() => {
   prisma.sesion.findUnique = async () => ({ usuarioId: usuarioSesion.id, expiraEn: new Date(Date.now() + 60000), usuario: usuarioSesion });
   prisma.colaborador.findUnique = async ({ where }) => colaboradores.find(registro => registro.email === where.email) || null;
   prisma.user.findUnique = async ({ where }) => cuentas.find(cuenta => cuenta.email === where.email) || null;
-  prisma.puesto.findUnique = async () => puesto;
+  prisma.puestoTrabajo.findUnique = async () => puesto;
   prisma.user.create = async ({ data }) => {
     const cuenta = { id: `507f1f77bcf86cd7994390${cuentas.length + 20}`, ...data };
     cuentas.push(cuenta);

@@ -1,0 +1,130 @@
+/**
+ * Reglas de la estructura organizacional (HU-007 / CGB-31):
+ * áreas, puestos de trabajo, duplicados y jerarquía con conteo de colaboradores.
+ */
+
+export const MENSAJE_DUPLICADO = 'El área o puesto ya existe en la organización';
+export const MENSAJE_AREA_INACTIVA = 'No puedes agregar puestos a un área desactivada.';
+export const MENSAJE_AREA_CON_PUESTOS =
+  'No se puede eliminar un área con puestos asociados; desactívala para conservar la integridad de rutas y colaboradores.';
+
+const LONGITUD_MINIMA = 3;
+const LONGITUD_MAXIMA = 80;
+
+export interface ResultadoValidacion<T> {
+  valido: boolean;
+  errores: Record<string, string>;
+  datos?: T;
+}
+
+export interface DatosArea {
+  nombre: string;
+  nombreClave: string;
+  activa: boolean;
+}
+
+export interface DatosPuesto {
+  nombre: string;
+  nombreClave: string;
+  areaId: string;
+}
+
+export function esObjectIdOrganizacionValido(id: string): boolean {
+  return /^[a-f\d]{24}$/i.test(id);
+}
+
+/** Regla de negocio: un área desactivada no admite nuevos puestos de trabajo. */
+export function puedeAgregarPuestoAArea(area: { activa: boolean }): boolean {
+  return Boolean(area.activa);
+}
+
+/** Regla de negocio (RNF-010): no se permite eliminar físicamente un área que ya tiene puestos asociados. */
+export function puedeEliminarArea(conteoPuestos: number): boolean {
+  return conteoPuestos === 0;
+}
+
+export function limpiarNombre(valor: unknown): string {
+  return typeof valor === 'string' ? valor.trim().replace(/\s+/g, ' ') : '';
+}
+
+/** Clave de comparación: sin tildes, en minúsculas y con espacios normalizados. */
+export function claveNombre(valor: unknown): string {
+  return limpiarNombre(valor).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+}
+
+function validarNombre(valor: unknown, errores: Record<string, string>) {
+  const nombre = limpiarNombre(valor);
+  if (nombre.length < LONGITUD_MINIMA) {
+    errores.nombre = `El nombre debe tener al menos ${LONGITUD_MINIMA} caracteres`;
+  } else if (nombre.length > LONGITUD_MAXIMA) {
+    errores.nombre = `El nombre no puede superar ${LONGITUD_MAXIMA} caracteres`;
+  }
+  return nombre;
+}
+
+export function validarArea(entrada: { nombre?: unknown }): ResultadoValidacion<DatosArea> {
+  const errores: Record<string, string> = {};
+  const nombre = validarNombre(entrada?.nombre, errores);
+  if (Object.keys(errores).length > 0) return { valido: false, errores };
+  return { valido: true, errores, datos: { nombre, nombreClave: claveNombre(nombre), activa: true } };
+}
+
+export function validarPuesto(entrada: { nombre?: unknown; areaId?: unknown }): ResultadoValidacion<DatosPuesto> {
+  const errores: Record<string, string> = {};
+  const nombre = validarNombre(entrada?.nombre, errores);
+  const areaId = typeof entrada?.areaId === 'string' ? entrada.areaId.trim() : '';
+  if (!areaId) errores.areaId = 'Selecciona el área a la que pertenece el puesto';
+  if (Object.keys(errores).length > 0) return { valido: false, errores };
+  return { valido: true, errores, datos: { nombre, nombreClave: claveNombre(nombre), areaId } };
+}
+
+/** Un nombre se repite entre áreas, o entre los puestos de una misma área si se indica `areaId`. */
+export function existeNombreDuplicado(
+  existentes: Array<{ nombre: string; areaId?: string }>,
+  nombre: string,
+  areaId?: string
+): boolean {
+  const clave = claveNombre(nombre);
+  return existentes.some(
+    (e) => claveNombre(e.nombre) === clave && (areaId === undefined || e.areaId === areaId)
+  );
+}
+
+export interface PuestoEstructura {
+  id: string;
+  nombre: string;
+  areaId: string;
+  colaboradores: number;
+}
+
+export interface AreaEstructura {
+  id: string;
+  nombre: string;
+  activa: boolean;
+  puestos: PuestoEstructura[];
+  totalColaboradores: number;
+}
+
+export function armarEstructura(
+  areas: Array<{ id: string; nombre: string; activa?: boolean }>,
+  puestos: Array<{ id: string; nombre: string; areaId: string }>,
+  conteoPorPuesto: Record<string, number> = {}
+): AreaEstructura[] {
+  return areas.map((area) => {
+    const delArea = puestos
+      .filter((p) => p.areaId === area.id)
+      .map((p) => ({
+        id: p.id,
+        nombre: p.nombre,
+        areaId: p.areaId,
+        colaboradores: conteoPorPuesto[p.id] ?? 0,
+      }));
+    return {
+      id: area.id,
+      nombre: area.nombre,
+      activa: area.activa ?? true,
+      puestos: delArea,
+      totalColaboradores: delArea.reduce((suma, p) => suma + p.colaboradores, 0)
+    };
+  });
+}

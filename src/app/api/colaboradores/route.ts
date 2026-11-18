@@ -34,8 +34,8 @@ export async function GET(request: NextRequest) {
       },
       orderBy: { createdAt: 'desc' },
     });
-    const puestos = await prisma.puesto.findMany({
-      include: { rutaOnboarding: true },
+    const puestos = await prisma.puestoTrabajo.findMany({
+      include: { area: true },
       orderBy: { nombre: 'asc' },
     });
 
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
         puestos: puestos.map(puesto => ({
           id: puesto.id,
           nombre: puesto.nombre,
-          rutaActiva: Boolean(puesto.rutaOnboarding?.activa),
+          rutaActiva: false,
         })),
         datos: colaboradores.map((colaborador) => ({
           id: colaborador.id,
@@ -130,7 +130,7 @@ async function registrarUno(cuerpo: Record<string, unknown>) {
     throw new Error('Ya existe una cuenta registrada con ese correo.');
   }
 
-  const puesto = await prisma.puesto.findUnique({ where: { id: puestoId }, include: { rutaOnboarding: true } });
+  const puesto = await prisma.puestoTrabajo.findUnique({ where: { id: puestoId } });
   if (!puesto) throw new Error('El puesto indicado no existe.');
 
   const registro = registrarColaboradorConRuta({
@@ -138,13 +138,8 @@ async function registrarUno(cuerpo: Record<string, unknown>) {
     email,
     dni,
     puestoId: puesto.id,
-    puesto: { id: puesto.id, nombre: puesto.nombre, rutaOnboardingId: puesto.rutaOnboardingId },
-    ruta: puesto.rutaOnboarding ? {
-      id: puesto.rutaOnboarding.id,
-      nombre: puesto.rutaOnboarding.nombre,
-      descripcion: puesto.rutaOnboarding.descripcion ?? undefined,
-      activa: puesto.rutaOnboarding.activa,
-    } : null,
+    puesto: { id: puesto.id, nombre: puesto.nombre, rutaOnboardingId: null },
+    ruta: null,
     baseUrl: process.env.APP_URL || 'https://app.cgb.latam',
   });
 

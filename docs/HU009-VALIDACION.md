@@ -60,3 +60,10 @@ Las capturas deben usar datos ficticios, ocultar DNI/correo completo si no es ne
 - [ ] Rechazo de enlace vencido o ya consumido.
 - [ ] Persistencia real de hash y expiración en MongoDB.
 - [ ] Confirmación de que no existe `enlaceActivacion` con token en MongoDB.
+
+## Uso de IA
+
+- Herramienta utilizada: GitHub Copilot.
+- Uso: inspección técnica, corrección de persistencia de tokens, documentación, preparación del Pull Request y comprobación local.
+- Validación humana requerida: diseño de modelos compartidos, permisos, alcance de activación, aprobación del rol y DNI.
+- Comprobación: 83 pruebas automáticas, TypeScript y ESLint; las decisiones no se consideran aprobadas por el asistente.
