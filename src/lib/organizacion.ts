@@ -16,12 +16,27 @@ export interface ResultadoValidacion<T> {
 
 export interface DatosArea {
   nombre: string;
+  nombreClave: string;
   activa: boolean;
 }
 
 export interface DatosPuesto {
   nombre: string;
+  nombreClave: string;
   areaId: string;
+}
+
+export function esObjectIdOrganizacionValido(id: string): boolean {
+  return /^[a-f\d]{24}$/i.test(id);
+}
+
+export function esErrorUnicidadPrisma(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    (error as { code?: unknown }).code === 'P2002'
+  );
 }
 
 export function limpiarNombre(valor: unknown): string {
@@ -47,7 +62,7 @@ export function validarArea(entrada: { nombre?: unknown }): ResultadoValidacion<
   const errores: Record<string, string> = {};
   const nombre = validarNombre(entrada?.nombre, errores);
   if (Object.keys(errores).length > 0) return { valido: false, errores };
-  return { valido: true, errores, datos: { nombre, activa: true } };
+  return { valido: true, errores, datos: { nombre, nombreClave: claveNombre(nombre), activa: true } };
 }
 
 export function validarPuesto(entrada: { nombre?: unknown; areaId?: unknown }): ResultadoValidacion<DatosPuesto> {
@@ -56,7 +71,7 @@ export function validarPuesto(entrada: { nombre?: unknown; areaId?: unknown }): 
   const areaId = typeof entrada?.areaId === 'string' ? entrada.areaId.trim() : '';
   if (!areaId) errores.areaId = 'Selecciona el área a la que pertenece el puesto';
   if (Object.keys(errores).length > 0) return { valido: false, errores };
-  return { valido: true, errores, datos: { nombre, areaId } };
+  return { valido: true, errores, datos: { nombre, nombreClave: claveNombre(nombre), areaId } };
 }
 
 /** Un nombre se repite entre áreas, o entre los puestos de una misma área si se indica `areaId`. */
@@ -81,22 +96,29 @@ export interface PuestoEstructura {
 export interface AreaEstructura {
   id: string;
   nombre: string;
+  activa: boolean;
   puestos: PuestoEstructura[];
   totalColaboradores: number;
 }
 
 export function armarEstructura(
-  areas: Array<{ id: string; nombre: string }>,
+  areas: Array<{ id: string; nombre: string; activa?: boolean }>,
   puestos: Array<{ id: string; nombre: string; areaId: string }>,
   conteoPorPuesto: Record<string, number> = {}
 ): AreaEstructura[] {
   return areas.map((area) => {
     const delArea = puestos
       .filter((p) => p.areaId === area.id)
-      .map((p) => ({ ...p, colaboradores: conteoPorPuesto[p.id] ?? 0 }));
+      .map((p) => ({
+        id: p.id,
+        nombre: p.nombre,
+        areaId: p.areaId,
+        colaboradores: conteoPorPuesto[p.id] ?? 0,
+      }));
     return {
       id: area.id,
       nombre: area.nombre,
+      activa: area.activa ?? true,
       puestos: delArea,
       totalColaboradores: delArea.reduce((suma, p) => suma + p.colaboradores, 0)
     };
