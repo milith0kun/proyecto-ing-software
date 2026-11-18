@@ -14,11 +14,12 @@ model User {
   name         String?
   role         String       @default("COLABORADOR")
   passwordHash String?
-  activo       Boolean      @default(false)
+  activo       Boolean                @default(false)
   colaborador  Colaborador?
   sesiones     Sesion[]
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  progresos    ProgresoCapacitacion[]
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
 
   @@map("users")
 }
@@ -48,12 +49,15 @@ model Capacitacion {
   duracionMin Int?       @default(30)
   icono       String?    @default("book-open")
   creadoPor   String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  // IDs de capacitaciones que deben estar COMPLETADAS antes de iniciar esta (HU-012)
+  prerrequisitos String[]               @default([]) @db.ObjectId
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
 
   // Relación con Slides (para HU-003 / HU-006)
-  slides    Slide[]
-  pasosRuta PasoRuta[]
+  slides         Slide[]
+  progresos      ProgresoCapacitacion[]
+  pasosRuta      PasoRuta[]
 
   @@index([ambito, estado, createdAt(sort: Desc)], map: "capacitaciones_catalogo_publico")
   @@map("capacitaciones")
@@ -76,6 +80,27 @@ model Slide {
   updatedAt      DateTime     @updatedAt
 
   @@map("slides")
+}
+
+
+// Avance privado de un colaborador en una capacitación interna (HU-012).
+// La clave única (usuario, capacitación) garantiza un solo registro por persona.
+// Restrict: borrar un usuario o una capacitación no elimina en silencio el historial de avance.
+model ProgresoCapacitacion {
+  id               String       @id @default(auto()) @map("_id") @db.ObjectId
+  usuarioId        String       @db.ObjectId
+  usuario          User         @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+  capacitacionId   String       @db.ObjectId
+  capacitacion     Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Restrict)
+  ultimoSlide      Int          @default(1) // último slide confirmado: punto de reanudación
+  slidesConfirmados Int[]       @default([]) // conjunto sin duplicados, base del porcentaje
+  estado           String       @default("EN_CURSO") // "EN_CURSO" | "COMPLETADA"
+  completadaEn     DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@unique([usuarioId, capacitacionId])
+  @@map("progreso_capacitaciones")
 }
 
 // Estructura organizacional (HU-007 / CGB-31)
