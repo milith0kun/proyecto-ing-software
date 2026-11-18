@@ -94,9 +94,9 @@
     \item \textbf{Denominación del Sistema:} Centro de Capacitación e Inducción CGB Academy.
     \item \textbf{Tipo de Aplicación:} Plataforma Web Modular (Orientación Pública y Onboarding Privado).
     \item \textbf{Organización Beneficiaria:} CGB Academy, integrando las divisiones CIIP LATAM, GEOMINA LATAM y BIOMEDIC.
-    \item \textbf{Repositorio Oficial en GitHub (Público):} \url{https://github.com/milith0kun/proyecto-ing-software}
-    \item \textbf{Ramas Principales de Trabajo:} \texttt{main} / \texttt{edmil-saire} (producción estable) y \texttt{desarrollo} (integración continua colaborativa).
-    \item \textbf{Cadencia y Tamaño del MVP:} 15 Historias de Usuario funcionales ejecutadas en 3 Sprints de dos semanas.
+    \item \textbf{Repositorio Oficial en GitHub (Público):} \href{https://github.com/milith0kun/proyecto-ing-software}{repositorio público del proyecto}
+    \item \textbf{Estrategia de ramas:} \texttt{main} como única rama permanente de integración, con ramas cortas por issue y Pull Request revisado.
+    \item \textbf{Cadencia y Tamaño del MVP:} 15 Historias de Usuario definidas y planificadas en 3 Sprints de dos semanas; el estado de entrega se valida en Jira.
 \end{itemize}
 
 \section{Objetivo General y Específicos}
@@ -233,7 +233,7 @@ La aplicación opera en la nube con acceso multiplataforma responsive para colab
 \hline
 \textbf{Lenguaje de Desarrollo} & \textbf{TypeScript} & Tipado estático de extremo a extremo que previene inconsistencias de tipo en tiempo de compilación entre modelos de datos, APIs y componentes de interfaz. \\
 \hline
-\textbf{Control de Versiones} & \textbf{Git \& GitHub} & Repositorio público con arquitectura de ramas: \texttt{main} / \texttt{edmil-saire} (producción), \texttt{desarrollo} (integración) y ramas personales por desarrollador. \\
+\textbf{Control de Versiones} & \textbf{Git \& GitHub} & \texttt{main} como rama de integración, ramas temporales por issue Jira y Pull Request revisado. \\
 \hline
 \textbf{Gestión y Tablero Ágil} & \textbf{Jira Software} & Tablero Kanban con límites WIP, estimación con Planning Poker \cite{cohn2004} y trazabilidad total de historias y subtareas TDD. \\
 \hline
@@ -276,7 +276,7 @@ Se seleccionó un modelo de desarrollo iterativo e incremental integrando:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Scrum:} Cadencia fija en Sprints de 2 semanas, ceremonias regulares y entregables por historias de usuario.
     \item \textbf{Kanban:} Transparencia visual mediante tablero de 4 columnas y límites WIP justificados con la Ley de Little.
-    \item \textbf{XP (Extreme Programming):} Desarrollo guiado por pruebas (TDD), integración continua y revisión de código por pares.
+    \item \textbf{XP (Extreme Programming):} Desarrollo guiado por pruebas (TDD) y revisión de código por pares. La integración continua automatizada queda como mejora pendiente: el repositorio revisado no contiene workflows de GitHub Actions.
 \end{itemize}
 
 \section{Prácticas Adoptadas del Proceso}
@@ -288,17 +288,18 @@ Se seleccionó un modelo de desarrollo iterativo e incremental integrando:
 
 \subsection{Aportes de Kanban}
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Tablero Visual de 4 Columnas:} $\text{TO DO} \rightarrow \mathbf{\text{DESARROLLO [WIP 3]}} \rightarrow \mathbf{\text{REVISIÓN [WIP 2]}} \rightarrow \text{DONE}$.
+    \item \textbf{Tablero Visual de 4 Columnas:}\par
+    \noindent\resizebox{\linewidth}{!}{$\text{POR HACER} \rightarrow \mathbf{\text{DESARROLLO [WIP 3]}} \rightarrow \mathbf{\text{REVISIÓN [WIP 2]}} \rightarrow \text{HECHO en main}$}.
     \item \textbf{Principio Lean:} Priorización absoluta de culminar revisiones antes de abrir nuevas tareas (\textit{``Stop starting, start finishing''}).
 \end{itemize}
 
 \subsection{Aportes de XP y Ciclo TDD}
-Cada Historia de Usuario se desglosa internamente en 4 subtareas técnicas obligatorias:
+Para cambios de comportamiento, el equipo aplica el ciclo TDD. Los pasos pueden registrarse en subtareas Jira cuando faciliten la coordinación; no son obligatorios para tareas documentales:
 \begin{enumerate}[leftmargin=*]
     \item \textbf{T1 -- RED (Pruebas):} Creación de pruebas unitarias y de integración que inicialmente fallan.
     \item \textbf{T2 -- GREEN (Implementación):} Código mínimo indispensable para satisfacer las pruebas con éxito.
     \item \textbf{T3 -- REFACTOR (Calidad):} Optimización de estructura y rendimiento sin alterar el comportamiento.
-    \item \textbf{T4 -- VALIDACIÓN E INTEGRACIÓN:} Verificación de criterios BDD y preparación del Pull Request.
+    \item \textbf{T4 -- VALIDACIÓN Y PR:} Verificación de criterios BDD y preparación del Pull Request hacia \texttt{main}.
 \end{enumerate}
 
 \subsection{Uso de Inteligencia Artificial en el Proceso}
@@ -333,12 +334,16 @@ Cada Historia de Usuario se desglosa internamente en 4 subtareas técnicas oblig
 \caption{Matriz de Roles y Responsabilidades del Equipo (Sprint 1).}
 \end{table}
 
-\subsection{Protocolo de Coordinación y Arquitectura de Ramas Git}
-Se utiliza la rama principal \texttt{main} / \texttt{edmil-saire} para producción, la rama \texttt{desarrollo} para integración continua y ramas personales por desarrollador (\texttt{alex-carpio}, \texttt{domingo-quispe}, \texttt{ronaldo-ticona}, \texttt{hector-barazorda}, \texttt{edmil-saire}). Toda integración requiere un Pull Request aprobado y validado mediante la suite de pruebas automatizadas.
+\subsection{Protocolo de Coordinación y Ramas Git}
+\texttt{main} es la única rama permanente de integración. Cada historia o cambio acotado se desarrolla en una rama corta nombrada \texttt{<tipo>/<CGB-ID>-<resumen>}, creada desde \texttt{origin/main}; por ejemplo, \texttt{feature/CGB-51-mi-onboarding} o \texttt{docs/CGB-123-flujo-git}. Las ramas con nombres de integrantes y \texttt{desarrollo}/\texttt{develop} son referencias históricas y no bases para trabajo nuevo.
+
+Antes de editar, cada colaborador inspecciona \texttt{git status} y los diffs, conserva archivos ajenos y agrega rutas explícitas. No usa \texttt{git add .} como rutina ni incluye \texttt{.env}, tokens, dependencias instaladas o artefactos generados. Los commits siguen Conventional Commits y contienen una intención, su ámbito y la clave Jira.
+
+El autor sincroniza su rama propia con \texttt{origin/main}, registra las verificaciones realmente ejecutadas y abre un Pull Request hacia \texttt{main} con issue Jira, cambio, evidencia y riesgos. Otra persona revisa y aprueba; los comentarios se resuelven antes de integrar mediante \textit{Squash and merge}. Jira pasa a Hecho cuando se cumple la Definition of Done. GitHub Actions no está configurado todavía; por eso no se afirma que los checks corran automáticamente. La guía operativa está en \url{https://github.com/milith0kun/proyecto-ing-software/blob/main/docs/FLUJO_DE_TRABAJO.md}.
 
 \section{Flujo de Trabajo del Equipo}
 \subsection{Estados del Tablero Visual}
-El flujo se organiza en 4 estados continuos: $\text{TO DO} \longrightarrow \text{DESARROLLO} \longrightarrow \text{REVISIÓN} \longrightarrow \text{DONE}$.
+El flujo se organiza en 4 estados continuos: $\text{POR HACER} \longrightarrow \text{DESARROLLO} \longrightarrow \text{REVISIÓN} \longrightarrow \text{HECHO en main}$.
 
 \subsection{Límites WIP y Fundamentación Matemática (Ley de Little)}
 Conforme a la Ley de Little ($\text{WIP} = \lambda \times W$) \cite{little1961}, se fijan los siguientes límites estrictos:
@@ -351,14 +356,13 @@ Conforme a la Ley de Little ($\text{WIP} = \lambda \times W$) \cite{little1961},
 Las tarjetas impedidas permanecen en su columna física con la etiqueta $\mathbf{\oslash\text{ BLOQUEADA}}$, registrando en Jira el motivo técnico, responsable y acción de destrabe a cargo del Scrum Master.
 
 \subsection{Definición de Hecho (Definition of Done -- DoD)}
-Para que una Historia de Usuario sea declarada formalmente \textbf{Done}, debe satisfacer:
+Para que una Historia de Usuario sea declarada formalmente \textbf{Hecho}, debe satisfacer las siguientes condiciones comunes; los criterios de aceptación específicos siguen siendo propios de cada historia:
 \begin{itemize}[leftmargin=*]
-    \item[\checkmark] Cumplir al 100\% los Criterios de Aceptación BDD (\textit{Dado que / Cuando / Entonces}).
-    \item[\checkmark] Pruebas automáticas superadas en verde (T1 a T4 del ciclo TDD).
-    \item[\checkmark] Cero errores ni advertencias de compilación en Next.js y TypeScript.
-    \item[\checkmark] Persistencia validada en MongoDB Atlas vía Prisma ORM.
-    \item[\checkmark] Pull Request revisado, aprobado y fusionado en la rama \texttt{desarrollo}.
-    \item[\checkmark] Demostración y validación satisfactoria por el Product Owner.
+    \item[\checkmark] Criterios de aceptación verificados con evidencia reproducible.
+    \item[\checkmark] Pruebas y comprobaciones pertinentes ejecutadas; comandos y resultados reales registrados. GitHub Actions aún no está configurado.
+    \item[\checkmark] Pull Request aprobado por otra persona y comentarios resueltos.
+    \item[\checkmark] Documentación/configuración actualizadas cuando aplica; sin secretos ni artefactos ajenos.
+    \item[\checkmark] PR integrado en \texttt{main}, con Jira, PR y commit enlazados y aceptación del Product Owner según la historia.
 \end{itemize}
 
 \section{Incrementos Presentados del Proyecto}
@@ -393,16 +397,18 @@ Para que una Historia de Usuario sea declarada formalmente \textbf{Done}, debe s
 Interfaces responsivas en producción local y servidas en VPS con base de datos MongoDB Atlas sembrada con cursos reales de las unidades CIIP LATAM, GEOMINA LATAM y BIOMEDIC.
 
 \subsubsection{Pruebas o Validaciones Realizadas}
-68 de 68 pruebas automatizadas superadas con éxito (\texttt{npm test}) y compilación limpia con Turbopack (\texttt{npm run build}) en $< 600\text{ms}$.
+La bitácora del Sprint 1 registra 68 de 68 pruebas superadas (\texttt{npm test}) y una compilación de Turbopack (\texttt{npm run build}) menor a 600 ms. Es un resultado registrado de esa ejecución, no un check automático ni evidencia de que todas las historias estén en Hecho. GitHub Actions aún no está configurado.
+
+En la consulta de Jira del 19 de octubre de 2026, cuatro de las seis historias del Sprint 1 figuraban en Hecho y HU-004/HU-006 seguían en Revisión. El Sprint 1 aparecía activo aunque sus fechas habían terminado el 15 de octubre; el equipo debe reconciliar ese estado antes de declarar el incremento completo.
 
 \subsubsection{Cambios Realizados Respecto al Avance Anterior}
 Consolidación del alcance MVP eliminando pasarelas de pago y módulos pesados de video para garantizar una entrega vertical 100\% funcional.
 
 \section{Métricas y Seguimiento del Proceso}
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Velocidad del Sprint (Velocity):} 6 Historias de Usuario completadas en el Sprint 1 (100\% de lo comprometido).
-    \item \textbf{Tiempo de Ciclo (Cycle Time):} Promedio de 3 a 4 días hábiles por Historia de Usuario desde \textit{TO DO} hasta \textit{DONE}.
-    \item \textbf{Tasa de Aceptación:} 100\% de criterios BDD superados antes del pase a producción.
+    \item \textbf{Estado del Sprint 1 en Jira (consulta del 19/10/2026):} 4 de 6 historias en Hecho; HU-004 y HU-006 en Revisión. Dos tareas de gestión seguían pendientes y el sprint aún figuraba activo después de su fecha de fin (15/10/2026).
+    \item \textbf{Tiempo de Ciclo (Cycle Time):} Meta de planificación de 3 a 4 días hábiles por Historia de Usuario desde \textit{Por hacer} hasta \textit{Hecho}; debe contrastarse con datos registrados en Jira.
+    \item \textbf{Tasa de Aceptación:} calcular el porcentaje desde los criterios verificados por historia en Jira; no se reporta un 100\% agregado mientras existan historias en Revisión.
 \end{itemize}
 
 \section{Acuerdos de Mejora para el Siguiente Incremento}
@@ -434,9 +440,9 @@ Consolidación del alcance MVP eliminando pasarelas de pago y módulos pesados d
 
 \section{Conclusiones}
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Eficacia del Modelo Iterativo e Incremental:} La combinación de Scrum con el control de flujo Kanban (Ley de Little) y TDD de XP permitió completar las 6 Historias de Usuario del Sprint 1 con cero regresiones de código y alta previsibilidad.
+    \item \textbf{Eficacia del Modelo Iterativo e Incremental:} Scrum, Kanban y TDD establecen una cadencia, límites de trabajo y prácticas de verificación. La consulta de Jira del 19/10/2026 muestra 4 de 6 historias del Sprint 1 en Hecho y dos en Revisión; antes de declarar el incremento completo se deben resolver esas revisiones y actualizar el sprint.
     \item \textbf{Rigor en Requerimientos:} La formalización de 15 Requerimientos Funcionales bajo ISO/IEC/IEEE 29148 y 10 Requerimientos No Funcionales bajo ISO/IEC 25010 asegura la trazabilidad técnica total desde la fase de diseño hasta la validación de aceptación.
-    \item \textbf{Calidad Verificable y Mantenibilidad:} La integración de contratos BDD, esquemas tipados en TypeScript y pruebas continuas garantiza que el sistema sea extensible y robusto para los siguientes sprints de la organización CGB Academy.
+    \item \textbf{Calidad Verificable y Mantenibilidad:} Los criterios BDD, las pruebas pertinentes y la revisión por pares aportan evidencia de calidad. El equipo debe registrar los resultados por historia; la automatización de CI queda pendiente de configurar.
 \end{enumerate}
 
 \bibliographystyle{plain}
