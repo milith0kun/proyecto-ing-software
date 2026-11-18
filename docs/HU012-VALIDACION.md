@@ -32,7 +32,8 @@ Guardar y finalizar usan control optimista (`escribirProgreso`): se actualiza so
 
 ## Verificación (17 de noviembre de 2026)
 
-- `npm test`: **92 pruebas pasan, 0 fallan** (24 de HU-012 en `tests/progreso-capacitacion.test.mjs` y `tests/visor-progreso.test.mjs`, incluidas 4 de concurrencia).
+- Tras traer `main` (18 de noviembre de 2026): `npm test` **113 pasan, 0 fallan**, `tsc`, `eslint` y `npm run build` sin errores.
+- `npm test` antes del merge: **92 pruebas pasan, 0 fallan** (24 de HU-012 en `tests/progreso-capacitacion.test.mjs` y `tests/visor-progreso.test.mjs`, incluidas 4 de concurrencia).
 - `npx tsc --noEmit` y `npx eslint src tests`: sin errores.
 - **MongoDB Atlas real** (`prisma db push` aplicado; colección `progreso_capacitaciones` con índice único usuario + capacitación). Con datos temporales, ya eliminados (0 restos):
   - Flujo: sin sesión 401; sin avance inicia en el slide 1; repetir confirmación deja un registro; reanuda en el slide 2 (67 %); otra cuenta no ve ese avance; finalizar antes de tiempo da 409; tras confirmar todos se completa con 100 %.

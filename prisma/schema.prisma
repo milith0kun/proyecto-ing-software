@@ -83,12 +83,13 @@ model Slide {
 
 // Avance privado de un colaborador en una capacitación interna (HU-012).
 // La clave única (usuario, capacitación) garantiza un solo registro por persona.
+// Restrict: borrar un usuario o una capacitación no elimina en silencio el historial de avance.
 model ProgresoCapacitacion {
   id               String       @id @default(auto()) @map("_id") @db.ObjectId
   usuarioId        String       @db.ObjectId
-  usuario          User         @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  usuario          User         @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
   capacitacionId   String       @db.ObjectId
-  capacitacion     Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Cascade)
+  capacitacion     Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Restrict)
   ultimoSlide      Int          @default(1) // último slide confirmado: punto de reanudación
   slidesConfirmados Int[]       @default([]) // conjunto sin duplicados, base del porcentaje
   estado           String       @default("EN_CURSO") // "EN_CURSO" | "COMPLETADA"
@@ -98,4 +99,31 @@ model ProgresoCapacitacion {
 
   @@unique([usuarioId, capacitacionId])
   @@map("progreso_capacitaciones")
+}
+
+// Estructura organizacional (HU-007 / CGB-31)
+model Area {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  nombre      String          @unique
+  nombreClave String          @unique
+  activa      Boolean         @default(true)
+  puestos     PuestoTrabajo[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@map("areas")
+}
+
+model PuestoTrabajo {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  nombre      String
+  nombreClave String
+  areaId      String   @db.ObjectId
+  area        Area     @relation(fields: [areaId], references: [id], onDelete: Restrict)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([areaId, nombre])
+  @@unique([areaId, nombreClave])
+  @@map("puestos_trabajo")
 }

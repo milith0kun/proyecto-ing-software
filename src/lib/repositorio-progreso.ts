@@ -9,6 +9,9 @@ export interface RegistroProgreso {
 }
 export interface ClaveProgreso { usuarioId_capacitacionId: { usuarioId: string; capacitacionId: string } }
 
+export type NuevoProgreso = Prisma.ProgresoCapacitacionUncheckedCreateInput;
+export type CambioProgresoDatos = Prisma.ProgresoCapacitacionUncheckedUpdateManyInput;
+
 export const claveDeProgreso = (usuarioId: string, capacitacionId: string): ClaveProgreso =>
   ({ usuarioId_capacitacionId: { usuarioId, capacitacionId } });
 
