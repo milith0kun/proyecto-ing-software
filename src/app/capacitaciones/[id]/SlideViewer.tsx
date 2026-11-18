@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   calcularProgresoLectura,
@@ -12,34 +12,60 @@ import {
   type SlideVisor,
 } from '@/lib/visor-capacitacion';
 
+// Seguimiento opcional (HU-012): el recorrido público no lo usa y se comporta igual que antes.
+export interface SeguimientoVisor {
+  guardar: (slide: number) => Promise<boolean>;
+  finalizar: () => Promise<boolean>;
+  completada: boolean;
+}
+type EstadoGuardado = 'guardando' | 'guardado' | 'error';
+const TEXTO_GUARDADO: Record<EstadoGuardado, string> = {
+  guardando: 'Guardando tu avance…',
+  guardado: 'Avance guardado',
+  error: 'No pudimos guardar tu avance.',
+};
+
 /* eslint-disable @next/next/no-img-element */
-export default function SlideViewer({
-  slides,
-  slideInicial = 1,
-  onSlideChange,
-  alTerminarHref = '/capacitaciones',
-}: {
-  slides: SlideVisor[];
-  slideInicial?: number;
-  onSlideChange?: (slideOrden: number) => Promise<void>;
-  alTerminarHref?: string;
-}) {
-  const inicialSeguro = Math.max(1, Math.min(Math.floor(slideInicial), Math.max(slides.length, 1)));
-  const [slideActual, setSlideActual] = useState(inicialSeguro);
-  const [errorProgreso, setErrorProgreso] = useState('');
+export default function SlideViewer({ slides, slideInicial = 1, seguimiento }: { slides: SlideVisor[]; slideInicial?: number; seguimiento?: SeguimientoVisor }) {
+  const [slideActual, setSlideActual] = useState(() => Math.min(Math.max(Math.floor(slideInicial) || 1, 1), Math.max(slides.length, 1)));
+  const [resultadoGuardado, setResultadoGuardado] = useState<{ clave: string; ok: boolean } | null>(null);
+  const [intentoGuardado, setIntentoGuardado] = useState(0);
+  const claveGuardado = `${slideActual}:${intentoGuardado}`;
+  const estadoGuardado: EstadoGuardado = resultadoGuardado?.clave !== claveGuardado ? 'guardando' : resultadoGuardado.ok ? 'guardado' : 'error';
+  const [finalizando, setFinalizando] = useState(false);
+  const [completada, setCompletada] = useState(seguimiento?.completada ?? false);
+  const [errorFinalizar, setErrorFinalizar] = useState(false);
   const inicioToqueX = useRef<number | null>(null);
   const totalSlides = slides.length;
   const progreso = calcularProgresoLectura(slideActual, totalSlides);
   const slide = slides[slideActual - 1];
 
-  const cambiarSlide = useCallback((nuevoSlide: number) => {
-    if (nuevoSlide === slideActual) return;
-    setSlideActual(nuevoSlide);
-    setErrorProgreso('');
-    if (onSlideChange) {
-      void onSlideChange(nuevoSlide).catch(() => setErrorProgreso('No se pudo guardar tu avance. Revisa tu conexión y vuelve a intentarlo.'));
+  // Cada slide al que se llega se confirma en el servidor; reintentar repite la misma confirmación idempotente.
+  const guardar = seguimiento?.guardar;
+  useEffect(() => {
+    if (!guardar || slides.length === 0) return;
+    let vigente = true;
+    guardar(slideActual).then(
+      (ok) => { if (vigente) setResultadoGuardado({ clave: claveGuardado, ok }); },
+      () => { if (vigente) setResultadoGuardado({ clave: claveGuardado, ok: false }); },
+    );
+    return () => { vigente = false; };
+  }, [guardar, slideActual, slides.length, claveGuardado]);
+
+  async function finalizarCapacitacion() {
+    if (!seguimiento) return;
+    setFinalizando(true);
+    setErrorFinalizar(false);
+    try {
+      const ok = await seguimiento.finalizar();
+      setCompletada(ok);
+      setErrorFinalizar(!ok);
+    } catch {
+      setErrorFinalizar(true);
+    } finally {
+      setFinalizando(false);
     }
-  }, [onSlideChange, slideActual]);
+  }
 
   useEffect(() => {
     function manejarTeclado(evento: KeyboardEvent) {
@@ -50,13 +76,13 @@ export default function SlideViewer({
       const siguiente = navegarPorTeclado(evento.key, slideActual, totalSlides);
       if (siguiente !== slideActual) {
         evento.preventDefault();
-        cambiarSlide(siguiente);
+        setSlideActual(siguiente);
       }
     }
 
     window.addEventListener('keydown', manejarTeclado);
     return () => window.removeEventListener('keydown', manejarTeclado);
-  }, [cambiarSlide, slideActual, totalSlides]);
+  }, [slideActual, totalSlides]);
 
   if (!slide) {
     return (
@@ -78,6 +104,20 @@ export default function SlideViewer({
           {progreso}% completado
         </span>
       </div>
+
+      {seguimiento && (
+        <div style={{ marginBottom: '10px', fontSize: '13px', color: 'var(--text-muted)' }}>
+          <p style={{ margin: 0 }}>Tu posición se guarda para que puedas reanudar esta capacitación más tarde.</p>
+          <p role="status" style={{ margin: '4px 0 0', fontWeight: 600, color: estadoGuardado === 'error' ? '#B42318' : 'var(--text-muted)' }}>
+            {TEXTO_GUARDADO[estadoGuardado]}
+            {estadoGuardado === 'error' && (
+              <button type="button" onClick={() => setIntentoGuardado((n) => n + 1)} style={{ marginLeft: '8px', border: 0, background: 'none', color: 'var(--brand-blue)', fontWeight: 700, textDecoration: 'underline', cursor: 'pointer' }}>
+                Reintentar
+              </button>
+            )}
+          </p>
+        </div>
+      )}
 
       <div
         role="progressbar"
@@ -107,9 +147,9 @@ export default function SlideViewer({
 
           const direccion = obtenerDireccionDeslizamiento(inicioX, finX);
           if (direccion === 'siguiente') {
-            cambiarSlide(obtenerSiguienteSlide(slideActual, totalSlides));
+            setSlideActual((actual) => obtenerSiguienteSlide(actual, totalSlides));
           } else if (direccion === 'anterior') {
-            cambiarSlide(obtenerSlideAnterior(slideActual, totalSlides));
+            setSlideActual((actual) => obtenerSlideAnterior(actual, totalSlides));
           }
         }}
         onTouchCancel={() => {
@@ -159,15 +199,35 @@ export default function SlideViewer({
           type="button"
           className="visor-control"
           aria-label="Ir a la diapositiva anterior"
-          onClick={() => cambiarSlide(obtenerSlideAnterior(slideActual, totalSlides))}
+          onClick={() => setSlideActual((actual) => obtenerSlideAnterior(actual, totalSlides))}
           disabled={slideActual === 1}
           style={{ border: '1px solid var(--borde-sutil)', borderRadius: '999px', backgroundColor: '#FFFFFF', color: 'var(--brand-navy)', fontWeight: 700, cursor: slideActual === 1 ? 'not-allowed' : 'pointer', opacity: slideActual === 1 ? 0.55 : 1 }}
         >
           Anterior
         </button>
-        {slideActual === totalSlides ? (
+        {slideActual === totalSlides && seguimiento ? (
+          completada ? (
+            <Link
+              href="/colaborador"
+              className="visor-control"
+              style={{ border: 0, borderRadius: '999px', backgroundColor: 'var(--brand-navy)', color: '#FFFFFF', fontWeight: 700, textDecoration: 'none' }}
+            >
+              Capacitación completada · Volver a mi espacio
+            </Link>
+          ) : (
+            <button
+              type="button"
+              className="visor-control"
+              onClick={finalizarCapacitacion}
+              disabled={finalizando || estadoGuardado !== 'guardado'}
+              style={{ border: 0, borderRadius: '999px', backgroundColor: 'var(--brand-navy)', color: '#FFFFFF', fontWeight: 700, cursor: finalizando || estadoGuardado !== 'guardado' ? 'not-allowed' : 'pointer', opacity: finalizando || estadoGuardado !== 'guardado' ? 0.55 : 1 }}
+            >
+              {finalizando ? 'Finalizando…' : 'Finalizar'}
+            </button>
+          )
+        ) : slideActual === totalSlides ? (
           <Link
-            href={alTerminarHref}
+            href="/capacitaciones"
             className="visor-control"
             style={{ border: 0, borderRadius: '999px', backgroundColor: 'var(--brand-navy)', color: '#FFFFFF', fontWeight: 700, textDecoration: 'none' }}
           >
@@ -178,14 +238,14 @@ export default function SlideViewer({
             type="button"
             className="visor-control"
             aria-label="Ir a la diapositiva siguiente"
-            onClick={() => cambiarSlide(obtenerSiguienteSlide(slideActual, totalSlides))}
+            onClick={() => setSlideActual((actual) => obtenerSiguienteSlide(actual, totalSlides))}
             style={{ border: 0, borderRadius: '999px', backgroundColor: 'var(--brand-navy)', color: '#FFFFFF', fontWeight: 700, cursor: 'pointer' }}
           >
             Siguiente
           </button>
         )}
       </nav>
-      {errorProgreso && <p className="visor-progreso-error" role="alert">{errorProgreso}</p>}
+      {errorFinalizar && <p role="alert" style={{ color: '#B42318', fontWeight: 600 }}>No pudimos finalizar. Revisa tu avance e inténtalo nuevamente.</p>}
     </section>
   );
 }

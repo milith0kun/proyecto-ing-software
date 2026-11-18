@@ -2546,3 +2546,229 @@ button:disabled {
   .rutas-asignacion__guardar { justify-content: stretch; }
   .rutas-asignacion__guardar .boton-primario { width: 100%; }
 }
+
+/* ==========================================================================
+   Estructura organizacional — Vista en acordeón (HU-007 / CGB-31)
+   ========================================================================== */
+.org-header-acciones,
+.org-heading-acciones {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.org-filtros {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(180px, 240px);
+  gap: 12px;
+  padding: 0 30px 24px;
+}
+
+.org-acordeon-lista {
+  display: grid;
+  gap: 14px;
+  padding: 20px 30px 30px;
+  border-top: 1px solid var(--borde-divisor);
+}
+
+.org-acordeon-item {
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease-out-soft),
+              box-shadow var(--dur-fast) var(--ease-out-soft);
+}
+
+.org-acordeon-item--abierta {
+  border-color: rgba(20, 98, 135, 0.34);
+  box-shadow: var(--sombra-tarjeta);
+}
+
+.org-acordeon-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  background: var(--bg-card);
+}
+
+.org-acordeon-item--abierta .org-acordeon-cabecera {
+  background: var(--bg-surface-alt);
+  border-bottom: 1px solid var(--borde-divisor);
+}
+
+.org-acordeon-disparador {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.org-acordeon-disparador:focus-visible {
+  outline: 3px solid rgba(77, 196, 211, 0.62);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+
+.org-acordeon-chevron {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  border: 1px solid var(--borde-sutil);
+  border-radius: 10px;
+  background: var(--bg-primary);
+  color: var(--brand-navy);
+  transition: transform var(--dur-fast) var(--ease-out-soft),
+              background-color var(--dur-fast) var(--ease-out-soft);
+}
+
+.org-acordeon-item--abierta .org-acordeon-chevron {
+  transform: rotate(180deg);
+  background: var(--brand-navy);
+  color: #FFFFFF;
+}
+
+.org-acordeon-titulo-bloque {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.org-acordeon-titulo-bloque strong {
+  overflow: hidden;
+  color: var(--brand-navy);
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.org-acordeon-metadatos {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.org-acordeon-acciones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.org-acordeon-cuerpo {
+  padding: 18px 20px 20px;
+  background: var(--bg-card);
+}
+
+.org-puestos-lista {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.org-puesto-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--borde-divisor);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+}
+
+.org-puesto-nombre {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.org-puesto-icono {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(20, 98, 135, 0.1);
+  color: var(--brand-blue);
+}
+
+.org-puesto-nombre strong,
+.org-puesto-nombre span {
+  display: block;
+}
+
+.org-puesto-nombre strong {
+  color: var(--brand-navy);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.org-puesto-nombre div > span {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.org-puestos-vacio {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  border: 1px dashed var(--borde-sutil);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+}
+
+.org-puestos-vacio p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+@media (max-width: 760px) {
+  .org-filtros {
+    grid-template-columns: 1fr;
+    padding: 0 20px 18px;
+  }
+
+  .org-acordeon-lista {
+    padding: 16px 20px 22px;
+  }
+
+  .org-acordeon-cabecera {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .org-acordeon-acciones {
+    justify-content: flex-start;
+  }
+
+  .org-puesto-fila {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

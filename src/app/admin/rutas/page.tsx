@@ -1,28 +1,34 @@
-import { redirect } from 'next/navigation';
-import { CabeceraAdminCgb } from '@/components/institucional/CabeceraAdminCgb';
-import { PieCgb } from '@/components/institucional/PieCgb';
-import { sesionActual } from '@/lib/sesion';
-import PanelAsignacionRutas from './PanelAsignacionRutas';
+import { obtenerServicioRutas } from '@/lib/rutas-http';
+import ConstructorRutas from './ConstructorRutas';
 
 export const dynamic = 'force-dynamic';
 
-export default async function PaginaRutas() {
-  const usuario = await sesionActual();
-  if (!usuario) redirect('/login');
-  if (usuario.role !== 'ADMINISTRADOR') redirect('/admin/colaboradores');
+export default async function PaginaRutasOnboarding() {
+  const { areas, capacitaciones, rutas } = await obtenerServicioRutas().obtenerDatosConstructor();
+
+  const rutasIniciales = rutas.map(r => ({
+    id: r.id,
+    titulo: r.titulo,
+    objetivo: r.objetivo,
+    estado: r.estado,
+    areaId: r.areaId,
+    puestoId: r.puestoId,
+    activadaEn: r.activadaEn ? r.activadaEn.toISOString() : null,
+    pasos: r.pasos.map(p => ({
+      id: p.id,
+      rutaId: p.rutaId,
+      capacitacionId: p.capacitacionId,
+      orden: p.orden,
+      obligatorio: p.obligatorio,
+      capacitacionTitulo: p.capacitacionTitulo,
+    })),
+  }));
 
   return (
-    <div className="admin-shell">
-      <CabeceraAdminCgb>
-        <div className="admin-header__context">
-          <span className="indicador-operativo" />
-          <span>Asignación de rutas y capacitaciones</span>
-        </div>
-      </CabeceraAdminCgb>
-      <main className="panel-admin panel-admin--compact">
-        <PanelAsignacionRutas />
-      </main>
-      <PieCgb />
-    </div>
+    <ConstructorRutas
+      areas={areas}
+      capacitaciones={capacitaciones}
+      rutasIniciales={rutasIniciales}
+    />
   );
 }
