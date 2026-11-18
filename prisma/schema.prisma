@@ -17,6 +17,7 @@ model User {
   activo    Boolean  @default(false)
   sesiones  Sesion[]
   progresos ProgresoCapacitacion[]
+  intentosEvaluacion IntentoEvaluacion[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -56,6 +57,7 @@ model Capacitacion {
   // Relación con Slides (para HU-003 / HU-006)
   slides      Slide[]
   progresos   ProgresoCapacitacion[]
+  evaluacion  Evaluacion?
 
   @@index([ambito, estado, createdAt(sort: Desc)], map: "capacitaciones_catalogo_publico")
   @@map("capacitaciones")
@@ -98,4 +100,48 @@ model ProgresoCapacitacion {
 
   @@unique([usuarioId, capacitacionId])
   @@map("progreso_capacitaciones")
+}
+
+// Pregunta de opción múltiple embebida en la evaluación. `correcta` nunca se envía al navegador antes de calificar.
+type PreguntaEvaluacion {
+  id               String
+  enunciado        String
+  opciones         String[]
+  correcta         Int      // índice base 0 dentro de `opciones`
+  retroalimentacion String?
+}
+
+// Microtest formativo de una capacitación (HU-014). La configuración la gestiona HU-013.
+model Evaluacion {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  capacitacionId  String       @unique @db.ObjectId
+  capacitacion    Capacitacion @relation(fields: [capacitacionId], references: [id], onDelete: Cascade)
+  titulo          String       @default("Microtest")
+  preguntas       PreguntaEvaluacion[]
+  notaMinima      Int          @default(70) // porcentaje 0-100 para aprobar
+  maxIntentos     Int          @default(3)
+  tiempoLimiteSeg Int?         // temporizador opcional
+  intentos        IntentoEvaluacion[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@map("evaluaciones")
+}
+
+// Intento calificado de un colaborador. (usuario, evaluación, número) único evita pasar el límite de intentos en solicitudes simultáneas.
+model IntentoEvaluacion {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  evaluacionId String     @db.ObjectId
+  evaluacion   Evaluacion @relation(fields: [evaluacionId], references: [id], onDelete: Cascade)
+  usuarioId    String     @db.ObjectId
+  usuario      User       @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  numero       Int
+  respuestas   Int[]      // -1 = sin responder
+  aciertos     Int
+  puntaje      Int        // porcentaje 0-100
+  aprobado     Boolean
+  enviadoEn    DateTime   @default(now())
+
+  @@unique([usuarioId, evaluacionId, numero])
+  @@map("intentos_evaluacion")
 }
