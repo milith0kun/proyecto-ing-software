@@ -15,9 +15,10 @@
    - La relación `PuestoTrabajo.area` cambia de `onDelete: Cascade` a `onDelete: Restrict`.
    - `DELETE /api/organizacion/areas/[id]` bloquea la eliminación con HTTP `409` si el área tiene puestos asociados.
    - En su lugar, la interfaz y `PATCH /api/organizacion/areas/[id]` permiten desactivar y reactivar el área (`activa: false` / `true`) preservando puestos, rutas de onboarding (`CGB-36`) y colaboradores (`CGB-41`).
-3. **Compatibilidad con módulos dependientes (`CGB-36` y `CGB-41`, punto 7 de revisión):**
+3. **Compatibilidad con módulos dependientes (`CGB-36` y `CGB-41`, punto 7 de revisión) y arquitectura en capas (diapositivas 5 y 6):**
    - Los modelos oficiales son `Area` (`areas`) y `PuestoTrabajo` (`puestos_trabajo`).
-   - `obtenerEstructuraOrganizacional()` en `src/lib/organizacion-prisma.ts` invoca `armarEstructura` dejando preparado el parámetro `conteoPorPuesto` (actualmente en `0` hasta integrar la relación `Colaborador -> PuestoTrabajo.id` de `CGB-41`).
+   - `obtenerEstructuraOrganizacional()` en `src/lib/repositorio-organizacion.ts` invoca `armarEstructura` dejando preparado el parámetro `conteoPorPuesto` (actualmente en `0` hasta integrar la relación `Colaborador -> PuestoTrabajo.id` de `CGB-41`).
+   - El flujo separa estrictamente las 4 capas documentadas en [`HU007-DISENO-Y-TRAZABILIDAD.md`](./HU007-DISENO-Y-TRAZABILIDAD.md): Presentación (`PanelOrganizacion.tsx`), Controladores delgados (`route.ts`), Lógica de negocio (`servicio-organizacion.ts` y `organizacion.ts`) y Acceso a datos (`repositorio-organizacion.ts`).
 
 ---
 

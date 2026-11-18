@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { CabeceraAdminCgb } from '@/components/institucional/CabeceraAdminCgb';
 import { PieCgb } from '@/components/institucional/PieCgb';
-import { obtenerEstructuraOrganizacional } from '@/lib/organizacion-prisma';
+import { obtenerEstructuraOrganizacional } from '@/lib/repositorio-organizacion';
 import type { AreaEstructura } from '@/lib/organizacion';
 import PanelOrganizacion from './PanelOrganizacion';
 
