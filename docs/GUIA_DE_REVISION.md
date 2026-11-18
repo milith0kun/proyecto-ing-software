@@ -39,7 +39,7 @@ Un asistente de IA puede preparar el informe, pero **no aprueba, fusiona, public
    │  npm test · npm run lint · tsc · build si aplica · evidencia (capturas/logs)     │
    ▼                                                                                  │
  PULL REQUEST hacia main  [👤 Autor]  plantilla completa + «Uso de IA» + RNF         │
-   │  CI «Lint y pruebas» en verde                                                    │
+   │  CI en verde: Build, Tests, Lint, Seguridad                                      │
    ▼                                                                                  │
  REVISIÓN  [🔍 Revisor]  listas GC · REQ · DIS · ARQ  →  informe + comentarios        │
    │     ┌── hay bloqueantes ──► CHANGES_REQUESTED ──► [👤] corrige y hace push ──┐   │
@@ -71,6 +71,8 @@ Leyenda: ✅ Cumple · ⚠️ Cumple en parte · ❌ No cumple · ⏳ Pendiente 
 Rutas: archivos de la rama <rama>, salvo que diga otra cosa. Autor: <nombre>. <Tiene PR #n | No tiene PR>.
 
 Veredicto: <2-4 frases: qué funciona, qué impide revisarla o aprobarla, qué es lo más valioso>.
+
+Fortaleza y mejora concreta: <una fortaleza> · <una mejora concreta>.
 
 Estado: <conflictos con main y con qué ramas/PR chocan archivos concretos>.
 
@@ -144,23 +146,29 @@ Fuente: `3.Gestion_de_configuracion.pdf`. Responsables: 👤 autor · 🔍 revis
 |---|---|---|---|---|---|
 | GC-01 | Rama y clave Jira | Nombre `<tipo>/<CGB-ID>-<resumen>`; la clave existe en Jira; una sola historia | `git branch -r`, PR | 👤 | 20, 21 |
 | GC-02 | Rama al día | La rama contiene `origin/main` actual; conflictos resueltos entendiendo ambas intenciones y validando el comportamiento | `git merge-base --is-ancestor origin/main <rama>`; `git merge-tree` | 👤 | 14, 15 |
-| GC-03 | Commits con intención | `tipo(ámbito): descripción (CGB-n)`; un propósito por commit; el mensaje refleja el diff | `git log origin/main..<rama>` | 👤 | 13, 27 |
-| GC-04 | Solo lo de la tarea | Sin `.env`, secretos, `node_modules`, `.next`, archivos ajenos ni otro lockfile | `git diff --stat origin/main...<rama>` | 👤 | 6 |
+| GC-03 | Commits con intención | `tipo(ámbito): descripción (CGB-n)`; un propósito por commit; el mensaje refleja el diff; se revisó `git status` y `git diff --staged` antes de confirmar | `git log origin/main..<rama>` | 👤 | 13, 27 |
+| GC-04 | Solo lo de la tarea | Sin `.env`, secretos, `node_modules`, `.next`, archivos ajenos ni otro lockfile; los datos de prueba, scripts y la configuración de automatización que usa la HU están versionados y ubicados | `git diff --stat origin/main...<rama>` | 👤 | 6 |
 | GC-05 | Issue claro | Problema, contexto, criterios de aceptación, responsable y prioridad | Jira | PO / 👤 | 23 |
 | GC-06 | PR completo | Plantilla llena: necesidad, cambio, verificación real, RNF, uso de IA | PR | 👤 | 24, 25 |
 | GC-07 | Verificación registrada | `npm test`, `npm run lint`, `tsc` y, si toca build/rutas/dependencias, `npm run build`; comando y resultado | PR / documento de validación | 👤 | 25, 32 |
 | GC-08 | Verificación reproducida | El revisor ejecutó los comandos sobre el SHA publicado (worktree o clon limpio) | Salida del comando | 🔍 | 26, 43 |
-| GC-09 | CI | El check `CI / Lint y pruebas` está en verde en el PR | PR → Checks | 🔍 | 25 |
+| GC-09 | CI: Tests y lint | El job «Lint y pruebas» (`npm test` y `npm run lint`) está en verde en el PR | PR → Checks | 🔍 | 25 |
 | GC-10 | Impacto de datos y config | Cambio en base compartida (`db push`) documentado: entorno, qué se aplicó, quién autorizó; variables en `.env.example` sin valores reales | Documento de la HU | 👤 | 8 |
 | GC-11 | Revisión del diff | Correctitud, referencias desactualizadas, evidencia de que funciona | Comentarios con archivo, escenario y consecuencia | 🔍 | 26 |
 | GC-12 | Hilos y aprobación | Conversaciones resueltas; aprobación de una persona distinta del autor, después del último push | PR | 🔍 | 25, 40 |
 | GC-13 | Integración | Squash and merge con título `tipo(ámbito): … (HU-0nn / CGB-n)` | PR → `main` | 🔍 | 14, 20, 25 |
-| GC-14 | Trazabilidad | Necesidad → issue → rama → PR → commit → prueba enlazados | Jira + PR | 👤 / 🔍 | 9 |
-| GC-15 | Tablero y WIP | Estado coherente con la realidad; límites WIP; bloqueos visibles con causa y responsable | Jira | 🔍 / PO | 30 |
+| GC-14 | Trazabilidad | Necesidad → issue → rama → PR → commit → prueba enlazados; incluye la prueba y la versión (tag o SHA de `main`) que contienen el cambio | Jira + PR | 👤 / 🔍 | 9 |
+| GC-15 | Tablero y WIP | Estado coherente con la realidad; límites WIP; bloqueos visibles con causa y responsable; cada tarjeta cumple la condición de su columna: entrada clara → cambio activo → PR y evidencia → DoD cumplida | Jira | 🔍 / PO | 30 |
 | GC-16 | DoD | Se cumplen los seis puntos de `definition-of-done.md` antes de pasar a Hecho | PR + Jira | 🔍 | 32 |
-| GC-17 | Uso de IA | Herramienta, qué propuso, qué decidió el equipo y cómo se verificó; o «sin uso». La afirmación de la IA se contrasta con archivos y pruebas | PR, sección «Uso de IA» | 👤 / 🔍 | 34–38 |
+| GC-17 | Uso de IA | Herramienta, qué propuso, qué decidió el equipo y cómo se verificó; o «sin uso». La afirmación de la IA se contrasta con archivos y pruebas; decisión trazable: motivo, cambio aplicado y evidencia de validación de cada propuesta aceptada, modificada o rechazada | PR, sección «Uso de IA» | 👤 / 🔍 | 34–38 |
 | GC-18 | Línea base | No se declara línea base ni tag sin identificar SHA, alcance, instrucciones y aprobación | `docs/configuracion.md` | PO / 🔍 | 7, 16 |
 | GC-19 | Reconstrucción | Otra persona puede clonar, instalar con `npm ci` y reproducir lo que se declaró | README, `docs/configuracion.md` | 👤 | 10, 42 |
+| GC-20 | CI: Build | `npm run build` pasa en la CI y no necesita secretos | PR → Checks (job «Build») | 🔍 | 25 |
+| GC-21 | CI: Seguridad | `npm audit` sin vulnerabilidades altas ni críticas en producción introducidas por la HU; las ya existentes se tratan en su propia tarea | PR → Checks (job «Seguridad») | 🔍 / 👤 | 25 |
+| GC-22 | Evaluación de impacto | Se evaluaron comportamiento, interfaces/API, pruebas, documentación y entrega; si se rechaza o pospone, queda la razón | PR / Jira | PO / 👤 | 8 |
+| GC-23 | Despliegue y cierre | Rama eliminada tras fusionar; entorno de destino anotado cuando exista | GitHub, `docs/configuracion.md` | 🔍 | 25 |
+| GC-24 | Roles | El autor explica y verifica; el revisor contrasta; el equipo resuelve el impacto en las HU dependientes; el integrador comprueba los acuerdos antes del merge | PR | todos | 40 |
+| GC-25 | Fortaleza y mejora | El informe nombra una fortaleza y una mejora concreta | Informe | 🔍 | 42 |
 
 ## 5. Lista REQ — Requisitos
 
@@ -180,6 +188,10 @@ Fuente: `4. Requisitos.pdf`. Apóyate en la matriz y los conflictos de [`REQUISI
 | REQ-10 | Alcance mínimo | Nada que no pida un criterio; sin funciones «por si acaso» (*feature bloat*, regla 80/20) | Diff frente a criterios | 🔍 |
 | REQ-11 | Conflictos entre HU | Si dos HU deciden lo mismo con reglas distintas, se eleva al PO y se registra la decisión | Hilo del PR + Jira | PO |
 | REQ-12 | Hipótesis frente a evidencia | Lo no validado con usuarios se rotula como hipótesis; no se informan entrevistas o pruebas que no ocurrieron | Documentos de la HU | 👤 |
+| REQ-13 | Cobertura | La cobertura de pruebas se mide; el umbral (por ejemplo ≥ 80 %) está pendiente de acordar con el PO | Informe de cobertura | 👤 / PO |
+| REQ-14 | Aprobación de la interfaz | Si cambia el frontend, la aprobación de quien diseña (PO o diseñador) consta en el PR | PR | PO |
+| REQ-15 | RNF como criterio de terminado | Cada RNF declarado tiene su revisión de código centrada en él y, si aplica, una prueba con carga real | PR | 👤 / 🔍 |
+| REQ-16 | Épica y experimento | HU pequeña (las épicas se dividen); si es experimento: hipótesis, métrica y decisión posterior (continuar, pivotar o abandonar) | Jira | PO |
 
 ## 6. Lista DIS — Diseño de software
 
@@ -203,6 +215,8 @@ Fuente: `5.Diseno_Software.pdf`. Se evalúa el diseño detallado: clases, funcio
 | DIS-14 | Integridad de datos | Borrados y relaciones protegen el historial (`Restrict` frente a `Cascade` si se pierde información); índices únicos para unicidad | `prisma/schema.prisma` | 👤 / 🔍 |
 | DIS-15 | Modelo único | Un mismo concepto no se define dos veces con formas distintas en ramas diferentes | `schema.prisma` entre ramas | 👤 / PO |
 | DIS-16 | Documento de diseño | Decisiones y trazabilidad HU → criterios → pruebas → archivos | `docs/HU0nn-DISENO-Y-TRAZABILIDAD.md` | 👤 |
+| DIS-17 | Proceso de diseño | Observar → explicar → corregir → probar → comparar → decidir; se conservan solo las mejoras justificadas | PR | 👤 |
+| DIS-18 | Refactor seguro | Pruebas verdes antes y después, pasos pequeños y ninguna funcionalidad nueva en los commits `refactor` | `git log`, PR | 👤 |
 
 ## 7. Lista ARQ — Arquitectura
 
@@ -229,9 +243,12 @@ Regla de capas (ARQ, láminas 21 y 28): **la capa n solo usa la capa n-1**; el c
 | ARQ-07 | Sesión y permisos | Las rutas privadas usan la verificación de sesión y de rol del proyecto | `src/lib/permisos.ts`, `route.ts` | 👤 |
 | ARQ-08 | Un modelo, varias vistas | El estado vive en el modelo; la vista solo lo presenta (MVC) | Componentes | 👤 |
 | ARQ-09 | Monolito con módulos claros | No se introducen servicios o procesos nuevos sin justificarlos; la complejidad se defiende con costo y madurez del equipo | PR | 👤 / PO |
-| ARQ-10 | Decisión y costo futuro | Las decisiones de estructura se justifican con restricciones reales y se anotan; el costo puede aparecer años después | `docs/` o PR | 👤 |
+| ARQ-10 | Decisión y costo futuro | Las decisiones de estructura se justifican con restricciones reales y se anotan; el costo puede aparecer años después; se anotan observabilidad (registro de errores) y puntos únicos de fallo | `docs/` o PR | 👤 |
 | ARQ-11 | Dependencia de proveedor | Si se usa un servicio gestionado (BaaS, Atlas, correo), se anota la dependencia y el costo variable | `docs/configuracion.md` | 👤 / PO |
 | ARQ-12 | Interfaz dinámica (SPA/MPA) | Los componentes de cliente piden datos por API; no incrustan reglas de negocio | `*.tsx` con `'use client'` | 👤 |
+| ARQ-13 | Arquitectura justificada | El documento de diseño explica por qué monolito modular y qué alternativa se descartó | `docs/HU0nn-DISENO…` | 👤 / PO |
+| ARQ-14 | Consistencia entre colecciones | Las escrituras en varias colecciones usan transacción o compensación explícita y probada | Servicio + pruebas | 👤 |
+| ARQ-15 | Observabilidad y fallo único | Los errores se registran sin datos personales y el punto único de fallo está reconocido | `docs/`, código | 👤 / PO |
 
 ## 8. Veredicto y qué bloquea
 
@@ -241,7 +258,7 @@ Regla de capas (ARQ, láminas 21 y 28): **la capa n solo usa la capa n-1**; el c
 | **Cambios solicitados** | Hay al menos un ❌ bloqueante |
 | **En espera** | Falta una decisión del PO o que se integre otra HU de la que depende |
 
-**Bloqueante** (impide fusionar): criterio de aceptación sin evidencia o fallido; pruebas, lint o CI en rojo; conflicto sin resolver o rama que no contiene `main`; RNF de privacidad o seguridad sin comprobar; secreto o dato personal en claro; pérdida de datos por borrado en cascada no decidida; salto de capa o HTTP dentro del modelo en **código nuevo**; modelo duplicado que choca con otra HU.
+**Bloqueante** (impide fusionar): criterio de aceptación sin evidencia o fallido; pruebas, lint, build o CI en rojo, o check de CI ausente una vez que el workflow esté en `main`; dependencia nueva con vulnerabilidad alta o crítica; conflicto sin resolver o rama que no contiene `main`; RNF de privacidad o seguridad sin comprobar; secreto o dato personal en claro; pérdida de datos por borrado en cascada no decidida; salto de capa o HTTP dentro del modelo en **código nuevo**; modelo duplicado que choca con otra HU.
 
 **No bloqueante** (se anota y se programa): tamaño de componentes, refactor de código antiguo, mejoras de cohesión, documentación adicional, evidencia complementaria. Se deja como comentario con propuesta, no como `CHANGES_REQUESTED`.
 
@@ -298,6 +315,9 @@ Esta sección es el análisis completo de los cuatro documentos. Cada fila une *
 | **Evidencia** | Capturas o logs reproducibles de cada criterio; base de datos real si aplica | `docs/evidencias-hu0nn/` | GC, REQ |
 | **PR** | Plantilla completa, CI verde, uso de IA, RNF, enlace al issue | GitHub | GC |
 | **Cierre** | DoD de 6 puntos; Squash and merge; Jira → Hecho con PR y commit | PR + Jira | GC |
+| **Evaluación de impacto** | Comportamiento, interfaces/API, pruebas, documentación y entrega; razón si se rechaza o pospone | PR o Jira | GC |
+| **Trazabilidad completa** | Issue → PR → commit → prueba → versión (tag o SHA de `main`) | Jira + PR | GC |
+| **CI en verde** | Build, Tests, Lint y Seguridad (este último informativo hasta actualizar dependencias) | PR → Checks | GC |
 
 ### 11.1 GC — Gestión de configuración y control de cambios (46 páginas)
 
@@ -323,6 +343,16 @@ Esta sección es el análisis completo de los cuatro documentos. Cada fila une *
 | 34–38 | IA explica y propone; el equipo comprueba; hallazgo = archivo, línea, escenario, consecuencia; decisión registrada (aceptar, modificar o rechazar) o «sin uso» | Sección «Uso de IA» con herramienta, decisión y verificación | PR | GC-17 |
 | 39–41 | Entregable: repositorio, tablero, workflow y DoD con un enlace principal | README con enlaces a flujo, DoD y guía de revisión | README | GC-19 |
 | 43 | «¿Qué falta para confiar?»: cada afirmación necesita una condición comprobable | Ningún ✅ sin evidencia nombrada | Informe | todos |
+| 6 | Ítems: también requisitos, datos de prueba, scripts y configuración de automatización | Datos de prueba (seed), scripts y workflows de la HU versionados y ubicados | `prisma/`, `package.json`, `.github/` | GC-04 |
+| 8 | Impacto en comportamiento, interfaces, pruebas, documentación y entrega; si se rechaza o pospone se conserva la razón | Sección «Impacto» en el PR o en Jira con las cinco dimensiones; razón registrada si se pospone | Jira + PR | GC-22 |
+| 9 | Trazabilidad: añadir la prueba y la versión que contienen el cambio | Enlace a la prueba y a la versión (tag o SHA de `main`) | Jira | GC-14 |
+| 13 | `git status` y `git diff --staged` antes de confirmar | Revisión previa al commit | `git log`, PR | GC-03 |
+| 25 (paso 5) | CI/CD ejecuta Build, Tests, Lint y Seguridad sobre el PR | Los cuatro checks en verde | PR → Checks | GC-09, 20, 21 |
+| 25 (paso 9) | Despliegue y cierre: entorno de destino y rama eliminada | Rama eliminada tras fusionar; entorno de despliegue anotado cuando exista | GitHub, `docs/configuracion.md` | GC-23 |
+| 30 | Condiciones de entrada por columna y bloqueo con causa y persona | Cada tarjeta cumple la condición de su columna | Jira | GC-15 |
+| 37 | Hallazgo = archivo + línea + escenario + consecuencia; decisión trazable = motivo, cambio y evidencia | Cada propuesta de IA con su decisión, motivo y evidencia | PR | GC-17 |
+| 40 | Roles: autor explica y verifica; revisor contrasta; equipo resuelve el impacto; integrador comprueba acuerdos | Cada rol cumplido y visible en el PR; entrega con versión, línea base y evidencia | PR | GC-24 |
+| 42 | Revisión con una fortaleza y una mejora concreta | Informe con ambas | Informe | GC-25 |
 
 ### 11.2 REQ — Requisitos (107 páginas)
 
@@ -348,6 +378,10 @@ Esta sección es el análisis completo de los cuatro documentos. Cada fila une *
 | 74–76 | MVP es un experimento; puede omitir prácticas de ingeniería | En este proyecto **no**: la DoD aplica siempre; si se decide lo contrario, lo registra el PO | Jira | REQ-06 |
 | 94 | MVP con IA: cuidar seguridad, privacidad y protección de datos | Sin datos personales ni credenciales en prompts o código | PR | REQ-08 |
 | 95–103 | Pruebas A/B para experimentos | Solo si la HU declara una hipótesis comparativa: muestra, métrica y duración | Jira | ⚪ |
+| 23–24, 33 | Criterios de terminado de ejemplo: cobertura de pruebas ≥ 80 %, linter, aprobación del diseñador UX del frontend, revisión por otro integrante | Cobertura medida (umbral por acordar con el PO) y aprobación de la interfaz cuando cambia el frontend | PR, informe de cobertura | REQ-13, 14 |
+| 23 | Un RNF importante entra en la DoD: revisión de código centrada en él y pruebas con carga real | Por cada RNF declarado, la revisión y la prueba que lo comprueban | PR | REQ-15 |
+| 27–28 | Una épica se divide en historias pequeñas | HU pequeña; si viene de una épica, la descomposición está en Jira | Jira | REQ-16 |
+| 67–69 | Al final de un ciclo de MVP: nuevo ciclo, pivote, abandono o ajuste producto-mercado | Si la HU es experimento: hipótesis, métrica y decisión posterior | Jira | REQ-16 |
 
 ### 11.3 DIS — Diseño de software (150 páginas)
 
@@ -376,6 +410,8 @@ Esta sección es el análisis completo de los cuatro documentos. Cada fila une *
 | 146 | IA como revisora, no autoridad; verificar clases innecesarias, compilación y conducta; no subir credenciales ni datos personales | Registro en «Uso de IA» | PR | GC-17 |
 | 148 | Tres ideas para el proyecto: responsabilidades claras, dependencias controladas, pruebas antes que adornos | Las tres, comprobadas en la HU | PR | DIS-03, DIS-06, DIS-13 |
 | — | (Del proyecto, no del PDF) Integridad de datos y modelo único | `Restrict` frente a `Cascade` decidido; un solo modelo por concepto | `schema.prisma` | DIS-14, DIS-15 |
+| 140 | Refactorizar: pruebas antes, cambios pequeños, mismas pruebas después | Evidencia de pruebas verdes antes y después del `refactor` | PR | DIS-18 |
+| 147 | Observar → explicar → corregir → probar → comparar → decidir | El PR cuenta qué se observó, qué se corrigió, cómo se probó y qué mejoras se conservaron | PR | DIS-17 |
 
 ### 11.4 ARQ — Arquitectura (116 diapositivas)
 
@@ -401,6 +437,9 @@ Esta sección es el análisis completo de los cuatro documentos. Cada fila une *
 | 107 | Cada servicio controla su modelo de datos; no se comparten bases sin límites | Un módulo dueño por colección; sin segunda colección para lo mismo | `schema.prisma` | ARQ-06 |
 | 108–110 | Recomendación: empezar con un monolito; migrar gradualmente (*Strangler Fig*) | El monolito modular es la base; migrar solo con motivo | PR | ARQ-09 |
 | — | (Del proyecto) Sesión y permisos en rutas privadas | `permisos.ts` aplicado en cada `route.ts` privada | `route.ts` | ARQ-07 |
+| 113–115 | Justificar la arquitectura elegida frente a otras en un caso concreto | Párrafo en el documento de diseño: por qué monolito modular y qué se descartó | `docs/HU0nn-DISENO…` | ARQ-13 |
+| 105, 107 | Transacciones y consistencia entre servicios o colecciones | Si la HU escribe en varias colecciones: transacción o compensación explícita | Servicio + pruebas | ARQ-14 |
+| 99 | Redundancia, recuperación y observabilidad | Registro de errores y recuperación anotados como riesgo o resueltos | `docs/`, código | ARQ-15 |
 
 ### 11.5 Cómo se usa esta matriz
 
@@ -408,3 +447,16 @@ Esta sección es el análisis completo de los cuatro documentos. Cada fila une *
 2. Al **escribir el informe**, la columna *Diap.* sale de aquí y se copia al «Punto (diap.)» de la plantilla de la sección 3.
 3. Si un documento de clase cambia, se actualiza **primero** esta matriz y luego las listas 4 a 7.
 4. Un punto de la matriz que ninguna HU ha podido cumplir se eleva al equipo: o se corrige el proceso o se retira la exigencia, con la razón en Jira.
+
+### 11.6 Cambios incorporados el 18/11/2026
+
+Tras comparar la guía con las láminas (incluidas las imágenes de GC 7–9, 17, 24–26, 30, 37 y 40 y de REQ 9 y 33) se agregaron:
+
+- **CI completa (GC 25):** Build y Seguridad además de Tests y Lint (GC-20, GC-21); ausencia de CI como bloqueo (§8).
+- **Control de cambios (GC 8–9):** evaluación de impacto y trazabilidad con prueba y versión (GC-22, GC-14).
+- **Cierre y roles (GC 25, 40, 42):** despliegue y rama eliminada, roles del flujo, fortaleza y mejora (GC-23, GC-24, GC-25).
+- **Requisitos (REQ 23, 24, 27–28, 33, 67–69):** cobertura, aprobación de la interfaz, RNF como criterio de terminado, épicas y experimentos (REQ-13 a REQ-16).
+- **Diseño (DIS 140, 147):** proceso de diseño y refactor seguro (DIS-17, DIS-18).
+- **Arquitectura (ARQ 99, 105, 107, 113–115):** justificación, consistencia entre colecciones y observabilidad (ARQ-13 a ARQ-15).
+
+Pendiente de decisión del equipo y del PO: el umbral de cobertura (REQ-13) y la aprobación de interfaz (REQ-14) no están en `definition-of-done.md`; se revisan como criterios de la guía hasta que se acuerden.

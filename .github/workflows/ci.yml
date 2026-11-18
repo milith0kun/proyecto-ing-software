@@ -33,3 +33,37 @@ jobs:
 
       - name: Pruebas
         run: npm test
+
+  compilar:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias (lockfile)
+        run: npm ci
+
+      - name: Compilar
+        run: npm run build
+
+  seguridad:
+    name: Seguridad (npm audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Informativo: el aviso no bloquea el PR hasta que se actualicen `next` y `zod`
+      # (ver Jira). Después se quita el `||` para que sea un check obligatorio.
+      - name: Auditar dependencias de producción
+        run: |
+          npm audit --omit=dev --audit-level=high || echo "::warning title=Vulnerabilidades en dependencias de producción::npm audit encontró vulnerabilidades altas o críticas (next, zod). Pendiente la tarea de actualización de dependencias."

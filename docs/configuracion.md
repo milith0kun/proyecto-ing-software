@@ -18,7 +18,7 @@
 
 `package-lock.json` es el lockfile versionado y npm es el gestor acordado. No agregar archivos `.env`, tokens, claves ni datos personales reales. `.env.example` debe usar valores ficticios y explicar solo los nombres requeridos.
 
-Desde el 17 de noviembre de 2026 la CI de GitHub Actions ejecuta `npm ci`, `npm run lint` y `npm test` en cada PR hacia `main`. A esa fecha no existen tags ni releases publicados: no se anuncia una línea base de release inexistente.
+Desde el 17 de noviembre de 2026 la CI de GitHub Actions ejecuta `npm ci`, `npm run lint`, `npm test` y `npm run build` en cada PR hacia `main`, y un `npm audit` informativo de las dependencias de producción. A esa fecha no existen tags ni releases publicados: no se anuncia una línea base de release inexistente.
 
 ## Aprobación de una línea base
 

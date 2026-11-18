@@ -16,7 +16,7 @@
 - RNF aplicables (ver `docs/REQUISITOS_APLICADOS.md`) y cómo se comprobó cada uno:
 - Evidencia (capturas, logs o pasos reproducibles), cuando aplique:
 - Comprobaciones no ejecutadas y motivo:
-- Resultado del check `CI / Lint y pruebas`:
+- Resultado de los checks de CI (`Lint y pruebas`, `Build`; `Seguridad` es informativo):
 
 ## Uso de IA
 
