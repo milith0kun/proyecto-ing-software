@@ -189,7 +189,7 @@ El modelo secuencial en Cascada se descartó porque presupone requerimientos inm
 ### 8.2 Justificación del Modelo Iterativo e Incremental
 - **De Scrum se toma:** La cadencia fija en sprints cortos (2 semanas), las ceremonias de planificación, sincronización diaria, revisión y retrospectiva, y la unidad de trabajo en historias de usuario priorizadas.
 - **De Kanban se toma:** La transparencia visual mediante el tablero Kanban por fases, la limitación explícita del trabajo en curso (*WIP limits*) y la política de bloqueo para visibilizar impedimentos.
-- **De XP se toma:** Desarrollo guiado por pruebas (*TDD* en lógica crítica), propiedad colectiva del código, diseño simple y revisión por pares (*Peer Review*). La integración continua automatizada queda como mejora pendiente: el repositorio revisado no contiene workflows de GitHub Actions.
+- **De XP se toma:** Desarrollo guiado por pruebas (*TDD* en lógica crítica), propiedad colectiva del código, diseño simple y revisión por pares (*Peer Review*). La integración continua se automatizó el 18/11/2026: un workflow de GitHub Actions ejecuta Lint y pruebas, compilación (*Build*) y análisis de seguridad (`npm audit`) en cada Pull Request y en cada *push* a `main`.
 
 ---
 
@@ -216,7 +216,7 @@ El modelo secuencial en Cascada se descartó porque presupone requerimientos inm
   2. **T2 — Implementación / GREEN:** Programación mínima necesaria para hacer pasar las pruebas con éxito.
   3. **T3 — Refactorización:** Optimización de estructura, legibilidad y rendimiento sin modificar el comportamiento funcional.
   4. **T4 — Validación y PR:** Verificación de criterios de aceptación y preparación del pull request hacia `main`.
-- **Verificación previa al PR:** el autor ejecuta y registra las pruebas y comprobaciones disponibles; GitHub Actions aún no está configurado, por lo que no se afirma que estas comprobaciones corran automáticamente.
+- **Verificación previa al PR:** el autor ejecuta y registra las pruebas y comprobaciones disponibles; la CI de GitHub Actions (Lint y pruebas, compilación y seguridad, desde el 18/11/2026) ejecuta estas comprobaciones en cada Pull Request y su resultado se registra en el PR.
 - **Revisión de Código por Pares (*Peer Review*):** Ningún código se integra a la rama común sin al menos una aprobación formal de otro integrante.
 - **Diseño Simple y Propiedad Colectiva del Código:** Código semántico, componentes modulares en Next.js y tipado estricto con Prisma y TypeScript.
 
@@ -351,7 +351,7 @@ Una Historia de Usuario puede pasar a Revisión únicamente cuando:
 #### 3. Transición: REVISIÓN $\longrightarrow$ HECHO
 Una Historia de Usuario alcanza el estado final de Done únicamente cuando:
 - El código ha sido revisado y aprobado formalmente por al menos otro desarrollador (*Peer Review* en GitHub).
-- Las pruebas pertinentes registradas en el PR pasan sin regresiones; el repositorio todavía no configura ejecución automática en GitHub Actions.
+- Las pruebas pertinentes registradas en el PR pasan sin regresiones; la CI de GitHub Actions ejecuta Lint y pruebas, compilación y seguridad en cada Pull Request (desde el 18/11/2026).
 - No existen errores bloqueantes de compilación en Next.js ni TypeScript.
 - Se validaron satisfactoriamente todos los criterios de aceptación junto al Product Owner.
 - El Pull Request ha sido fusionado limpiamente en `main`.
