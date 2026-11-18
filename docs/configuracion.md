@@ -14,10 +14,11 @@
 | Pruebas | `tests/`, scripts de `package.json` | Commit; comando y resultado en PR | Autor de la historia y persona revisora |
 | Proceso e instrucciones para agentes | `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `skills/`, `docs/` | Commit de Git | Equipo de desarrollo; cambios de política revisados por el equipo |
 | Entrega aprobada | Tag/release de GitHub, cuando exista una entrega | Tag ligado a un SHA, notas, checks y aprobación | Responsable de release y Product Owner |
+| Integración continua | `.github/workflows/ci.yml` | Commit de Git; resultado del check `CI / Lint y pruebas` en cada PR | Equipo de desarrollo; cambios revisados en PR |
 
 `package-lock.json` es el lockfile versionado y npm es el gestor acordado. No agregar archivos `.env`, tokens, claves ni datos personales reales. `.env.example` debe usar valores ficticios y explicar solo los nombres requeridos.
 
-En la revisión del 19 de octubre de 2026 no se encontraron tags ni releases publicados y el repositorio no contiene workflows de GitHub Actions. Hasta que CI esté configurada, cada PR conserva los comandos y resultados ejecutados manualmente; no se anuncian checks automáticos ni una línea base de release inexistente.
+Desde el 17 de noviembre de 2026 la CI de GitHub Actions ejecuta `npm ci`, `npm run lint` y `npm test` en cada PR hacia `main`. A esa fecha no existen tags ni releases publicados: no se anuncia una línea base de release inexistente.
 
 ## Aprobación de una línea base
 

@@ -144,7 +144,7 @@ Hacer push solo de la rama de la tarea y abrir el PR hacia `main`. El PR debe vi
 5. Se integra mediante **Squash and merge** para dejar un commit claro por historia en `main`. No se hace merge directo desde una cuenta local ni se fuerza el push a `main`.
 6. El issue de Jira pasa a **Hecho** solo después de cumplir `docs/definition-of-done.md`; se enlazan PR y commit y se registra cualquier evidencia de aceptación.
 
-La configuración de GitHub usa `main` como rama predeterminada, requiere un PR y una aprobación, impide force-push y eliminación de `main`, permite **Squash and merge** y elimina automáticamente la rama de una tarea después de fusionar. No hay workflows de CI todavía; los checks manuales se registran en el PR y los checks obligatorios se añaden cuando exista automatización configurada.
+La configuración de GitHub usa `main` como rama predeterminada, requiere un PR y una aprobación, impide force-push y eliminación de `main`, permite **Squash and merge** y elimina automáticamente la rama de una tarea después de fusionar. El workflow `.github/workflows/ci.yml` ejecuta `npm ci`, `npm run lint` y `npm test` en cada PR hacia `main` y en cada push a `main`; el check `CI / Lint y pruebas` debe estar en verde antes de aprobar. Los comandos que la CI no cubre (por ejemplo `npm run build` o pruebas manuales de aceptación) se siguen registrando en el PR.
 
 ## 7. Cambios, trazabilidad y versiones aprobadas
 

@@ -15,6 +15,13 @@
 - Criterios de aceptación comprobados:
 - Evidencia (capturas, logs o pasos reproducibles), cuando aplique:
 - Comprobaciones no ejecutadas y motivo:
+- Resultado del check `CI / Lint y pruebas`:
+
+## Uso de IA
+
+- Herramienta usada (o escribir **«sin uso»**):
+- Qué propuso y qué decidió el equipo (aceptar, modificar o rechazar) con su razón:
+- Cómo se comprobó lo que la IA afirmó (archivos revisados, pruebas ejecutadas):
 
 ## Lista antes de pedir revisión
 
