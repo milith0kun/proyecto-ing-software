@@ -8,7 +8,7 @@ import { PieCgb } from '@/components/institucional/PieCgb';
 import {
   evaluarFortalezaContrasena,
   type DatosPerfilActivacion,
-} from '@/lib/activacion-cuenta';
+} from '@/lib/politica-contrasena';
 
 function IconoCheck({ cumplido }: { cumplido: boolean }) {
   return (

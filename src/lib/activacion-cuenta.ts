@@ -1,4 +1,17 @@
 import { createHash, randomBytes } from 'node:crypto';
+import {
+  evaluarFortalezaContrasena,
+  validarPoliticaContrasena,
+  type DatosPerfilActivacion,
+  type FortalezaContrasena,
+} from './politica-contrasena';
+
+export {
+  evaluarFortalezaContrasena,
+  validarPoliticaContrasena,
+  type DatosPerfilActivacion,
+  type FortalezaContrasena,
+};
 
 export const DURACION_TOKEN_ACTIVACION_MS = 1000 * 60 * 60 * 48; // 48 horas
 
@@ -29,13 +42,6 @@ export interface RegistroActivacionColaborador {
   passwordHash: string | null;
   tokenActivacionHash: string | null;
   tokenExpiraEn: Date | null;
-}
-
-export interface DatosPerfilActivacion {
-  nombre: string;
-  email: string;
-  puestoNombre: string | null;
-  rutaNombre: string | null;
 }
 
 export interface ResultadoActivacionCuenta {
@@ -75,60 +81,6 @@ export function hashTokenActivacion(token: string): string {
 
 export function calcularExpiracion48h(ahora = new Date()): Date {
   return new Date(ahora.getTime() + DURACION_TOKEN_ACTIVACION_MS);
-}
-
-export function validarPoliticaContrasena(contrasena: string): {
-  valido: boolean;
-  errores: string[];
-} {
-  const errores: string[] = [];
-  const texto = typeof contrasena === 'string' ? contrasena : '';
-
-  if (texto.length < 8) {
-    errores.push('La contraseña debe tener al menos 8 caracteres.');
-  }
-  if (new TextEncoder().encode(texto).length > 72) {
-    errores.push('La contraseña no puede superar los 72 bytes.');
-  }
-  if (!/\d/.test(texto)) {
-    errores.push('La contraseña debe incluir al menos un número.');
-  }
-  if (!/[^A-Za-z0-9\s]/.test(texto)) {
-    errores.push('La contraseña debe incluir al menos un símbolo.');
-  }
-
-  return { valido: errores.length === 0, errores };
-}
-
-export interface FortalezaContrasena {
-  nivel: 'DEBIL' | 'MEDIA' | 'FUERTE';
-  porcentaje: number;
-  criterios: {
-    longitudMinima: boolean;
-    tieneNumero: boolean;
-    tieneSimbolo: boolean;
-    tieneMayuscula: boolean;
-  };
-}
-
-/**
- * Evalúa la fortaleza visual de la contraseña en tiempo real (HU-010 T3).
- */
-export function evaluarFortalezaContrasena(contrasena: string): FortalezaContrasena {
-  const texto = typeof contrasena === 'string' ? contrasena : '';
-  const criterios = {
-    longitudMinima: texto.length >= 8,
-    tieneNumero: /\d/.test(texto),
-    tieneSimbolo: /[^A-Za-z0-9\s]/.test(texto),
-    tieneMayuscula: /[A-Z]/.test(texto),
-  };
-
-  const cumplidos = Object.values(criterios).filter(Boolean).length;
-  const porcentaje = Math.round((cumplidos / 4) * 100);
-  const nivel: FortalezaContrasena['nivel'] =
-    cumplidos <= 1 ? 'DEBIL' : cumplidos <= 3 ? 'MEDIA' : 'FUERTE';
-
-  return { nivel, porcentaje, criterios };
 }
 
 function esRegistroActivacionVigente(
