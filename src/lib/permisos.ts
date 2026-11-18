@@ -21,7 +21,7 @@ export async function exigirAdministrador(solicitud: NextRequest) {
 }
 
 export async function exigirGestorColaboradores(solicitud: NextRequest) {
-  return exigirRoles(solicitud, ['ADMINISTRADOR', 'ESPECIALISTA_RRHH']);
+  return exigirRoles(solicitud, ['ADMINISTRADOR']);
 }
 
 export async function esAdministrador(solicitud: NextRequest) {

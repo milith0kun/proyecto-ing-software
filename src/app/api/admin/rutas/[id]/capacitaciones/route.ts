@@ -27,7 +27,7 @@ export async function GET(_request: NextRequest, { params }: ContextoRuta) {
     }
 
     const [asignadas, disponibles] = await Promise.all([
-      prisma.rutaCapacitacion.findMany({
+      prisma.pasoRuta.findMany({
         where: { rutaId: id },
         orderBy: { orden: 'asc' },
         select: {
@@ -116,13 +116,14 @@ export async function PUT(request: NextRequest, { params }: ContextoRuta) {
     }
 
     await prisma.$transaction(async transaction => {
-      await transaction.rutaCapacitacion.deleteMany({ where: { rutaId: id } });
+      await transaction.pasoRuta.deleteMany({ where: { rutaId: id } });
       if (asignaciones.length > 0) {
-        await transaction.rutaCapacitacion.createMany({
+        await transaction.pasoRuta.createMany({
           data: asignaciones.map(item => ({
             rutaId: id,
             capacitacionId: item.capacitacionId,
             orden: item.orden,
+            obligatorio: true,
           })),
         });
       }

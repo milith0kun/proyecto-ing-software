@@ -65,7 +65,7 @@ test('CGB-54 RED: consulta solo rutas y capacitaciones reales de MongoDB', async
     descripcion: 'Ruta existente',
     activa: true,
   });
-  prisma.rutaCapacitacion.findMany = async () => [];
+  prisma.pasoRuta.findMany = async () => [];
   prisma.capacitacion.findMany = async () => [];
 
   const contexto = { params: Promise.resolve({ id: rutaId }) };
@@ -105,8 +105,8 @@ test('CGB-54 RED: reemplaza asignaciones por orden real y elimina las anteriores
     estado: 'PUBLICADA',
   }));
   prisma.$transaction = async ejecutar => ejecutar(prisma);
-  prisma.rutaCapacitacion.deleteMany = async datos => operaciones.push({ operacion: 'delete', datos });
-  prisma.rutaCapacitacion.createMany = async datos => operaciones.push({ operacion: 'create', datos });
+  prisma.pasoRuta.deleteMany = async datos => operaciones.push({ operacion: 'delete', datos });
+  prisma.pasoRuta.createMany = async datos => operaciones.push({ operacion: 'create', datos });
 
   const contexto = { params: Promise.resolve({ id: rutaId }) };
   const respuesta = await reemplazarAsignaciones(

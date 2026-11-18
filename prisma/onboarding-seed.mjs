@@ -7,16 +7,21 @@ const puestosIniciales = [
 
 export async function sembrarPuestosRutas(prisma) {
   for (const inicial of puestosIniciales) {
-    const rutaExistente = await prisma.rutaOnboarding.findFirst({ where: { nombre: inicial.ruta } });
-    const ruta = rutaExistente
-      ? await prisma.rutaOnboarding.update({ where: { id: rutaExistente.id }, data: { descripcion: inicial.descripcion, activa: true } })
-      : await prisma.rutaOnboarding.create({ data: { nombre: inicial.ruta, descripcion: inicial.descripcion, activa: true } });
-    const puestoExistente = await prisma.puesto.findFirst({ where: { nombre: inicial.puesto } });
-    if (puestoExistente) {
-      await prisma.puesto.update({ where: { id: puestoExistente.id }, data: { rutaOnboardingId: ruta.id } });
-    } else {
-      await prisma.puesto.create({ data: { nombre: inicial.puesto, rutaOnboardingId: ruta.id } });
+    const puesto = await prisma.puestoTrabajo.findFirst({ where: { nombre: inicial.puesto } });
+    const rutaExistente = await prisma.rutaOnboarding.findFirst({
+      where: puesto ? { puestoId: puesto.id } : { nombre: inicial.ruta },
+    });
+
+    if (rutaExistente) {
+      await prisma.rutaOnboarding.update({
+        where: { id: rutaExistente.id },
+        data: { nombre: inicial.ruta, descripcion: inicial.descripcion, estado: 'BORRADOR', puestoId: puesto?.id ?? null },
+      });
+    } else if (puesto) {
+      await prisma.rutaOnboarding.create({
+        data: { nombre: inicial.ruta, descripcion: inicial.descripcion, estado: 'BORRADOR', puestoId: puesto.id },
+      });
     }
   }
-  console.log(`✅ Puestos y rutas de onboarding disponibles: ${puestosIniciales.length}`);
+  console.log(`✅ Rutas de onboarding disponibles: ${puestosIniciales.length}`);
 }

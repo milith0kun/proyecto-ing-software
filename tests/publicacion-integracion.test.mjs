@@ -13,7 +13,6 @@ const id = '507f1f77bcf86cd799439011';
 const usuario = { id: '507f1f77bcf86cd799439012', email: 'admin@example.com', name: 'Prueba', role: 'ADMINISTRADOR', activo: true, passwordHash: null };
 const token = await crearToken(usuario, 'sesion-prueba-hu004', process.env.AUTH_SECRET);
 const tokenColaborador = await crearToken({ ...usuario, role: 'COLABORADOR' }, 'sesion-prueba-hu004', process.env.AUTH_SECRET);
-const tokenRrhh = await crearToken({ ...usuario, role: 'ESPECIALISTA_RRHH' }, 'sesion-prueba-hu004', process.env.AUTH_SECRET);
 const base = { id, titulo: 'Inducción de prueba', descripcion: 'Contenido de inducción de prueba.', unidad: 'CIIP', ambito: 'PUBLICO', estado: 'BORRADOR', publicadaEn: null, categoria: 'Inducción', duracionMin: 30, icono: 'book-open', slides: [{ id: 'slide-1', capacitacionId: id, titulo: 'Bienvenida', contenido: 'Bienvenidos al centro de capacitación.', tipo: 'TEXT', orden: 1, lista: [] }] };
 let registro;
 let cambios;
@@ -78,12 +77,10 @@ test('HU004: creación directa con PUBLICADA sigue creando BORRADOR', async () =
   assert.equal(cambios[0].estado, 'BORRADOR');
 });
 
-test('HU004: anónimo, colaborador y origen ajeno no publican ni escriben', async () => {
+test('HU004: anónimo y colaborador no publican ni escriben', async () => {
   assert.equal((await publicar(solicitud(`/api/capacitaciones/${id}/publicar`, 'POST', undefined, false), contexto)).status, 401);
   rol = 'COLABORADOR';
   assert.equal((await publicar(solicitud(`/api/capacitaciones/${id}/publicar`, 'POST', undefined, true, 'http://localhost:3000', tokenColaborador), contexto)).status, 403);
-  rol = 'ESPECIALISTA_RRHH';
-  assert.equal((await publicar(solicitud(`/api/capacitaciones/${id}/publicar`, 'POST', undefined, true, 'http://localhost:3000', tokenRrhh), contexto)).status, 403);
   rol = 'ADMINISTRADOR';
   assert.equal((await publicar(solicitud(`/api/capacitaciones/${id}/publicar`, 'POST', undefined, true, 'https://otro.example'), contexto)).status, 403);
   assert.equal(cambios.length, 0);

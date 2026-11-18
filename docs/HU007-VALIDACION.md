@@ -69,4 +69,6 @@ Validación ejecutada en `http://localhost:3000/admin/organizacion` (`next start
 ## 4. Estado de `prisma db push` en MongoDB Atlas
 
 - **Inspección previa ejecutada (18/11/2026):** Se verificó en modo lectura en `cgb_academy` que las colecciones `areas` y `puestos_trabajo` tienen actualmente `0` documentos preexistentes sin `nombreClave`.
-- **Estado de ejecución de `npx prisma db push`:** Pendiente de confirmación expresa del administrador de la base de datos compartida para crear los índices únicos `areas.nombreClave_1` y `puestos_trabajo.areaId_1_nombreClave_1` en Atlas.
+- **Ejecución de `npx prisma db push` (18/11/2026):** ejecutado sobre `cgb_academy` con el esquema de `main` (`3300bc5`), a instrucción del administrador y PO del proyecto, sin la opción de pérdida de datos. Registro y decisiones de actor en Jira CGB-31.
+- **Índices creados:** `areas_nombre_key` y `areas_nombreClave_key` (únicos), `puestos_trabajo_areaId_nombre_key` y `puestos_trabajo_areaId_nombreClave_key` (únicos), `pasos_ruta_rutaId_orden_key` y `pasos_ruta_rutaId_capacitacionId_key` (únicos) y `rutas_onboarding_areaId_puestoId_estado_idx`. Verificado después en modo lectura; no se modificó ni borró ningún documento.
+- **Efecto:** la unicidad de áreas y puestos (CA-03) ya no depende solo de la comprobación previa del servicio: dos solicitudes simultáneas con el mismo nombre se rechazan con `P2002` y HTTP 409.

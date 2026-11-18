@@ -7,12 +7,10 @@ import { POST as registrar } from '../src/app/api/colaboradores/route.ts';
 
 const secreto = 'clave-de-prueba-hu009-para-autenticacion-32-bytes-minimo';
 const admin = { id: '507f1f77bcf86cd799439011', email: 'admin@example.com', name: 'Admin', role: 'ADMINISTRADOR', activo: true, passwordHash: null };
-const especialistaRrhh = { id: '507f1f77bcf86cd799439016', email: 'rrhh@example.com', name: 'Especialista RR. HH.', role: 'ESPECIALISTA_RRHH', activo: true, passwordHash: null };
 const sesionId = 'sesion-hu009-api';
 const tokenAdmin = await crearToken(admin, sesionId, secreto);
-const tokenRrhh = await crearToken(especialistaRrhh, sesionId, secreto);
-const ruta = { id: '507f1f77bcf86cd799439012', nombre: 'Inducción RH', activa: true, descripcion: 'Ruta de RR. HH.' };
-const puesto = { id: '507f1f77bcf86cd799439013', nombre: 'Analista de RR. HH.', rutaOnboardingId: ruta.id, rutaOnboarding: ruta };
+const ruta = { id: '507f1f77bcf86cd799439012', nombre: 'Inducción RH', titulo: 'Inducción RH', estado: 'ACTIVA', activa: true, descripcion: 'Ruta de RR. HH.' };
+const puesto = { id: '507f1f77bcf86cd799439013', nombre: 'Analista de RR. HH.', rutas: [ruta] };
 let cuentas;
 let colaboradores;
 let enviados;
@@ -36,7 +34,7 @@ test.beforeEach(() => {
   prisma.sesion.findUnique = async () => ({ usuarioId: usuarioSesion.id, expiraEn: new Date(Date.now() + 60000), usuario: usuarioSesion });
   prisma.colaborador.findUnique = async ({ where }) => colaboradores.find(registro => registro.email === where.email) || null;
   prisma.user.findUnique = async ({ where }) => cuentas.find(cuenta => cuenta.email === where.email) || null;
-  prisma.puesto.findUnique = async () => puesto;
+  prisma.puestoTrabajo.findUnique = async () => puesto;
   prisma.user.create = async ({ data }) => {
     const cuenta = { id: `507f1f77bcf86cd7994390${cuentas.length + 20}`, ...data };
     cuentas.push(cuenta);
@@ -75,7 +73,7 @@ function solicitud(datos, token = tokenAdmin) {
 }
 
 test('registra una cuenta vinculada, asigna la ruta y envía la invitación sin divulgar el token', async () => {
-  const respuesta = await registrar(solicitud({ nombre: 'Ana Torres', email: 'ana@example.com', dni: '12345678', puestoId: puesto.id }));
+  const respuesta = await registrar(solicitud({ nombre: 'Ana Torres', email: 'ana@example.com', puestoId: puesto.id }));
   const cuerpo = await respuesta.json();
 
   assert.equal(respuesta.status, 201);
@@ -88,12 +86,13 @@ test('registra una cuenta vinculada, asigna la ruta y envía la invitación sin 
   assert.notEqual(colaboradores[0].tokenActivacion, new URL(enviados[0].opciones.html.match(/href="([^"]+)/)[1]).searchParams.get('token'));
   assert.equal(enviados.length, 1);
   assert.equal(JSON.stringify(cuerpo).includes('token'), false);
+  assert.equal(Object.hasOwn(colaboradores[0], 'enlaceActivacion'), false);
 });
 
 test('acepta registro masivo y revierte cuenta si falla el correo', async () => {
   const lote = [
-    { nombre: 'Ana Torres', email: 'ana@example.com', dni: '12345678', puestoId: puesto.id },
-    { nombre: 'Luis Rojas', email: 'luis@example.com', dni: '87654321', puestoId: puesto.id },
+    { nombre: 'Ana Torres', email: 'ana@example.com', puestoId: puesto.id },
+    { nombre: 'Luis Rojas', email: 'luis@example.com', puestoId: puesto.id },
   ];
   const respuesta = await registrar(solicitud({ colaboradores: lote }));
   assert.equal(respuesta.status, 201);
@@ -101,18 +100,8 @@ test('acepta registro masivo y revierte cuenta si falla el correo', async () => 
   assert.equal(enviados.length, 2);
 
   globalThis.fetch = async () => new Response(null, { status: 503 });
-  const fallida = await registrar(solicitud({ nombre: 'Eva Paz', email: 'eva@example.com', dni: '55555555', puestoId: puesto.id }));
+  const fallida = await registrar(solicitud({ nombre: 'Eva Paz', email: 'eva@example.com', puestoId: puesto.id }));
   assert.equal(fallida.status, 400);
   assert.equal(cuentas.some(cuenta => cuenta.email === 'eva@example.com'), false);
   assert.equal(colaboradores.some(registro => registro.email === 'eva@example.com'), false);
-});
-
-test('el rol de Recursos Humanos puede registrar colaboradores', async () => {
-  usuarioSesion = especialistaRrhh;
-  const respuesta = await registrar(solicitud({
-    nombre: 'María Flores', email: 'maria@example.com', dni: '99887766', puestoId: puesto.id,
-  }, tokenRrhh));
-
-  assert.equal(respuesta.status, 201);
-  assert.equal(colaboradores[0].email, 'maria@example.com');
 });

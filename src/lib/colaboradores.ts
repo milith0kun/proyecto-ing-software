@@ -19,7 +19,6 @@ export interface PuestoResumen {
 export interface RegistraColaboradorInput {
   nombre: string;
   email: string;
-  dni: string;
   puestoId: string;
 }
 
@@ -27,12 +26,10 @@ export interface ColaboradorRegistro {
   id: string;
   nombre: string;
   email: string;
-  dni: string;
   puestoId: string;
   estado: EstadoColaborador;
   rutaAsignada: RutaOnboardingResumen | null;
   progreso: number;
-  token?: string;
   tokenActivacion: string | null;
   enlaceActivacion: string | null;
   expiraEn: Date | null;
@@ -46,21 +43,18 @@ export function normalizarCorreo(correo: string): string {
 export function construirRegistroColaborador(input: RegistraColaboradorInput): ColaboradorRegistro {
   const nombre = String(input.nombre || '').trim();
   const email = normalizarCorreo(input.email);
-  const dni = String(input.dni || '').trim();
   const puestoId = String(input.puestoId || '').trim();
 
   if (!nombre) throw new Error('El nombre del colaborador es obligatorio.');
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     throw new Error('El correo del colaborador no es válido.');
   }
-  if (!dni) throw new Error('El DNI es obligatorio para registrar al colaborador.');
   if (!puestoId) throw new Error('Debe indicarse un puesto para asignar la ruta de onboarding.');
 
   return {
     id: randomUUID(),
     nombre,
     email,
-    dni,
     puestoId,
     estado: 'PENDIENTE_ACTIVACION',
     rutaAsignada: null,
@@ -104,7 +98,7 @@ export function crearInvitacionColaborador(
     tokenActivacion: token,
     tokenActivacionHash: hashTokenActivacion(token),
     enlaceActivacion,
-    expiraEn: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    expiraEn: new Date(Date.now() + 1000 * 60 * 60 * 48),
   };
 }
 
@@ -133,7 +127,6 @@ export function filtrarColaboradoresPorEstado(
 export function registrarColaboradorConRuta({
   nombre,
   email,
-  dni,
   puestoId,
   puesto,
   ruta,
@@ -149,7 +142,7 @@ export function registrarColaboradorConRuta({
   enlaceActivacion: string;
   expiraEn: Date;
 } {
-  const registro = construirRegistroColaborador({ nombre, email, dni, puestoId });
+  const registro = construirRegistroColaborador({ nombre, email, puestoId });
   const conRuta = asignarRutaOnboarding(registro, puesto ?? null, ruta ?? null);
   const conInvitacion = crearInvitacionColaborador(conRuta, baseUrl);
 
