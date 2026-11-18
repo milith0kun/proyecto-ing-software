@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcryptjs';
+import { sembrarPuestosRutas } from './onboarding-seed.mjs';
 
 const prisma = new PrismaClient();
 
@@ -50,6 +51,8 @@ async function main() {
   });
 
   console.log(`✅ Usuarios preservados: ${admin.email} (ADMINISTRADOR) y ${colaborador.email} (COLABORADOR)`);
+
+  await sembrarPuestosRutas(prisma);
 
   // -------------------------------------------------------------------------
   // 2. Limpieza de datos anteriores

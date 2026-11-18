@@ -1581,6 +1581,24 @@ button:disabled {
   gap: 18px 16px;
 }
 
+.admin-formulario--colaboradores {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.admin-formulario__fila {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: end;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--borde-sutil);
+}
+
+.admin-formulario__quitar {
+  grid-column: 1 / -1;
+  justify-self: end;
+}
+
 .admin-campo {
   min-width: 0;
 }
@@ -1832,6 +1850,7 @@ button:disabled {
   .admin-dialog__encabezado { gap: 12px; margin-bottom: 20px; }
   .admin-dialog__encabezado h2 { font-size: 21px; }
   .admin-formulario { grid-template-columns: 1fr; gap: 15px; }
+  .admin-formulario__fila { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .admin-campo--ancho { grid-column: auto; }
   .admin-borrador-nota { align-items: flex-start; flex-direction: column; }
   .admin-formulario__acciones { flex-direction: column-reverse; }
@@ -1846,6 +1865,7 @@ button:disabled {
   .admin-metrica { min-height: 70px; }
   .admin-filtros { grid-template-columns: 1fr; }
   .admin-busqueda { grid-column: auto; }
+  .admin-formulario__fila { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {

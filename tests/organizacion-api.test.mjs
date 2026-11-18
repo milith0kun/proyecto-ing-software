@@ -26,6 +26,7 @@ const usuario = {
   passwordHash: null,
 };
 const token = await crearToken(usuario, 'sesion-prueba-hu007', process.env.AUTH_SECRET);
+const tokenColaborador = await crearToken({ ...usuario, role: 'COLABORADOR' }, 'sesion-prueba-hu007-colaborador', process.env.AUTH_SECRET);
 
 let rol;
 let areasDb;
@@ -152,7 +153,7 @@ function solicitud(ruta, method, datos, autenticar = true, origen = 'http://loca
     headers: {
       origin: origen,
       'Content-Type': 'application/json',
-      ...(autenticar ? { cookie: `cgb_sesion=${token}` } : {}),
+      ...(autenticar ? { cookie: `cgb_sesion=${rol === 'COLABORADOR' ? tokenColaborador : token}` } : {}),
     },
     ...(datos === undefined ? {} : { body: JSON.stringify(datos) }),
   });

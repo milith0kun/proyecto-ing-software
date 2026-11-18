@@ -159,7 +159,6 @@ export function crearRepositorioRutasPrisma(): RepositorioRutasOnboarding {
 
     async listarRutas(): Promise<RutaOnboardingRegistro[]> {
       const rutas = await prisma.rutaOnboarding.findMany({
-        orderBy: { createdAt: 'desc' },
         include: {
           pasos: {
             orderBy: { orden: 'asc' },
