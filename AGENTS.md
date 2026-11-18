@@ -14,6 +14,8 @@ Antes de cambiar código, documentación o configuración, lee [`docs/FLUJO_DE_T
 
 Antes de editar archivos, inspecciona `git status` y los diffs. Conserva cambios locales y archivos sin seguimiento que no pertenecen a la tarea. Agrega rutas explícitas; no ejecutes comandos de limpieza, borrado o sobrescritura para despejar el árbol sin autorización explícita. `npm` y `package-lock.json` son los gestores versionados del repo; no adoptes o borres archivos de otro gestor sin decisión del equipo.
 
+Cuando se pida revisar una historia, rama o PR, aplica [`docs/GUIA_DE_REVISION.md`](docs/GUIA_DE_REVISION.md): las listas de los cuatro documentos de clase (GC, REQ, DIS, ARQ), la separación autor/revisor y el formato de informe. No apruebes, fusiones ni muevas estados de Jira sin instrucción explícita.
+
 Para cerrar una historia, aplica [`docs/definition-of-done.md`](docs/definition-of-done.md); para cambios de dependencias, configuración, entregas o alcance, consulta [`docs/configuracion.md`](docs/configuracion.md). No informes pruebas, aceptación, entrevistas o revisiones que no ocurrieron.
 
 Para tareas de stakeholders, necesidades de usuarios, requisitos, criterios de aceptación, backlog Jira o la actividad de Ingeniería de Software I, lee y sigue [`skills/cgb-academy-requirements/SKILL.md`](skills/cgb-academy-requirements/SKILL.md). Para trabajo general de repositorio, usa también [`skills/cgb-academy-development-workflow/SKILL.md`](skills/cgb-academy-development-workflow/SKILL.md). El análisis de requisitos es fechado: vuelve a comprobar Jira antes de describir su estado actual.

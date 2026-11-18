@@ -142,6 +142,7 @@ Punto de entrada para recorrer la evidencia del proyecto (repositorio, tablero, 
 | Workflow: ramas, commits, PR y revisión | [`docs/FLUJO_DE_TRABAJO.md`](docs/FLUJO_DE_TRABAJO.md), [plantilla de PR](.github/PULL_REQUEST_TEMPLATE.md) |
 | Definition of Done | [`docs/definition-of-done.md`](docs/definition-of-done.md) |
 | Requisitos aplicados: 3 C, INVEST, matriz RNF × HU, conflictos y caso de uso | [`docs/REQUISITOS_APLICADOS.md`](docs/REQUISITOS_APLICADOS.md) |
+| Guía de revisión de historias: listas GC, REQ, DIS y ARQ, autor/revisor y formato de informe | [`docs/GUIA_DE_REVISION.md`](docs/GUIA_DE_REVISION.md) |
 | Tablero y backlog | [Jira CGB](https://cgb-academy.atlassian.net/jira/software/projects/CGB/boards/4) |
 | Estado de ramas y GitHub | [`docs/ESTADO_RAMAS.md`](docs/ESTADO_RAMAS.md) |
 | Laboratorios | [`Labos/`](Labos/), incluido el [Sprint Planning del Laboratorio 7](Labos/Guia7/informe_laboratorio_7.pdf) |

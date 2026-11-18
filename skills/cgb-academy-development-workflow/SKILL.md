@@ -15,6 +15,7 @@ Before changing files, read:
 - `docs/FLUJO_DE_TRABAJO.md` for the end-to-end team process.
 - `docs/definition-of-done.md` when finishing a story or deciding whether work is complete.
 - `docs/configuracion.md` for dependencies, environment, change control, or approved baselines.
+- `docs/GUIA_DE_REVISION.md` whenever asked to review a story, branch, or Pull Request: follow its GC/REQ/DIS/ARQ checklists, author-versus-reviewer split, and report format. Do not approve, merge, or change Jira states without an explicit instruction.
 - `docs/ESTADO_RAMAS.md` only as a dated branch snapshot; inspect current GitHub state before branch cleanup.
 
 Jira project `CGB` is the work-item record; GitHub `main` is the single integration branch. New work uses a short-lived branch named `<type>/<CGB-ID>-<slug>` and a reviewed Pull Request to `main`. Do not start new work from personal branches or `desarrollo`.

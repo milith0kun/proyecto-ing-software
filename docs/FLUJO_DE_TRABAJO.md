@@ -139,7 +139,7 @@ Hacer push solo de la rama de la tarea y abrir el PR hacia `main`. El PR debe vi
 ## 6. Pull Request y revisión
 
 1. El autor abre un PR hacia `main`, enlaza la historia Jira y completa la plantilla.
-2. Otra persona revisa el diff, criterios de aceptación, pruebas, datos/seguridad, documentación e impacto en interfaces dependientes.
+2. Otra persona revisa el diff, criterios de aceptación, pruebas, datos/seguridad, documentación e impacto en interfaces dependientes. La revisión sigue las cuatro listas (GC, REQ, DIS, ARQ) y el formato de informe de [`GUIA_DE_REVISION.md`](GUIA_DE_REVISION.md).
 3. La persona revisora deja comentarios concretos con archivo, escenario y consecuencia. El autor responde y actualiza la rama; no se marca como resuelto un comentario sin atenderlo.
 4. Una persona distinta del autor aprueba cuando las observaciones están resueltas y hay evidencia suficiente.
 5. Se integra mediante **Squash and merge** para dejar un commit claro por historia en `main`. No se hace merge directo desde una cuenta local ni se fuerza el push a `main`.
