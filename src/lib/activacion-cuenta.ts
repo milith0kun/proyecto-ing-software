@@ -100,6 +100,37 @@ export function validarPoliticaContrasena(contrasena: string): {
   return { valido: errores.length === 0, errores };
 }
 
+export interface FortalezaContrasena {
+  nivel: 'DEBIL' | 'MEDIA' | 'FUERTE';
+  porcentaje: number;
+  criterios: {
+    longitudMinima: boolean;
+    tieneNumero: boolean;
+    tieneSimbolo: boolean;
+    tieneMayuscula: boolean;
+  };
+}
+
+/**
+ * Evalúa la fortaleza visual de la contraseña en tiempo real (HU-010 T3).
+ */
+export function evaluarFortalezaContrasena(contrasena: string): FortalezaContrasena {
+  const texto = typeof contrasena === 'string' ? contrasena : '';
+  const criterios = {
+    longitudMinima: texto.length >= 8,
+    tieneNumero: /\d/.test(texto),
+    tieneSimbolo: /[^A-Za-z0-9\s]/.test(texto),
+    tieneMayuscula: /[A-Z]/.test(texto),
+  };
+
+  const cumplidos = Object.values(criterios).filter(Boolean).length;
+  const porcentaje = Math.round((cumplidos / 4) * 100);
+  const nivel: FortalezaContrasena['nivel'] =
+    cumplidos <= 1 ? 'DEBIL' : cumplidos <= 3 ? 'MEDIA' : 'FUERTE';
+
+  return { nivel, porcentaje, criterios };
+}
+
 function esRegistroActivacionVigente(
   registro: RegistroActivacionColaborador | null,
   ahora: Date,

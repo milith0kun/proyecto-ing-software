@@ -22,22 +22,23 @@ export const dynamic = 'force-dynamic';
 const servicioActivacion = () =>
   crearServicioActivacionCuenta(crearRepositorioActivacionPrisma(), clave => hash(clave, 12));
 
+function responderErrorActivacion(error: unknown, mensajeGenerico: string): NextResponse {
+  if (error instanceof ErrorActivacionCuenta) {
+    return NextResponse.json(
+      { ok: false, codigo: error.codigo, error: error.message },
+      { status: 400 },
+    );
+  }
+  return NextResponse.json({ ok: false, error: mensajeGenerico }, { status: 503 });
+}
+
 export async function GET(solicitud: NextRequest) {
   const token = solicitud.nextUrl.searchParams.get('token') ?? '';
   try {
     const datos = await servicioActivacion().validarToken(token);
     return NextResponse.json({ ok: true, datos }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
-    if (error instanceof ErrorActivacionCuenta) {
-      return NextResponse.json(
-        { ok: false, codigo: error.codigo, error: error.message },
-        { status: 400 },
-      );
-    }
-    return NextResponse.json(
-      { ok: false, error: 'No pudimos validar el enlace de activación.' },
-      { status: 503 },
-    );
+    return responderErrorActivacion(error, 'No pudimos validar el enlace de activación.');
   }
 }
 
@@ -77,15 +78,9 @@ export async function POST(solicitud: NextRequest) {
     respuesta.headers.set('Cache-Control', 'no-store');
     return respuesta;
   } catch (error) {
-    if (error instanceof ErrorActivacionCuenta) {
-      return NextResponse.json(
-        { ok: false, codigo: error.codigo, error: error.message },
-        { status: 400 },
-      );
-    }
-    return NextResponse.json(
-      { ok: false, error: 'No pudimos activar la cuenta. Solicita un nuevo enlace.' },
-      { status: 503 },
+    return responderErrorActivacion(
+      error,
+      'No pudimos activar la cuenta. Solicita un nuevo enlace.',
     );
   }
 }
@@ -109,15 +104,6 @@ export async function PUT(solicitud: NextRequest) {
       { headers: { 'Cache-Control': 'no-store' } },
     );
   } catch (error) {
-    if (error instanceof ErrorActivacionCuenta) {
-      return NextResponse.json(
-        { ok: false, codigo: error.codigo, error: error.message },
-        { status: 400 },
-      );
-    }
-    return NextResponse.json(
-      { ok: false, error: 'No pudimos procesar la solicitud de nuevo enlace.' },
-      { status: 503 },
-    );
+    return responderErrorActivacion(error, 'No pudimos procesar la solicitud de nuevo enlace.');
   }
 }

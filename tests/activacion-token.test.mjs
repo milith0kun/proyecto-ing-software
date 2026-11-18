@@ -6,6 +6,7 @@ import {
   validarPoliticaContrasena,
   hashTokenActivacion,
   calcularExpiracion48h,
+  evaluarFortalezaContrasena,
 } from '../src/lib/activacion-cuenta.ts';
 
 function crearRepositorioActivacionEnMemoria({
@@ -151,4 +152,18 @@ test('HU-010 CA-03: rechaza tokens expirados (>48h) o alterados y permite solici
   assert.ok(reenvio.tokenNuevo);
   assert.equal(repo.registros[1].tokenActivacionHash, hashTokenActivacion(reenvio.tokenNuevo));
   assert.equal(repo.registros[1].tokenExpiraEn?.getTime(), expira48.getTime());
+});
+
+test('HU-010 T3 REFACTOR: evalúa fortaleza visual de contraseña (débil, media y fuerte)', () => {
+  const debil = evaluarFortalezaContrasena('abc');
+  assert.equal(debil.nivel, 'DEBIL');
+  assert.equal(debil.porcentaje, 0);
+
+  const media = evaluarFortalezaContrasena('clave123!');
+  assert.equal(media.nivel, 'MEDIA');
+  assert.equal(media.porcentaje, 75);
+
+  const fuerte = evaluarFortalezaContrasena('ClaveSegura1!');
+  assert.equal(fuerte.nivel, 'FUERTE');
+  assert.equal(fuerte.porcentaje, 100);
 });
