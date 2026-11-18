@@ -2820,3 +2820,31 @@ button:disabled {
     transition: none;
   }
 }
+
+/* Microtest formativo (HU-014) */
+.microtest { max-width: 860px; margin: 0 auto; padding: clamp(20px, 5vw, 40px); border: 1px solid var(--borde-sutil); border-radius: 16px; background: #fff; box-shadow: var(--sombra-tarjeta); }
+.microtest h2 { margin: 0 0 8px; color: var(--brand-navy); font-family: var(--font-heading); }
+.microtest__info, .microtest__ayuda { color: var(--text-muted); font-size: 14px; }
+.microtest__tiempo { font-weight: 700; color: var(--brand-navy); }
+.microtest__pregunta { margin: 0 0 20px; padding: 0; border: 0; min-width: 0; }
+.microtest__pregunta legend { padding: 0; margin-bottom: 8px; font-weight: 700; color: var(--text-primary); overflow-wrap: anywhere; }
+.microtest__opcion { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 12px; margin-bottom: 6px; border: 1px solid var(--borde-sutil); border-radius: 12px; cursor: pointer; }
+.microtest__opcion:has(input:checked) { border-color: var(--brand-blue); background: #EEF5FF; }
+.microtest__opcion:has(input:focus-visible) { outline: 3px solid var(--borde-focus); outline-offset: 2px; }
+.microtest__error { color: #B42318; font-weight: 600; }
+.microtest__primario, .microtest__secundario { min-height: 48px; padding-inline: 20px; border-radius: 999px; font-weight: 700; cursor: pointer; text-decoration: none; }
+.microtest__primario { border: 0; background: var(--brand-navy); color: #fff; }
+.microtest__secundario { border: 1px solid var(--borde-sutil); background: #fff; color: var(--brand-navy); }
+.microtest__primario:disabled { opacity: 0.55; cursor: not-allowed; }
+.microtest__acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.microtest__estado { padding: 12px 16px; border-radius: 12px; font-weight: 700; }
+.microtest__estado--aprobado { background: #E7F6EC; color: #05603A; animation: microtest-aprobado 0.6s var(--ease-out-soft, ease-out); }
+.microtest__estado--reprobado { background: #FEF3F2; color: #B42318; }
+.microtest__detalle { padding-left: 22px; }
+.microtest__item { margin-bottom: 14px; padding: 10px 14px; border-left: 4px solid; border-radius: 8px; }
+.microtest__item--ok { border-color: #12B76A; background: #F6FEF9; }
+.microtest__item--mal { border-color: #F04438; background: #FFFBFA; }
+.microtest__enunciado { font-weight: 700; margin: 0 0 4px; }
+.microtest__retro { margin: 4px 0 0; color: var(--text-muted); font-style: italic; }
+@keyframes microtest-aprobado { from { transform: scale(0.94); opacity: 0.4; } to { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .microtest__estado--aprobado { animation: none; } }

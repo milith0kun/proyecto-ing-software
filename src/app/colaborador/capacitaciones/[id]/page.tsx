@@ -3,6 +3,8 @@ import { notFound, redirect } from 'next/navigation';
 import { buscarCapacitacionParaVisor, buscarProgreso, claveDeProgreso, idsCompletadas } from '@/lib/repositorio-progreso';
 import { sesionActual } from '@/lib/sesion';
 import { prerrequisitosCumplidos, slideDeReanudacion } from '@/lib/progreso-capacitacion';
+import { buscarEvaluacionPorCapacitacion, listarIntentos } from '@/lib/repositorio-evaluacion';
+import { intentosRestantes, preguntasParaResolver } from '@/lib/microtest';
 import { MarcoCapacitacion } from '@/components/capacitaciones/MarcoCapacitacion';
 import { VisorCapacitacionInterna } from '@/components/capacitaciones/VisorCapacitacionInterna';
 
@@ -27,6 +29,14 @@ export default async function PaginaCapacitacionInterna({ params }: { params: Pr
 
   const progreso = await buscarProgreso(claveDeProgreso(usuario.id, id));
 
+  const completada = progreso?.estado === 'COMPLETADA';
+  const evaluacion = completada ? null : await buscarEvaluacionPorCapacitacion(id);
+  const intentos = evaluacion ? await listarIntentos(usuario.id, evaluacion.id) : [];
+  const microtest = evaluacion && {
+    preguntas: preguntasParaResolver(evaluacion.preguntas), notaMinima: evaluacion.notaMinima,
+    intentosRestantes: intentosRestantes(evaluacion.maxIntentos, intentos.length), tiempoLimiteSeg: evaluacion.tiempoLimiteSeg,
+  };
+
   return (
     <MarcoCapacitacion>
       <section className="experiencia-capacitacion">
@@ -39,7 +49,8 @@ export default async function PaginaCapacitacionInterna({ params }: { params: Pr
           capacitacionId={id}
           slides={capacitacion.slides}
           slideInicial={slideDeReanudacion(progreso, capacitacion.slides.length)}
-          completada={progreso?.estado === 'COMPLETADA'}
+          completada={completada}
+          microtest={microtest}
         />
       </section>
     </MarcoCapacitacion>
