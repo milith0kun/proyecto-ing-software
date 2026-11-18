@@ -1,69 +1,113 @@
 # HU-009 / CGB-41 — Registrar colaboradores e invitarlos
 
-## Estado
+## Estado al 18 de noviembre de 2026
 
-**Bloqueada para integración hasta cerrar decisiones de modelo, alcance, rol y trazabilidad.**
+**CGB-41 permanece en `DESARROLLO`; PR #18 continúa en revisión.**
 
-La implementación disponible tiene pruebas automáticas, pero aún no se completaron las evidencias reales de MongoDB, correo ni navegador ni el acuerdo del equipo sobre los modelos compartidos.
+La implementación está integrada técnicamente con CGB-31 y CGB-36 en la rama `feature/CGB-41-registrar-colaboradores`. La dependencia con CGB-46 fue confirmada en Jira: CGB-41 bloquea a CGB-46 (HU-010). Por tanto, CGB-41 genera y persiste la invitación; CGB-46 debe ser la responsable de validar y consumir el token para activar la cuenta. Esta separación evita que dos historias dupliquen la activación.
+
+Los siguientes controles de software están verdes:
+
+- 113 pruebas automáticas aprobadas y 0 fallos.
+- `npx prisma validate` y `npx prisma generate` correctos.
+- `npx tsc --noEmit` correcto.
+- `npx eslint .` correcto.
+- `git diff --check` correcto.
+
+Las pruebas usan dobles de Prisma y correo. No sustituyen MongoDB Atlas, Resend ni el navegador real.
 
 ## Criterios
 
 | Criterio | Implementación | Evidencia | Estado |
 |---|---|---|---|
-| CA-01: registrar colaborador pendiente | Crea cuenta inactiva y colaborador vinculado | `tests/colaboradores-api.test.mjs`, `tests/colaboradores-hu009.test.mjs` | Automático verde |
-| CA-02: asignar ruta según puesto | Busca el puesto y asigna su ruta activa | Pruebas de flujo y registro | Automático verde; modelo pendiente |
-| CA-03: generar invitación segura | Token aleatorio, hash SHA-256, expiración y correo | `tests/colaboradores-hu009.test.mjs`, `tests/correo-invitacion.test.mjs`, `tests/activacion-colaborador.test.mjs` | Automático verde |
-| CA-04: monitorear y filtrar colaboradores | Panel administrativo con estado y ruta | `tests/colaboradores-hu009.test.mjs` | Pendiente validación visual |
+| CA-01: registro individual o masivo | Crea colaborador vinculado y cuenta inactiva | `tests/colaboradores-api.test.mjs`, `tests/colaboradores-flujo.test.mjs` | Automático verde |
+| CA-02: asignar ruta activa según puesto | Busca la ruta `ACTIVA` asociada a `PuestoTrabajo.rutas` | Pruebas CGB-41 y CGB-36 | Integrado; falta prueba real |
+| CA-03: generar invitación segura | Token aleatorio, hash SHA-256, expiración y correo | `tests/colaboradores-hu009.test.mjs`, `tests/correo-invitacion.test.mjs`, `tests/activacion-colaborador.test.mjs` | Automático verde; falta Resend real |
+| CA-04: monitorear colaboradores | Panel administrativo con filtros por estado y ruta | `tests/colaboradores-hu009.test.mjs` | Pendiente validación visual |
 
 ## Evidencia automática
 
-- `npm test`: 83 pruebas aprobadas, 0 fallos.
+- `npm test`: **113 pruebas aprobadas, 0 fallos**.
+- `npx prisma validate`: válido.
+- `npx prisma generate`: correcto.
+- `npx tsc --noEmit`: sin errores.
 - `npx eslint .`: sin errores.
-- `npx tsc --noEmit`: sin errores después de limpiar artefactos `.next`.
+- `git diff --check`: sin errores.
 
-Estas pruebas usan dobles de Prisma y correo; no prueban MongoDB Atlas ni Resend reales.
+Las pruebas usan dobles de Prisma y correo; no sustituyen MongoDB Atlas ni el proveedor Resend real.
 
-## Evidencia visual pendiente
+## Evidencia visual requerida
 
-Capturas requeridas:
+- Captura de `/admin/colaboradores` con registro individual y masivo.
+- Captura del correo recibido sin mostrar tokens completos.
+- Capturas de `/login/activar`: contraseña válida, contraseña inválida y enlace vencido o consumido.
+- Guardar archivos ficticios en `docs/evidencias-hu009/` y enlazarlos desde este documento.
 
-1. `/admin/colaboradores`: listado, filtros y registro individual.
-2. Bandeja o consola de correo: invitación recibida y enlace sin exponerlo en la respuesta/API.
-3. `/login/activar`: contraseña válida, activación correcta y contraseña inválida.
+## Evidencia real pendiente
 
-Las capturas deben usar datos ficticios, ocultar DNI/correo completo si no es necesario y evitar mostrar tokens.
+- [ ] Registrar datos temporales en MongoDB Atlas y eliminarlos al finalizar.
+- [ ] Confirmar persistencia de hash SHA-256 y expiración.
+- [ ] Confirmar que no exista `enlaceActivacion` en MongoDB.
+- [ ] Enviar una invitación real mediante Resend.
+- [ ] Confirmar recepción y activación desde el correo.
+- [ ] Verificar vista responsive en `/admin/colaboradores` y `/login/activar`.
+
+## Decisiones externas pendientes
+
+- Aprobar formalmente si se captura/muestra DNI o se elimina del flujo.
+- Aprobar formalmente el rol `ESPECIALISTA_RRHH`.
+- Definir qué HU posee activación y alinear caducidad/contraseña con CGB-46.
+- Obtener aprobación de revisión por pares en el PR #18.
+- Resolver las conversaciones abiertas antes del merge.
 
 ## Seguridad
 
-- El token no debe persistirse en texto plano ni como enlace completo.
-- MongoDB conserva solo el hash SHA-256 y la expiración.
-- El enlace completo existe solo en memoria y en el correo enviado.
-- Activación y cambio de cuenta deben consumir el token de forma atómica.
+- El token no se persiste en texto plano ni como enlace completo.
+- MongoDB conserva solo hash SHA-256 y expiración.
+- El enlace completo existe solo en memoria y en el correo.
+- Activación y cambio de cuenta consumen el token de forma atómica.
 - La API no expone el token ni el enlace de activación.
-
-## Bloqueos
-
-- CGB-31/CGB-36/CGB-41 deben acordar una única estructura de áreas, puestos y rutas.
-- CGB-41/CGB-46 deben acordar qué HU implementa la activación.
-- El rol `ESPECIALISTA_RRHH` requiere decisión y aprobación registrada del PO.
-- Se debe decidir si el DNI aparece en el listado.
-- Falta configurar el dominio/remitente de Resend y ejecutar pruebas reales.
-
-## Validación manual pendiente
-
-- [ ] Inicio de sesión con cuenta autorizada.
-- [ ] Registro individual.
-- [ ] Registro masivo.
-- [ ] Corrección de datos inválidos.
-- [ ] Recepción real del correo.
-- [ ] Activación con contraseña válida.
-- [ ] Rechazo de enlace vencido o ya consumido.
-- [ ] Persistencia real de hash y expiración en MongoDB.
-- [ ] Confirmación de que no existe `enlaceActivacion` con token en MongoDB.
 
 ## Uso de IA
 
 - Herramienta utilizada: GitHub Copilot.
-- Uso: inspección técnica, corrección de persistencia de tokens, documentación, preparación del Pull Request y comprobación local.
-- Validación humana requerida: diseño de modelos compartidos, permisos, alcance de activación, aprobación del rol y DNI.
-- Comprobación: 83 pruebas automáticas, TypeScript y ESLint; las decisiones no se consideran aprobadas por el asistente.
+- Uso: integración CGB-31/CGB-36, corrección de conflictos, documentación y validaciones.
+- Validación humana requerida: decisiones del PO, permisos, DNI, aprobación de revisión y evidencia real.
+
+## Validación real ejecutada el 18 de noviembre de 2026
+
+Se inició la aplicación local con la configuración privada existente y se realizó una revisión desde el navegador sobre MongoDB Atlas.
+
+### Evidencia obtenida
+
+- `/admin/organizacion`: se creó temporalmente el área ficticia `Prueba CGB41` y el puesto ficticio compatible con Prisma.
+- `/admin/rutas`: se creó la ruta ficticia `Ruta CGB41 Temporal`, se agregó una capacitación y se activó.
+- `/admin/colaboradores`: se abrió el formulario con el puesto activo disponible y se realizaron pruebas de registro con datos ficticios.
+- Se comprobaron visualmente filtros, tabla vacía, formulario individual y mensajes de error.
+
+Capturas:
+
+- [Registro sin configuración completa de correo](evidencias-hu009/registro-cgb41-sin-resend.png)
+- [Resultado del intento de registro](evidencias-hu009/registro-cgb41-resultados.png)
+
+Las capturas usan nombres, DNI y correos ficticios. No contienen tokens ni credenciales.
+
+### Hallazgos reales
+
+- La aplicación pudo consultar y escribir registros temporales en Atlas.
+- Se encontró una incompatibilidad durante la preparación: existía un modelo legado de puestos en la colección `puestos`, mientras el modelo Prisma vigente usa `puestos_trabajo`.
+- Al usar un puesto creado por Prisma y una ruta activa, el intento de registro no pudo completar el envío porque `RESEND_API_KEY` no está configurado en el entorno.
+- El sistema mostró de forma segura el error `No pudimos registrar al colaborador` o el fallo específico de correo, sin exponer token ni enlace.
+- No se confirmó CA-03 con Resend real.
+- No se confirmó una activación real desde el correo.
+
+### Limpieza
+
+Se eliminaron los registros temporales creados durante la revisión:
+
+- Área `Prueba CGB41`.
+- Puestos temporales asociados.
+- Ruta `Ruta CGB41 Temporal` y sus pasos.
+- Colaboradores y cuentas temporales.
+
+Comprobación posterior: 0 áreas, 0 puestos, 0 colaboradores temporales y 2 usuarios base originales. Las 4 rutas base no fueron modificadas permanentemente.
