@@ -1,22 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { Prisma } from '@prisma/client';
-import { prisma } from '@/lib/prisma';
 import { exigirSesionInterna } from '@/lib/permisos';
 import {
   ErrorProgreso, calcularPorcentajeAvance, prerrequisitosCumplidos,
   puedeFinalizar, registrarConfirmacion, slideDeReanudacion,
 } from '@/lib/progreso-capacitacion';
+import {
+  actualizarProgresoSiNoCambio, buscarCapacitacionInternaPublicada, buscarProgreso, claveDeProgreso,
+  crearProgreso, idsCompletadas,
+  type CapacitacionInterna as Capacitacion, type ClaveProgreso, type RegistroProgreso as Progreso,
+} from '@/lib/repositorio-progreso';
 
 const SIN_CACHE = { 'Cache-Control': 'no-store' };
 const ID_VALIDO = /^[a-f\d]{24}$/i;
 
 type Contexto = { params: Promise<{ id: string }> };
-interface Capacitacion { prerrequisitos: string[]; slides: { id: string }[] }
-interface Progreso { ultimoSlide: number; slidesConfirmados: number[]; estado: string; completadaEn?: Date | null; updatedAt?: Date }
 
 interface Preparado {
   usuarioId: string; id: string; total: number;
-  clave: { usuarioId_capacitacionId: { usuarioId: string; capacitacionId: string } };
+  clave: ClaveProgreso;
   capacitacion: Capacitacion; progreso: Progreso | null;
 }
 
@@ -40,23 +42,17 @@ async function prepararSolicitud(solicitud: NextRequest, { params }: Contexto): 
   if ('respuesta' in sesion) return sesion.respuesta;
   const { id } = await params;
   if (!ID_VALIDO.test(id)) return falla('El identificador de la capacitación no es válido.', 400);
-  const capacitacion: Capacitacion | null = await prisma.capacitacion.findFirst({
-    where: { id, estado: 'PUBLICADA', ambito: 'INTERNO' },
-    select: { id: true, prerrequisitos: true, slides: { select: { id: true } } },
-  });
+  const capacitacion = await buscarCapacitacionInternaPublicada(id);
   if (!capacitacion) return falla('Capacitación no encontrada.', 404);
   const usuarioId = sesion.usuario.id;
-  const clave = { usuarioId_capacitacionId: { usuarioId, capacitacionId: id } };
-  const progreso: Progreso | null = await prisma.progresoCapacitacion.findUnique({ where: clave });
+  const clave = claveDeProgreso(usuarioId, id);
+  const progreso = await buscarProgreso(clave);
   return { usuarioId, id, clave, capacitacion, progreso, total: capacitacion.slides.length };
 }
 
 async function exigirPrerrequisitos(usuarioId: string, capacitacion: Capacitacion) {
   if (capacitacion.prerrequisitos.length === 0) return true;
-  const hechas: { capacitacionId: string }[] = await prisma.progresoCapacitacion.findMany({
-    where: { usuarioId, estado: 'COMPLETADA' }, select: { capacitacionId: true },
-  });
-  return prerrequisitosCumplidos(capacitacion.prerrequisitos, hechas.map(p => p.capacitacionId));
+  return prerrequisitosCumplidos(capacitacion.prerrequisitos, await idsCompletadas(usuarioId));
 }
 
 async function ejecutar(solicitud: NextRequest, contexto: Contexto, accion: (p: Preparado) => Promise<NextResponse>) {
@@ -83,21 +79,19 @@ const INTENTOS_MAXIMOS = 5;
 async function escribirProgreso({ usuarioId, id, clave, progreso }: Preparado, calcular: (actual: Progreso | null) => Cambio): Promise<Progreso | null> {
   let actual = progreso;
   for (let intento = 0; intento < INTENTOS_MAXIMOS; intento += 1) {
-    if (intento > 0) actual = await prisma.progresoCapacitacion.findUnique({ where: clave });
+    if (intento > 0) actual = await buscarProgreso(clave);
     const cambio = calcular(actual);
     if (!cambio) return actual;
     if (!actual) {
       try {
-        return await prisma.progresoCapacitacion.create({ data: cambio.create });
+        return await crearProgreso(cambio.create);
       } catch (error) {
         if ((error as { code?: string })?.code === 'P2002') continue; // otra solicitud creó el registro primero
         throw error;
       }
     }
-    const { count } = await prisma.progresoCapacitacion.updateMany({
-      where: { usuarioId, capacitacionId: id, updatedAt: actual.updatedAt }, data: cambio.update,
-    });
-    if (count === 1) return await prisma.progresoCapacitacion.findUnique({ where: clave });
+    const { count } = await actualizarProgresoSiNoCambio(usuarioId, id, actual.updatedAt, cambio.update);
+    if (count === 1) return await buscarProgreso(clave);
   }
   throw new ErrorProgreso('Tu avance cambió mientras se guardaba. Inténtalo nuevamente.', 409);
 }
