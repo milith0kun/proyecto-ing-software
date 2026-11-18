@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { exigirSesionInterna } from '@/lib/permisos';
 import { puedeFinalizar } from '@/lib/progreso-capacitacion';
 import {
-  ErrorMicrotest, apruebaNota, calcularResultado, intentosRestantes, validarRespuestas,
+  ErrorMicrotest, apruebaNota, calcularResultado, intentosRestantes, preguntasParaResolver, validarRespuestas,
 } from '@/lib/microtest';
 import {
   buscarCapacitacionInternaPublicada, buscarProgreso, claveDeProgreso,
@@ -71,4 +71,15 @@ export async function evaluarMicrotest(solicitud: NextRequest) {
     if (error instanceof ErrorMicrotest) return falla(error.message, error.status);
     return falla('No pudimos procesar tu evaluación. Inténtalo nuevamente.', 503);
   }
+}
+
+// Configuración del microtest para la página del visor (sin respuestas correctas). null si no hay microtest.
+export async function obtenerMicrotest(usuarioId: string, capacitacionId: string) {
+  const evaluacion = await buscarEvaluacionPorCapacitacion(capacitacionId);
+  if (!evaluacion) return null;
+  const intentos = await listarIntentos(usuarioId, evaluacion.id);
+  return {
+    preguntas: preguntasParaResolver(evaluacion.preguntas), notaMinima: evaluacion.notaMinima,
+    intentosRestantes: intentosRestantes(evaluacion.maxIntentos, intentos.length), tiempoLimiteSeg: evaluacion.tiempoLimiteSeg,
+  };
 }

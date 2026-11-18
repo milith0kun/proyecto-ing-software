@@ -1,10 +1,8 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { buscarCapacitacionParaVisor, buscarProgreso, claveDeProgreso, idsCompletadas } from '@/lib/repositorio-progreso';
+import { obtenerVisor } from '@/lib/servicio-progreso';
 import { sesionActual } from '@/lib/sesion';
-import { prerrequisitosCumplidos, slideDeReanudacion } from '@/lib/progreso-capacitacion';
-import { buscarEvaluacionPorCapacitacion, listarIntentos } from '@/lib/repositorio-evaluacion';
-import { intentosRestantes, preguntasParaResolver } from '@/lib/microtest';
+import { obtenerMicrotest } from '@/lib/servicio-evaluacion';
 import { MarcoCapacitacion } from '@/components/capacitaciones/MarcoCapacitacion';
 import { VisorCapacitacionInterna } from '@/components/capacitaciones/VisorCapacitacionInterna';
 
@@ -14,28 +12,18 @@ export default async function PaginaCapacitacionInterna({ params }: { params: Pr
   const usuario = await sesionActual();
   if (!usuario) redirect('/login');
   const { id } = await params;
-  if (!/^[a-f\d]{24}$/i.test(id)) notFound();
-
-  const capacitacion = await buscarCapacitacionParaVisor(id);
-  if (!capacitacion) notFound();
-
-  if (!prerrequisitosCumplidos(capacitacion.prerrequisitos, await idsCompletadas(usuario.id))) {
+  const visor = await obtenerVisor(usuario.id, id);
+  if (visor.estado === 'no-encontrada') notFound();
+  if (visor.estado === 'bloqueada') {
     return <MarcoCapacitacion>
       <section role="status" className="visor-sin-contenido">
         Completa primero las capacitaciones previas para habilitar esta. <Link href="/colaborador">Volver a mi espacio</Link>
       </section>
     </MarcoCapacitacion>;
   }
+  const { capacitacion } = visor;
 
-  const progreso = await buscarProgreso(claveDeProgreso(usuario.id, id));
-
-  const completada = progreso?.estado === 'COMPLETADA';
-  const evaluacion = completada ? null : await buscarEvaluacionPorCapacitacion(id);
-  const intentos = evaluacion ? await listarIntentos(usuario.id, evaluacion.id) : [];
-  const microtest = evaluacion && {
-    preguntas: preguntasParaResolver(evaluacion.preguntas), notaMinima: evaluacion.notaMinima,
-    intentosRestantes: intentosRestantes(evaluacion.maxIntentos, intentos.length), tiempoLimiteSeg: evaluacion.tiempoLimiteSeg,
-  };
+  const microtest = visor.completada ? null : await obtenerMicrotest(usuario.id, id);
 
   return (
     <MarcoCapacitacion>
@@ -48,8 +36,8 @@ export default async function PaginaCapacitacionInterna({ params }: { params: Pr
         <VisorCapacitacionInterna
           capacitacionId={id}
           slides={capacitacion.slides}
-          slideInicial={slideDeReanudacion(progreso, capacitacion.slides.length)}
-          completada={completada}
+          slideInicial={visor.slideInicial}
+          completada={visor.completada}
           microtest={microtest}
         />
       </section>

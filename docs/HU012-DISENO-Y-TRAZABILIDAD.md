@@ -16,10 +16,10 @@ Cada capa solo usa a la inmediatamente inferior:
 
 | Capa | Módulo | Responsabilidad |
 |---|---|---|
-| Presentación | `src/app/colaborador/capacitaciones/[id]/page.tsx`, `VisorCapacitacionInterna.tsx`, `src/app/capacitaciones/[id]/SlideViewer.tsx` | Mostrar slides, estado de guardado y reintento |
+| Presentación | `src/app/colaborador/capacitaciones/[id]/page.tsx`, `VisorCapacitacionInterna.tsx`, `src/app/capacitaciones/[id]/SlideViewer.tsx` | Mostrar slides, estado de guardado y reintento; la página consume `obtenerVisor` del servicio y no el repositorio |
 | Controlador (API) | `src/app/api/colaborador/capacitaciones/[id]/progreso/**/route.ts` | Reexportar `consultarProgreso`, `guardarProgreso` y `finalizarProgreso` |
 | Lógica de negocio | `src/lib/servicio-progreso.ts`, `src/lib/progreso-capacitacion.ts` | Orquestar la solicitud (servicio) y reglas puras: avance, reanudación, no saltar slides, finalización |
-| Acceso a datos | `src/lib/repositorio-progreso.ts` (también lo usa la página del visor), `prisma/schema.prisma` | Único módulo del flujo que conoce Prisma/MongoDB |
+| Acceso a datos | `src/lib/repositorio-progreso.ts`, `prisma/schema.prisma` | Único módulo del flujo que conoce Prisma/MongoDB |
 
 ## Principios de diseño (diapositiva 5)
 

@@ -37,7 +37,7 @@ Capacitación temporal `[DEMO] Microtest HU-014` en MongoDB Atlas, con la cuenta
 |---|---|
 | Presentación | `MicrotestInterno.tsx`, `VisorCapacitacionInterna.tsx`, `SlideViewer.tsx`, página `colaborador/capacitaciones/[id]` |
 | Controlador | `src/app/api/evaluaciones/evaluar/route.ts` |
-| Lógica | `src/lib/servicio-evaluacion.ts` (orquestación) y `src/lib/microtest.ts` (reglas puras) |
+| Lógica | `src/lib/servicio-evaluacion.ts` (orquestación; `obtenerMicrotest` alimenta la página sin exponer respuestas) y `src/lib/microtest.ts` (reglas puras) |
 | Datos | `src/lib/repositorio-evaluacion.ts`, modelos `Evaluacion` e `IntentoEvaluacion` en `prisma/schema.prisma` |
 
 Las respuestas correctas no se envían al navegador antes de calificar (`preguntasParaResolver`).
