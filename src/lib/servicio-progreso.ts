@@ -10,6 +10,7 @@ import {
   crearProgreso, idsCompletadas,
   type CapacitacionInterna as Capacitacion, type ClaveProgreso, type RegistroProgreso as Progreso,
 } from '@/lib/repositorio-progreso';
+import { buscarEvaluacionPorCapacitacion } from '@/lib/repositorio-evaluacion';
 
 const SIN_CACHE = { 'Cache-Control': 'no-store' };
 const ID_VALIDO = /^[a-f\d]{24}$/i;
@@ -120,6 +121,10 @@ export function finalizarProgreso(solicitud: NextRequest, contexto: Contexto) {
   return ejecutar(solicitud, contexto, async preparado => {
     const { usuarioId, id, capacitacion, total } = preparado;
     if (!(await exigirPrerrequisitos(usuarioId, capacitacion))) return falla('Completa primero las capacitaciones previas.', 403);
+    // Con microtest (HU-014), la capacitación se completa solo al aprobarlo.
+    if (preparado.progreso?.estado !== 'COMPLETADA' && await buscarEvaluacionPorCapacitacion(id)) {
+      return falla('Aprueba el microtest para completar esta capacitación.', 409);
+    }
     const guardado = await escribirProgreso(preparado, actual => {
       if (actual?.estado === 'COMPLETADA') return null;
       if (!puedeFinalizar(actual, total)) throw new ErrorProgreso('Confirma todos los slides y finaliza desde el último.', 409);
