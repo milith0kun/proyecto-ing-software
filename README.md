@@ -143,6 +143,7 @@ Punto de entrada para recorrer la evidencia del proyecto (repositorio, tablero, 
 | Definition of Done | [`docs/definition-of-done.md`](docs/definition-of-done.md) |
 | Requisitos aplicados: 3 C, INVEST, matriz RNF × HU, conflictos y caso de uso | [`docs/REQUISITOS_APLICADOS.md`](docs/REQUISITOS_APLICADOS.md) |
 | Guía de revisión de historias: listas GC, REQ, DIS y ARQ, autor/revisor y formato de informe | [`docs/GUIA_DE_REVISION.md`](docs/GUIA_DE_REVISION.md) |
+| Arquitectura: capas, dónde va cada pieza, propiedad de los datos y cómo se comprueba | [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md) |
 | Tablero y backlog | [Jira CGB](https://cgb-academy.atlassian.net/jira/software/projects/CGB/boards/4) |
 | Estado de ramas y GitHub | [`docs/ESTADO_RAMAS.md`](docs/ESTADO_RAMAS.md) |
 | Laboratorios | [`Labos/`](Labos/), incluido el [Sprint Planning del Laboratorio 7](Labos/Guia7/informe_laboratorio_7.pdf) |

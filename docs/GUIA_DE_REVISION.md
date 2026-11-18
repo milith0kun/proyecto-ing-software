@@ -220,7 +220,7 @@ Fuente: `5.Diseno_Software.pdf`. Se evalúa el diseño detallado: clases, funcio
 
 ## 7. Lista ARQ — Arquitectura
 
-Fuente: `6 Arquitectura.pptx`. Estilo del proyecto: **monolito modular en capas con MVC web** (Next.js).
+Fuente: `6 Arquitectura.pptx`. Estilo del proyecto: **monolito modular en capas con MVC web** (Next.js); la convención completa está en [`ARQUITECTURA.md`](ARQUITECTURA.md).
 
 ```text
 Vista        src/app/**/page.tsx · src/components/**        (qué ve la persona)
