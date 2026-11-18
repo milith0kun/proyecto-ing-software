@@ -13,6 +13,7 @@
 
 - Comandos ejecutados y resultados reales:
 - Criterios de aceptación comprobados:
+- RNF aplicables (ver `docs/REQUISITOS_APLICADOS.md`) y cómo se comprobó cada uno:
 - Evidencia (capturas, logs o pasos reproducibles), cuando aplique:
 - Comprobaciones no ejecutadas y motivo:
 - Resultado del check `CI / Lint y pruebas`:
