@@ -2,28 +2,34 @@
 
 ## Estado al 18 de noviembre de 2026
 
-**CGB-41 permanece en `DESARROLLO`; PR #18 continúa en revisión.**
+**CGB-41 integrado con `main`; PR #18 pendiente de nueva revisión.**
 
-La implementación está integrada técnicamente con CGB-31 y CGB-36 en la rama `feature/CGB-41-registrar-colaboradores`. La dependencia con CGB-46 fue confirmada en Jira: CGB-41 bloquea a CGB-46 (HU-010). Por tanto, CGB-41 genera y persiste la invitación; CGB-46 debe ser la responsable de validar y consumir el token para activar la cuenta. Esta separación evita que dos historias dupliquen la activación.
+### Diseño por capas
 
-Los siguientes controles de software están verdes:
+- `src/lib/colaboradores.ts`: dominio puro, validaciones y generación segura de invitación.
+- `src/lib/repositorio-colaboradores.ts`: acceso Prisma y persistencia.
+- `src/lib/servicio-colaboradores.ts`: casos de uso sin HTTP.
+- `src/lib/controlador-colaboradores.ts`: traduce autenticación, lote y errores HTTP.
+- `src/app/api/colaboradores/route.ts`: fachada delgada GET/POST.
 
-- 113 pruebas automáticas aprobadas y 0 fallos.
-- `npx prisma validate` y `npx prisma generate` correctos.
-- `npx tsc --noEmit` correcto.
-- `npx eslint .` correcto.
-- `git diff --check` correcto.
+La activación y consumo del token fueron retirados de CGB-41 y quedan bajo responsabilidad de CGB-46.
 
-Las pruebas usan dobles de Prisma y correo. No sustituyen MongoDB Atlas, Resend ni el navegador real.
+### Decisiones aplicadas
 
-## Criterios
+- No se captura ni persiste DNI.
+- Vigencia de invitación: 48 horas.
+- Solo `ADMINISTRADOR` registra colaboradores.
+- La ruta activa se obtiene desde `PuestoTrabajo.rutas` usando `RutaOnboarding.puestoId`.
+- CGB-41 conserva el modelo `Colaborador`; CGB-46 consumiría el token y activaría la cuenta.
 
-| Criterio | Implementación | Evidencia | Estado |
-|---|---|---|---|
-| CA-01: registro individual o masivo | Crea colaborador vinculado y cuenta inactiva | `tests/colaboradores-api.test.mjs`, `tests/colaboradores-flujo.test.mjs` | Automático verde |
-| CA-02: asignar ruta activa según puesto | Busca la ruta `ACTIVA` asociada a `PuestoTrabajo.rutas` | Pruebas CGB-41 y CGB-36 | Integrado; falta prueba real |
-| CA-03: generar invitación segura | Token aleatorio, hash SHA-256, expiración y correo | `tests/colaboradores-hu009.test.mjs`, `tests/correo-invitacion.test.mjs`, `tests/activacion-colaborador.test.mjs` | Automático verde; falta Resend real |
-| CA-04: monitorear colaboradores | Panel administrativo con filtros por estado y ruta | `tests/colaboradores-hu009.test.mjs` | Pendiente validación visual |
+### RNF aplicados
+
+| RNF | Requisito | Verificación |
+|---|---|---|
+| RNF-007 | Minimización de datos personales | El formulario, modelo y pruebas no contienen DNI. |
+| RNF-010 | Integridad y persistencia | Prisma con relaciones oficiales; revertir registro elimina usuario y colaborador ante fallo de correo. |
+| RNF-? Seguridad | Token no se persiste en claro | Solo se guarda el hash SHA-256 y la expiración; el enlace existe solo en memoria/correo. |
+| RNF-? Permisos | Solo administradores registran | `exigirGestorColaboradores` permite únicamente `ADMINISTRADOR`. |
 
 ## Evidencia automática
 

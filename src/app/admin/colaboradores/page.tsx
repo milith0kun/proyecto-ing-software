@@ -22,25 +22,21 @@ interface Colaborador {
   id: string;
   nombre: string;
   email: string;
-  dni: string | null;
   estado: string;
   progreso: number;
   puesto: PuestoResumen | null;
   rutaAsignada: RutaAsignada | null;
-  enlaceActivacion?: string | null;
 }
 
 interface FormularioColaborador {
   nombre: string;
   email: string;
-  dni: string;
   puestoId: string;
 }
 
 const FORMULARIO_INICIAL: FormularioColaborador = {
   nombre: '',
   email: '',
-  dni: '',
   puestoId: '',
 };
 
@@ -166,10 +162,6 @@ export default function PaginaColaboradores() {
                 <div className="admin-campo">
                   <label htmlFor={`colaborador-email-${indice}`}><span>Correo institucional</span></label>
                   <input id={`colaborador-email-${indice}`} className="campo-formulario" required type="email" value={formulario.email} onChange={evento => setFormularios(actuales => actuales.map((fila, posicion) => posicion === indice ? { ...fila, email: evento.target.value } : fila))} placeholder="ana@cgb.latam" />
-                </div>
-                <div className="admin-campo">
-                  <label htmlFor={`colaborador-dni-${indice}`}><span>DNI</span></label>
-                  <input id={`colaborador-dni-${indice}`} className="campo-formulario" required value={formulario.dni} onChange={evento => setFormularios(actuales => actuales.map((fila, posicion) => posicion === indice ? { ...fila, dni: evento.target.value } : fila))} placeholder="12345678" />
                 </div>
                 <div className="admin-campo">
                   <label htmlFor={`colaborador-puesto-${indice}`}><span>Puesto</span></label>

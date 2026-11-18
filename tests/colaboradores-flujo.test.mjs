@@ -2,9 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { NextRequest } from 'next/server';
 import { prisma } from '../src/lib/prisma.ts';
-import { autenticar, crearToken } from '../src/lib/autenticacion.ts';
+import { crearToken } from '../src/lib/autenticacion.ts';
 import { POST as registrar } from '../src/app/api/colaboradores/route.ts';
-import { POST as activar } from '../src/app/api/auth/activar/route.ts';
 
 const secreto = 'clave-de-integracion-hu009-de-32-bytes-o-mas-2026';
 const admin = { id: '507f1f77bcf86cd799439011', email: 'admin@example.com', name: 'Admin', role: 'ADMINISTRADOR', activo: true, passwordHash: null };
@@ -58,11 +57,11 @@ test.after(() => {
   delete process.env.EMAIL_FROM;
 });
 
-test('HU-009 flujo completo: registro, asignación, invitación, activación e inicio de sesión', async () => {
+test('HU-009 flujo: registro, asignación e invitación sin activar', async () => {
   const registroHttp = new NextRequest('http://localhost:3000/api/colaboradores', {
     method: 'POST',
     headers: { origin: 'http://localhost:3000', 'Content-Type': 'application/json', cookie: `cgb_sesion=${tokenAdmin}` },
-    body: JSON.stringify({ nombre: 'Ana Torres', email: 'ana@example.com', dni: '12345678', puestoId: puesto.id }),
+    body: JSON.stringify({ nombre: 'Ana Torres', email: 'ana@example.com', puestoId: puesto.id }),
   });
   const respuestaRegistro = await registrar(registroHttp);
   assert.equal(respuestaRegistro.status, 201);
@@ -70,19 +69,4 @@ test('HU-009 flujo completo: registro, asignación, invitación, activación e i
   assert.equal(registro.progreso, 0);
   assert.equal(cuenta.activo, false);
   assert.ok(enlace);
-
-  const tokenInvitacion = new URL(enlace).searchParams.get('token');
-  const respuestaActivacion = await activar(new NextRequest('http://localhost:3000/api/auth/activar', {
-    method: 'POST',
-    headers: { origin: 'http://localhost:3000', 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token: tokenInvitacion, contrasena: 'ClaveFuerteDePrueba2026!' }),
-  }));
-  assert.equal(respuestaActivacion.status, 200);
-  assert.equal(cuenta.activo, true);
-  assert.equal(registro.estado, 'ACTIVO');
-  assert.equal(registro.tokenActivacion, null);
-
-  const sesion = await autenticar({ correo: cuenta.email, contrasena: 'ClaveFuerteDePrueba2026!' }, async () => cuenta);
-  assert.equal(sesion.role, 'COLABORADOR');
-  assert.equal(sesion.email, 'ana@example.com');
 });

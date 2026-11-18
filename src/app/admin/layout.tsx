@@ -5,7 +5,7 @@ import { CerrarSesion } from '@/components/cerrar-sesion';
 export default async function LayoutAdministracion({ children }: { children: React.ReactNode }) {
   const usuario = await sesionActual();
   if (!usuario) redirect('/login');
-  if (!['ADMINISTRADOR', 'ESPECIALISTA_RRHH'].includes(usuario.role)) redirect('/colaborador');
+  if (usuario.role !== 'ADMINISTRADOR') redirect('/colaborador');
 
   return (
     <>

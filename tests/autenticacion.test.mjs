@@ -10,7 +10,6 @@ import {
   solicitudMismoOrigen,
   resolverSesion,
   usarCookieSegura,
-  puedeAccederRutaAdmin,
 } from '../src/lib/autenticacion.ts';
 
 const secreto = 'secreto-exclusivo-de-pruebas-hu001-2026-32-bytes-minimo';
@@ -33,14 +32,6 @@ const usuarioColaborador = {
   email: 'colaborador@cgb.latam',
   name: 'Colaborador Académico',
   role: 'COLABORADOR',
-  activo: true,
-  passwordHash: hashColaborador,
-};
-const usuarioRrhh = {
-  id: 'usr_rrhh_001',
-  email: 'rrhh@cgb.latam',
-  name: 'Especialista de Recursos Humanos',
-  role: 'ESPECIALISTA_RRHH',
   activo: true,
   passwordHash: hashColaborador,
 };
@@ -73,22 +64,6 @@ test('HU-001: TDD Fase RED/GREEN - Validaciones de Acceso Interno y Autenticaci�
         /Credenciales inválidas/
       );
     }
-  });
-
-  await t.test('Especialista RR. HH. autentica y solo tiene destino al panel de colaboradores', async () => {
-    const resultado = await autenticar(
-      { correo: usuarioRrhh.email, contrasena: claveColaborador },
-      async () => usuarioRrhh
-    );
-    const token = await crearToken(resultado, 'sesion_rrhh_1', secreto);
-    const verificado = await verificarToken(token, secreto);
-
-    assert.equal(resultado.role, 'ESPECIALISTA_RRHH');
-    assert.equal(destinoPorRol(resultado.role), '/admin/colaboradores');
-    assert.equal(verificado.rol, 'ESPECIALISTA_RRHH');
-    assert.equal(puedeAccederRutaAdmin(resultado.role, '/admin/colaboradores'), true);
-    assert.equal(puedeAccederRutaAdmin(resultado.role, '/admin/colaboradores/'), true);
-    assert.equal(puedeAccederRutaAdmin(resultado.role, '/admin/capacitaciones'), false);
   });
 
   await t.test('CA-03: Firma, integridad y expiración de tokens JWT', async () => {

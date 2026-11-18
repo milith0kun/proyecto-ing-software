@@ -4,8 +4,8 @@ import { z } from 'zod';
 
 export const NOMBRE_COOKIE = 'cgb_sesion';
 export const DURACION_SESION = 60 * 60 * 8;
-export type RolInterno = 'ADMINISTRADOR' | 'ESPECIALISTA_RRHH' | 'COLABORADOR';
-const ROLES_INTERNOS: RolInterno[] = ['ADMINISTRADOR', 'ESPECIALISTA_RRHH', 'COLABORADOR'];
+export type RolInterno = 'ADMINISTRADOR' | 'COLABORADOR';
+const ROLES_INTERNOS: RolInterno[] = ['ADMINISTRADOR', 'COLABORADOR'];
 export interface CuentaInterna {
   id: string; email: string; name: string | null; role: string;
   activo: boolean; passwordHash: string | null;
@@ -62,13 +62,12 @@ export async function verificarToken(token: string | undefined, secreto: string)
 
 export function destinoPorRol(rol: string) {
   if (rol === 'ADMINISTRADOR') return '/admin/capacitaciones';
-  if (rol === 'ESPECIALISTA_RRHH') return '/admin/colaboradores';
   return '/colaborador';
 }
 
-export function puedeAccederRutaAdmin(rol: string, pathname: string) {
-  const ruta = pathname.replace(/\/+$/, '') || '/';
-  return rol === 'ADMINISTRADOR' || (rol === 'ESPECIALISTA_RRHH' && ruta === '/admin/colaboradores');
+export function puedeAccederRutaAdmin(rol: string, pathname?: string) {
+  void pathname;
+  return rol === 'ADMINISTRADOR';
 }
 
 export interface SesionPersistida {

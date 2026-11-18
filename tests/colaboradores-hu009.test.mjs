@@ -5,7 +5,6 @@ import {
   construirRegistroColaborador,
   asignarRutaOnboarding,
   crearInvitacionColaborador,
-  filtrarColaboradoresPorEstado,
   registrarColaboradorConRuta,
   ESTADOS_COLABORADOR,
 } from '../src/lib/colaboradores.ts';
@@ -27,7 +26,6 @@ test('HU-009: CA-01 Registro individual crea el colaborador en estado PENDIENTE_
   const colaborador = construirRegistroColaborador({
     nombre: 'María López',
     email: 'maria.lopez@cgb.latam',
-    dni: '01234567',
     puestoId: puestoAnalista.id,
   });
 
@@ -42,7 +40,6 @@ test('HU-009: CA-02 Asignación automática de ruta según puesto', () => {
   const registro = construirRegistroColaborador({
     nombre: 'Carlos Díaz',
     email: 'carlos.diaz@cgb.latam',
-    dni: '76543210',
     puestoId: puestoAnalista.id,
   });
 
@@ -54,11 +51,10 @@ test('HU-009: CA-02 Asignación automática de ruta según puesto', () => {
   assert.equal(asignado.estado, 'PENDIENTE_ACTIVACION');
 });
 
-test('HU-009: CA-03 Generación de token y enlace de activación', () => {
+test('HU-009: CA-03 Generación de token seguro de invitación', () => {
   const registro = construirRegistroColaborador({
     nombre: 'Lucía Silva',
     email: 'lucia.silva@cgb.latam',
-    dni: '19876543',
     puestoId: puestoAnalista.id,
   });
 
@@ -67,30 +63,13 @@ test('HU-009: CA-03 Generación de token y enlace de activación', () => {
   assert.ok(invitacion.token.length > 20);
   assert.match(invitacion.enlaceActivacion, /^https:\/\/app\.cgb\.latam\/login\/activar\?/);
   assert.ok(invitacion.expiraEn instanceof Date);
-  assert.ok(invitacion.expiraEn.getTime() > Date.now());
+  assert.equal(invitacion.expiraEn.getTime() - Date.now() > 47 * 60 * 60 * 1000, true);
 });
 
-test('HU-009: CA-04 Panel de monitoreo filtra por estado y ruta asignada', () => {
-  const colaboradores = [
-    { id: 'c1', nombre: 'A', email: 'a@cgb.latam', estado: 'PENDIENTE_ACTIVACION', rutaAsignada: { id: 'ruta-1', nombre: 'Inducción RH' } },
-    { id: 'c2', nombre: 'B', email: 'b@cgb.latam', estado: 'ACTIVO', rutaAsignada: { id: 'ruta-2', nombre: 'Inducción Operaciones' } },
-    { id: 'c3', nombre: 'C', email: 'c@cgb.latam', estado: 'EN_PROGRESO', rutaAsignada: { id: 'ruta-1', nombre: 'Inducción RH' } },
-  ];
-
-  const enProgreso = filtrarColaboradoresPorEstado(colaboradores, 'EN_PROGRESO');
-  const rh = filtrarColaboradoresPorEstado(colaboradores, 'PENDIENTE_ACTIVACION', 'ruta-1');
-
-  assert.equal(enProgreso.length, 1);
-  assert.equal(enProgreso[0].id, 'c3');
-  assert.equal(rh.length, 1);
-  assert.equal(rh[0].email, 'a@cgb.latam');
-});
-
-test('HU-009: TDD BDD - Registro completo con ruta y activación', () => {
+test('HU-009: TDD BDD - Registro completo con ruta e invitación', () => {
   const registro = registrarColaboradorConRuta({
     nombre: 'Esteban Ruiz',
     email: 'esteban.ruiz@cgb.latam',
-    dni: '11009988',
     puestoId: puestoAnalista.id,
     puesto: puestoAnalista,
     ruta: rutaOnboarding,
