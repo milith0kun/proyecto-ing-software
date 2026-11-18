@@ -169,5 +169,26 @@ export function crearRepositorioRutasPrisma(): RepositorioRutasOnboarding {
       });
       return rutas.map(mapearRutaPrisma);
     },
+
+    async listarAreasActivasConPuestos() {
+      const areas = await prisma.area.findMany({
+        where: { activa: true },
+        orderBy: { nombre: 'asc' },
+        include: { puestos: { orderBy: { nombre: 'asc' } } },
+      });
+      return areas.map(a => ({
+        id: a.id,
+        nombre: a.nombre,
+        puestos: a.puestos.map(p => ({ id: p.id, nombre: p.nombre, areaId: p.areaId })),
+      }));
+    },
+
+    async listarCapacitacionesPublicadas() {
+      return prisma.capacitacion.findMany({
+        where: { estado: 'PUBLICADA' },
+        orderBy: { titulo: 'asc' },
+        select: { id: true, titulo: true, unidad: true, duracionMin: true },
+      });
+    },
   };
 }

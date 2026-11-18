@@ -25,6 +25,19 @@ export interface CapacitacionBasica {
   estado: string;
 }
 
+export interface AreaConPuestos {
+  id: string;
+  nombre: string;
+  puestos: PuestoBasico[];
+}
+
+export interface CapacitacionCatalogo {
+  id: string;
+  titulo: string;
+  unidad: string;
+  duracionMin: number | null;
+}
+
 export interface PasoRutaEntrada {
   capacitacionId: string;
   orden: number;
@@ -88,6 +101,8 @@ export interface RepositorioRutasOnboarding {
     activadaEn: Date,
   ): Promise<RutaOnboardingRegistro | null>;
   listarRutas(): Promise<RutaOnboardingRegistro[]>;
+  listarAreasActivasConPuestos?(): Promise<AreaConPuestos[]>;
+  listarCapacitacionesPublicadas?(): Promise<CapacitacionCatalogo[]>;
 }
 
 export class ErrorRutaOnboarding extends Error {
@@ -174,8 +189,25 @@ export function puedeIniciarPaso(
 
 export function crearServicioRutasOnboarding(repositorio: RepositorioRutasOnboarding) {
   return {
-    async listarRutas(): Promise<RutaOnboardingRegistro[]> {
-      return repositorio.listarRutas();
+    async listarRutas(estadoFiltro?: string): Promise<RutaOnboardingRegistro[]> {
+      const todas = await repositorio.listarRutas();
+      const filtroNormalizado = typeof estadoFiltro === 'string' ? estadoFiltro.toUpperCase().trim() : '';
+      return filtroNormalizado ? todas.filter(r => r.estado === filtroNormalizado) : todas;
+    },
+
+    async obtenerDatosConstructor(): Promise<{
+      areas: AreaConPuestos[];
+      capacitaciones: CapacitacionCatalogo[];
+      rutas: RutaOnboardingRegistro[];
+    }> {
+      const [areas, capacitaciones, rutas] = await Promise.all([
+        repositorio.listarAreasActivasConPuestos ? repositorio.listarAreasActivasConPuestos() : Promise.resolve([]),
+        repositorio.listarCapacitacionesPublicadas
+          ? repositorio.listarCapacitacionesPublicadas()
+          : Promise.resolve([]),
+        repositorio.listarRutas(),
+      ]);
+      return { areas, capacitaciones, rutas };
     },
 
     async obtenerRuta(rutaId: string): Promise<RutaOnboardingRegistro> {

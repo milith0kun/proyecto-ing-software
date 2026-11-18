@@ -73,6 +73,20 @@ function crearRepositorioEnMemoria({
     async listarRutas() {
       return structuredClone(rutas);
     },
+    async listarAreasActivasConPuestos() {
+      return areas
+        .filter(a => a.activa)
+        .map(a => ({
+          id: a.id,
+          nombre: a.nombre,
+          puestos: puestos.filter(p => p.areaId === a.id),
+        }));
+    },
+    async listarCapacitacionesPublicadas() {
+      return capacitaciones
+        .filter(c => c.estado === 'PUBLICADA')
+        .map(c => ({ id: c.id, titulo: c.titulo, unidad: 'CIIP', duracionMin: 30 }));
+    },
   };
 }
 
@@ -233,4 +247,33 @@ test('HU-008: bloquea la modificación o reordenamiento de pasos cuando la ruta 
     sinCambios.pasos.map(p => p.capacitacionId),
     ['cap-1', 'cap-2'],
   );
+});
+
+test('HU-008: servicio filtra rutas por estado y expone datos del constructor sin acoplar la página a Prisma', async () => {
+  const repo = crearRepositorioEnMemoria();
+  const servicio = crearServicioRutasOnboarding(repo);
+
+  const borrador = await servicio.crearRuta({
+    titulo: 'Ruta Borrador',
+    objetivo: 'Objetivo completo para probar filtro por estado.',
+    areaId: 'area-ti',
+  });
+  const activa = await servicio.crearRuta({
+    titulo: 'Ruta Activa',
+    objetivo: 'Objetivo completo para probar estado ACTIVA.',
+    areaId: 'area-ti',
+  });
+  await servicio.secuenciarCapacitaciones(activa.id, ['cap-1']);
+  await servicio.activarRuta(activa.id, new Date('2026-11-17T23:00:00Z'));
+
+  const soloActivas = await servicio.listarRutas('activa');
+  assert.deepEqual(soloActivas.map(r => r.id), [activa.id]);
+
+  const soloBorradores = await servicio.listarRutas('BORRADOR');
+  assert.deepEqual(soloBorradores.map(r => r.id), [borrador.id]);
+
+  const datos = await servicio.obtenerDatosConstructor();
+  assert.equal(datos.areas.length, 1);
+  assert.equal(datos.capacitaciones.length, 3);
+  assert.equal(datos.rutas.length, 2);
 });

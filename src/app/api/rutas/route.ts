@@ -9,9 +9,8 @@ export async function GET(request: NextRequest) {
   if (rechazo) return rechazo;
 
   try {
-    const estadoFiltro = request.nextUrl.searchParams.get('estado')?.toUpperCase().trim();
-    const todas = await obtenerServicioRutas().listarRutas();
-    const datos = estadoFiltro ? todas.filter(r => r.estado === estadoFiltro) : todas;
+    const estadoFiltro = request.nextUrl.searchParams.get('estado') ?? undefined;
+    const datos = await obtenerServicioRutas().listarRutas(estadoFiltro);
 
     return NextResponse.json(
       { ok: true, total: datos.length, datos },
