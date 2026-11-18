@@ -38,7 +38,6 @@ export async function POST(solicitud: NextRequest) {
         data: {
           estado: 'ACTIVO',
           tokenActivacion: null,
-          enlaceActivacion: null,
           tokenExpiraEn: null,
         },
       });

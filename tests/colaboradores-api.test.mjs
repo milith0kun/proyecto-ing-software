@@ -88,6 +88,7 @@ test('registra una cuenta vinculada, asigna la ruta y envía la invitación sin 
   assert.notEqual(colaboradores[0].tokenActivacion, new URL(enviados[0].opciones.html.match(/href="([^"]+)/)[1]).searchParams.get('token'));
   assert.equal(enviados.length, 1);
   assert.equal(JSON.stringify(cuerpo).includes('token'), false);
+  assert.equal(Object.hasOwn(colaboradores[0], 'enlaceActivacion'), false);
 });
 
 test('acepta registro masivo y revierte cuenta si falla el correo', async () => {
