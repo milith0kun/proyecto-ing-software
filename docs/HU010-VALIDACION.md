@@ -37,7 +37,7 @@ Siguiendo la arquitectura monolítica modular en capas (donde la capa `n` solo i
 
 - **Seguridad del token (corrección de revisión):** la base de datos almacena **únicamente** el hash `SHA-256` en `Colaborador.tokenActivacion` y su fecha de expiración `tokenExpiraEn` (`48h`). El enlace con token plano **nunca** se persiste en MongoDB (se eliminó `enlaceActivacion` tanto del esquema como de `actualizarTokenReenvio`).
 - **Base de datos compartida (Atlas):** no se ejecutó `prisma db push` (solo `npx prisma generate` local tras integrar `origin/main`). Para las capturas en navegador se crearon registros temporales de demostración y se eliminaron inmediatamente después dejando las colecciones limpias.
-- **Coordinación pendiente con PO y `CGB-41` (`HU-009`):** `CGB-41` también define `Colaborador` y una versión inicial de `src/app/api/auth/activar/route.ts`. Queda registrada al PO la decisión de consolidar en `CGB-46` la activación oficial (`/api/auth/activar` + `/activar-cuenta`) conservando de `CGB-41` el registro de colaboradores (`POST /api/colaboradores`).
+- **Decisión aprobada del PO y coordinación con `CGB-41` (`HU-009`):** el PO registró en Jira que la activación (`/api/auth/activar` y `/activar-cuenta`, vigencia de `48 h` y contraseña de `≥ 8` caracteres con número y símbolo) pertenece a `CGB-46`, que `CGB-41` es dueña del modelo `Colaborador` + registro/correo (`POST /api/colaboradores`) y que no se captura `dni` por `RNF-007` (campo eliminado de `Colaborador` en `prisma/schema.prisma`).
 
 ## Evidencia en el navegador (`/activar-cuenta` y `/colaborador`)
 
@@ -55,7 +55,7 @@ Detalle completo en [docs/HU010-DISENO-Y-TRAZABILIDAD.md](HU010-DISENO-Y-TRAZABI
 - **RNF-002 (Español):** mensajes UI, etiquetas ARIA y errores `ErrorActivacionCuenta` íntegramente en español.
 - **RNF-005 (Acceso interno, parcial):** enlace público protegido por token; `POST`/`PUT` exigen `esSolicitudMismoOrigen` y emiten cookie `cgb_sesion` + `Sesion` para `/colaborador`.
 - **RNF-006 (Credenciales):** `bcryptjs` (coste `12`), política `≥ 8` chars + número + símbolo y token solo como hash `SHA-256` (`tests/activacion-token.test.mjs`).
-- **RNF-007 (Minimización de datos):** sin `passwordHash` ni `enlaceActivacion` en plano en MongoDB (`1bc4eba`); reenvío con respuesta neutra.
+- **RNF-007 (Minimización de datos):** sin `passwordHash` ni `enlaceActivacion` en plano en MongoDB (`1bc4eba`), sin captura de `dni` en `Colaborador` y reenvío con respuesta neutra.
 - **RNF-008 (Consistencia visual):** `CabeceraCgb`, `PieCgb` y paleta institucional verificados en `docs/evidencias-hu010/`.
 
 ## Evidencia TDD, Validaciones y Uso de IA
@@ -66,5 +66,6 @@ Detalle completo en [docs/HU010-DISENO-Y-TRAZABILIDAD.md](HU010-DISENO-Y-TRAZABI
 - **T4 Build Fix (`a640f0e`):** separación cliente/servidor en `src/lib/politica-contrasena.ts`.
 - **Merge con `main` (`85695d7`) y corrección de seguridad (`1bc4eba`):** alineación con `CGB-31`/`CGB-36`, eliminación de `enlaceActivacion` persistido, desacoplamiento de `prisma` en `route.ts` y cliente `src/lib/activacion-cliente.ts`.
 - **Documentación y capturas (`c83872c`, `a6ba816`):** validación, evidencias reales y limpieza en Atlas.
-- **Merge con `main` (`79e3ec1` — `HU-012`), `ARQ-03` y trazabilidad RNF:** integración limpia en `prisma/schema.prisma`, extracción de `src/lib/activacion-http.ts` y creación de `docs/HU010-DISENO-Y-TRAZABILIDAD.md`.
+- **Merge con `main` (`79e3ec1` — `HU-012`), `ARQ-03` y trazabilidad RNF (`841a34f`, `866f96f`, `3e1f7f7`):** integración limpia en `prisma/schema.prisma`, extracción de `src/lib/activacion-http.ts` y creación de `docs/HU010-DISENO-Y-TRAZABILIDAD.md`.
+- **Merge con `main` (`6b77d33` — CI, fuentes locales y `HU-013`) y retiro de `dni`:** eliminación de `dni` en `Colaborador` según decisión del PO y verificación completa.
 - **Declaración de uso de IA (diapositivas 37–38):** Se utilizó asistente de IA (Antigravity / Gemini) como apoyo para pruebas TDD, refactorización por capas y revisión de seguridad, con verificación humana y ejecución local de `npm test`, `npm run lint`, `npx tsc --noEmit` y `npx next build --webpack`.

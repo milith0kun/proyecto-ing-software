@@ -8,7 +8,12 @@ Complementa `docs/HU010-VALIDACION.md` siguiendo la estructura de diseño, arqui
 
 - **3 C (Tarjeta + Conversación + Confirmación):**
   - **Tarjeta:** `CGB-46` en Jira (subtareas `CGB-47` a `CGB-50`), vinculada mediante `is blocked by CGB-41` para consolidar modelo y propietario único.
-  - **Conversación (decisiones pendientes con el PO):** la necesidad proviene de `informe/registro_conversatorios.md` y de la especificación de `docs/REQUISITOS_APLICADOS.md` §4–§5. Quedan registradas en Jira `CGB-46` para confirmación del PO las 3 decisiones compartidas con `CGB-41`: vigencia del token (`48h` vs `7 días`), longitud mínima de contraseña (`8` vs `12` caracteres) y titularidad única (`CGB-41` para `Colaborador` + registro/correo; `CGB-46` para `/api/auth/activar` + `/activar-cuenta`).
+  - **Conversación (decisiones aprobadas por el PO en Jira `CGB-41` y `CGB-46`):** la necesidad proviene de `informe/registro_conversatorios.md` y `docs/REQUISITOS_APLICADOS.md` §4–§5. El Product Owner (PO) confirmó oficialmente en Jira:
+    1. **La activación es propiedad exclusiva de `CGB-46`:** vigencia de `48 horas` y contraseña de mínimo `8 caracteres` con número y símbolo (`/api/auth/activar` y `/activar-cuenta`). `CGB-41` solo registra, asigna ruta y envía invitación.
+    2. **No se captura el DNI (`RNF-007`):** prevalece la minimización de datos (solo nombre, correo y rol); se eliminó el campo `dni` de `Colaborador` en `prisma/schema.prisma`.
+    3. **No se crea el rol `ESPECIALISTA_RRHH`:** registra el `ADMINISTRADOR`, igual que en `HU-007` y `HU-008`.
+    4. **La ruta apunta al puesto:** como ya está definido en `main`.
+    5. **`CGB-41` es dueña del modelo `Colaborador`:** entra primero el PR #18 y `CGB-46` (PR #11) adopta el modelo idéntico.
   - **Confirmación:** criterios `CA-01` a `CA-04` cubiertos por 6 pruebas automatizadas en `tests/activacion-token.test.mjs` y 3 capturas reales en `docs/evidencias-hu010/`.
 - **Criterios de aceptación ≠ DoD:** `CA-01..CA-04` validan los requisitos funcionales de HU-010; la `Definition of Done` común (`docs/definition-of-done.md`) incorpora los Requisitos No Funcionales (RNF) aplicables según `docs/REQUISITOS_APLICADOS.md` §3.
 
@@ -20,7 +25,7 @@ Complementa `docs/HU010-VALIDACION.md` siguiendo la estructura de diseño, arqui
 | **RNF-002** | Interfaz y mensajes en español | Textos visibles, etiquetas ARIA, barras de fortaleza (`DÉBIL`/`MEDIA`/`FUERTE`), alertas y respuestas JSON de error (`ErrorActivacionCuenta`) redactados íntegramente en español. |
 | **RNF-005** | Acceso interno (parcial en activación) | `/activar-cuenta` y `GET/PUT /api/auth/activar` son públicos únicamente mediante token criptográfico válido; las mutaciones (`POST`, `PUT`) validan `esSolicitudMismoOrigen`, emiten cookie `cgb_sesion` (`HttpOnly`, `SameSite`) respaldada por `Sesion` persistida y redirigen al área protegida `/colaborador` (`tests/activacion-token.test.mjs`). |
 | **RNF-006** | Seguridad de credenciales | Contraseña hasheada con `bcryptjs` (coste `12`) y política mínima (`≥ 8` caracteres, número y símbolo); token almacenado **únicamente** como hash `SHA-256` con vigencia de `48 h` y consumo atómico de uso único (`tests/activacion-token.test.mjs`, commit `1bc4eba`). |
-| **RNF-007** | Minimización y privacidad de datos | `GET /api/auth/activar` devuelve solo `nombre`, `email`, `puesto` y `ruta` (sin `passwordHash` ni token); se eliminó `enlaceActivacion` en claro de MongoDB y del esquema (`1bc4eba`); `PUT /api/auth/activar` devuelve siempre respuesta neutra para no revelar correos existentes. |
+| **RNF-007** | Minimización y privacidad de datos | `GET /api/auth/activar` devuelve solo `nombre`, `email`, `puesto` y `ruta` (sin `passwordHash` ni token); se eliminó `enlaceActivacion` en claro de MongoDB (`1bc4eba`) y el campo `dni` de `Colaborador` según decisión del PO; `PUT /api/auth/activar` devuelve siempre respuesta neutra. |
 | **RNF-008** | Consistencia visual institucional | Reutiliza `CabeceraCgb`, `PieCgb`, tipografía y paleta oficial CGB Academy (`#146287`, `#4DC4D3`, `#002855`), comprobado visualmente en `docs/evidencias-hu010/`. |
 
 ## 2. Arquitectura en 4 capas y justificación (diapositiva 6)
@@ -67,9 +72,9 @@ Se mantiene el **monolito modular en capas sobre Next.js** en lugar de extraer u
 | Merge `main` (`CGB-31` + `CGB-36`) | `85695d7` | `prisma/schema.prisma`, `src/lib/activacion-cuenta-prisma.ts` |
 | Corrección de seguridad y capas | `1bc4eba` | `prisma/schema.prisma`, `src/lib/activacion-cuenta*.ts`, `src/lib/activacion-cliente.ts`, `route.ts`, `tests/activacion-token.test.mjs` |
 | Validación y capturas | `c83872c`, `a6ba816` | `docs/HU010-VALIDACION.md`, `docs/evidencias-hu010/*.png` |
-| Merge `main` (`HU-012`), `ARQ-03` y trazabilidad | *(actual)* | `prisma/schema.prisma`, `src/lib/activacion-http.ts`, `src/app/api/auth/activar/route.ts`, `docs/HU010-DISENO-Y-TRAZABILIDAD.md` |
+| Merge `main` (`HU-012`), `ARQ-03` y trazabilidad | `841a34f`, `866f96f`, `3e1f7f7` | `prisma/schema.prisma`, `src/lib/activacion-http.ts`, `src/app/api/auth/activar/route.ts`, `docs/HU010-DISENO-Y-TRAZABILIDAD.md` |
+| Merge `main` (`6b77d33` — CI, fuentes, `HU-013`) y retiro de `dni` | *(actual)* | `prisma/schema.prisma` (sin `dni`), `docs/HU010-DISENO-Y-TRAZABILIDAD.md`, `docs/HU010-VALIDACION.md` |
 
 ## 5. Pendientes externos a la rama
 
-- **Decisión del PO y alineación con `CGB-41` (PR #18):** confirmar vigencia (`48h` vs `7d`), longitud de contraseña (`8` vs `12`) y consolidación del modelo único `Colaborador` en `CGB-41` tras su integración en `main`.
-- **CI en `main`:** integrar el PR #12 (`docs/CGB-78-flujo-y-configuracion`) para habilitar `ci.yml` en el PR #11.
+- **Integración previa de `CGB-41` (PR #18):** el PO ya confirmó las 5 decisiones en Jira y `Colaborador` quedó sin `dni`. Solo resta que se fusione el PR #18 para traer `main` y aprobar el PR #11.
