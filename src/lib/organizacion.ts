@@ -4,6 +4,9 @@
  */
 
 export const MENSAJE_DUPLICADO = 'El área o puesto ya existe en la organización';
+export const MENSAJE_AREA_INACTIVA = 'No puedes agregar puestos a un área desactivada.';
+export const MENSAJE_AREA_CON_PUESTOS =
+  'No se puede eliminar un área con puestos asociados; desactívala para conservar la integridad de rutas y colaboradores.';
 
 const LONGITUD_MINIMA = 3;
 const LONGITUD_MAXIMA = 80;
@@ -30,13 +33,14 @@ export function esObjectIdOrganizacionValido(id: string): boolean {
   return /^[a-f\d]{24}$/i.test(id);
 }
 
-export function esErrorUnicidadPrisma(error: unknown): boolean {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'code' in error &&
-    (error as { code?: unknown }).code === 'P2002'
-  );
+/** Regla de negocio: un área desactivada no admite nuevos puestos de trabajo. */
+export function puedeAgregarPuestoAArea(area: { activa: boolean }): boolean {
+  return Boolean(area.activa);
+}
+
+/** Regla de negocio (RNF-010): no se permite eliminar físicamente un área que ya tiene puestos asociados. */
+export function puedeEliminarArea(conteoPuestos: number): boolean {
+  return conteoPuestos === 0;
 }
 
 export function limpiarNombre(valor: unknown): string {

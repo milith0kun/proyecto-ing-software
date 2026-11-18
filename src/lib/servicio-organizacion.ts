@@ -3,10 +3,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { exigirAdministrador } from '@/lib/permisos';
 import {
+  MENSAJE_AREA_CON_PUESTOS,
+  MENSAJE_AREA_INACTIVA,
   MENSAJE_DUPLICADO,
-  esErrorUnicidadPrisma,
   esObjectIdOrganizacionValido,
   existeNombreDuplicado,
+  puedeAgregarPuestoAArea,
+  puedeEliminarArea,
   validarArea,
   validarPuesto,
 } from '@/lib/organizacion';
@@ -14,6 +17,7 @@ import {
   borrarAreaPorId,
   buscarAreaConConteoPuestos,
   buscarAreaPorId,
+  esErrorUnicidadPrisma,
   guardarArea,
   guardarPuesto,
   listarAreasExceptoId,
@@ -28,6 +32,38 @@ const SIN_CACHE = { 'Cache-Control': 'no-store' };
 
 type ContextoId = { params: Promise<{ id: string }> };
 
+function responderJsonInvalido() {
+  return NextResponse.json(
+    { ok: false, error: 'El cuerpo de la solicitud debe ser un objeto JSON válido.' },
+    { status: 400 }
+  );
+}
+
+function responderDatosInvalidos(detalles: Record<string, string>) {
+  return NextResponse.json(
+    { ok: false, error: 'Datos inválidos.', detalles },
+    { status: 400 }
+  );
+}
+
+function responderDuplicado() {
+  return NextResponse.json(
+    { ok: false, error: MENSAJE_DUPLICADO, detalles: { nombre: MENSAJE_DUPLICADO } },
+    { status: 409 }
+  );
+}
+
+function responderErrorServidor(error: unknown, mensaje: string) {
+  if (esErrorUnicidadPrisma(error)) return responderDuplicado();
+  return NextResponse.json({ ok: false, error: mensaje }, { status: 503 });
+}
+
+async function leerObjetoJson(request: NextRequest): Promise<Record<string, unknown> | null> {
+  const cuerpo = await request.json().catch(() => null);
+  if (!cuerpo || typeof cuerpo !== 'object' || Array.isArray(cuerpo)) return null;
+  return cuerpo as Record<string, unknown>;
+}
+
 export async function listarAreasOrganizacion(request: NextRequest) {
   const rechazo = await exigirAdministrador(request);
   if (rechazo) return rechazo;
@@ -40,11 +76,8 @@ export async function listarAreasOrganizacion(request: NextRequest) {
       { ok: true, total: datos.length, datos },
       { headers: SIN_CACHE }
     );
-  } catch {
-    return NextResponse.json(
-      { ok: false, error: 'No pudimos obtener las áreas organizacionales.' },
-      { status: 503 }
-    );
+  } catch (error) {
+    return responderErrorServidor(error, 'No pudimos obtener las áreas organizacionales.');
   }
 }
 
@@ -53,28 +86,17 @@ export async function crearAreaOrganizacion(request: NextRequest) {
   if (rechazo) return rechazo;
 
   try {
-    const cuerpo = await request.json().catch(() => null);
-    if (!cuerpo || typeof cuerpo !== 'object' || Array.isArray(cuerpo)) {
-      return NextResponse.json(
-        { ok: false, error: 'El cuerpo de la solicitud debe ser un objeto JSON válido.' },
-        { status: 400 }
-      );
-    }
+    const cuerpo = await leerObjetoJson(request);
+    if (!cuerpo) return responderJsonInvalido();
 
-    const validacion = validarArea(cuerpo as { nombre?: unknown });
+    const validacion = validarArea(cuerpo);
     if (!validacion.valido || !validacion.datos) {
-      return NextResponse.json(
-        { ok: false, error: 'Datos inválidos.', detalles: validacion.errores },
-        { status: 400 }
-      );
+      return responderDatosInvalidos(validacion.errores);
     }
 
     const existentes = await listarAreasRepositorio();
     if (existeNombreDuplicado(existentes, validacion.datos.nombre)) {
-      return NextResponse.json(
-        { ok: false, error: MENSAJE_DUPLICADO, detalles: { nombre: MENSAJE_DUPLICADO } },
-        { status: 409 }
-      );
+      return responderDuplicado();
     }
 
     const creada = await guardarArea({
@@ -88,16 +110,7 @@ export async function crearAreaOrganizacion(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    if (esErrorUnicidadPrisma(error)) {
-      return NextResponse.json(
-        { ok: false, error: MENSAJE_DUPLICADO, detalles: { nombre: MENSAJE_DUPLICADO } },
-        { status: 409 }
-      );
-    }
-    return NextResponse.json(
-      { ok: false, error: 'No pudimos crear el área organizacional.' },
-      { status: 503 }
-    );
+    return responderErrorServidor(error, 'No pudimos crear el área organizacional.');
   }
 }
 
@@ -117,13 +130,8 @@ export async function actualizarAreaOrganizacion(
       );
     }
 
-    const cuerpo = await request.json().catch(() => null);
-    if (!cuerpo || typeof cuerpo !== 'object' || Array.isArray(cuerpo)) {
-      return NextResponse.json(
-        { ok: false, error: 'El cuerpo de la solicitud debe ser un objeto JSON válido.' },
-        { status: 400 }
-      );
-    }
+    const cuerpo = await leerObjetoJson(request);
+    if (!cuerpo) return responderJsonInvalido();
 
     const existente = await buscarAreaPorId(id);
     if (!existente) {
@@ -133,36 +141,29 @@ export async function actualizarAreaOrganizacion(
       );
     }
 
-    const payload = cuerpo as { nombre?: unknown; activa?: unknown };
     const cambios: { nombre?: string; nombreClave?: string; activa?: boolean } = {};
 
-    if (payload.nombre !== undefined) {
-      const validacion = validarArea({ nombre: payload.nombre });
+    if (cuerpo.nombre !== undefined) {
+      const validacion = validarArea({ nombre: cuerpo.nombre });
       if (!validacion.valido || !validacion.datos) {
-        return NextResponse.json(
-          { ok: false, error: 'Datos inválidos.', detalles: validacion.errores },
-          { status: 400 }
-        );
+        return responderDatosInvalidos(validacion.errores);
       }
       const otras = await listarAreasExceptoId(id);
       if (existeNombreDuplicado(otras, validacion.datos.nombre)) {
-        return NextResponse.json(
-          { ok: false, error: MENSAJE_DUPLICADO, detalles: { nombre: MENSAJE_DUPLICADO } },
-          { status: 409 }
-        );
+        return responderDuplicado();
       }
       cambios.nombre = validacion.datos.nombre;
       cambios.nombreClave = validacion.datos.nombreClave;
     }
 
-    if (payload.activa !== undefined) {
-      if (typeof payload.activa !== 'boolean') {
+    if (cuerpo.activa !== undefined) {
+      if (typeof cuerpo.activa !== 'boolean') {
         return NextResponse.json(
           { ok: false, error: 'El estado del área debe ser booleano.' },
           { status: 400 }
         );
       }
-      cambios.activa = payload.activa;
+      cambios.activa = cuerpo.activa;
     }
 
     if (Object.keys(cambios).length === 0) {
@@ -183,16 +184,7 @@ export async function actualizarAreaOrganizacion(
       datos: actualizada,
     });
   } catch (error) {
-    if (esErrorUnicidadPrisma(error)) {
-      return NextResponse.json(
-        { ok: false, error: MENSAJE_DUPLICADO, detalles: { nombre: MENSAJE_DUPLICADO } },
-        { status: 409 }
-      );
-    }
-    return NextResponse.json(
-      { ok: false, error: 'No pudimos actualizar el área organizacional.' },
-      { status: 503 }
-    );
+    return responderErrorServidor(error, 'No pudimos actualizar el área organizacional.');
   }
 }
 
@@ -220,13 +212,9 @@ export async function eliminarAreaOrganizacion(
       );
     }
 
-    if (existente._count.puestos > 0) {
+    if (!puedeEliminarArea(existente._count.puestos)) {
       return NextResponse.json(
-        {
-          ok: false,
-          error:
-            'No se puede eliminar un área con puestos asociados; desactívala para conservar la integridad de rutas y colaboradores.',
-        },
+        { ok: false, error: MENSAJE_AREA_CON_PUESTOS },
         { status: 409 }
       );
     }
@@ -237,11 +225,8 @@ export async function eliminarAreaOrganizacion(
       ok: true,
       mensaje: 'Área eliminada correctamente.',
     });
-  } catch {
-    return NextResponse.json(
-      { ok: false, error: 'No pudimos eliminar el área organizacional.' },
-      { status: 503 }
-    );
+  } catch (error) {
+    return responderErrorServidor(error, 'No pudimos eliminar el área organizacional.');
   }
 }
 
@@ -264,11 +249,8 @@ export async function listarPuestosOrganizacion(request: NextRequest) {
       { ok: true, total: puestos.length, datos: puestos },
       { headers: SIN_CACHE }
     );
-  } catch {
-    return NextResponse.json(
-      { ok: false, error: 'No pudimos obtener los puestos de trabajo.' },
-      { status: 503 }
-    );
+  } catch (error) {
+    return responderErrorServidor(error, 'No pudimos obtener los puestos de trabajo.');
   }
 }
 
@@ -277,20 +259,12 @@ export async function crearPuestoOrganizacion(request: NextRequest) {
   if (rechazo) return rechazo;
 
   try {
-    const cuerpo = await request.json().catch(() => null);
-    if (!cuerpo || typeof cuerpo !== 'object' || Array.isArray(cuerpo)) {
-      return NextResponse.json(
-        { ok: false, error: 'El cuerpo de la solicitud debe ser un objeto JSON válido.' },
-        { status: 400 }
-      );
-    }
+    const cuerpo = await leerObjetoJson(request);
+    if (!cuerpo) return responderJsonInvalido();
 
-    const validacion = validarPuesto(cuerpo as { nombre?: unknown; areaId?: unknown });
+    const validacion = validarPuesto(cuerpo);
     if (!validacion.valido || !validacion.datos) {
-      return NextResponse.json(
-        { ok: false, error: 'Datos inválidos.', detalles: validacion.errores },
-        { status: 400 }
-      );
+      return responderDatosInvalidos(validacion.errores);
     }
 
     const { nombre, nombreClave, areaId } = validacion.datos;
@@ -313,19 +287,16 @@ export async function crearPuestoOrganizacion(request: NextRequest) {
       );
     }
 
-    if (!area.activa) {
+    if (!puedeAgregarPuestoAArea(area)) {
       return NextResponse.json(
-        { ok: false, error: 'No puedes agregar puestos a un área desactivada.' },
+        { ok: false, error: MENSAJE_AREA_INACTIVA },
         { status: 409 }
       );
     }
 
     const puestosDelArea = await listarPuestosBasicos(areaId);
     if (existeNombreDuplicado(puestosDelArea, nombre, areaId)) {
-      return NextResponse.json(
-        { ok: false, error: MENSAJE_DUPLICADO, detalles: { nombre: MENSAJE_DUPLICADO } },
-        { status: 409 }
-      );
+      return responderDuplicado();
     }
 
     const creado = await guardarPuesto({ nombre, nombreClave, areaId });
@@ -335,15 +306,6 @@ export async function crearPuestoOrganizacion(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    if (esErrorUnicidadPrisma(error)) {
-      return NextResponse.json(
-        { ok: false, error: MENSAJE_DUPLICADO, detalles: { nombre: MENSAJE_DUPLICADO } },
-        { status: 409 }
-      );
-    }
-    return NextResponse.json(
-      { ok: false, error: 'No pudimos crear el puesto de trabajo.' },
-      { status: 503 }
-    );
+    return responderErrorServidor(error, 'No pudimos crear el puesto de trabajo.');
   }
 }

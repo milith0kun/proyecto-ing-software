@@ -40,6 +40,18 @@
 - `npm run lint -- --max-warnings=0`: 0 errores, 0 advertencias.
 - `npm run build` (`prisma generate && next build`): compilación de producción exitosa, generando `/admin/organizacion`, `/api/organizacion/areas`, `/api/organizacion/areas/[id]` y `/api/organizacion/puestos`.
 
-### Comprobaciones pendientes
+### Comprobaciones pendientes y nota de migración en Atlas
+- **Nota al aplicar el esquema en MongoDB Atlas:** `nombreClave` es único y obligatorio en `Area` y `PuestoTrabajo`. Si `areas` o `puestos_trabajo` tienen documentos previos de prueba creados sin `nombreClave`, antes de ejecutar `npx prisma db push` se deben limpiar esos registros de prueba o rellenar `nombreClave` con `claveNombre(nombre)`.
 - Validación visual en navegador conectado a MongoDB Atlas (requiere `.env` local con `DATABASE_URL` y `npx prisma db push` / datos de prueba) para adjuntar capturas de `/admin/organizacion`.
 - Acuerdo con los responsables de `CGB-36` (Domingo) y `CGB-41` (Ronaldo) sobre el uso unificado de `Area` y `PuestoTrabajo` y el enlace de `Colaborador.puestoId`.
+
+---
+
+## 4. Diseño por capas
+
+| Capa | Módulo | Responsabilidad |
+|---|---|---|
+| Presentación | `src/app/admin/organizacion/page.tsx`, `src/app/admin/organizacion/PanelOrganizacion.tsx` | Vista en acordeón (`Área → Puestos → Colaboradores`), buscador, filtros y modales |
+| Controlador | `src/app/api/organizacion/areas/route.ts`, `src/app/api/organizacion/areas/[id]/route.ts`, `src/app/api/organizacion/puestos/route.ts` | Reexportar handlers de `servicio-organizacion.ts` |
+| Lógica de negocio | `src/lib/servicio-organizacion.ts`, `src/lib/organizacion.ts` | Orquestación HTTP y reglas puras (`validarArea`, `validarPuesto`, `existeNombreDuplicado`, `puedeAgregarPuestoAArea`, `puedeEliminarArea`, `armarEstructura`) |
+| Acceso a datos | `src/lib/repositorio-organizacion.ts`, `prisma/schema.prisma` | Consultas Prisma y detección de error de unicidad `P2002` (`esErrorUnicidadPrisma`) |

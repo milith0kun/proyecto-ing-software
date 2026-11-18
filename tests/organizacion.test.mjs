@@ -5,6 +5,8 @@ import {
   validarPuesto,
   existeNombreDuplicado,
   armarEstructura,
+  puedeAgregarPuestoAArea,
+  puedeEliminarArea,
   MENSAJE_DUPLICADO
 } from '../src/lib/organizacion.ts';
 
@@ -65,5 +67,12 @@ test('HU-007 (CGB-31): estructura organizacional - áreas y puestos', async (t) 
     assert.equal(software.puestos.length, 2);
     assert.equal(software.totalColaboradores, 3);
     assert.equal(estructura.find((a) => a.id === 'a1').totalColaboradores, 0);
+  });
+
+  await t.test('Reglas de dominio: área inactiva no admite puestos y área con puestos no se elimina', () => {
+    assert.equal(puedeAgregarPuestoAArea({ activa: true }), true);
+    assert.equal(puedeAgregarPuestoAArea({ activa: false }), false);
+    assert.equal(puedeEliminarArea(0), true);
+    assert.equal(puedeEliminarArea(2), false);
   });
 });

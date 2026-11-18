@@ -22,6 +22,15 @@ export interface PuestoRegistro {
   updatedAt?: Date;
 }
 
+export function esErrorUnicidadPrisma(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    (error as { code?: unknown }).code === 'P2002'
+  );
+}
+
 export function listarAreasRepositorio(options?: { soloActivas?: boolean }): Promise<AreaRegistro[]> {
   const soloActivas = Boolean(options?.soloActivas);
   return prisma.area.findMany({
