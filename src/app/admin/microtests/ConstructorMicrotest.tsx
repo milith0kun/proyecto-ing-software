@@ -12,26 +12,16 @@ import {
   puedeModificarMicrotest,
   validarConfiguracionMicrotest,
 } from '@/lib/configuracion-microtest';
+import {
+  eliminarMicrotestCliente,
+  guardarMicrotestCliente,
+} from '@/lib/microtests-cliente';
+import type {
+  CapacitacionConMicrotestUI,
+  EvaluacionResumenUI,
+} from '@/lib/servicio-configuracion-microtest';
 
-export interface EvaluacionResumenUI {
-  id: string;
-  capacitacionId: string;
-  titulo: string;
-  notaMinima: number;
-  maxIntentos: number;
-  tiempoLimiteSeg: number | null;
-  preguntas: PreguntaConfigurada[];
-  _count?: { intentos: number };
-}
-
-export interface CapacitacionConMicrotestUI {
-  id: string;
-  titulo: string;
-  unidad: string;
-  ambito: string;
-  estado: string;
-  evaluacion: EvaluacionResumenUI | null;
-}
+export type { CapacitacionConMicrotestUI, EvaluacionResumenUI };
 
 interface PropsConstructorMicrotest {
   capacitacionesIniciales: CapacitacionConMicrotestUI[];
@@ -217,25 +207,18 @@ export function ConstructorMicrotest({
     setGuardando(true);
     try {
       const esEdicion = Boolean(evaluacionActual?.id);
-      const url = esEdicion
-        ? `/api/microtests/${evaluacionActual!.id}`
-        : '/api/microtests';
-      const metodo = esEdicion ? 'PUT' : 'POST';
+      const resultado = await guardarMicrotestCliente(
+        validacion.datos,
+        evaluacionActual?.id
+      );
 
-      const res = await fetch(url, {
-        method: metodo,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(validacion.datos),
-      });
-      const json = await res.json();
-
-      if (!res.ok || !json.ok) {
-        setErrorGeneral(json.error || 'No se pudo guardar el microtest.');
-        if (json.detalles) setErroresCampo(json.detalles);
+      if (!resultado.ok || !resultado.datos) {
+        setErrorGeneral(resultado.error || 'No se pudo guardar el microtest.');
+        if (resultado.detalles) setErroresCampo(resultado.detalles);
         return;
       }
 
-      const evaluacionGuardada: EvaluacionResumenUI = json.datos;
+      const evaluacionGuardada: EvaluacionResumenUI = resultado.datos;
       const nuevasCapacitaciones = capacitaciones.map((c) =>
         c.id === capacitacionId ? { ...c, evaluacion: evaluacionGuardada } : c
       );
@@ -259,12 +242,9 @@ export function ConstructorMicrotest({
     setErrorGeneral(null);
 
     try {
-      const res = await fetch(`/api/microtests/${evaluacionActual.id}`, {
-        method: 'DELETE',
-      });
-      const json = await res.json();
-      if (!res.ok || !json.ok) {
-        setErrorGeneral(json.error || 'No se pudo eliminar el microtest.');
+      const resultado = await eliminarMicrotestCliente(evaluacionActual.id);
+      if (!resultado.ok) {
+        setErrorGeneral(resultado.error || 'No se pudo eliminar el microtest.');
         return;
       }
 

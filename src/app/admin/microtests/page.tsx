@@ -1,43 +1,18 @@
 import Link from 'next/link';
 import { CabeceraAdminCgb } from '@/components/institucional/CabeceraAdminCgb';
 import { PieCgb } from '@/components/institucional/PieCgb';
-import { listarCapacitacionesParaMicrotest } from '@/lib/repositorio-configuracion-microtest';
 import {
-  CapacitacionConMicrotestUI,
-  ConstructorMicrotest,
-} from './ConstructorMicrotest';
+  obtenerCapacitacionesConMicrotestInicial,
+  type CapacitacionConMicrotestUI,
+} from '@/lib/servicio-configuracion-microtest';
+import { ConstructorMicrotest } from './ConstructorMicrotest';
 
 export const dynamic = 'force-dynamic';
 
 export default async function PaginaAdminMicrotests() {
   let capacitacionesIniciales: CapacitacionConMicrotestUI[] = [];
   try {
-    const lista = await listarCapacitacionesParaMicrotest();
-    capacitacionesIniciales = lista.map((cap) => ({
-      id: cap.id,
-      titulo: cap.titulo,
-      unidad: cap.unidad,
-      ambito: cap.ambito,
-      estado: cap.estado,
-      evaluacion: cap.evaluacion
-        ? {
-            id: cap.evaluacion.id,
-            capacitacionId: cap.evaluacion.capacitacionId,
-            titulo: cap.evaluacion.titulo,
-            notaMinima: cap.evaluacion.notaMinima,
-            maxIntentos: cap.evaluacion.maxIntentos,
-            tiempoLimiteSeg: cap.evaluacion.tiempoLimiteSeg,
-            preguntas: cap.evaluacion.preguntas.map((p) => ({
-              id: p.id,
-              enunciado: p.enunciado,
-              opciones: p.opciones,
-              correcta: p.correcta,
-              retroalimentacion: p.retroalimentacion ?? null,
-            })),
-            _count: { intentos: cap.evaluacion._count.intentos },
-          }
-        : null,
-    }));
+    capacitacionesIniciales = await obtenerCapacitacionesConMicrotestInicial();
   } catch {
     capacitacionesIniciales = [];
   }

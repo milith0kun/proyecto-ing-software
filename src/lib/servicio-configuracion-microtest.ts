@@ -1,11 +1,10 @@
 /**
  * Capa de lógica de negocio (servicio de aplicación) para configurar microtests (HU-013 / CGB-61).
- * Orquesta autorización de administrador, reglas puras (`configuracion-microtest.ts`) y acceso a datos (`repositorio-configuracion-microtest.ts`).
+ * Orquesta reglas puras (`configuracion-microtest.ts`) y acceso a datos (`repositorio-configuracion-microtest.ts`) sin acoplamiento a HTTP.
  */
-import { NextRequest, NextResponse } from 'next/server';
-import { exigirAdministrador } from '@/lib/permisos';
 import {
   MENSAJE_MICROTEST_DUPLICADO,
+  PreguntaConfigurada,
   calcularPesoPorPregunta,
   esObjectIdMicrotestValido,
   puedeModificarMicrotest,
@@ -19,39 +18,38 @@ import {
   crearMicrotestEnRepositorio,
   eliminarMicrotestEnRepositorio,
   esErrorUnicidadMicrotestPrisma,
+  listarCapacitacionesParaMicrotest,
   listarMicrotestsConfigurados,
 } from '@/lib/repositorio-configuracion-microtest';
 
-const CABECERAS_NO_CACHE = { 'Cache-Control': 'no-store' };
-
-function responderJsonInvalido() {
-  return NextResponse.json(
-    { ok: false, error: 'El cuerpo de la solicitud debe ser un objeto JSON válido.' },
-    { status: 400 }
-  );
+export interface EvaluacionResumenUI {
+  id: string;
+  capacitacionId: string;
+  titulo: string;
+  notaMinima: number;
+  maxIntentos: number;
+  tiempoLimiteSeg: number | null;
+  preguntas: PreguntaConfigurada[];
+  _count?: { intentos: number };
 }
 
-function responderDatosInvalidos(detalles: Record<string, string>) {
-  return NextResponse.json(
-    { ok: false, error: 'Datos inválidos.', detalles },
-    { status: 400 }
-  );
+export interface CapacitacionConMicrotestUI {
+  id: string;
+  titulo: string;
+  unidad: string;
+  ambito: string;
+  estado: string;
+  evaluacion: EvaluacionResumenUI | null;
 }
 
-function responderConflicto(error: string) {
-  return NextResponse.json({ ok: false, error }, { status: 409 });
-}
-
-function responderErrorServidor(error: string) {
-  return NextResponse.json({ ok: false, error }, { status: 503 });
-}
-
-async function leerObjetoJson(
-  request: NextRequest
-): Promise<Record<string, unknown> | null> {
-  const cuerpo = await request.json().catch(() => null);
-  if (!cuerpo || typeof cuerpo !== 'object' || Array.isArray(cuerpo)) return null;
-  return cuerpo as Record<string, unknown>;
+export class ErrorConfiguracionMicrotest extends Error {
+  constructor(
+    message: string,
+    readonly status: 400 | 404 | 409,
+    readonly detalles?: Record<string, string>
+  ) {
+    super(message);
+  }
 }
 
 function enriquecerEvaluacion<
@@ -68,197 +66,172 @@ function enriquecerEvaluacion<
   };
 }
 
-export async function listarMicrotests(request: NextRequest) {
-  const rechazo = await exigirAdministrador(request);
-  if (rechazo) return rechazo;
-
-  try {
-    const capacitacionId = request.nextUrl.searchParams.get('capacitacionId')?.trim();
-    if (capacitacionId && !esObjectIdMicrotestValido(capacitacionId)) {
-      return NextResponse.json(
-        { ok: false, error: 'El identificador de la capacitación no es válido.' },
-        { status: 400 }
-      );
-    }
-
-    const evaluaciones = await listarMicrotestsConfigurados(capacitacionId);
-    const datos = evaluaciones.map((ev) => enriquecerEvaluacion(ev));
-
-    return NextResponse.json(
-      { ok: true, total: datos.length, datos },
-      { headers: CABECERAS_NO_CACHE }
-    );
-  } catch {
-    return responderErrorServidor('No pudimos consultar los microtests configurados.');
-  }
+export async function obtenerCapacitacionesConMicrotestInicial(): Promise<
+  CapacitacionConMicrotestUI[]
+> {
+  const lista = await listarCapacitacionesParaMicrotest();
+  return lista.map((cap) => ({
+    id: cap.id,
+    titulo: cap.titulo,
+    unidad: cap.unidad,
+    ambito: cap.ambito,
+    estado: cap.estado,
+    evaluacion: cap.evaluacion
+      ? {
+          id: cap.evaluacion.id,
+          capacitacionId: cap.evaluacion.capacitacionId,
+          titulo: cap.evaluacion.titulo,
+          notaMinima: cap.evaluacion.notaMinima,
+          maxIntentos: cap.evaluacion.maxIntentos,
+          tiempoLimiteSeg: cap.evaluacion.tiempoLimiteSeg,
+          preguntas: cap.evaluacion.preguntas.map((p) => ({
+            id: p.id,
+            enunciado: p.enunciado,
+            opciones: p.opciones,
+            correcta: p.correcta,
+            retroalimentacion: p.retroalimentacion ?? null,
+          })),
+          _count: { intentos: cap.evaluacion._count.intentos },
+        }
+      : null,
+  }));
 }
 
-export async function crearMicrotest(request: NextRequest) {
-  const rechazo = await exigirAdministrador(request);
-  if (rechazo) return rechazo;
+export async function listarMicrotestsEnServicio(capacitacionId?: string) {
+  if (capacitacionId && !esObjectIdMicrotestValido(capacitacionId)) {
+    throw new ErrorConfiguracionMicrotest(
+      'El identificador de la capacitación no es válido.',
+      400
+    );
+  }
+  const evaluaciones = await listarMicrotestsConfigurados(capacitacionId);
+  return evaluaciones.map((ev) => enriquecerEvaluacion(ev));
+}
+
+export async function registrarMicrotestEnServicio(
+  cuerpo: Record<string, unknown>
+) {
+  const validacion = validarConfiguracionMicrotest(cuerpo);
+  if (!validacion.valido || !validacion.datos) {
+    throw new ErrorConfiguracionMicrotest(
+      'Datos inválidos.',
+      400,
+      validacion.errores
+    );
+  }
+
+  const capacitacion = await buscarCapacitacionPorId(
+    validacion.datos.capacitacionId
+  );
+  if (!capacitacion) {
+    throw new ErrorConfiguracionMicrotest(
+      'La capacitación seleccionada no existe.',
+      404
+    );
+  }
+
+  const existente = await buscarMicrotestPorCapacitacionId(
+    validacion.datos.capacitacionId
+  );
+  if (existente) {
+    throw new ErrorConfiguracionMicrotest(MENSAJE_MICROTEST_DUPLICADO, 409);
+  }
 
   try {
-    const cuerpo = await leerObjetoJson(request);
-    if (!cuerpo) return responderJsonInvalido();
-
-    const validacion = validarConfiguracionMicrotest(cuerpo);
-    if (!validacion.valido || !validacion.datos) {
-      return responderDatosInvalidos(validacion.errores);
-    }
-
-    const capacitacion = await buscarCapacitacionPorId(validacion.datos.capacitacionId);
-    if (!capacitacion) {
-      return NextResponse.json(
-        { ok: false, error: 'La capacitación seleccionada no existe.' },
-        { status: 404 }
-      );
-    }
-
-    const existente = await buscarMicrotestPorCapacitacionId(
-      validacion.datos.capacitacionId
-    );
-    if (existente) {
-      return responderConflicto(MENSAJE_MICROTEST_DUPLICADO);
-    }
-
     const creado = await crearMicrotestEnRepositorio(validacion.datos);
-    return NextResponse.json(
-      { ok: true, datos: enriquecerEvaluacion(creado) },
-      { status: 201 }
-    );
+    return enriquecerEvaluacion(creado);
   } catch (error) {
     if (esErrorUnicidadMicrotestPrisma(error)) {
-      return responderConflicto(MENSAJE_MICROTEST_DUPLICADO);
+      throw new ErrorConfiguracionMicrotest(MENSAJE_MICROTEST_DUPLICADO, 409);
     }
-    return responderErrorServidor(
-      'No pudimos registrar el microtest. Inténtalo nuevamente.'
-    );
+    throw error;
   }
 }
 
-export async function obtenerMicrotest(request: NextRequest, id: string) {
-  const rechazo = await exigirAdministrador(request);
-  if (rechazo) return rechazo;
-
+export async function obtenerMicrotestEnServicio(id: string) {
   if (!esObjectIdMicrotestValido(id)) {
-    return NextResponse.json(
-      { ok: false, error: 'El identificador del microtest no es válido.' },
-      { status: 400 }
+    throw new ErrorConfiguracionMicrotest(
+      'El identificador del microtest no es válido.',
+      400
     );
   }
 
-  try {
-    const evaluacion = await buscarMicrotestPorId(id);
-    if (!evaluacion) {
-      return NextResponse.json(
-        { ok: false, error: 'Microtest no encontrado.' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(
-      { ok: true, datos: enriquecerEvaluacion(evaluacion) },
-      { headers: CABECERAS_NO_CACHE }
-    );
-  } catch {
-    return responderErrorServidor('No pudimos obtener el microtest.');
+  const evaluacion = await buscarMicrotestPorId(id);
+  if (!evaluacion) {
+    throw new ErrorConfiguracionMicrotest('Microtest no encontrado.', 404);
   }
+
+  return enriquecerEvaluacion(evaluacion);
 }
 
-export async function actualizarMicrotest(request: NextRequest, id: string) {
-  const rechazo = await exigirAdministrador(request);
-  if (rechazo) return rechazo;
-
+export async function actualizarMicrotestEnServicio(
+  id: string,
+  cuerpo: Record<string, unknown>
+) {
   if (!esObjectIdMicrotestValido(id)) {
-    return NextResponse.json(
-      { ok: false, error: 'El identificador del microtest no es válido.' },
-      { status: 400 }
+    throw new ErrorConfiguracionMicrotest(
+      'El identificador del microtest no es válido.',
+      400
     );
   }
 
-  try {
-    const existente = await buscarMicrotestPorId(id);
-    if (!existente) {
-      return NextResponse.json(
-        { ok: false, error: 'Microtest no encontrado.' },
-        { status: 404 }
-      );
-    }
+  const existente = await buscarMicrotestPorId(id);
+  if (!existente) {
+    throw new ErrorConfiguracionMicrotest('Microtest no encontrado.', 404);
+  }
 
-    const permisoEdicion = puedeModificarMicrotest(existente._count.intentos);
-    if (!permisoEdicion.permitido) {
-      return responderConflicto(permisoEdicion.motivo!);
-    }
+  const permisoEdicion = puedeModificarMicrotest(existente._count.intentos);
+  if (!permisoEdicion.permitido) {
+    throw new ErrorConfiguracionMicrotest(permisoEdicion.motivo!, 409);
+  }
 
-    const cuerpo = await leerObjetoJson(request);
-    if (!cuerpo) return responderJsonInvalido();
-
-    const validacion = validarConfiguracionMicrotest({
-      ...cuerpo,
-      capacitacionId: cuerpo.capacitacionId ?? existente.capacitacionId,
-    });
-    if (!validacion.valido || !validacion.datos) {
-      return responderDatosInvalidos(validacion.errores);
-    }
-
-    if (validacion.datos.capacitacionId !== existente.capacitacionId) {
-      return responderDatosInvalidos({
-        capacitacionId: 'No se puede cambiar la capacitación asociada al microtest.',
-      });
-    }
-
-    const actualizado = await actualizarMicrotestEnRepositorio(id, {
-      titulo: validacion.datos.titulo,
-      notaMinima: validacion.datos.notaMinima,
-      maxIntentos: validacion.datos.maxIntentos,
-      tiempoLimiteSeg: validacion.datos.tiempoLimiteSeg,
-      preguntas: validacion.datos.preguntas,
-    });
-
-    return NextResponse.json({
-      ok: true,
-      datos: enriquecerEvaluacion(actualizado),
-    });
-  } catch {
-    return responderErrorServidor(
-      'No pudimos actualizar el microtest. Inténtalo nuevamente.'
+  const validacion = validarConfiguracionMicrotest({
+    ...cuerpo,
+    capacitacionId: cuerpo.capacitacionId ?? existente.capacitacionId,
+  });
+  if (!validacion.valido || !validacion.datos) {
+    throw new ErrorConfiguracionMicrotest(
+      'Datos inválidos.',
+      400,
+      validacion.errores
     );
   }
+
+  if (validacion.datos.capacitacionId !== existente.capacitacionId) {
+    throw new ErrorConfiguracionMicrotest('Datos inválidos.', 400, {
+      capacitacionId: 'No se puede cambiar la capacitación asociada al microtest.',
+    });
+  }
+
+  const actualizado = await actualizarMicrotestEnRepositorio(id, {
+    titulo: validacion.datos.titulo,
+    notaMinima: validacion.datos.notaMinima,
+    maxIntentos: validacion.datos.maxIntentos,
+    tiempoLimiteSeg: validacion.datos.tiempoLimiteSeg,
+    preguntas: validacion.datos.preguntas,
+  });
+
+  return enriquecerEvaluacion(actualizado);
 }
 
-export async function eliminarMicrotest(request: NextRequest, id: string) {
-  const rechazo = await exigirAdministrador(request);
-  if (rechazo) return rechazo;
-
+export async function eliminarMicrotestEnServicio(id: string) {
   if (!esObjectIdMicrotestValido(id)) {
-    return NextResponse.json(
-      { ok: false, error: 'El identificador del microtest no es válido.' },
-      { status: 400 }
+    throw new ErrorConfiguracionMicrotest(
+      'El identificador del microtest no es válido.',
+      400
     );
   }
 
-  try {
-    const existente = await buscarMicrotestPorId(id);
-    if (!existente) {
-      return NextResponse.json(
-        { ok: false, error: 'Microtest no encontrado.' },
-        { status: 404 }
-      );
-    }
-
-    const permisoEliminacion = puedeModificarMicrotest(existente._count.intentos);
-    if (!permisoEliminacion.permitido) {
-      return responderConflicto(permisoEliminacion.motivo!);
-    }
-
-    await eliminarMicrotestEnRepositorio(id);
-    return NextResponse.json({
-      ok: true,
-      mensaje: 'Microtest eliminado correctamente.',
-    });
-  } catch {
-    return responderErrorServidor(
-      'No pudimos eliminar el microtest. Inténtalo nuevamente.'
-    );
+  const existente = await buscarMicrotestPorId(id);
+  if (!existente) {
+    throw new ErrorConfiguracionMicrotest('Microtest no encontrado.', 404);
   }
+
+  const permisoEliminacion = puedeModificarMicrotest(existente._count.intentos);
+  if (!permisoEliminacion.permitido) {
+    throw new ErrorConfiguracionMicrotest(permisoEliminacion.motivo!, 409);
+  }
+
+  await eliminarMicrotestEnRepositorio(id);
+  return { mensaje: 'Microtest eliminado correctamente.' };
 }
