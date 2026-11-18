@@ -16,7 +16,7 @@
    - **Dueño de los datos (`ARQ-06`):** Con `CGB-61` bloqueando a `CGB-66` en Jira, **esta HU (`CGB-61`, PR #17) es la dueña oficial** de los modelos `PreguntaEvaluacion` (tipo embebido con `id`, `enunciado`, `opciones`, `correcta` base 0 y `retroalimentacion`), `Evaluacion` (`@@map("evaluaciones")`, `capacitacionId @unique`, `onDelete: Restrict`) e `IntentoEvaluacion` (`@@map("intentos_evaluacion")`, `@@unique([usuarioId, evaluacionId, numero])`, `onDelete: Restrict` hacia `Evaluacion` y `User`). Se integra primero en `main` y `CGB-66` (PR #13) adopta estos modelos oficiales.
    - **Protección contra borrado en cascada (`DIS-14` / `RNF-010`):** Tanto `Evaluacion.capacitacion` como `IntentoEvaluacion.evaluacion` e `IntentoEvaluacion.usuario` usan `onDelete: Restrict`, alineado con `CGB-31` y `CGB-56`, impidiendo que borrar un usuario o una capacitación elimine en silencio evaluaciones o calificaciones históricas.
 3. **Arquitectura en 4 capas estrictas ($n \to n-1$):**
-   - El detalle de las 4 capas (`Presentación → Controlador → Lógica de negocio → Acceso a datos`), donde `page.tsx` invoca exclusivamente a `servicio-configuracion-microtest.ts`, los controladores usan `microtests-http.ts`, el servicio no importa `NextResponse` y el constructor usa `microtests-cliente.ts`, se documenta sin duplicación en [`HU013-DISENO-Y-TRAZABILIDAD.md`](./HU013-DISENO-Y-TRAZABILIDAD.md).
+   - El detalle de las 4 capas (`Presentación → Controlador → Lógica de negocio → Acceso a datos`), incluyendo la extracción de `TarjetaPreguntaMicrotest.tsx`, `microtests-cliente.ts` y `microtests-http.ts`, se documenta sin duplicación en [`HU013-DISENO-Y-TRAZABILIDAD.md`](./HU013-DISENO-Y-TRAZABILIDAD.md).
 
 ---
 
@@ -33,26 +33,33 @@
 
 ### 2.2 Comprobación de Requisitos No Funcionales (RNF por ID)
 
-| ID RNF | Requisito No Funcional | Cómo se comprueba en HU-013 |
+Medidos sobre build de producción (`next build` + `next start`) en `localhost` conectado a MongoDB Atlas (`cgb_academy`), 18/11/2026:
+
+| ID RNF | Requisito No Funcional | Resultado comprobado y límite declarado |
 |---|---|---|
-| **RNF-001** | Diseño adaptable (Responsive Web Design) | Grillas responsivas (`grid-cols-1 md:grid-cols-2 lg:grid-cols-4`) y contenedores adaptables en `ConstructorMicrotest.tsx`. |
-| **RNF-002** | Idioma español e interfaz clara | Toda la interfaz, etiquetas `aria-label` y mensajes de error (`MENSAJE_MICROTEST_DUPLICADO`, `MENSAJE_MICROTEST_CON_INTENTOS`) están en español. |
-| **RNF-003** | Rendimiento en infraestructura acotada (VPS 2 vCPU / 8 GB RAM) | Preguntas embebidas (`PreguntaEvaluacion[]`) en un solo documento `Evaluacion` sin `JOIN` costosos y cabeceras `Cache-Control: no-store`. |
-| **RNF-005** | Control de acceso interno por rol y protección CSRF | `exigirAdministrador` en `/api/microtests` y `/api/microtests/[id]` + validación `Same-Origin` en `POST`, `PUT` y `DELETE` (`tests/configuracion-microtest-api.test.mjs`). |
-| **RNF-008** | Consistencia visual e identidad institucional CGB | Uso de `CabeceraAdminCgb`, `PieCgb`, `.publicacion-panel`, `.kicker-cgb`, `.boton-primario` y alertas accesibles (`role="alert"`, `role="status"`). |
-| **RNF-010** | Integridad referencial y de calificaciones | Índice único `capacitacionId @unique` en `Evaluacion` y bloqueo `409 Conflict` ante edición o borrado cuando existen intentos registrados (`03-bloqueo-con-intentos.png`). |
+| **RNF-001** | Diseño adaptable (Responsive) | `scrollWidth <= innerWidth` sin desplazamiento horizontal en **375 px** (`375/375`), **768 px** (`753/768`) y **1280 px** (`1265/1280`). Evidencia: `04-movil-375px.png`. |
+| **RNF-002** | Idioma español | Interfaz, etiquetas `aria-label` y mensajes de error (`MENSAJE_MICROTEST_DUPLICADO`, `MENSAJE_MICROTEST_CON_INTENTOS`) 100 % en español. |
+| **RNF-003** | Infraestructura objetivo (VPS 2 vCPU / 8 GB RAM) | Preguntas embebidas (`PreguntaEvaluacion[]`) en un documento `Evaluacion` sin `JOIN` costosos y cabeceras `Cache-Control: no-store`. |
+| **RNF-004** | Contenido ligero (`< 1,5 s`) | Sobre `next start` con Atlas: cargas subsecuentes en **215 ms y 221 ms** (`TTFB` `200–201 ms`); primera carga en frío **1604 ms** (`TTFB` `1405 ms` por conexión inicial a Atlas). *Límite:* medido desde `localhost` contra Atlas, no desde VPS/4G. |
+| **RNF-005** | Seguridad de acceso interno y CSRF | `exigirAdministrador` (401/403) + validación `Same-Origin` en `POST`, `PUT` y `DELETE` (`tests/configuracion-microtest-api.test.mjs`). |
+| **RNF-008** | Consistencia visual CGB | Uso de `CabeceraAdminCgb`, `PieCgb`, `.publicacion-panel`, `.kicker-cgb`, `.boton-primario` y alertas accesibles (`role="alert"`, `role="status"`). |
+| **RNF-009** | Facilidad de administración (*no-code*) | Construcción visual dinámica de preguntas, opciones, selección de respuesta correcta y cálculo automático de puntaje en `/admin/microtests`. |
+| **RNF-010** | Integridad de información y calificaciones | `capacitacionId @unique`, `onDelete: Restrict` en `Evaluacion.capacitacion`, `IntentoEvaluacion.evaluacion` e `IntentoEvaluacion.usuario`, y bloqueo `409 Conflict` cuando existen intentos (`03-bloqueo-con-intentos.png`). |
+
+*(RNF-006 y RNF-007 aplican a autenticación/registro de colaboradores, no a esta HU).*
 
 ---
 
 ## 3. Evidencia en navegador conectado a MongoDB Atlas (`CGB-65`, 18/11/2026)
 
-Validación ejecutada en `http://localhost:3000/admin/microtests` conectado al clúster `cgb_academy` de MongoDB Atlas con la sesión `admin@cgb.latam` (`ADMINISTRADOR`). Los registros temporales creados durante la prueba (`Microtest de Seguridad de la Información` y su intento de prueba) se eliminaron al finalizar para conservar intacta la base compartida.
+Validación ejecutada en `http://localhost:3000/admin/microtests` (`next start` conectado al clúster `cgb_academy` de MongoDB Atlas con la sesión `admin@cgb.latam`). Los registros temporales creados durante la prueba se eliminaron al finalizar (`0` documentos restantes en `evaluaciones` e `intentos_evaluacion`).
 
 | Criterio | Evidencia en navegador (`/admin/microtests`) |
 |---|---|
 | **CA-01 y CA-02** Constructor dinámico con preguntas, opciones, alternativa correcta, puntaje por pregunta (`50 pts`) y nota mínima (`80%`) | ![Constructor dinámico de preguntas](evidencias-hu013/01-constructor-preguntas.png) |
-| **CA-03** Microtest guardado y vinculado a una capacitación en estado `BORRADOR` | ![Microtest vinculado a capacitación](evidencias-hu013/02-microtest-vinculado.png) |
-| **CA-04 y RNF-010** Bloqueo de edición y eliminación cuando existen intentos registrados por colaboradores | ![Bloqueo de edición con intentos registrados](evidencias-hu013/03-bloqueo-con-intentos.png) |
+| **CA-03** Microtest guardado y vinculado a capacitación en `BORRADOR` | ![Microtest vinculado a capacitación](evidencias-hu013/02-microtest-vinculado.png) |
+| **CA-04 y RNF-010** Bloqueo de edición y eliminación cuando existen intentos registrados | ![Bloqueo de edición con intentos registrados](evidencias-hu013/03-bloqueo-con-intentos.png) |
+| **RNF-001** Vista adaptable en móvil (`375 px`, sin desplazamiento horizontal) | ![Vista móvil 375px](evidencias-hu013/04-movil-375px.png) |
 
 ---
 
@@ -60,7 +67,7 @@ Validación ejecutada en `http://localhost:3000/admin/microtests` conectado al c
 
 1. **Cliente Prisma y Tipado:** `npx prisma generate` y `npx tsc --noEmit` (`0` errores).
 2. **Linter:** `npm run lint -- --max-warnings=0` (`0` advertencias, `0` errores).
-3. **Suite de pruebas:** `npm test` → **128/128 pruebas pasando** (incluyendo las 12 pruebas de HU-013 y las 116 de `main`).
+3. **Suite de pruebas:** `npm test` → **134/134 pruebas pasando** (incluyendo las 12 pruebas de HU-013 y las 122 de `main`).
 4. **Compilación de producción:** `npm run build` exitoso.
-5. **Estado de colecciones y `prisma db push` en MongoDB Atlas (`cgb_academy`, `GC-10`):** Se inspeccionó en modo lectura el clúster `cgb_academy` comprobando que las colecciones `evaluaciones` (con índice único `evaluaciones_capacitacionId_key`) e `intentos_evaluacion` (con índice único `intentos_evaluacion_usuarioId_evaluacionId_numero_key`) existen y tienen `0` documentos preexistentes. Esta rama no ejecutó `npx prisma db push`; cualquier ejecución futura sobre la base compartida requiere confirmación expresa del administrador de la base de datos.
-6. **Declaración de uso de IA:** Se empleó Antigravity / Gemini bajo guía del responsable (Alex Carpio) para estructurar las 4 capas (`configuracion-microtest.ts`, `repositorio-configuracion-microtest.ts`, `servicio-configuracion-microtest.ts`, `microtests-http.ts`, `microtests-cliente.ts`, `ConstructorMicrotest.tsx`), las pruebas automatizadas y la captura de evidencias contra Atlas.
+5. **Estado de colecciones y `prisma db push` en MongoDB Atlas (`cgb_academy`, `GC-10`):** Se inspeccionó en modo lectura el clúster `cgb_academy` comprobando que `evaluaciones` (índice único `evaluaciones_capacitacionId_key`) e `intentos_evaluacion` (índice único `intentos_evaluacion_usuarioId_evaluacionId_numero_key`) existen y tienen `0` documentos preexistentes. Esta rama no ejecutó `npx prisma db push`; cualquier ejecución futura sobre la base compartida requiere confirmación expresa del administrador de la base de datos.
+6. **Declaración de uso de IA:** Se empleó Antigravity / Gemini bajo guía del responsable (Alex Carpio) para estructurar las 4 capas, extraer `TarjetaPreguntaMicrotest.tsx`, `microtests-http.ts` y `microtests-cliente.ts`, redactar pruebas y ejecutar verificaciones locales y contra Atlas.
